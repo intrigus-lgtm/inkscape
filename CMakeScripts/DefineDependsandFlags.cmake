@@ -258,18 +258,18 @@ endif()
 # Include dependencies:
 
 pkg_check_modules(
-    GTK3
+    GTK4
     REQUIRED
-    glibmm-2.4>=2.58
-    gtkmm-3.0>=3.24
-    gdkmm-3.0>=3.24
-    gtk+-3.0>=3.24
-    gdk-3.0>=3.24
+    glibmm-2.68
+    gtkmm-4.0
+    gtk4
+    cairomm-1.16
+    pangomm-2.48
     )
-list(APPEND INKSCAPE_CXX_FLAGS ${GTK3_CFLAGS_OTHER})
-list(APPEND INKSCAPE_INCS_SYS ${GTK3_INCLUDE_DIRS})
-list(APPEND INKSCAPE_LIBS ${GTK3_LIBRARIES})
-link_directories(${GTK3_LIBRARY_DIRS})
+list(APPEND INKSCAPE_CXX_FLAGS ${GTK4_CFLAGS_OTHER})
+list(APPEND INKSCAPE_INCS_SYS ${GTK4_INCLUDE_DIRS})
+list(APPEND INKSCAPE_LIBS ${GTK4_LIBRARIES})
+link_directories(${GTK4_LIBRARY_DIRS})
 
 if(WITH_GSOURCEVIEW)
     pkg_check_modules(GSOURCEVIEW gtksourceview-4)
@@ -408,7 +408,7 @@ if(WITH_NLS)
     endif()
 endif(WITH_NLS)
 
-pkg_check_modules(SIGC++ REQUIRED sigc++-2.0 )
+pkg_check_modules(SIGC++ REQUIRED sigc++-3.0)
 sanitize_ldflags_for_libs(SIGC++_LDFLAGS)
 list(APPEND INKSCAPE_LIBS ${SIGC++_LDFLAGS})
 list(APPEND INKSCAPE_CXX_FLAGS ${SIGC++_CFLAGS_OTHER} "-DSIGCXX_DISABLE_DEPRECATED")
@@ -418,17 +418,6 @@ sanitize_ldflags_for_libs(EPOXY_LDFLAGS)
 list(APPEND INKSCAPE_LIBS ${EPOXY_LDFLAGS})
 list(APPEND INKSCAPE_CXX_FLAGS ${EPOXY_CFLAGS_OTHER})
 
-if(WITH_X11)
-    find_package(X11 REQUIRED)
-    list(APPEND INKSCAPE_INCS_SYS ${X11_INCLUDE_DIRS})
-    list(APPEND INKSCAPE_LIBS ${X11_LIBRARIES})
-    add_definitions(-DHAVE_X11)
-
-    pkg_get_variable(GTK3_TARGETS gtk+-3.0 targets)
-    if(NOT("${GTK3_TARGETS}" MATCHES "x11"))
-        message(FATAL_ERROR "GTK+3 doesn't targets X11, this is required for WITH_X11")
-    endif()
-endif(WITH_X11)
 
 # end Dependencies
 

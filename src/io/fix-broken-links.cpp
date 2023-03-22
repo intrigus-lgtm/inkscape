@@ -151,7 +151,7 @@ static bool extractFilepath(Glib::ustring const &href, std::string &filename)
                 filename = Glib::filename_from_uri(href);
                 isFile = true;
             } catch(Glib::ConvertError e) {
-                g_warning("%s", e.what().c_str());
+                g_warning("%s", e.what());
             }
         }
     } else {
@@ -244,7 +244,7 @@ static std::map<Glib::ustring, Glib::ustring> locateLinks(Glib::ustring const & 
                     priorLocations.push_back(path);
                 }
             } catch (Glib::ConvertError e) {
-                g_warning("%s", e.what().c_str());
+                g_warning("%s", e.what());
             }
         }
     }

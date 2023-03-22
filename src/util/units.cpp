@@ -397,10 +397,10 @@ bool UnitTable::load(std::string const &filename) {
         ctx.parse(unitfile);
         ctx.end_parse();
     } catch (Glib::FileError const &e) {
-        g_warning("Units file %s is missing: %s\n", filename.c_str(), e.what().c_str());
+        g_warning("Units file %s is missing: %s\n", filename.c_str(), e.what());
         return false;
     } catch (Glib::MarkupError const &e) {
-        g_warning("Problem loading units file '%s': %s\n", filename.c_str(), e.what().c_str());
+        g_warning("Problem loading units file '%s': %s\n", filename.c_str(), e.what());
         return false;
     }
     return true;

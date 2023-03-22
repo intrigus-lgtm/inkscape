@@ -40,7 +40,7 @@ void PngOutput::export_raster(Inkscape::Extension::Output * /*module*/,
     catch (const Gio::Error& e) {
         std::cerr << "Moving resource " << png_file
                   << " to "             << filename
-                  << " failed: "        << e.what().raw() << std::endl;
+                  << " failed: "        << e.what() << std::endl;
     }
 }
 

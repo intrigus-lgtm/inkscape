@@ -55,7 +55,7 @@ build_menu()
     } catch (Glib::Error const &err) {
         std::cerr << "build_menu: failed to load Main menu from: "
                     << filename <<": "
-                    << err.what().raw() << std::endl;
+                    << err.what() << std::endl;
         return;
     }
 

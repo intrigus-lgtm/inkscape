@@ -139,7 +139,7 @@ void URIReference::attach(const URI &uri)
         try {
             path = absuri.toNativeFilename();
         } catch (const Glib::Error &e) {
-            g_warning("%s", e.what().c_str());
+            g_warning("%s", e.what());
         }
 
         if (!path.empty()) {

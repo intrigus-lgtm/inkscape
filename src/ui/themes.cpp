@@ -240,7 +240,7 @@ static void
 show_parsing_error(const Glib::RefPtr<const Gtk::CssSection>& section, const Glib::Error& error)
 {
 #ifndef NDEBUG
-  g_warning("There is a warning parsing theme CSS:: %s", error.what().c_str());
+  g_warning("There is a warning parsing theme CSS:: %s", error.what());
 #endif
 }
 

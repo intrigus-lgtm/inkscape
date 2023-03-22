@@ -1891,14 +1891,14 @@ Glib::RefPtr<Gdk::GLContext> Canvas::create_context()
     try {
         result = get_window()->create_gl_context();
     } catch (const Gdk::GLError &e) {
-        std::cerr << "Failed to create OpenGL context: " << e.what().raw() << std::endl;
+        std::cerr << "Failed to create OpenGL context: " << e.what() << std::endl;
         return {};
     }
 
     try {
         result->realize();
     } catch (const Glib::Error &e) {
-        std::cerr << "Failed to realize OpenGL context: " << e.what().raw() << std::endl;
+        std::cerr << "Failed to realize OpenGL context: " << e.what() << std::endl;
         return {};
     }
 

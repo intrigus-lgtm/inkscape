@@ -34,7 +34,7 @@ void help_open_url(const Glib::ustring &url, Gtk::Window *window)
     try {
         window->show_uri(url, GDK_CURRENT_TIME);
     } catch (const Glib::Error &e) {
-        g_warning("Unable to show '%s': %s", url.c_str(), e.what().c_str());
+        g_warning("Unable to show '%s': %s", url.c_str(), e.what());
     }
 }
 

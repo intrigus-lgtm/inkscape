@@ -22,6 +22,7 @@
 #include <gtkmm/popover.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/scale.h>
+#include <gtkmm/scrolledwindow.h>
 #include <gtkmm/scrollbar.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/separator.h>

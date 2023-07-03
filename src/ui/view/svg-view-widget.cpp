@@ -41,9 +41,10 @@ namespace Inkscape::UI::View {
 SVGViewWidget::SVGViewWidget(SPDocument* document)
 {
     _canvas = Gtk::make_managed<Inkscape::UI::Widget::Canvas>();
+
     _canvas->property_expand().set_value(true);
     property_expand().set_value(false);
-    add(*_canvas);
+    append(*_canvas);
 
     _parent = new Inkscape::CanvasItemGroup(_canvas->get_canvas_item_root());
     _drawing = new Inkscape::CanvasItemDrawing(_parent);
@@ -52,8 +53,6 @@ SVGViewWidget::SVGViewWidget(SPDocument* document)
     _drawing->get_drawing()->setCursorTolerance(0);
 
     setDocument(document);
-
-    show_all();
 }
 
 SVGViewWidget::~SVGViewWidget()
@@ -150,7 +149,7 @@ bool SVGViewWidget::event(CanvasEvent const &event, DrawingItem *drawing_item)
         },
         [&] (ButtonReleaseEvent const &event) {
             if (event.button == 1 && _clicking && href) {
-                if (auto window = dynamic_cast<Gtk::Window*>(_canvas->get_toplevel())) {
+                if (auto window = dynamic_cast<Gtk::Window*>(_canvas->get_root())) {
                     window->show_uri(href, event.time);
                 }
             }

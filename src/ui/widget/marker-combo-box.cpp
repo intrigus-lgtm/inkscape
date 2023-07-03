@@ -30,7 +30,6 @@
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/menubutton.h>
-#include <gtkmm/radiobutton.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/window.h>
 
@@ -123,7 +122,7 @@ MarkerComboBox::MarkerComboBox(Glib::ustring id, int l) :
         g_bad_marker = renderer.render_surface(1.0);
     }
 
-    add(_menu_btn);
+    prepend(_menu_btn);
 
     _preview.signal_size_allocate().connect([=](Gtk::Allocation& a){
         // refresh after preview widget has been finally resized/expanded

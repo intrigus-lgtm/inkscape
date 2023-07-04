@@ -26,8 +26,8 @@ void CairoGraphics::set_outlines_enabled(bool enabled)
 {
     outlines_enabled = enabled;
     if (!enabled) {
-        store.outline_surface.clear();
-        snapshot.outline_surface.clear();
+        store.outline_surface.reset();
+        snapshot.outline_surface.reset();
     }
 }
 

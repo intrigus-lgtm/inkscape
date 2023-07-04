@@ -37,7 +37,7 @@ public:
     {
         ResponsiveUpdater::reset();
         inprogress = false;
-        old_clean_region.clear();
+        old_clean_region.reset();
     }
 
     void intersect(const Geom::IntRect &rect) override
@@ -83,7 +83,7 @@ public:
             return false;
         } else {
             // Completed redraw but damage events arrived => ask for another redraw, using the up-to-date clean region.
-            old_clean_region.clear();
+            old_clean_region.reset();
             return true;
         }
     }

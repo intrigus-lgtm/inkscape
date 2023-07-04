@@ -251,7 +251,7 @@ cairo_pattern_t *DrawingPattern::renderPattern(RenderContext &rc, Geom::IntRect 
                 }
             }
         }
-        dirty.clear();
+        dirty.reset();
     }
 
     // Debug: Show pattern tile.

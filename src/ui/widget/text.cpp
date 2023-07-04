@@ -34,7 +34,7 @@ void Text::setText(Glib::ustring const text)
     getEntry().set_text(text); // FIXME: set correctly
 }
 
-Glib::SignalProxy<void> Text::signal_activate()
+Glib::SignalProxy<void()> Text::signal_activate()
 {
     return getEntry().signal_activate();
 }

@@ -57,7 +57,7 @@ public:
     /**
      * Signal raised when the spin button's value changes.
      */
-    Glib::SignalProxy<void> signal_activate();
+    Glib::SignalProxy<void()> signal_activate();
 
     bool setProgrammatically; // true if the value was set by setValue, not changed by the user;
                               // if a callback checks it, it must reset it back to false

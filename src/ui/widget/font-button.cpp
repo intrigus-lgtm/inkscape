@@ -27,7 +27,7 @@ void FontButton::setValue(Glib::ustring const &fontspec)
     getFontButton().set_font_name(fontspec);
 }
 
-Glib::SignalProxy<void> FontButton::signal_font_value_changed()
+Glib::SignalProxy<void()> FontButton::signal_font_value_changed()
 {
     return getFontButton().signal_font_set();
 }

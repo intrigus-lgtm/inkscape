@@ -156,7 +156,7 @@ void Scalar::addSlider()
     UI::pack_start(*this, *scale);
 }
 
-Glib::SignalProxy<void> Scalar::signal_value_changed()
+Glib::SignalProxy<void()> Scalar::signal_value_changed()
 {
     return get_spin_button().signal_value_changed();
 }

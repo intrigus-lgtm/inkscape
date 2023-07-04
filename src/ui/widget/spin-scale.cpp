@@ -88,7 +88,7 @@ void SpinScale::set_from_attribute(SPObject* o)
         _adjustment->set_value(get_default()->as_double());
 }
 
-Glib::SignalProxy<void> SpinScale::signal_value_changed()
+Glib::SignalProxy<void()> SpinScale::signal_value_changed()
 {
     return _adjustment->signal_value_changed();
 }

@@ -145,12 +145,12 @@ void Point::clearProgrammatically()
     ywidget.setProgrammatically = false;
 }
 
-Glib::SignalProxy<void> Point::signal_x_value_changed()
+Glib::SignalProxy<void()> Point::signal_x_value_changed()
 {
     return xwidget.signal_value_changed();
 }
 
-Glib::SignalProxy<void> Point::signal_y_value_changed()
+Glib::SignalProxy<void()> Point::signal_y_value_changed()
 {
     return ywidget.signal_value_changed();
 }

@@ -44,7 +44,7 @@ public:
     /**
     * Signal raised when the font button's value changes.
     */
-    Glib::SignalProxy<void> signal_font_value_changed();
+    Glib::SignalProxy<void()> signal_font_value_changed();
 
 private:
     [[nodiscard]] Gtk::FontButton const &getFontButton() const;

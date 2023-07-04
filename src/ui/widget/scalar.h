@@ -171,7 +171,7 @@ public:
     /**
      * Signal raised when the spin button's value changes.
      */
-    Glib::SignalProxy<void> signal_value_changed();
+    Glib::SignalProxy<void()> signal_value_changed();
 
     /**
      * true if the value was set by setValue, not changed by the user;

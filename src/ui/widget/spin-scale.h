@@ -46,7 +46,7 @@ public:
     void set_from_attribute(SPObject*) override;
 
     // Shortcuts to _adjustment
-    Glib::SignalProxy<void> signal_value_changed();
+    Glib::SignalProxy<void()> signal_value_changed();
     double get_value() const;
     void set_value(const double);
     void set_focuswidget(GtkWidget *widget);

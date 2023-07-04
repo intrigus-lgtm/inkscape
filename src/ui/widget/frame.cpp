@@ -10,14 +10,12 @@
 
 #include "frame.h"
 
-#include <gtkmm/stylecontext.h>
-
 namespace Inkscape::UI::Widget {
 
 Frame::Frame(Glib::ustring const &label_text /*= {}*/, bool label_bold /*= true*/ )
     : _label(label_text, Gtk::Align::END, Gtk::Align::CENTER, true)
 {
-    get_style_context()->add_class("flat");
+    add_css_class("flat");
 
     set_label_widget(_label);
     set_label(label_text, label_bold);
@@ -26,9 +24,8 @@ Frame::Frame(Glib::ustring const &label_text /*= {}*/, bool label_bold /*= true*
 void
 Frame::add(Widget& widget)
 {
-    Gtk::Frame::add(widget);
+    Gtk::Frame::set_child(widget);
     set_padding(4, 0, 8, 0);
-    show_all_children();
 }
 
 void

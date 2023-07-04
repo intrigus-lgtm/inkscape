@@ -134,14 +134,14 @@ ImageProperties::ImageProperties() :
     auto& change = get_widget<Gtk::Button>(_builder, "change-img");
     change.signal_clicked().connect([=](){
         if (_update.pending()) return;
-        auto window = dynamic_cast<Gtk::Window*>(get_toplevel());
+        auto window = dynamic_cast<Gtk::Window*>(get_root());
         link_image(window, _image);
     });
 
     auto& extract = get_widget<Gtk::Button>(_builder, "export");
     extract.signal_clicked().connect([=](){
         if (_update.pending()) return;
-        auto window = dynamic_cast<Gtk::Window*>(get_toplevel());
+        auto window = dynamic_cast<Gtk::Window*>(get_root());
         extract_image(window, _image);
     });
 
@@ -277,7 +277,7 @@ void ImageProperties::update(SPImage* image) {
 }
 
 void ImageProperties::update_bg_color() {
-    if (auto wnd = dynamic_cast<Gtk::Window*>(get_toplevel())) {
+    if (auto wnd = dynamic_cast<Gtk::Window*>(get_root())) {
         auto sc = wnd->get_style_context();
         auto const color = get_color_with_class(sc, "theme_bg_color");
         _background_color = conv_gdk_color_to_rgba(color);

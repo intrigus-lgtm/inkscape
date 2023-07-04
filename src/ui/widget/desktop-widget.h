@@ -40,7 +40,6 @@
 #include <2geom/point.h>
 #include <glibmm/refptr.h>
 #include <gtkmm/box.h>
-#include <sigc++/connection.h>
 
 #include "helper/auto-connection.h"
 #include "message.h"

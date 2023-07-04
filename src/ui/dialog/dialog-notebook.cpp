@@ -358,7 +358,7 @@ void DialogNotebook::close_tab_callback()
 
     if (dynamic_cast<DialogBase*>(_notebook.get_nth_page(page_number))) {
         // is this a dialog in a floating window?
-        if (auto window = dynamic_cast<DialogWindow*>(_container->get_toplevel())) {
+        if (auto window = dynamic_cast<DialogWindow*>(_container->get_root())) {
             // store state of floating dialog before it gets deleted
             DialogManager::singleton().store_state(*window);
         }
@@ -920,7 +920,7 @@ void DialogNotebook::on_page_switch(Gtk::Widget *curr_page, guint)
         if (!_label_visible) {
             queue_allocate(); 
         }
-        auto window = dynamic_cast<DialogWindow*>(_container->get_toplevel());
+        auto window = dynamic_cast<DialogWindow*>(_container->get_root());
         if (window) {
             resize_widget_children(window->get_container());
         } else {

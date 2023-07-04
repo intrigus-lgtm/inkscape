@@ -372,7 +372,7 @@ Gtk::EventSequenceState MyHandle::on_click_released(Gtk::GestureClick const &ges
 
 void MyHandle::toggle_multipaned() {
     // visibility toggle of multipaned in a floating dialog window doesn't make sense; skip
-    if (dynamic_cast<DialogWindow*>(get_toplevel())) return;
+    if (dynamic_cast<DialogWindow*>(get_root())) return;
 
     auto panel = dynamic_cast<DialogMultipaned*>(get_parent());
     if (!panel) return;
@@ -1121,7 +1121,7 @@ bool can_collapse(Gtk::Widget* widget, Gtk::Widget* handle) {
     if (!widget || dynamic_cast<DialogMultipaned*>(widget) == nullptr) return false;
 
     // collapsing is not supported in floating dialogs
-    if (dynamic_cast<DialogWindow*>(widget->get_toplevel())) return false;
+    if (dynamic_cast<DialogWindow*>(widget->get_root())) return false;
 
     auto parent = handle->get_parent();
     if (!parent) return false;

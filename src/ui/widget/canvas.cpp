@@ -981,7 +981,7 @@ Gtk::EventSequenceState Canvas::on_button_released(Gtk::GestureClick const &cont
             set_split_mode(SplitMode::NORMAL);
 
             // Update action (turn into utility function?).
-            auto window = dynamic_cast<Gtk::ApplicationWindow*>(get_toplevel());
+            auto window = dynamic_cast<Gtk::ApplicationWindow*>(get_root());
             if (!window) {
                 std::cerr << "Canvas::on_motion_notify_event: window missing!" << std::endl;
                 return Gtk::EventSequenceState::CLAIMED;

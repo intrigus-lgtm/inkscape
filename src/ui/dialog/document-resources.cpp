@@ -457,7 +457,7 @@ DocumentResources::DocumentResources()
     });
 
     _extract.signal_clicked().connect([this]{
-        auto window = dynamic_cast<Gtk::Window*>(get_toplevel());
+        auto const window = dynamic_cast<Gtk::Window *>(get_root());
 
         switch (_showing_resource) {
         case Images:

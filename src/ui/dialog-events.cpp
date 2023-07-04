@@ -44,13 +44,13 @@ void sp_dialog_defocus(GtkWindow *win)
 void sp_dialog_defocus_on_enter_cpp(Gtk::Entry *e)
 {
     e->signal_activate().connect([e] {
-        sp_dialog_defocus_cpp(dynamic_cast<Gtk::Window*>(e->get_toplevel()));
+        sp_dialog_defocus_cpp(dynamic_cast<Gtk::Window*>(e->get_root()));
     });
 }
 
 static void sp_dialog_defocus_callback(GtkWindow*, gpointer data)
 {
-    sp_dialog_defocus(GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(data))));
+    sp_dialog_defocus(GTK_WINDOW(gtk_widget_get_root(GTK_WIDGET(data))));
 }
 
 void sp_dialog_defocus_on_enter(GtkWidget *w)

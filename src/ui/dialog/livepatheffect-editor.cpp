@@ -928,13 +928,12 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
     if (LPEExpanderCurrent) {
         _LPESelectionInfo.set_visible(false);
         LPEExpanderCurrent->set_expanded(true);
-        if (auto const current_window = dynamic_cast<Gtk::Window *>(LPEExpanderCurrent->get_toplevel())) {
+        if (auto const current_window = dynamic_cast<Gtk::Window *>(LPEExpanderCurrent->get_root())) {
             current_window->set_focus(*LPEExpanderCurrent);
         }
     }
 
     selection_info();
-    LPEListBox.show_all_children();
     ensure_size();
 }
 

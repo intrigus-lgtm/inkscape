@@ -613,7 +613,7 @@ void DialogContainer::link_dialog(DialogBase *dialog)
 {
     dialogs.insert(std::pair<Glib::ustring, DialogBase *>(dialog->get_type(), dialog));
 
-    DialogWindow *window = dynamic_cast<DialogWindow *>(get_toplevel());
+    DialogWindow *window = dynamic_cast<DialogWindow *>(get_root());
     if (window) {
         window->update_dialogs();
     }
@@ -636,7 +636,7 @@ void DialogContainer::unlink_dialog(DialogBase *dialog)
         dialogs.erase(found);
     }
 
-    DialogWindow *window = dynamic_cast<DialogWindow *>(get_toplevel());
+    DialogWindow *window = dynamic_cast<DialogWindow *>(get_root());
     if (window) {
         window->update_dialogs();
     }
@@ -1101,7 +1101,7 @@ void DialogContainer::column_empty(DialogMultipaned *column)
         parent->remove(*column);
     }
 
-    DialogWindow *window = dynamic_cast<DialogWindow *>(get_toplevel());
+    DialogWindow *window = dynamic_cast<DialogWindow *>(get_root());
     if (window && parent) {
         auto const &children = parent->get_multipaned_children();
         // Close the DialogWindow if you're in an empty one

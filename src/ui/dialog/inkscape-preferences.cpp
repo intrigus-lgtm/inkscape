@@ -1870,7 +1870,7 @@ void InkscapePreferences::initPageUI()
                     font_box->set_text(desc.to_string());
                 }
             });
-            dialog_show_modal_and_selfdestruct(std::move(dlg), get_toplevel());
+            dialog_show_modal_and_selfdestruct(std::move(dlg), get_root());
         });
         _page_theme.add_line(false, _("Monospaced font:"), *font_box, "", _("Select fixed-width font"), true, font_button);
 
@@ -3359,7 +3359,7 @@ void InkscapePreferences::onKBTreeEdited (const Glib::ustring& path, guint accel
         Gtk::MessageDialog dialog(message, false, Gtk::MessageType::QUESTION, Gtk::ButtonsType::YES_NO, true);
         dialog.set_title(_("Reassign shortcut?"));
         dialog.set_secondary_text(_("Are you sure you want to reassign this shortcut?"));
-        dialog.set_transient_for(*dynamic_cast<Gtk::Window *>(get_toplevel()));
+        dialog.set_transient_for(*dynamic_cast<Gtk::Window *>(get_root()));
         int response = Inkscape::UI::dialog_run(dialog);
         if (response != Gtk::ResponseType::YES) {
             return;

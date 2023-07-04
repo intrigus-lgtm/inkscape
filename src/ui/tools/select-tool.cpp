@@ -775,7 +775,7 @@ bool SelectTool::root_handler(CanvasEvent const &event)
             ret = true;
 
             // TODO Simplify this (or remove it, if canvas exists, window must exist).
-            GtkWindow *w = GTK_WINDOW(gtk_widget_get_toplevel(_desktop->getCanvas()->Gtk::Widget::gobj()));
+            GtkWindow *w = GTK_WINDOW(gtk_widget_get_root(_desktop->getCanvas()->Gtk::Widget::gobj()));
             if (w) {
                 gtk_window_present(w);
                 _desktop->getCanvas()->grab_focus();

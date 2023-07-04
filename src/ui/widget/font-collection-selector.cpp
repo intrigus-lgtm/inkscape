@@ -477,7 +477,7 @@ void FontCollectionSelector::deletion_warning_message_dialog(Glib::ustring const
     auto message = Glib::ustring::compose(_("Are you sure want to delete the \"%1\" font collection?\n"), collection_name);
     auto dialog = std::make_unique<Gtk::MessageDialog>(message, false, Gtk::MessageType::WARNING, Gtk::ButtonsType::YES_NO, true);
     dialog->signal_response().connect(onresponse);
-    dialog_show_modal_and_selfdestruct(std::move(dialog), get_toplevel());
+    dialog_show_modal_and_selfdestruct(std::move(dialog), get_root());
 }
 
 bool FontCollectionSelector::on_key_pressed(GtkEventControllerKey const * const controller,

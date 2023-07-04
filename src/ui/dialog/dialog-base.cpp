@@ -140,7 +140,7 @@ void DialogBase::blink()
 }
 
 void DialogBase::focus_dialog() {
-    if (auto window = dynamic_cast<Gtk::Window*>(get_toplevel())) {
+    if (auto window = dynamic_cast<Gtk::Window*>(get_root())) {
         window->present();
     }
 
@@ -156,7 +156,7 @@ void DialogBase::focus_dialog() {
 }
 
 void DialogBase::defocus_dialog() {
-    if (auto wnd = dynamic_cast<Gtk::Window*>(get_toplevel())) {
+    if (auto wnd = dynamic_cast<Gtk::Window*>(get_root())) {
         // defocus floating dialog:
         sp_dialog_defocus_cpp(wnd);
 

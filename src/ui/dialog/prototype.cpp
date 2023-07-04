@@ -75,7 +75,7 @@ void Prototype::selectionChanged(Inkscape::Selection *selection)
 
 void Prototype::on_click()
 {
-    auto window = dynamic_cast<Gtk::Window*>(get_toplevel());
+    auto window = dynamic_cast<Gtk::Window*>(get_root());
     if (window) {
         std::cerr << "Dialog is part of: " << window->get_name() << "  (" << window->get_title() << ")" << std::endl;
     } else {

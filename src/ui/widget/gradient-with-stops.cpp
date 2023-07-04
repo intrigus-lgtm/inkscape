@@ -113,7 +113,7 @@ void GradientWithStops::update() {
 void GradientWithStops::on_style_updated() {
     Gtk::Box::on_style_updated();
 
-    if (auto wnd = dynamic_cast<Gtk::Window*>(this->get_toplevel())) {
+    if (auto wnd = dynamic_cast<Gtk::Window*>(this->get_root())) {
         auto sc = wnd->get_style_context();
         _background_color = get_color_with_class(sc, "theme_bg_color");
     }

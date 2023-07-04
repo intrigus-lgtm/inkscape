@@ -32,7 +32,7 @@ class Rectangle;
 } // namespace Gdk
 
 namespace Gtk {
-class GestureMultiPress;
+class GestureClick;
 } // namespace Gtk
 
 class SPDesktop;
@@ -144,7 +144,7 @@ private:
     bool on_scroll(GtkEventControllerScroll const *controller,
                    double dx, double dy);
 
-    // GtkGestureMultiPress
+    // GtkGestureClick
     Gtk::EventSequenceState on_button_pressed (Gtk::GestureClick const &controller,
                                                int n_press, double x, double y);
     Gtk::EventSequenceState on_button_released(Gtk::GestureClick const &controller,

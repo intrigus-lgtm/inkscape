@@ -196,7 +196,8 @@ Cairo::RefPtr<Cairo::LinearGradient> create_cubic_gradient(
     int steps = 8
 );
 
-void set_dark_titlebar(Glib::RefPtr<Gdk::Window> const &win, bool is_dark);
+// If on Windows, get the native window & set it to DWMA_USE_IMMERSIVE_DARK_MODE
+void set_dark_titlebar(Glib::RefPtr<Gdk::Surface> const &surface, bool is_dark);
 
 // Cover for Glib::wrap not passing through const.
 template <typename T>

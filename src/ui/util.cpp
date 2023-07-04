@@ -381,12 +381,12 @@ uint32_t conv_gdk_color_to_rgba(const Gdk::RGBA& color, double replace_alpha) {
     return rgba;
 }
 
-void set_dark_titlebar(Glib::RefPtr<Gdk::Window> const &win, bool is_dark)
+void set_dark_titlebar(Glib::RefPtr<Gdk::Surface> const &surface, bool is_dark)
 {
 #if (defined (_WIN32) || defined (_WIN64))
-    if (win->gobj()) {
+    if (surface->gobj()) {
         BOOL w32_darkmode = is_dark;
-        HWND hwnd = (HWND)gdk_win32_window_get_handle((GdkWindow*)win->gobj());
+        HWND hwnd = (HWND)gdk_win32_surface_get_handle((GdkSurface*)surface->gobj());
         if (DwmSetWindowAttribute) {
             DWORD attr = DWMWA_USE_IMMERSIVE_DARK_MODE;
             if (FAILED(DwmSetWindowAttribute(hwnd, attr, &w32_darkmode, sizeof(w32_darkmode)))) {

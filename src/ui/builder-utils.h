@@ -31,8 +31,7 @@ void throw_missing(const char* object_type, const char* id);
 
 // get widget from builder or throw
 template<class W> W& get_widget(const Glib::RefPtr<Gtk::Builder>& builder, const char* id) {
-    W* widget;
-    builder->get_widget(id, widget);
+    auto const widget = builder->get_widget<W>(id);
     if (!widget) {
         Detail::throw_missing("widget", id);
     }
@@ -41,8 +40,7 @@ template<class W> W& get_widget(const Glib::RefPtr<Gtk::Builder>& builder, const
 
 template<class W, typename... Args>
 W& get_derived_widget(const Glib::RefPtr<Gtk::Builder>& builder, const char* id, Args&&... args) {
-    W* widget;
-    builder->get_widget_derived(id, widget, std::forward<Args>(args)...);
+    auto const widget = builder->get_widget_derived<W>(builder, id, std::forward<Args>(args)...);
     if (!widget) {
         Detail::throw_missing("widget", id);
     }
@@ -50,7 +48,7 @@ W& get_derived_widget(const Glib::RefPtr<Gtk::Builder>& builder, const char* id,
 }
 
 template<class Ob> Glib::RefPtr<Ob> get_object(Glib::RefPtr<Gtk::Builder>& builder, const char* id) {
-    auto object = Glib::RefPtr<Ob>::cast_dynamic(builder->get_object(id));
+    auto const object = std::dynamic_pointer_cast<Ob>(builder->get_object(id));
     if (!object) {
         Detail::throw_missing("object", id);
     }
@@ -71,7 +69,7 @@ Ob &get_object_raw(Glib::RefPtr<Gtk::Builder> &builder, const char *id)
     return *object;
 }
 
-} } // namespace
+} } // namespace Inkscape::UI
 
 #endif // SEEN_BUILDER_UTILS_H
 

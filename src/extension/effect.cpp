@@ -194,7 +194,7 @@ bool
 Effect::prefs (SPDesktop * desktop)
 {
     if (_prefDialog != nullptr) {
-        _prefDialog->raise();
+        _prefDialog->present();
         return true;
     }
 

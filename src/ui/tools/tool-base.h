@@ -30,6 +30,10 @@
 #include "preferences.h"
 #include "ui/widget/events/enums.h"
 
+namespace Gdk {
+class Surface;
+}
+
 class GrDrag;
 class SPDesktop;
 class SPObject;
@@ -199,7 +203,7 @@ public:
 
     void set_cursor(std::string filename);
     void use_cursor(Glib::RefPtr<Gdk::Cursor> cursor);
-    Glib::RefPtr<Gdk::Cursor> get_cursor(Glib::RefPtr<Gdk::Window> window, std::string const &filename) const;
+    Glib::RefPtr<Gdk::Cursor> get_cursor(Glib::RefPtr<Gdk::Surface> surface, std::string const &filename) const;
     void use_tool_cursor();
 
     void enableGrDrag(bool enable = true);

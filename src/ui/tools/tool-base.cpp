@@ -18,10 +18,9 @@
 #include "ui/tools/tool-base.h"
 
 #include <set>
-
+#include <utility>
 #include <gdk/gdkkeysyms.h>
 #include <gdkmm/display.h>
-#include <giomm/simpleactiongroup.h>
 #include <glibmm/i18n.h>
 
 #include "desktop-events.h"
@@ -147,7 +146,7 @@ SPGroup *ToolBase::currentLayer() const
 void ToolBase::set_cursor(std::string filename)
 {
     if (filename != _cursor_filename) {
-        _cursor_filename = filename;
+        _cursor_filename = std::move(filename);
         use_tool_cursor();
     }
 }
@@ -157,7 +156,7 @@ void ToolBase::set_cursor(std::string filename)
  *
  * WARNING: currently this changes the window cursor, see load_svg_cursor
  */
-Glib::RefPtr<Gdk::Cursor> ToolBase::get_cursor(Glib::RefPtr<Gdk::Window> window, std::string const &filename) const
+Glib::RefPtr<Gdk::Cursor> ToolBase::get_cursor(Glib::RefPtr<Gdk::Surface> surface, std::string const &filename) const
 {
     bool fillHasColor   = false;
     bool strokeHasColor = false;
@@ -165,8 +164,7 @@ Glib::RefPtr<Gdk::Cursor> ToolBase::get_cursor(Glib::RefPtr<Gdk::Window> window,
     guint32 strokeColor = sp_desktop_get_color_tool(_desktop, getPrefsPath(), false, &strokeHasColor);
     double fillOpacity = fillHasColor ? sp_desktop_get_opacity_tool(_desktop, getPrefsPath(), true) : 1.0;
     double strokeOpacity = strokeHasColor ? sp_desktop_get_opacity_tool(_desktop, getPrefsPath(), false) : 1.0;
-
-    return load_svg_cursor(window->get_display(), window, filename,
+    return load_svg_cursor(surface->get_display(), surface, filename,
                            fillColor, strokeColor, fillOpacity, strokeOpacity);
 }
 

@@ -95,8 +95,6 @@ FilletChamferPropertiesDialog::FilletChamferPropertiesDialog()
 
     _apply_button.grab_default();
 
-    show_all_children();
-
     set_focus(_fillet_chamfer_position_numeric);
 }
 

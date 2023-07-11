@@ -392,7 +392,6 @@ public:
         _model = Gtk::ListStore::create(_columns);
         _tree.set_model(_model);
         _tree.set_headers_visible(false);
-        _tree.set_visible(true);
         add(_tree);
         if (tip_text) {
             _tree.set_tooltip_text(tip_text);
@@ -533,10 +532,6 @@ public:
         _angle.signal_attr_changed().connect(signal_attr_changed().make_slot());
         signal_attr_changed().connect(sigc::mem_fun(*this, &ColorMatrixValues::update_store));
 
-        _matrix.set_visible(true);
-        _saturation.set_visible(true);
-        _angle.set_visible(true);
-        _label.set_visible(true);
         _label.set_sensitive(false);
 
         get_style_context()->add_class("flat");
@@ -664,7 +659,7 @@ public:
         _entry.set_width_chars(1);
         _entry.signal_changed().connect(signal_attr_changed().make_slot());
 
-        show_all();
+        set_visible(true);
     }
 
     // Returns the element in xlink:href form.
@@ -993,7 +988,6 @@ private:
 
         UI::pack_start(*hb, *w, UI::PackOptions::expand_widget);
         UI::pack_start(*_groups[_current_type], *hb, UI::PackOptions::expand_widget);
-        hb->show_all();
     }
 
     std::vector<Gtk::Box*> _groups;
@@ -1166,16 +1160,14 @@ public:
           _light_label(_("Light Source:")),
           _light_source(LightSourceConverter),
           _locked(false),
-          _light_box(Gtk::Orientation::HORIZONTAL)
+          _light_box(Gtk::Orientation::HORIZONTAL, 6)
     {
         _light_label.set_xalign(0.0);
         _settings._size_group->add_widget(_light_label);
         UI::pack_start(_light_box, _light_label, UI::PackOptions::shrink);
         UI::pack_start(_light_box, _light_source, UI::PackOptions::expand_widget);
-        _light_box.show_all();
-        _light_box.set_spacing(6);
 
-        add(_light_box);
+        append(_light_box);
         reorder_child(_light_box, 0);
         _light_source.signal_changed().connect(sigc::mem_fun(*this, &LightSourceControl::on_source_changed));
 
@@ -2762,7 +2754,6 @@ FilterEffectsDialog::FilterEffectsDialog()
     // Initialize widget hierarchy
     _primitive_box = &get_widget<Gtk::ScrolledWindow>(_builder, "filter");
     _primitive_list.set_enable_search(false);
-    _primitive_list.show_all();
     _primitive_box->add(_primitive_list);
 
     auto symbolic = Inkscape::Preferences::get()->getBool("/theme/symbolicIcons", true);
@@ -2772,12 +2763,8 @@ FilterEffectsDialog::FilterEffectsDialog()
         [this](int const id){ add_filter_primitive(static_cast<FilterPrimitiveType>(id)); });
     UI::pack_start(_search_box, _effects_popup);
 
-    _filter_modifier.show_all();
-
-    _settings_effect.show_all();
     UI::pack_end(_params_box, _settings_effect);
 
-    _settings_filter.show_all();
     get_widget<Gtk::Popover>(_builder, "gen-settings").add(_settings_filter);
 
     get_widget<Gtk::Popover>(_builder, "info-popover").signal_show().connect([this]{
@@ -2929,7 +2916,6 @@ FilterEffectsDialog::FilterEffectsDialog()
     });
 
     update_widgets();
-    show_all_children();
     update();
     update_settings_view();
 }

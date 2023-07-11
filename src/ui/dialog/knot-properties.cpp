@@ -88,8 +88,6 @@ KnotPropertiesDialog::KnotPropertiesDialog()
 
     _apply_button.grab_default();
 
-    show_all_children();
-
     set_focus(_knot_y_entry);
 }
 

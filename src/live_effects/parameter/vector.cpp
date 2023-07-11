@@ -117,8 +117,6 @@ VectorParam::param_newWidget()
 
     auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
     UI::pack_start(*hbox, *pointwdg, true, true);
-    hbox->show_all_children();
-
     return hbox;
 }
 

@@ -233,8 +233,6 @@ DocumentProperties::DocumentProperties()
     _wr.setUpdating (false);
 
     _grids_button_remove.signal_clicked().connect([this]{ onRemoveGrid(); });
-
-    show_all_children();
 }
 
 //========================================================================
@@ -476,7 +474,6 @@ void DocumentProperties::build_page()
     using UI::Widget::PageProperties;
     _page = Gtk::manage(PageProperties::create());
     _page_page->table().attach(*_page, 0, 0);
-    _page_page->set_visible(true);
 
     _page->signal_color_changed().connect([this](unsigned const color, PageProperties::Color const element){
         if (_wr.isUpdating() || !_wr.desktop()) return;
@@ -584,8 +581,6 @@ void DocumentProperties::build_page()
 
 void DocumentProperties::build_guides()
 {
-    _page_guides->set_visible(true);
-
     auto const label_gui = Gtk::make_managed<Gtk::Label>();
     label_gui->set_markup (_("<b>Guides</b>"));
 
@@ -816,7 +811,6 @@ bool DocumentProperties::_AvailableProfilesList_separator(Glib::RefPtr<Gtk::Tree
 
 void DocumentProperties::build_cms()
 {
-    _page_cms->set_visible(true);
     Gtk::Label *label_link= Gtk::make_managed<Gtk::Label>("", Gtk::Align::START);
     label_link->set_markup (_("<b>Linked Color Profiles:</b>"));
     auto const label_avail = Gtk::make_managed<Gtk::Label>("", Gtk::Align::START);
@@ -904,15 +898,12 @@ void DocumentProperties::build_cms()
 
 void DocumentProperties::build_scripting()
 {
-    _page_scripting->set_visible(true);
-
     _page_scripting->table().attach(_scripting_notebook, 0, 0, 1, 1);
 
     _scripting_notebook.append_page(*_page_external_scripts, _("External scripts"));
     _scripting_notebook.append_page(*_page_embedded_scripts, _("Embedded scripts"));
 
     //# External scripts tab
-    _page_external_scripts->set_visible(true);
     Gtk::Label *label_external= Gtk::make_managed<Gtk::Label>("", Gtk::Align::START);
     label_external->set_markup (_("<b>External script files:</b>"));
 
@@ -969,7 +960,6 @@ void DocumentProperties::build_scripting()
 // TODO restore?    _ExternalScriptsList.set_fixed_height_mode(true);
 
     //# Embedded scripts tab
-    _page_embedded_scripts->set_visible(true);
     Gtk::Label *label_embedded= Gtk::make_managed<Gtk::Label>("", Gtk::Align::START);
     label_embedded->set_markup (_("<b>Embedded script files:</b>"));
 
@@ -1084,8 +1074,6 @@ void DocumentProperties::build_metadata()
 {
     using Inkscape::UI::Widget::EntityEntry;
 
-    _page_metadata1->set_visible(true);
-
     auto const label = Gtk::make_managed<Gtk::Label>();
     label->set_markup (_("<b>Dublin Core Entities</b>"));
     label->set_halign(Gtk::Align::START);
@@ -1122,8 +1110,6 @@ void DocumentProperties::build_metadata()
 
     button_save->signal_clicked().connect(sigc::mem_fun(*this, &DocumentProperties::save_default_metadata));
     button_load->signal_clicked().connect(sigc::mem_fun(*this, &DocumentProperties::load_default_metadata));
-
-    _page_metadata2->set_visible(true);
 
     row = 0;
     auto const llabel = Gtk::make_managed<Gtk::Label>();
@@ -1432,7 +1418,6 @@ void DocumentProperties::add_grid_widget(SPGrid *grid, bool select)
 {
     auto const widget = Gtk::make_managed<Inkscape::UI::Widget::GridWidget>(grid);
     _grids_notebook.append_page(*widget, *widget->getTabWidget());
-    _grids_notebook.show_all();
 
     _grids_button_remove.set_sensitive(true);
     if (select) {
@@ -1477,7 +1462,6 @@ void DocumentProperties::build_gridspage()
     }) {
         auto const btn = Gtk::make_managed<Gtk::Button>(label, false);
         btn->set_image_from_icon_name(icon, Gtk::IconSize::NORMAL);
-        btn->set_always_show_image();
         btn_size->add_widget(*btn);
         UI::pack_start(_grids_hbox_crea, *btn, false, true);
         btn->signal_clicked().connect([this, type = type]{ onNewGrid(type); });
@@ -1750,7 +1734,6 @@ GridWidget::GridWidget(SPGrid *grid)
     _tab_lbl = Gtk::make_managed<Gtk::Label>("-", true);
     UI::pack_start(*_tab, *_tab_img);
     UI::pack_start(*_tab, *_tab_lbl);
-    _tab->show_all();
 
     _name_label = Gtk::make_managed<Gtk::Label>("", Gtk::Align::CENTER);
     _name_label->set_margin_bottom(4);
@@ -1953,7 +1936,6 @@ GridWidget::GridWidget(SPGrid *grid)
     auto const inner = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
     UI::pack_start(*inner, *left, true, true);
     UI::pack_start(*inner, *column, false, false);
-    inner->show_all();
     UI::pack_start(*this, *inner, false, false);
     property_margin().set_value(4);
 
@@ -1991,9 +1973,7 @@ void GridWidget::update()
     _rsu_sy->getLabel()->set_markup_with_mnemonic(modular ? _("Block _height:") : _("Spacing _Y:"));
 
     auto show = [](Gtk::Widget* w, bool do_show){
-        w->set_no_show_all(false);
-        if (do_show) { w->show_all(); } else { w->set_visible(false); }
-        w->set_no_show_all();
+        w->set_visible(do_show);
     };
 
     show(_rsu_ax, axonometric);

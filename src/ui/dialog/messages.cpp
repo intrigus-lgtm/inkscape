@@ -56,8 +56,6 @@ Messages::Messages()
     // sick of this thing shrinking too much
     set_size_request(400, -1);
 
-    show_all_children();
-
     message(_("Ready."));
 
     buttonClear.signal_clicked().connect(sigc::mem_fun(*this, &Messages::clear));

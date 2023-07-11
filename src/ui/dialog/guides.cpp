@@ -354,7 +354,6 @@ void GuidelinePropertiesDialog::_setup() {
 
     set_position(Gtk::WIN_POS_MOUSE);
 
-    show_all_children();
     set_modal(true);
     _desktop->setWindowTransient (gobj());
     property_destroy_with_parent() = true;

@@ -172,8 +172,10 @@ LivePathEffectEditor::LivePathEffectEditor()
     _lpes_popup.on_button_press().connect([this]{ setMenu(); });
     _lpes_popup.on_focus().connect([this]{ setMenu(); return true; });
     UI::pack_start(_LPEAddContainer, _lpes_popup);
+
     sp_set_experimental(_experimental);
-    show_all();
+
+    set_visible(true);
 }
 
 LivePathEffectEditor::~LivePathEffectEditor()
@@ -512,8 +514,6 @@ LivePathEffectEditor::selection_info()
                 selection->clone();;
             });
             _LPEParentBox.add(*selectbutton2);
-
-            _LPEParentBox.show_all();
         } else if (!is<SPLPEItem>(selected) && !is<SPUse>(selected)) {
             _LPESelectionInfo.set_text(_("Select a path, shape, clone or group"));
             _LPESelectionInfo.set_visible(true);
@@ -560,9 +560,9 @@ LivePathEffectEditor::selection_info()
                 }
             }
             selected->rootsatellites = newrootsatellites;
-            _LPEParentBox.show_all();
+            _LPEParentBox.set_visible(true);
             _LPEParentBox.drag_dest_unset();
-            _LPECurrentItem.show_all();
+            _LPECurrentItem.set_visible(true);
         }
     } else if (!selection || selection->isEmpty()) {
         _LPESelectionInfo.set_text(_("Select a path, shape, clone or group"));
@@ -651,7 +651,6 @@ LivePathEffectEditor::showParams(LPEExpander const &expanderdata, bool const cha
             }
 
             expanderdata.first->add(*effectwidget);
-            expanderdata.first->show_all_children();
             align(effectwidget, lpe->spinbutton_width_chars);
 
             // fixme: add resizing of dialog

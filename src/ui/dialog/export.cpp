@@ -64,8 +64,7 @@ Export::Export()
 {
     prefs = Inkscape::Preferences::get();
 
-    add(container);
-    show_all_children();
+    append(container);
 
     container.signal_realize().connect([=, this]() {
         setDefaultNotebookPage();

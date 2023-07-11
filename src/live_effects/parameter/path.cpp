@@ -230,9 +230,7 @@ PathParam::param_newWidget()
         pIcon = Gtk::manage(sp_get_icon_image("tool-node-editor", Gtk::IconSize::NORMAL));
         pButton = Gtk::make_managed<Gtk::Button>();
         pButton->set_has_frame(false);
-        pIcon->set_visible(true);
         pButton->add(*pIcon);
-        pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &PathParam::on_edit_button_click));
         UI::pack_start(*_widget, *pButton, true, true);
         pButton->set_tooltip_text(_("Edit on-canvas"));
@@ -242,9 +240,8 @@ PathParam::param_newWidget()
         pIcon = Gtk::manage(sp_get_icon_image("edit-copy", Gtk::IconSize::NORMAL));
         pButton = Gtk::make_managed<Gtk::Button>();
         pButton->set_has_frame(false);
-        pIcon->set_visible(true);
         pButton->add(*pIcon);
-        pButton->set_visible(true);
+
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &PathParam::on_copy_button_click));
         UI::pack_start(*_widget, *pButton, true, true);
         pButton->set_tooltip_text(_("Copy path"));
@@ -254,9 +251,7 @@ PathParam::param_newWidget()
         pIcon = Gtk::manage(sp_get_icon_image("edit-paste", Gtk::IconSize::NORMAL));
         pButton = Gtk::make_managed<Gtk::Button>();
         pButton->set_has_frame(false);
-        pIcon->set_visible(true);
         pButton->add(*pIcon);
-        pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &PathParam::on_paste_button_click));
         UI::pack_start(*_widget, *pButton, true, true);
         pButton->set_tooltip_text(_("Paste path"));
@@ -265,15 +260,11 @@ PathParam::param_newWidget()
         pIcon = Gtk::manage(sp_get_icon_image("edit-clone", Gtk::IconSize::NORMAL));
         pButton = Gtk::make_managed<Gtk::Button>();
         pButton->set_has_frame(false);
-        pIcon->set_visible(true);
         pButton->add(*pIcon);
-        pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &PathParam::on_link_button_click));
         UI::pack_start(*_widget, *pButton, true, true);
         pButton->set_tooltip_text(_("Link to path in clipboard"));
     }
-
-    _widget->show_all_children();
 
     return _widget;
 }

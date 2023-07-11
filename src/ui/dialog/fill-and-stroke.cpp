@@ -63,8 +63,6 @@ FillAndStroke::FillAndStroke()
 
     UI::pack_end(*this, _composite_settings, UI::PackOptions::shrink);
 
-    show_all_children();
-
     _composite_settings.setSubject(&_subject);
 }
 
@@ -189,7 +187,7 @@ FillAndStroke::_createPageTabLabel(const Glib::ustring& label, const char *label
     _tab_label_box->add(*img);
 
     auto const _tab_label = Gtk::make_managed<Gtk::Label>(label, true);
-    _tab_label_box->add(*_tab_label);
+    _tab_label_box->append(*_tab_label);
 
     _tab_label_box->show_all();
     return *_tab_label_box;

@@ -140,7 +140,6 @@ void BatchItem::init(std::shared_ptr<PreviewDrawing> drawing) {
     set_valign(Gtk::Align::START);
     set_halign(Gtk::Align::START);
     add(_grid);
-    set_visible(true);
     this->set_focusable(false);
 
     _selector.signal_toggled().connect([this]() {
@@ -248,7 +247,6 @@ void BatchItem::refresh(bool hide, guint32 bg_color)
             _grid.attach(_label, 0, 2, 2, 1);
             _grid.attach(_preview, 0, 0, 2, 2);
         }
-        show_all_children();
         update_selected();
     }
 

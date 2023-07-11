@@ -874,8 +874,6 @@ void StyleDialog::readStyleElement()
         obj->requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG | SP_OBJECT_STYLE_MODIFIED_FLAG);
     }
 
-    _mainBox.show_all_children();
-
     _updating = false;
 }
 

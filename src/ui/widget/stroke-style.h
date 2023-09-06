@@ -19,7 +19,7 @@
 #include <vector>
 #include <glibmm/refptr.h>
 #include <gtkmm/box.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/checkbutton.h>
 
 #include "style.h"
 #include "ui/widget/spinbutton.h"
@@ -60,7 +60,7 @@ public:
     void selectionModifiedCB(guint flags);
     void selectionChangedCB();
 private:
-    /** List of valid types for the stroke-style radio-button widget */
+    /** List of valid types for the stroke-style radio check-button widget */
     enum StrokeStyleButtonType {
         STROKE_STYLE_BUTTON_JOIN, ///< A button to set the line-join style
         STROKE_STYLE_BUTTON_CAP,  ///< A button to set the line-cap style
@@ -68,12 +68,12 @@ private:
     };
 
     /**
-     * A custom radio-button for setting the stroke style.  It can be configured
+     * A custom radio check-button for setting the stroke style.  It can be configured
      * to set either the join or cap style by setting the button_type field.
      */
-    class StrokeStyleButton : public Gtk::RadioButton {
+    class StrokeStyleButton : public Gtk::CheckButton {
         public:
-            StrokeStyleButton(Gtk::RadioButtonGroup &grp,
+            StrokeStyleButton(Gtk::CheckButton      &grp,
                               char const            *icon,
                               StrokeStyleButtonType  button_type,
                               gchar const           *stroke_style);
@@ -105,7 +105,7 @@ private:
     void setScaledDash(SPCSSAttr *css, int ndash, const double *dash, double offset, double scale);
     bool isHairlineSelected() const;
 
-    StrokeStyleButton * makeRadioButton(Gtk::RadioButtonGroup &grp,
+    StrokeStyleButton * makeRadioButton(Gtk::CheckButton      &grp,
                                         char const            *icon,
                                         Gtk::Box              *hb,
                                         StrokeStyleButtonType  button_type,

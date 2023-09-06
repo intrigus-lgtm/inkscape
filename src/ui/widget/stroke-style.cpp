@@ -137,20 +137,20 @@ static Gtk::Box *spw_hbox(Gtk::Grid *table, int width, int col, int row)
 /**
  * Construct a stroke-style radio button with a given icon
  *
- * \param[in] grp          The Gtk::RadioButtonGroup to which to add the new button
+ * \param[in] grp          The Gtk::CheckButton with which to group
  * \param[in] icon         The icon to use for the button
  * \param[in] button_type  The type of stroke-style radio button (join/cap)
  * \param[in] stroke_style The style attribute to associate with the button
  */
-StrokeStyle::StrokeStyleButton::StrokeStyleButton(Gtk::RadioButtonGroup &grp,
+StrokeStyle::StrokeStyleButton::StrokeStyleButton(Gtk::CheckButton      &grp,
                                                   char const            *icon,
                                                   StrokeStyleButtonType  button_type,
                                                   gchar const           *stroke_style)
     : 
-        Gtk::RadioButton(grp),
         button_type(button_type),
         stroke_style(stroke_style)
 {
+    set_group(grp);
     set_visible(true);
     set_mode(false);
 
@@ -478,7 +478,7 @@ void StrokeStyle::_handleDocumentReplaced(SPDesktop *, SPDocument *document)
 /**
  * Helper function for creating stroke-style radio buttons.
  *
- * \param[in] grp           The Gtk::RadioButtonGroup in which to add the button
+ * \param[in] grp           The Gtk::CheckButton with which to group
  * \param[in] icon          The icon for the button
  * \param[in] hb            The Gtk::Box container in which to add the button
  * \param[in] button_type   The type (join/cap) for the button
@@ -488,7 +488,7 @@ void StrokeStyle::_handleDocumentReplaced(SPDesktop *, SPDocument *document)
  *          a handler for the toggle event is connected.
  */
 StrokeStyle::StrokeStyleButton *
-StrokeStyle::makeRadioButton(Gtk::RadioButtonGroup &grp,
+StrokeStyle::makeRadioButton(Gtk::CheckButton      &grp,
                              char const            *icon,
                              Gtk::Box              *hb,
                              StrokeStyleButtonType  button_type,

@@ -25,7 +25,7 @@
 namespace Inkscape {
 
 // Smart pointer for wrapping GdkEvents.
-struct GdkEventFreer { void operator()(GdkEvent *ev) const { gdk_event_free(ev); } };
+struct GdkEventFreer { void operator()(GdkEvent *ev) const { gdk_event_unref(ev); } };
 using GdkEventUniqPtr = std::unique_ptr<GdkEvent, GdkEventFreer>;
 
 /**
@@ -332,24 +332,15 @@ void inspect_event(E &&event, Fs... funcs)
  * Modifier-testing functions. ("mod" variant.)
  */
 
-/// "Primary" modifier: Ctrl on Linux/Windows and Cmd on macOS.
-#ifdef GDK_WINDOWING_QUARTZ
-inline constexpr auto INK_GDK_PRIMARY_MASK = GDK_MOD2_MASK;
-#else
-inline constexpr auto INK_GDK_PRIMARY_MASK = GDK_CONTROL_MASK;
-#endif
-// Todo: (GTK4) Replace INK_GDK_PRIMARY_MASK with GDK_CONTROL_MASK.
-// Reference: https://docs.gtk.org/gtk4/migrating-3to4.html#adapt-to-changes-in-keyboard-modifier-handling
-
 /// All modifiers used by Inkscape.
-inline constexpr auto INK_GDK_MODIFIER_MASK_MOD = GDK_SHIFT_MASK | INK_GDK_PRIMARY_MASK | GDK_ALT_MASK;
+inline constexpr auto INK_GDK_MODIFIER_MASK = GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_CONTROL_MASK;
 
 inline bool mod_shift(unsigned modifiers) { return modifiers & GDK_SHIFT_MASK; }
-inline bool mod_ctrl(unsigned modifiers) { return modifiers & INK_GDK_PRIMARY_MASK; }
+inline bool mod_ctrl(unsigned modifiers) { return modifiers & GDK_CONTROL_MASK; }
 inline bool mod_alt(unsigned modifiers) { return modifiers & GDK_ALT_MASK; }
-inline bool mod_shift_only(unsigned modifiers) { return (modifiers & INK_GDK_MODIFIER_MASK_MOD) == GDK_SHIFT_MASK; }
-inline bool mod_ctrl_only(unsigned modifiers) { return (modifiers & INK_GDK_MODIFIER_MASK_MOD) == INK_GDK_PRIMARY_MASK; }
-inline bool mod_alt_only(unsigned modifiers) { return (modifiers & INK_GDK_MODIFIER_MASK_MOD) == GDK_ALT_MASK; }
+inline bool mod_shift_only(unsigned modifiers) { return (modifiers & INK_GDK_MODIFIER_MASK) == GDK_SHIFT_MASK; }
+inline bool mod_ctrl_only(unsigned modifiers) { return (modifiers & INK_GDK_MODIFIER_MASK) == GDK_CONTROL_MASK; }
+inline bool mod_alt_only(unsigned modifiers) { return (modifiers & INK_GDK_MODIFIER_MASK) == GDK_ALT_MASK; }
 
 inline bool mod_shift(KeyEvent const &event) { return mod_shift(event.modifiers); }
 inline bool mod_ctrl(KeyEvent const &event) { return mod_ctrl(event.modifiers); }
@@ -360,19 +351,16 @@ inline bool mod_alt_only(KeyEvent const &event) { return mod_alt_only(event.modi
 
 /*
  * Modifier-testing functions. ("held" variant.)
- * Todo: (GTK4) Merge these into the above, since they will be the same.
+ * Todo: Merge these into the above, since they are the same.
  */
-
-/// All modifiers used by Inkscape.
-inline constexpr auto INK_GDK_MODIFIER_MASK_HELD = GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_ALT_MASK;
 
 inline bool state_held_shift(unsigned state) { return state & GDK_SHIFT_MASK; }
 inline bool state_held_ctrl(unsigned state) { return state & GDK_CONTROL_MASK; }
 inline bool state_held_alt(unsigned state) { return state & GDK_ALT_MASK; }
-inline bool state_held_only_shift(unsigned state) { return (state & INK_GDK_MODIFIER_MASK_HELD) == GDK_SHIFT_MASK; }
-inline bool state_held_only_ctrl(unsigned state) { return (state & INK_GDK_MODIFIER_MASK_HELD) == GDK_CONTROL_MASK; }
-inline bool state_held_only_alt(unsigned state) { return (state & INK_GDK_MODIFIER_MASK_HELD) == GDK_ALT_MASK; }
-inline bool state_held_any_modifiers(unsigned state) { return state & INK_GDK_MODIFIER_MASK_HELD; }
+inline bool state_held_only_shift(unsigned state) { return (state & INK_GDK_MODIFIER_MASK) == GDK_SHIFT_MASK; }
+inline bool state_held_only_ctrl(unsigned state) { return (state & INK_GDK_MODIFIER_MASK) == GDK_CONTROL_MASK; }
+inline bool state_held_only_alt(unsigned state) { return (state & INK_GDK_MODIFIER_MASK) == GDK_ALT_MASK; }
+inline bool state_held_any_modifiers(unsigned state) { return state & INK_GDK_MODIFIER_MASK; }
 inline bool state_held_no_modifiers(unsigned state) { return !state_held_any_modifiers(state); }
 
 template <unsigned button>

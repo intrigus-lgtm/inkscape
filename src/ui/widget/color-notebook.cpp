@@ -185,7 +185,7 @@ void ColorNotebook::_initUI(bool no_alpha)
     /* Color picker */
     GtkWidget *picker = sp_get_icon_image("color-picker", GTK_ICON_SIZE_SMALL_TOOLBAR);
     _btn_picker = gtk_button_new();
-    gtk_button_set_relief(GTK_BUTTON(_btn_picker), GTK_RELIEF_NONE);
+    gtk_button_set_has_frame(GTK_BUTTON(_btn_picker), false);
     gtk_container_add(GTK_CONTAINER(_btn_picker), picker);
     gtk_widget_set_tooltip_text(_btn_picker, _("Pick colors from image"));
     gtk_container_add(rgbabox_container, _btn_picker);

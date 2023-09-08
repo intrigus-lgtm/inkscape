@@ -979,7 +979,7 @@ Extension::autogui (SPDocument *doc, Inkscape::XML::Node *node, sigc::signal<voi
     }
 
     auto const agui = Gtk::make_managed<AutoGUI>();
-    agui->property_margin().set_value(InxParameter::GUI_BOX_MARGIN);
+    agui->set_margin(InxParameter::GUI_BOX_MARGIN);
     agui->set_spacing(InxParameter::GUI_BOX_SPACING);
 
     // go through the list of widgets and add the all non-hidden ones
@@ -994,7 +994,6 @@ Extension::autogui (SPDocument *doc, Inkscape::XML::Node *node, sigc::signal<voi
         agui->addWidget(widg, tip, indent);
     }
 
-    agui->set_visible(true);
     return agui;
 };
 
@@ -1003,16 +1002,16 @@ Extension::autogui (SPDocument *doc, Inkscape::XML::Node *node, sigc::signal<voi
 Gtk::Box *
 Extension::get_info_widget()
 {
-    auto const retval = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
-    retval->property_margin().set_value(4);
+    auto const retval = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
+    retval->set_margin(4);
 
     auto const info = Gtk::make_managed<Gtk::Frame>("General Extension Information");
     UI::pack_start(*retval, *info, true, true, 4);
 
     auto const table = Gtk::make_managed<Gtk::Grid>();
-    table->property_margin().set_value(4);
+    table->set_margin(4);
     table->set_column_spacing(4);
-    info->add(*table);
+    info->set_child(*table);
 
     int row = 0;
     add_val(_("Name:"), get_translation(_name.c_str()), table, &row);
@@ -1031,9 +1030,6 @@ void Extension::add_val(Glib::ustring const &labelstr, Glib::ustring const &valu
     (*row)++;
     table->attach(*label, 0, (*row) - 1, 1, 1);
     table->attach(*value, 1, (*row) - 1, 1, 1);
-
-    label->set_visible(true);
-    value->set_visible(true);
 }
 
 Gtk::Box *
@@ -1042,8 +1038,6 @@ Extension::get_params_widget()
     auto const retval = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     Gtk::Widget * content = Gtk::make_managed<Gtk::Label>("Params");
     UI::pack_start(*retval, *content, true, true, 4);
-    content->set_visible(true);
-    retval->set_visible(true);
     return retval;
 }
 

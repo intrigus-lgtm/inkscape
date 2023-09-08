@@ -166,7 +166,7 @@ Gtk::Widget *LPEFilletChamfer::newWidget()
     // use manage here, because after deletion of Effect object, others might
     // still be pointing to this widget.
     auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
-    vbox->property_margin().set_value(5);
+    vbox->set_margin(5);
 
     for (auto const param: param_vector) {
         if (!param->widget_is_visible) continue;

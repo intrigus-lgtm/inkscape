@@ -157,7 +157,7 @@ LPEMirrorSymmetry::newWidget()
     // use manage here, because after deletion of Effect object, others might
     // still be pointing to this widget.
     auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
-    vbox->property_margin().set_value(5);
+    vbox->set_margin(5);
 
     std::vector<Parameter *>::iterator it = param_vector.begin();
     while (it != param_vector.end()) {

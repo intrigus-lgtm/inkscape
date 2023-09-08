@@ -106,7 +106,7 @@ LPESimplify::newWidget()
 {
     // use manage here, because after deletion of Effect object, others might still be pointing to this widget.
     auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
-    vbox->property_margin().set_value(5);
+    vbox->set_margin(5);
 
     auto const buttons = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL,0);
 

@@ -83,7 +83,7 @@ PrefDialog::PrefDialog (Glib::ustring name, Gtk::Widget * controls, Effect * eff
         UI::pack_start(*this->get_content_area(), *sep, false, false, InxWidget::GUI_BOX_SPACING);
 
         hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
-        hbox->property_margin().set_value(InxWidget::GUI_BOX_MARGIN);
+        hbox->set_margin(InxWidget::GUI_BOX_MARGIN);
         _button_preview = _param_preview->get_widget(&_signal_preview);
         _button_preview->set_visible(true);
         UI::pack_start(*hbox, *_button_preview, true, true);

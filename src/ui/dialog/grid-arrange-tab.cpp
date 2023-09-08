@@ -608,7 +608,7 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
         XPadding.signal_value_changed().connect(sigc::mem_fun(*this, &GridArrangeTab::on_xpad_spinbutton_changed));
     }
 
-    PaddingTable->property_margin().set_value(MARGIN);
+    PaddingTable->set_margin(MARGIN);
     PaddingTable->set_row_spacing(MARGIN);
     PaddingTable->set_column_spacing(MARGIN);
     PaddingTable->attach(XPadding,        0, 0, 1, 1);
@@ -617,7 +617,7 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
 
     UI::pack_start(TileBox, *PaddingTable, false, false, MARGIN);
 
-    contents->property_margin().set_value(8);
+    contents->set_margin(8);
     UI::pack_start(*contents, TileBox);
 
     double SpacingType = prefs->getDouble("/dialogs/gridtiler/SpacingType", 15);

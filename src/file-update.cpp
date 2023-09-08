@@ -309,7 +309,7 @@ int gui_request_dpi_fix_method(SPDocument *doc)
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     Gtk::Dialog scale_dialog(_("Convert legacy Inkscape file"));
     scale_dialog.set_transient_for(*(INKSCAPE.active_desktop()->getToplevel()));
-    scale_dialog.property_margin().set_value(10);
+    scale_dialog.set_margin(10);
     scale_dialog.set_resizable(false);
     Gtk::Label explanation;
     explanation.set_markup(Glib::ustring("<b>") + doc->getDocumentName() + "</b>\n" +

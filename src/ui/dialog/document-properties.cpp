@@ -1468,7 +1468,7 @@ void DocumentProperties::build_gridspage()
     }
 
     _grids_vbox.set_name("NotebookPage");
-    _grids_vbox.property_margin().set_value(4);
+    _grids_vbox.set_margin(4);
     _grids_vbox.set_spacing(4);
     UI::pack_start(_grids_vbox, _grids_label_crea, false, false);
     UI::pack_start(_grids_vbox, _grids_hbox_crea, false, false);
@@ -1937,7 +1937,7 @@ GridWidget::GridWidget(SPGrid *grid)
     UI::pack_start(*inner, *left, true, true);
     UI::pack_start(*inner, *column, false, false);
     UI::pack_start(*this, *inner, false, false);
-    property_margin().set_value(4);
+    set_margin(4);
 
     auto widgets = UI::get_children(*left);
     widgets.erase(std::remove(widgets.begin(), widgets.end(), _grid_rcb_enabled), widgets.end());

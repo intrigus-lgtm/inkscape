@@ -80,8 +80,8 @@ Gtk::Widget *WidgetBox::get_widget(sigc::signal<void ()> *changeSignal)
     }
 
     auto const box = Gtk::make_managed<Gtk::Box>(orientation);
-    // box->property_margin().set_value(GUI_BOX_MARGIN); // leave at zero for now, so box is purely for layouting (not grouping)
-                                                         // revisit this later, possibly implementing GtkFrame or similar
+    // box->set_margin(GUI_BOX_MARGIN); // leave at zero for now, so box is purely for layouting (not grouping)
+                                        // revisit this later, possibly implementing GtkFrame or similar
     box->set_spacing(GUI_BOX_SPACING);
 
     if (_orientation == HORIZONTAL) {

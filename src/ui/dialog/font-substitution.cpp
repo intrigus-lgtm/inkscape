@@ -73,7 +73,7 @@ void show(std::vector<SPItem*> const &list, Glib::ustring const &out)
    cbWarning.set_visible(true);
 
    auto box = warning.get_content_area();
-   box->property_margin().set_value(5);
+   box->set_margin(5);
    box->set_spacing(2);
    UI::pack_start(*box, scrollwindow, true, true, 4);
    UI::pack_start(*box, cbSelect, false, false);

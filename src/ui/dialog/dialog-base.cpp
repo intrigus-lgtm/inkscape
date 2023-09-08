@@ -68,7 +68,7 @@ DialogBase::DialogBase(char const * const prefs_path, Glib::ustring dialog_type)
     }
 
     set_name(_dialog_type); // Essential for dialog functionality
-    property_margin().set_value(1); // Essential for dialog UI
+    set_margin(1); // Essential for dialog UI
 
     // TODO: GTK4: See if we can add the Controller on self — since all widgets receive all events.
     Controller::add_key_on_window<&DialogBase::on_window_key_pressed>(*this, *this,

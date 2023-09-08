@@ -71,7 +71,7 @@ Gtk::Widget *ParamNotebook::ParamNotebookPage::get_widget(sigc::signal<void ()> 
     }
 
     auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
-    vbox->property_margin().set_value(GUI_BOX_MARGIN);
+    vbox->set_margin(GUI_BOX_MARGIN);
     vbox->set_spacing(GUI_BOX_SPACING);
 
     // add parameters onto page (if any)

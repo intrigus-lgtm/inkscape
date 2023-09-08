@@ -196,7 +196,7 @@ void GuidelinePropertiesDialog::_setup() {
     auto mainVBox = get_content_area();
     _layout_table.set_row_spacing(4);
     _layout_table.set_column_spacing(4);
-    _layout_table.property_margin().set_value(4);
+    _layout_table.set_margin(4);
 
     UI::pack_start(*mainVBox, _layout_table, false, false);
 

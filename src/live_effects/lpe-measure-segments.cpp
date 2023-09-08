@@ -202,17 +202,17 @@ LPEMeasureSegments::newWidget()
     auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
 
     auto const vbox0 = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
-    vbox0->property_margin().set_value(5);
+    vbox0->set_margin(5);
 
     auto const vbox1 = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
-    vbox1->property_margin().set_value(5);
+    vbox1->set_margin(5);
 
     auto const vbox2 = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
-    vbox2->property_margin().set_value(5);
+    vbox2->set_margin(5);
 
     //Help page
     auto const vbox3 = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
-    vbox3->property_margin().set_value(5);
+    vbox3->set_margin(5);
 
     std::vector<Parameter *>::iterator it = param_vector.begin();
     while (it != param_vector.end()) {

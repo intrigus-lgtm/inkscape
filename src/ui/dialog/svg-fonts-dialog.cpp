@@ -893,7 +893,7 @@ Gtk::Box* SvgFontsDialog::global_settings_tab(){
         );
     });
 
-    global_vbox.property_margin().set_value(2);
+    global_vbox.set_margin(2);
     UI::pack_start(global_vbox, _grid, false, true);
     return &global_vbox;
 }
@@ -1317,7 +1317,7 @@ void SvgFontsDialog::set_glyphs_view_mode(bool list) {
 Gtk::Box* SvgFontsDialog::glyphs_tab() {
 
     glyphs_vbox.set_name("SVGFontsGlyphsTab");
-    glyphs_vbox.property_margin().set_value(4);
+    glyphs_vbox.set_margin(4);
     glyphs_vbox.set_spacing(4);
 
     auto const missing_glyph_button = Gtk::make_managed<Gtk::Button>(_("From selection"));
@@ -1577,7 +1577,7 @@ Gtk::Box* SvgFontsDialog::kerning_tab(){
     _font_da.set_size(-1, 60 + 20);
 
     kerning_vbox.set_name("SVGFontsKerningTab");
-    kerning_vbox.property_margin().set_value(4);
+    kerning_vbox.set_margin(4);
     kerning_vbox.set_spacing(4);
     UI::pack_start(kerning_vbox, *kerning_selector, false,false);
     UI::pack_start(kerning_vbox, _KerningPairsListScroller, true,true);

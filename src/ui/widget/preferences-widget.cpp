@@ -45,7 +45,7 @@ namespace Inkscape::UI::Widget {
 
 DialogPage::DialogPage()
 {
-    property_margin().set_value(12);
+    set_margin(12);
 
     set_orientation(Gtk::Orientation::VERTICAL);
     set_column_spacing(12);

@@ -100,7 +100,7 @@ Gtk::Widget *
 ColorPickerParam::param_newWidget()
 {
     auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 2);
-    hbox->property_margin().set_value(5);
+    hbox->set_margin(5);
 
     auto const colorpickerwdg = Gtk::make_managed<UI::Widget::RegisteredColorPicker>( param_label,
                                                                                       param_label,

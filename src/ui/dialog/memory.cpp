@@ -177,7 +177,7 @@ Memory::Memory()
     auto const button_box = Gtk::make_managed<Gtk::Box>();
     button_box->set_halign(Gtk::Align::END);
     button_box->set_spacing(6);
-    button_box->property_margin().set_value(4);
+    button_box->set_margin(4);
     UI::pack_end(*button_box, *button);
     UI::pack_end(*this, *button_box, UI::PackOptions::shrink);
 

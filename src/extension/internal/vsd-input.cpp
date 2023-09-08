@@ -105,7 +105,7 @@ VsdImportDialog::VsdImportDialog(const std::vector<RVNGString> &vec)
 
     // Preview area
     vbox1 = Gtk::make_managed<class Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
-    vbox1->property_margin().set_value(4);
+    vbox1->set_margin(4);
     UI::pack_start(*this->get_content_area(), *vbox1);
 
     // CONTROLS

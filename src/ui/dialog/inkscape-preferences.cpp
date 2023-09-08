@@ -269,7 +269,7 @@ InkscapePreferences::InkscapePreferences()
 
     //Main HBox
     auto const hbox_list_page = Gtk::make_managed<Gtk::Box>();
-    hbox_list_page->property_margin().set_value(12);
+    hbox_list_page->set_margin(12);
     hbox_list_page->set_spacing(12);
     add(*hbox_list_page);
 
@@ -2917,15 +2917,18 @@ void InkscapePreferences::initPageRendering()
 #endif
 
     auto const grid = Gtk::make_managed<Gtk::Grid>();
-    grid->property_margin().set_value(12);
+    grid->set_margin(12);
     grid->set_orientation(Gtk::Orientation::VERTICAL);
     grid->set_column_spacing(12);
     grid->set_row_spacing(6);
+
     auto const revealer = Gtk::make_managed<Gtk::Revealer>();
     revealer->add(*grid);
     revealer->set_reveal_child(Inkscape::Preferences::get()->getBool("/options/rendering/devmode"));
+
     _canvas_developer_mode_enabled.init(_("Enable developer mode"), "/options/rendering/devmode", false);
     _canvas_developer_mode_enabled.signal_toggled().connect([revealer, this] { revealer->set_reveal_child(_canvas_developer_mode_enabled.get_active()); });
+
     _page_rendering.add_group_header(_("Developer mode"));
     _page_rendering.add_line(true, "", _canvas_developer_mode_enabled, "", _("Enable additional debugging options"), false);
     _page_rendering.add(*revealer);

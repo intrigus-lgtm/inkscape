@@ -162,7 +162,7 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
     }
 
     if (prefs->getBool("/theme/symbolicIcons", true)) {
-        _menu.get_style_context()->add_class("symbolic");
+        _menu.add_css_class("symbolic");
     }
 
     _menu.show_all_children();
@@ -213,14 +213,12 @@ DialogNotebook::~DialogNotebook()
 
 void DialogNotebook::add_highlight_header()
 {
-    const auto &style = _notebook.get_style_context();
-    style->add_class("nb-highlight");
+    _notebook.add_css_class("nb-highlight");
 }
 
 void DialogNotebook::remove_highlight_header()
 {
-    const auto &style = _notebook.get_style_context();
-    style->remove_class("nb-highlight");
+    _notebook.remove_css_class("nb-highlight");
 }
 
 /**

@@ -960,7 +960,7 @@ ObjectsPanel::ObjectsPanel()
     UI::pack_start(*this, _page, UI::PackOptions::expand_widget);
 
     auto const set_selection_color = [&]
-        { selection_color = get_color_with_class(_tree.get_style_context(), "theme_selected_bg_color"); };
+        { selection_color = get_color_with_class(_tree, "theme_selected_bg_color"); };
     set_selection_color();
 
     auto enter_layer_label_editing_mode = [=]() {

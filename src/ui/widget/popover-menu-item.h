@@ -42,7 +42,7 @@ public:
                                            bool popdown_on_activate = true);
 
     /// A convenience, “drop-in” alias for signal_clicked().
-    [[nodiscard]] Glib::SignalProxy<void> signal_activate();
+    [[nodiscard]] Glib::SignalProxy<void ()> signal_activate();
 
 private:
     [[nodiscard]] PopoverMenu *get_menu();

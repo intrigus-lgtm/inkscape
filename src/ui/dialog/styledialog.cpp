@@ -449,7 +449,7 @@ void StyleDialog::readStyleElement()
 
     css_selector->set_text("element");
 
-    css_tree->get_style_context()->add_class("style_element");
+    css_tree->add_css_class("style_element");
     Glib::RefPtr<Gtk::TreeStore> store = Gtk::TreeStore::create(_mColumns);
     css_tree->set_model(store);
     _addTreeViewHandlers(*css_tree); // TODO: GTK4: Just add one on self as weʼll get events there?
@@ -628,7 +628,7 @@ void StyleDialog::readStyleElement()
 
         css_selector->set_text(selector);
 
-        css_tree->get_style_context()->add_class("style_sheet");
+        css_tree->add_css_class("style_sheet");
         Glib::RefPtr<Gtk::TreeStore> store = Gtk::TreeStore::create(_mColumns);
         css_tree->set_model(store);
         _addTreeViewHandlers(*css_tree); // TODO: GTK4: Just add one on self as weʼll get events there?
@@ -766,7 +766,7 @@ void StyleDialog::readStyleElement()
 
     css_selector->set_text("element.attributes");
 
-    css_tree->get_style_context()->add_class("style_attribute");
+    css_tree->add_css_class("style_attribute");
     store = Gtk::TreeStore::create(_mColumns);
     css_tree->set_model(store);
     _addTreeViewHandlers(*css_tree); // TODO: GTK4: Just add one on self as weʼll get events there?

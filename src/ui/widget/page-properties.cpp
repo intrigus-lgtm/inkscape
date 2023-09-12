@@ -269,7 +269,7 @@ private:
         auto const show = [=](Gtk::Widget * const w){ w->set_visible(show_widgets); };
 
         for (auto const widget : UI::get_children(_left_grid)) {
-            if (widget->get_style_context()->has_class("viewbox")) {
+            if (widget->has_css_class("viewbox")) {
                 show(widget);
             }
         }

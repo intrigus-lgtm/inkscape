@@ -392,14 +392,14 @@ void set_mono_class(Gtk::Widget* widget, bool mono)
     if (!widget) {
         return;
     }
-    Glib::ustring class_name = "mono-font";
-    auto style = widget->get_style_context();
-    auto has_class = style->has_class(class_name);
+
+    static Glib::ustring const class_name = "mono-font";
+    auto const has_class = widget->has_css_class(class_name);
 
     if (mono && !has_class) {
-        style->add_class(class_name);
+        widget->add_css_class(class_name);
     } else if (!mono && has_class) {
-        style->remove_class(class_name);
+        widget->remove_css_class(class_name);
     }
 }
 

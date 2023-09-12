@@ -89,7 +89,7 @@ DialogContainer::DialogContainer(InkscapeWindow* inkscape_window)
 {
     g_assert(_inkscape_window != nullptr);
 
-    get_style_context()->add_class("DialogContainer");
+    add_css_class("DialogContainer");
 
     columns = std::make_unique<DialogMultipaned>(Gtk::Orientation::HORIZONTAL);
     setup_drag_and_drop(columns.get());
@@ -177,14 +177,13 @@ Gtk::Widget *DialogContainer::create_notebook_tab(Glib::ustring const &label_str
     auto const tab = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
     close->set_image_from_icon_name("window-close");
     close->set_tooltip_text(_("Close Tab"));
-    close->get_style_context()->add_class("close-button");
+    close->add_css_class("close-button");
     Glib::ustring label_str_fix = label_str;
     label_str_fix = Glib::Regex::create("\\W")->replace_literal(label_str_fix, 0, "-", (Glib::Regex::MatchFlags)0);
-    tab->get_style_context()->add_class(label_str_fix);
-    tab->add(*image);
-    tab->add(*label);
-    tab->add(*close);
-    tab->show_all();
+    tab->add_css_class(label_str_fix);
+    tab->append(*image);
+    tab->append(*label);
+    tab->append(*close);
 
     // Workaround to the fact that Gtk::Box doesn't receive on_button_press event
     auto const cover = Gtk::make_managed<Gtk::EventBox>();

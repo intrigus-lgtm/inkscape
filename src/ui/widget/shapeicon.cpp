@@ -16,7 +16,6 @@
 #include <gdkmm/general.h>
 #include <gtkmm/cssprovider.h>
 #include <gtkmm/enums.h>
-#include <gtkmm/stylecontext.h>
 #include <gtkmm/widget.h>
 
 #include "color.h"
@@ -53,18 +52,17 @@ void CellRendererItemIcon::render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr,
         return;
     }
 
-    auto const style_context = widget.get_style_context();
     // CSS color might have changed, so refresh if so:
-    if (auto const color = to_guint32(get_foreground_color(style_context));
+    if (auto const color = to_guint32(widget.get_color());
         _widget_color != color)
     {
         _widget_color = color;
         set_icon_name();
     }
     // GTK4 will not let us recolor symbolic icons any other way I can find, so…
-    style_context->add_class(_color_class);
+    widget.add_css_class(_color_class);
     Gtk::CellRendererPixbuf::render_vfunc(cr, widget, background_area, cell_area, flags);
-    style_context->remove_class(_color_class);
+    widget.remove_css_class(_color_class);
 
     int clipmask = _property_clipmask.get_value();
     if (clipmask <= 0) return;

@@ -140,7 +140,7 @@ IconPreviewPanel::IconPreviewPanel()
         auto const &label = labels[i];
 
         buttons[i] = Gtk::make_managed<Gtk::ToggleButton>();
-        buttons[i]->get_style_context()->add_class("icon-preview");
+        buttons[i]->add_css_class("icon-preview");
         buttons[i]->set_has_frame(false);
         buttons[i]->set_active( i == hot );
 

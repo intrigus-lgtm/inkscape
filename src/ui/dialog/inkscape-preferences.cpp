@@ -29,6 +29,7 @@
 #include <glibmm/miscutils.h>
 #include <glibmm/regex.h>
 #include <glibmm/ustring.h>
+#include <gdkmm/display.h>
 #include <gtkmm/accelgroup.h>
 #include <gtkmm/box.h>
 #include <gtkmm/cssprovider.h>
@@ -44,7 +45,7 @@
 #include <gtkmm/revealer.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/settings.h>
-#include <gtkmm/stylecontext.h>
+#include <gtkmm/styleprovider.h>
 #include <gtkmm/togglebutton.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
@@ -221,7 +222,7 @@ void InkscapePreferences::add_highlight(Gtk::Label *label, Glib::ustring const &
     Glib::ustring text = label->get_text();
     Glib::ustring const n_text = text.lowercase().normalize();
     Glib::ustring const n_key = key.lowercase().normalize();
-    label->get_style_context()->add_class("highlight");
+    label->add_css_class("highlight");
     auto const pos = n_text.find(n_key);
     auto const len = n_key.size();
     text = Glib::Markup::escape_text(text.substr(0, pos)) + "<span weight=\"bold\" underline=\"single\">" +
@@ -241,7 +242,7 @@ void InkscapePreferences::remove_highlight(Gtk::Label *label)
     if (label->get_use_markup()) {
         Glib::ustring text = label->get_text();
         label->set_text(text);
-        label->get_style_context()->remove_class("highlight");
+        label->remove_css_class("highlight");
     }
 }
 
@@ -381,8 +382,8 @@ InkscapePreferences::InkscapePreferences()
     title_frame->add(_page_title);
     UI::pack_start(*vbox_page, *title_frame, false, false);
     UI::pack_start(*vbox_page, _page_frame, true, true);
-    _page_frame.get_style_context()->add_class("flat");
-    title_frame->get_style_context()->add_class("flat");
+    _page_frame.add_css_class("flat");
+    title_frame->add_css_class("flat");
 
     initPageTools();
     initPageUI();
@@ -1228,11 +1229,11 @@ void InkscapePreferences::resetIconsColors(bool themechange)
 
     if (prefs->getBool("/theme/symbolicDefaultBaseColors", true) ||
         !prefs->getEntry("/theme/" + themeiconname + "/symbolicBaseColor").isValid()) {
-        auto const screen = Gdk::Screen::get_default();
+        auto const display = Gdk::Display::get_default();
         if (INKSCAPE.themecontext->getColorizeProvider()) {
-            Gtk::StyleContext::remove_provider_for_screen(screen, INKSCAPE.themecontext->getColorizeProvider());
+            Gtk::StyleProvider::remove_provider_for_display(display, INKSCAPE.themecontext->getColorizeProvider());
         }
-        auto base_color = get_foreground_color(_symbolic_base_color.get_style_context());
+        auto base_color = _symbolic_base_color.get_color();
         // This is a hack to fix a problematic style which isn't updated fast enough on
         // change from dark to bright themes
         if (themechange) {
@@ -1255,13 +1256,13 @@ void InkscapePreferences::resetIconsColors(bool themechange)
     }
 
     if (prefs->getBool("/theme/symbolicDefaultHighColors", true)) {
-        auto const screen = Gdk::Screen::get_default();
+        auto const display = Gdk::Display::get_default();
         if (INKSCAPE.themecontext->getColorizeProvider()) {
-            Gtk::StyleContext::remove_provider_for_screen(screen, INKSCAPE.themecontext->getColorizeProvider());
+            Gtk::StyleProvider::remove_provider_for_display(display, INKSCAPE.themecontext->getColorizeProvider());
         }
-        auto const success_color = get_foreground_color(_symbolic_success_color.get_style_context());
-        auto const warning_color = get_foreground_color(_symbolic_warning_color.get_style_context());
-        auto const error_color   = get_foreground_color(_symbolic_error_color.get_style_context());
+        auto const success_color = _symbolic_success_color.get_color();
+        auto const warning_color = _symbolic_warning_color.get_color();
+        auto const error_color   = _symbolic_error_color  .get_color();
         SPColor success_color_sp(success_color.get_red(), success_color.get_green(), success_color.get_blue());
         SPColor warning_color_sp(warning_color.get_red(), warning_color.get_green(), warning_color.get_blue());
         SPColor error_color_sp(error_color.get_red(), error_color.get_green(), error_color.get_blue());
@@ -1310,8 +1311,8 @@ void InkscapePreferences::changeIconsColors()
     auto const &colorize_provider = INKSCAPE.themecontext->getColorizeProvider();
     if (!colorize_provider) return;
 
-    auto const screen = Gdk::Screen::get_default();
-    Gtk::StyleContext::remove_provider_for_screen(screen, colorize_provider);
+    auto const display = Gdk::Display::get_default();
+    Gtk::StyleProvider::remove_provider_for_display(display, colorize_provider);
 
     Glib::ustring css_str = "";
     if (prefs->getBool("/theme/symbolicIcons", false)) {
@@ -1324,8 +1325,8 @@ void InkscapePreferences::changeIconsColors()
         g_critical("CSSProviderError::load_from_data(): failed to load '%s'\n(%s)", css_str.c_str(), ex.what().c_str());
     }
 
-    Gtk::StyleContext::add_provider_for_screen(screen, colorize_provider,
-                                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    Gtk::StyleProvider::add_provider_for_display(display, INKSCAPE.themecontext->getColorizeProvider(),
+                                                 GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 }
 
 void InkscapePreferences::toggleSymbolic()
@@ -1334,8 +1335,8 @@ void InkscapePreferences::toggleSymbolic()
     Gtk::Window *window = SP_ACTIVE_DESKTOP->getToplevel();
     if (prefs->getBool("/theme/symbolicIcons", false)) {
         if (window ) {
-            window->get_style_context()->add_class("symbolic");
-            window->get_style_context()->remove_class("regular");
+            window->add_css_class("symbolic");
+            window->remove_css_class("regular");
         }
         _symbolic_base_colors.set_sensitive(true);
         _symbolic_highlight_colors.set_sensitive(true);
@@ -1348,12 +1349,12 @@ void InkscapePreferences::toggleSymbolic()
         }
     } else {
         if (window) {
-            window->get_style_context()->add_class("regular");
-            window->get_style_context()->remove_class("symbolic");
+            window->add_css_class("regular");
+            window->remove_css_class("symbolic");
         }
-        auto const screen = Gdk::Screen::get_default();
+        auto const display = Gdk::Display::get_default();
         if (INKSCAPE.themecontext->getColorizeProvider()) {
-            Gtk::StyleContext::remove_provider_for_screen(screen, INKSCAPE.themecontext->getColorizeProvider());
+            Gtk::StyleProvider::remove_provider_for_display(display, INKSCAPE.themecontext->getColorizeProvider());
         }
         _symbolic_base_colors.set_sensitive(false);
         _symbolic_highlight_colors.set_sensitive(false);
@@ -1383,12 +1384,12 @@ void InkscapePreferences::themeChange(bool contrastslider)
 {
     Gtk::Window *window = SP_ACTIVE_DESKTOP->getToplevel();
     if (window) {
-        auto const screen = Gdk::Screen::get_default();
+        auto const display = Gdk::Display::get_default();
         if (INKSCAPE.themecontext->getContrastThemeProvider()) {
-            Gtk::StyleContext::remove_provider_for_screen(screen, INKSCAPE.themecontext->getContrastThemeProvider());
+            Gtk::StyleProvider::remove_provider_for_display(display, INKSCAPE.themecontext->getContrastThemeProvider());
         }
         if (INKSCAPE.themecontext->getThemeProvider() ) {
-            Gtk::StyleContext::remove_provider_for_screen(screen, INKSCAPE.themecontext->getThemeProvider() );
+            Gtk::StyleProvider::remove_provider_for_display(display, INKSCAPE.themecontext->getThemeProvider() );
         }
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         Glib::ustring current_theme = prefs->getString("/theme/gtkTheme", prefs->getString("/theme/defaultGtkTheme", ""));
@@ -1784,14 +1785,14 @@ void InkscapePreferences::initPageUI()
                                  "/theme/" + themeiconname + "/symbolicWarningColor", 0xF57900ff);
     _symbolic_error_color.init(_("Color for symbolic error icons:"), "/theme/" + themeiconname + "/symbolicErrorColor",
                                0xCC0000ff);
-    _symbolic_base_color.get_style_context()->add_class("system_base_color");
-    _symbolic_success_color.get_style_context()->add_class("system_success_color");
-    _symbolic_warning_color.get_style_context()->add_class("system_warning_color");
-    _symbolic_error_color.get_style_context()->add_class("system_error_color");
-    _symbolic_base_color.get_style_context()->add_class("symboliccolors");
-    _symbolic_success_color.get_style_context()->add_class("symboliccolors");
-    _symbolic_warning_color.get_style_context()->add_class("symboliccolors");
-    _symbolic_error_color.get_style_context()->add_class("symboliccolors");
+    _symbolic_base_color.add_css_class("system_base_color");
+    _symbolic_success_color.add_css_class("system_success_color");
+    _symbolic_warning_color.add_css_class("system_warning_color");
+    _symbolic_error_color.add_css_class("system_error_color");
+    _symbolic_base_color.add_css_class("symboliccolors");
+    _symbolic_success_color.add_css_class("symboliccolors");
+    _symbolic_warning_color.add_css_class("symboliccolors");
+    _symbolic_error_color.add_css_class("symboliccolors");
     auto const changeIconsColor = sigc::hide(sigc::mem_fun(*this, &InkscapePreferences::changeIconsColors));
     _symbolic_base_color.connectChanged   (changeIconsColor);
     _symbolic_warning_color.connectChanged(changeIconsColor);
@@ -1927,7 +1928,7 @@ void InkscapePreferences::initPageUI()
             auto const slider = Gtk::make_managed<UI::Widget::PrefSlider>(false);
             slider->init(tbox.prefs, min, max, 1, 4, min, 0);
             slider->getSlider()->signal_format_value().connect(format_value);
-            slider->getSlider()->get_style_context()->add_class("small-marks");
+            slider->getSlider()->add_css_class("small-marks");
             for (int i = min; i <= max; i += 8) {
                 auto const markup = (i % min == 0) ? format_value(i) : Glib::ustring{};
                 slider->getSlider()->add_mark(i, Gtk::PositionType::BOTTOM, markup);

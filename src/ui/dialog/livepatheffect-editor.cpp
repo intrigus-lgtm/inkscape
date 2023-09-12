@@ -32,7 +32,6 @@
 #include <gtkmm/searchentry.h>
 #include <gtkmm/selectiondata.h>
 #include <gtkmm/spinbutton.h>
-#include <gtkmm/stylecontext.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/adaptors/hide.h>
 #include <sigc++/functors/mem_fun.h>
@@ -115,6 +114,7 @@ bool sp_set_experimental(bool &_experimental)
     }
     return false;
 }
+
 /*####################
  * Callback functions
  */
@@ -369,7 +369,7 @@ void LivePathEffectEditor::add_lpes(Inkscape::UI::Widget::CompletionPopup &popup
     }
 
     if (symbolic) {
-        menu.get_style_context()->add_class("symbolic");
+        menu.add_css_class("symbolic");
     }
 }
 
@@ -686,11 +686,11 @@ LivePathEffectEditor::on_drop(Gtk::Widget &widget,
     }
 
     if (pos_source > pos_target) {
-        if (widget.get_style_context()->has_class("after")) {
+        if (widget.has_css_class("after")) {
             pos_target ++;
         }
     } else if (pos_source < pos_target) {
-        if (widget.get_style_context()->has_class("before")) {
+        if (widget.has_css_class("before")) {
             pos_target --;
         }
     }
@@ -713,12 +713,12 @@ LivePathEffectEditor::on_drop(Gtk::Widget &widget,
 
 static void update_before_after_classes(Gtk::Widget &widget, bool const before)
 {
-    if (auto const style_context = widget.get_style_context(); before) {
-        style_context->remove_class("after" );
-        style_context->add_class   ("before");
+    if (before) {
+        widget.remove_css_class("after" );
+        widget.add_css_class   ("before");
     } else {
-        style_context->remove_class("before");
-        style_context->add_class   ("after" );
+        widget.remove_css_class("before");
+        widget.add_css_class   ("after" );
     }
 }
 
@@ -835,9 +835,9 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
 
                 cr = cairo_create (surface);
                 cairo_push_group(cr);
-                LPEEffect->get_style_context()->add_class("drag-icon");
+                LPEEffect->add_css_class("drag-icon");
                 gtk_widget_draw (LPEEffect->Gtk::Widget::gobj(), cr);
-                LPEEffect->get_style_context()->remove_class("drag-icon");
+                LPEEffect->remove_css_class("drag-icon");
                 cairo_pop_group_to_source(cr);
                 cairo_paint_with_alpha(cr, 0.5);
 

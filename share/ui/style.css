@@ -370,10 +370,6 @@ SPCanvas {
     background-color: white;
 }
 
-#TextFontFamilyAction_combobox {
-    -GtkComboBox-appears-as-list: true;
-}
-
 #QuickActions,
 #StickyZoom ,#StickyZoom *,
 #LockGuides, #LockGuides *,

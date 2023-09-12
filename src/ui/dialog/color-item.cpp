@@ -109,8 +109,7 @@ ColorItem::ColorItem(PaintDef const &paintdef, DialogBase *dialog)
     } else {
         pinned_default = true;
         data = PaintNone{};
-        auto ctx = get_style_context();
-        ctx->add_class("paint-none");
+        add_css_class("paint-none");
     }
     description = paintdef.get_description();
     color_id = paintdef.get_color_id();
@@ -152,8 +151,7 @@ ColorItem::ColorItem(Glib::ustring name) : description(std::move(name)) {
     set_name("ColorItem");
     set_tooltip_text(description);
     color_id = "-";
-    auto ctx = get_style_context();
-    ctx->add_class(group ? "group" : "filler");
+    add_css_class(group ? "group" : "filler");
 }
 
 ColorItem::~ColorItem() = default;
@@ -197,7 +195,7 @@ void ColorItem::draw_color(Cairo::RefPtr<Cairo::Context> const &cr, int w, int h
         auto x = (w - width) / 2 - 0.5;
         cr->move_to(x, y);
         cr->line_to(x + width, y);
-        auto fg = get_foreground_color(get_style_context());
+        auto const fg = get_color();
         cr->set_source_rgba(fg.get_red(), fg.get_green(), fg.get_blue(), 0.5);
         cr->set_line_width(1);
         cr->stroke();
@@ -217,7 +215,7 @@ void ColorItem::draw_color(Cairo::RefPtr<Cairo::Context> const &cr, int w, int h
         cr->paint();
         // there's no way to query background color to check if color item stands out,
         // so we apply faint outline to let users make out color shapes blending with background
-        auto fg = get_foreground_color(get_style_context());
+        auto const fg = get_color();
         cr->rectangle(0.5, 0.5, w - 1, h - 1);
         cr->set_source_rgba(fg.get_red(), fg.get_green(), fg.get_blue(), 0.07);
         cr->set_line_width(1);

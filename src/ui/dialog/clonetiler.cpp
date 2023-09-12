@@ -28,7 +28,6 @@
 #include <gtkmm/notebook.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/sizegroup.h>
-#include <gtkmm/stylecontext.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -814,7 +813,7 @@ CloneTiler::CloneTiler()
 
             {
                 auto const frame = Gtk::make_managed<Gtk::Frame>(_("1. Pick from the drawing:"));
-                frame->get_style_context()->add_class("flat");
+                frame->add_css_class("flat");
                 UI::pack_start(*vvb, *frame, false, false);
 
                 auto const table = Gtk::make_managed<Gtk::Grid>();
@@ -885,7 +884,7 @@ CloneTiler::CloneTiler()
 
             {
                 auto const frame = Gtk::make_managed<Gtk::Frame>(_("2. Tweak the picked value:"));
-                frame->get_style_context()->add_class("flat");
+                frame->add_css_class("flat");
                 UI::pack_start(*vvb, *frame, false, false, VB_MARGIN);
 
                 auto const table = Gtk::make_managed<Gtk::Grid>();
@@ -929,7 +928,7 @@ CloneTiler::CloneTiler()
 
             {
                 auto const frame = Gtk::make_managed<Gtk::Frame>(_("3. Apply the value to the clones':"));
-                frame->get_style_context()->add_class("flat");
+                frame->add_css_class("flat");
                 UI::pack_start(*vvb, *frame, false, false);
 
                 auto const table = Gtk::make_managed<Gtk::Grid>();

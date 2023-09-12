@@ -19,15 +19,15 @@
 #include <regex>
 #include <string>
 #include <utility>
-
 #include <gio/gio.h>
 #include <glibmm/regex.h>
 #include <glibmm/ustring.h>
+#include <gdkmm/display.h>
 #include <gtk/gtk.h>
 #include <gtkmm/cssprovider.h>
 #include <gtkmm/csssection.h>
 #include <gtkmm/settings.h>
-#include <gtkmm/stylecontext.h>
+#include <gtkmm/styleprovider.h>
 #include <gtkmm/window.h>
 #include <pangomm/font.h>
 #include <pangomm/fontdescription.h>
@@ -36,7 +36,6 @@
 #include "desktop.h"
 #include "inkscape.h"
 #include "preferences.h"
-
 #include "io/resource.h"
 #include "object/sp-item-group.h"  // set_default_highlight_colors
 #include "svg/css-ostringstream.h"
@@ -250,12 +249,12 @@ struct NarrowSpinbuttonObserver : Preferences::Observer {
         Preferences::Observer(path), _provider(std::move(provider)) {}
 
     void notify(Preferences::Entry const& new_val) override {
-        auto screen = Gdk::Screen::get_default();
+        auto const display = Gdk::Display::get_default();
         if (new_val.getBool()) {
-            Gtk::StyleContext::add_provider_for_screen(screen, _provider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+            Gtk::StyleProvider::add_provider_for_display(display, _provider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
         }
         else {
-            Gtk::StyleContext::remove_provider_for_screen(screen, _provider);
+            Gtk::StyleProvider::remove_provider_for_display(display, _provider);
         }
     }
 
@@ -270,7 +269,7 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
 {
     using namespace Inkscape::IO::Resource;
     // Add style sheet (GTK3)
-    auto const screen = Gdk::Screen::get_default();
+    auto const display = Gdk::Display::get_default();
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     gchar *gtkThemeName = nullptr;
     gchar *gtkIconThemeName = nullptr;
@@ -378,18 +377,18 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
         if (!cssstring.empty()) {
             // Use c format allow parse with errors or warnings
             gtk_css_provider_load_from_data (_contrastthemeprovider->gobj(), cssstring.c_str(), -1, nullptr);
-            Gtk::StyleContext::add_provider_for_screen(screen, _contrastthemeprovider, GTK_STYLE_PROVIDER_PRIORITY_SETTINGS);
+            Gtk::StyleProvider::add_provider_for_display(display, _contrastthemeprovider, GTK_STYLE_PROVIDER_PRIORITY_SETTINGS);
         }
     } else {
         cssstringcached = "";
         if (_contrastthemeprovider) {
-            Gtk::StyleContext::remove_provider_for_screen(screen, _contrastthemeprovider);
+            Gtk::StyleProvider::remove_provider_for_display(display, _contrastthemeprovider);
         }
     } 
     Glib::ustring style = get_filename(UIS, "style.css");
     if (!style.empty()) {
         if (_styleprovider) {
-            Gtk::StyleContext::remove_provider_for_screen(screen, _styleprovider);
+            Gtk::StyleProvider::remove_provider_for_display(display, _styleprovider);
         }
         if (!_styleprovider) {
             _styleprovider = Gtk::CssProvider::create();
@@ -400,7 +399,7 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
             g_critical("CSSProviderError::load_from_path(): failed to load '%s'\n(%s)", style.c_str(),
                        ex.what().c_str());
         }
-        Gtk::StyleContext::add_provider_for_screen(screen, _styleprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        Gtk::StyleProvider::add_provider_for_display(display, _styleprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
     // load small CSS snippet to style spinbuttons by removing excessive padding
     if (!_spinbuttonprovider) {
@@ -428,7 +427,7 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
     style = get_filename(UIS, gtkthemename.c_str(), false, true);
     if (!style.empty()) {
         if (_themeprovider) {
-            Gtk::StyleContext::remove_provider_for_screen(screen, _themeprovider);
+            Gtk::StyleProvider::remove_provider_for_display(display, _themeprovider);
         }
         if (!_themeprovider) {
             _themeprovider = Gtk::CssProvider::create();
@@ -439,7 +438,7 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
             g_critical("CSSProviderError::load_from_path(): failed to load '%s'\n(%s)", style.c_str(),
                        ex.what().c_str());
         }
-        Gtk::StyleContext::add_provider_for_screen(screen, _themeprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        Gtk::StyleProvider::add_provider_for_display(display, _themeprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
 
     if (!_colorizeprovider) {
@@ -454,13 +453,13 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
     } catch (const Gtk::CssProviderError &ex) {
         g_critical("CSSProviderError::load_from_data(): failed to load '%s'\n(%s)", css_str.c_str(), ex.what().c_str());
     }
-    Gtk::StyleContext::add_provider_for_screen(screen, _colorizeprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    Gtk::StyleProvider::add_provider_for_display(display, _colorizeprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
 #if __APPLE__
     Glib::ustring macstyle = get_filename(UIS, "mac.css");
     if (!macstyle.empty()) {
         if (_macstyleprovider) {
-            Gtk::StyleContext::remove_provider_for_screen(screen, _macstyleprovider);
+            Gtk::StyleProvider::remove_provider_for_display(display, _macstyleprovider);
         }
         if (!_macstyleprovider) {
             _macstyleprovider = Gtk::CssProvider::create();
@@ -471,14 +470,14 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
             g_critical("CSSProviderError::load_from_path(): failed to load '%s'\n(%s)", macstyle.c_str(),
                        ex.what().c_str());
         }
-        Gtk::StyleContext::add_provider_for_screen(screen, _macstyleprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        Gtk::StyleProvider::add_provider_for_display(display, _macstyleprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
 #endif
 
     style = get_filename(UIS, "user.css");
     if (!style.empty()) {
         if (_userprovider) {
-            Gtk::StyleContext::remove_provider_for_screen(screen, _userprovider);
+            Gtk::StyleProvider::remove_provider_for_display(display, _userprovider);
         }
         if (!_userprovider) {
             _userprovider = Gtk::CssProvider::create();
@@ -489,7 +488,7 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
             g_critical("CSSProviderError::load_from_path(): failed to load '%s'\n(%s)", style.c_str(),
                        ex.what().c_str());
         }
-        Gtk::StyleContext::add_provider_for_screen(screen, _userprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        Gtk::StyleProvider::add_provider_for_display(display, _userprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
 }
 
@@ -521,7 +520,7 @@ bool ThemeContext::isCurrentThemeDark(Gtk::Window * const window)
 
     // Otherwise, check the foreground color, and if that has luminance >= 50%, we conclude the theme is dark.
     // Note: Use @theme_fg_color, since currentColor might not be set or correct
-    auto const rgba = get_color_with_class(window->get_style_context(), "theme_fg_color");
+    auto const rgba = get_color_with_class(*window, "theme_fg_color");
     dark = get_luminance(rgba) >= 0.5;
     return dark;
 }
@@ -550,18 +549,18 @@ ThemeContext::themechangecallback() {
             set_dark_titlebar(w, dark);
         }
         if (dark) {
-            wnd->get_style_context()->add_class("dark");
-            wnd->get_style_context()->remove_class("bright");
+            wnd->add_css_class("dark");
+            wnd->remove_css_class("bright");
         } else {
-            wnd->get_style_context()->add_class("bright");
-            wnd->get_style_context()->remove_class("dark");
+            wnd->add_css_class("bright");
+            wnd->remove_css_class("dark");
         }
         if (prefs->getBool("/theme/symbolicIcons", false)) {
-            wnd->get_style_context()->add_class("symbolic");
-            wnd->get_style_context()->remove_class("regular");
+            wnd->add_css_class("symbolic");
+            wnd->remove_css_class("regular");
         } else {
-            wnd->get_style_context()->add_class("regular");
-            wnd->get_style_context()->remove_class("symbolic");
+            wnd->add_css_class("regular");
+            wnd->remove_css_class("symbolic");
         }
 #if (defined (_WIN32) || defined (_WIN64))
         wnd->present();
@@ -591,7 +590,6 @@ std::vector<guint32> ThemeContext::getHighlightColors(Gtk::Window *window)
     auto const child = window->get_child();
     if (!child) return colors;
 
-    auto const context = child->get_style_context();
     Glib::ustring name = "highlight-color-";
 
     for (int i = 1; i <= 8; ++i) {
@@ -600,12 +598,12 @@ std::vector<guint32> ThemeContext::getHighlightColors(Gtk::Window *window)
         // N.B. We must use Window:child; Window itself gives a constant color.
 
         auto const css_class = name + std::to_string(i);
-        context->add_class(css_class);
+        child->add_css_class(css_class);
 
-        auto const rgba = get_foreground_color(context);
+        auto const rgba = child->get_color();
         colors.push_back( to_guint32(rgba) );
 
-        context->remove_class(css_class);
+        child->remove_css_class(css_class);
     }
 
     return colors;
@@ -617,8 +615,8 @@ void ThemeContext::adjustGlobalFontScale(double factor) {
         return;
     }
 
-    auto screen = Gdk::Screen::get_default();
-    Gtk::StyleContext::remove_provider_for_screen(screen, _fontsizeprovider);
+    auto display = Gdk::Display::get_default();
+    Gtk::StyleProvider::remove_provider_for_display(display, _fontsizeprovider);
 
     Inkscape::CSSOStringStream os;
     os.precision(3);
@@ -643,7 +641,7 @@ void ThemeContext::adjustGlobalFontScale(double factor) {
     _fontsizeprovider->load_from_data(os.str());
 
     // note: priority set to APP - 1 to make sure styles.css take precedence over generic font-size
-    Gtk::StyleContext::add_provider_for_screen(screen, _fontsizeprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION - 1);
+    Gtk::StyleProvider::add_provider_for_display(display, _fontsizeprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION - 1);
 }
 
 void ThemeContext::initialize_source_syntax_styles() {

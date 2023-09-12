@@ -38,7 +38,7 @@ struct GetShapeIconResult final { Glib::ustring icon_name; Glib::ustring color_c
 // Get a managed Gtk::Image with icon_name & CSS class for a specific shape icon
 [[nodiscard]] Gtk::Image *get_shape_image(Glib::ustring const &shape_type,
                                           std::uint32_t rgba_color,
-                                          Gtk::IconSize icon_size = Gtk::ICON_SIZE_BUTTON);
+                                          Gtk::IconSize icon_size = Gtk::IconSize::INHERIT);
 
 } // namespace Inkscape::UI
 

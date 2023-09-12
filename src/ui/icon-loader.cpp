@@ -15,17 +15,14 @@
 #include <unordered_map>
 #include <giomm/themedicon.h>
 #include <gdkmm/display.h>
-#include <gdkmm/screen.h>
 #include <gtkmm/cssprovider.h>
-#include <gtkmm/iconinfo.h>
 #include <gtkmm/icontheme.h>
 #include <gtkmm/image.h>
-#include <gtkmm/stylecontext.h>
+#include <gtkmm/styleprovider.h>
 #include <gtkmm/window.h>
 
 #include "desktop.h"
 #include "inkscape.h"
-
 
 Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, int size)
 {
@@ -45,14 +42,16 @@ Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, Gtk::IconSize icon
 
 GtkWidget *sp_get_icon_image(Glib::ustring const &icon_name, GtkIconSize icon_size)
 {
-    return gtk_image_new_from_icon_name(icon_name.c_str(), icon_size);
+    auto const widget = gtk_image_new_from_icon_name(icon_name.c_str());
+    gtk_image_set_icon_size(GTK_IMAGE(widget), icon_size);
+    return widget;
 }
 
 namespace Inkscape::UI {
 
 // Maintain a map of every color requested to a CSS class that will apply it
 [[nodiscard]] static Glib::ustring const &get_color_class(std::uint32_t const rgba_color,
-                                                          Glib::RefPtr<Gdk::Screen> const &screen)
+                                                          Glib::RefPtr<Gdk::Display> const &display)
 {
     static std::unordered_map<std::uint32_t, Glib::ustring> color_classes;
     auto &color_class = color_classes[rgba_color];
@@ -73,7 +72,7 @@ namespace Inkscape::UI {
     css_provider->load_from_data(data);
     // Add it with the needed priority = higher than themes.cpp _colorizeprovider
     static constexpr auto priority = GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1;
-    Gtk::StyleContext::add_provider_for_screen(screen, css_provider, priority);
+    Gtk::StyleProvider::add_provider_for_display(display, css_provider, priority);
     return color_class;
 }
 
@@ -91,8 +90,7 @@ namespace Inkscape::UI {
 GetShapeIconResult get_shape_icon(Glib::ustring const &shape_type, std::uint32_t const rgba_color)
 {
     Glib::RefPtr<Gdk::Display> display = Gdk::Display::get_default();
-    Glib::RefPtr<Gdk::Screen>  screen = display->get_default_screen();
-    Glib::RefPtr<Gtk::IconTheme> icon_theme = Gtk::IconTheme::get_for_screen(screen);
+    auto const icon_theme = Gtk::IconTheme::get_for_display(display);
 
     auto icon_name = Glib::ustring::compose("shape-%1-symbolic", shape_type);
     if (!icon_theme->has_icon(icon_name)) {
@@ -102,7 +100,7 @@ GetShapeIconResult get_shape_icon(Glib::ustring const &shape_type, std::uint32_t
         }
     }
 
-    return {std::move(icon_name), get_color_class(rgba_color, screen)};
+    return {std::move(icon_name), get_color_class(rgba_color, display)};
 }
 
 /// As get_shape_icon(), but returns a ready-made, managed Image having that icon name & CSS class.
@@ -111,8 +109,9 @@ Gtk::Image *get_shape_image(Glib::ustring const &shape_type, std::uint32_t const
 {
     auto const [icon_name, color_class] = get_shape_icon(shape_type, rgba_color);
     auto const icon = Gio::ThemedIcon::create(icon_name);
-    auto const image = Gtk::make_managed<Gtk::Image>(icon, icon_size);
-    image->get_style_context()->add_class(color_class);
+    auto const image = Gtk::make_managed<Gtk::Image>(icon);
+    image->set_icon_size(icon_size);
+    image->add_css_class(color_class);
     return image;
 }
 

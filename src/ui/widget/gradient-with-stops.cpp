@@ -114,8 +114,7 @@ void GradientWithStops::on_style_updated() {
     Gtk::Box::on_style_updated();
 
     if (auto wnd = dynamic_cast<Gtk::Window*>(this->get_root())) {
-        auto sc = wnd->get_style_context();
-        _background_color = get_color_with_class(sc, "theme_bg_color");
+        _background_color = get_color_with_class(*wnd, "theme_bg_color");
     }
 
     // load and cache cursors
@@ -278,9 +277,9 @@ bool GradientWithStops::on_focus(Gtk::DirectionType const direction)
 void GradientWithStops::on_drawing_area_has_focus()
 {
     if (_drawing_area->has_focus()) {
-        get_style_context()->add_class("focus-within");
+        add_css_class("focus-within");
     } else {
-        get_style_context()->remove_class("focus-within");
+        remove_css_class("focus-within");
     }
 }
 
@@ -467,7 +466,7 @@ bool GradientWithStops::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const
 
     cr->begin_new_path();
 
-    auto const fg = get_foreground_color(get_style_context());
+    auto const fg = get_color();
     auto const &bg = _background_color;
 
     // stop handle outlines and selection indicator use theme colors:

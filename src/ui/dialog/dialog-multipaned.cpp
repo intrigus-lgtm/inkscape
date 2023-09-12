@@ -94,7 +94,7 @@ MyDropZone::MyDropZone(Gtk::Orientation orientation)
     set_orientation(orientation);
     set_size(DROPZONE_SIZE);
 
-    get_style_context()->add_class("backgnd-passive");
+    add_css_class("backgnd-passive");
 
     signal_drag_motion().connect([=](Glib::RefPtr<Gdk::DragContext> const &/*ctx*/, int x, int y, guint time) {
         if (!_active) {
@@ -138,16 +138,14 @@ void MyDropZone::remove_highlight_instances()
 
 void MyDropZone::add_highlight()
 {
-    const auto &style = get_style_context();
-    style->remove_class("backgnd-passive");
-    style->add_class("backgnd-active");
+    remove_css_class("backgnd-passive");
+    add_css_class   ("backgnd-active" );
 }
 
 void MyDropZone::remove_highlight()
 {
-    const auto &style = get_style_context();
-    style->remove_class("backgnd-active");
-    style->add_class("backgnd-passive");
+    remove_css_class("backgnd-active" );
+    add_css_class   ("backgnd-passive");
 }
 
 void MyDropZone::set_size(int size)
@@ -271,7 +269,7 @@ bool MyHandle::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr)
     if (_click_indicator && is_click_resize_active() && !_dragging) {
         auto rect = get_active_click_zone();
         if (rect.width > 4 && rect.height > 0) {
-            auto const fg = get_foreground_color(get_style_context());
+            auto const fg = get_color();
             rounded_rectangle(cr, rect.x + 2, rect.y, rect.width - 4, rect.height, 3);
             cr->set_source_rgba(fg.get_red(), fg.get_green(), fg.get_blue(), 0.26);
             cr->fill();

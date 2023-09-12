@@ -1449,9 +1449,9 @@ void DocumentProperties::build_gridspage()
     /// Dissenting view: you want snapping without grid.
 
     _grids_label_crea.set_markup(_("<b>Creation</b>"));
-    _grids_label_crea.get_style_context()->add_class("heading");
+    _grids_label_crea.add_css_class("heading");
     _grids_label_def.set_markup(_("<b>Defined grids</b>"));
-    _grids_label_def.get_style_context()->add_class("heading");
+    _grids_label_def.add_css_class("heading");
     _grids_hbox_crea.set_spacing(5);
     UI::pack_start(_grids_hbox_crea, *Gtk::make_managed<Gtk::Label>("Add grid:"), false, true);
     auto btn_size = Gtk::SizeGroup::create(Gtk::SizeGroupMode::SIZE_GROUP_HORIZONTAL);
@@ -1737,7 +1737,8 @@ GridWidget::GridWidget(SPGrid *grid)
 
     _name_label = Gtk::make_managed<Gtk::Label>("", Gtk::Align::CENTER);
     _name_label->set_margin_bottom(4);
-    _name_label->get_style_context()->add_class("heading");
+    _name_label->add_css_class("heading");
+    _name_label->add_css_class("heading");
     UI::pack_start(*this, *_name_label, false, false);
 
     _wr.setUpdating(true);

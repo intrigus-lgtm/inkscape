@@ -413,8 +413,7 @@ ZoomCorrRuler::on_draw(const Cairo::RefPtr<Cairo::Context>& cr) {
     auto const w = get_width();
     _drawing_width = w - _border * 2;
 
-    auto const fg = get_foreground_color(get_style_context());
-
+    auto const fg = get_color();
     cr->set_line_width(1);
     cr->set_source_rgb(fg.get_red(), fg.get_green(), fg.get_blue());
 

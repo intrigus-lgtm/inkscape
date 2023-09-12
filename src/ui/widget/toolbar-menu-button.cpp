@@ -40,8 +40,7 @@ void ToolbarMenuButton::init(int priority, std::string tag, Gtk::Box *popover_bo
     // large enough.
     int pos = 0;
     for (auto child : children) {
-        auto style_context = child->get_style_context();
-        bool const is_child = style_context->has_class(_tag);
+        bool const is_child = child->has_css_class(_tag);
         if (is_child) {
             _children.emplace_back(pos, child);
         }

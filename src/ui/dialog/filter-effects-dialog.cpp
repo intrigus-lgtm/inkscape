@@ -45,7 +45,6 @@
 #include <gtkmm/popover.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/sizegroup.h>
-#include <gtkmm/stylecontext.h>
 #include <gtkmm/textview.h>
 #include <gtkmm/treeviewcolumn.h>
 #include <gtkmm/treeview.h>
@@ -534,7 +533,7 @@ public:
 
         _label.set_sensitive(false);
 
-        get_style_context()->add_class("flat");
+        add_css_class("flat");
     }
 
     void set_from_attribute(SPObject* o) override
@@ -1010,7 +1009,7 @@ public:
           _funcNode(nullptr),
           _box(Gtk::Orientation::VERTICAL)
     {
-        get_style_context()->add_class("flat");
+        add_css_class("flat");
 
         add(_box);
         _box.add(_type);
@@ -1951,9 +1950,8 @@ bool FilterEffectsDialog::PrimitiveList::on_draw_signal(const Cairo::RefPtr<Cair
     convert_bin_window_to_widget_coords(0,0,x_origin,y_origin);
     cr->translate(x_origin, y_origin);
 
-    auto const style_context = get_style_context();
-    auto const fg_color = get_foreground_color(style_context);
-    auto const bg_color = get_color_with_class(style_context, "theme_bg_color");
+    auto const fg_color = get_color();
+    auto const bg_color = get_color_with_class(*this, "theme_bg_color");
     auto bar_color = mix_colors(bg_color, fg_color, 0.06);
      // color of connector arrow heads and effect separator lines
     auto mid_color = mix_colors(bg_color, fg_color, 0.16);
@@ -2715,7 +2713,7 @@ void FilterEffectsDialog::add_effects(Inkscape::UI::Widget::CompletionPopup& pop
         popup.add_to_completion_list(id, effect.label, effect.icon_name + (symbolic ? "-symbolic" : ""));
     }
     if (symbolic) {
-        menu.get_style_context()->add_class("symbolic");
+        menu.add_css_class("symbolic");
     }
 }
 

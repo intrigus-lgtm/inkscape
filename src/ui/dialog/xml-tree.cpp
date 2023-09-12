@@ -243,9 +243,9 @@ XmlTree::XmlTree()
     _mono_font.action = [=]() {
         Glib::ustring mono("mono-font");
         if (_mono_font) {
-            _treemm->get_style_context()->add_class(mono);
+            _treemm->add_css_class(mono);
         } else {
-            _treemm->get_style_context()->remove_class(mono);
+            _treemm->remove_css_class(mono);
         }
         attributes->set_mono_font(_mono_font);
     };

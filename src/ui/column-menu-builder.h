@@ -60,7 +60,7 @@ public:
             _last_section = section;
 
             auto const sep = Gtk::make_managed<Widget::PopoverMenuItem>();
-            sep->get_style_context()->add_class("menu-category");
+            sep->add_css_class("menu-category");
             sep->set_sensitive(false);
             sep->set_halign(Gtk::Align::START);
             sep->show_all();

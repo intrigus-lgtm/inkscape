@@ -141,10 +141,10 @@ MarkerComboBox::MarkerComboBox(Glib::ustring id, int l) :
             image->set_size_request(-1, 10);
             box->set_sensitive(false);
             box->set_focusable(false);
-            box->get_style_context()->add_class("marker-separator");
+            box->add_css_class("marker-separator");
         }
         else {
-            box->get_style_context()->add_class("marker-item-box");
+            box->add_css_class("marker-item-box");
         }
         _widgets_to_markers[image] = item;
         box->set_size_request(item->width, item->height);
@@ -756,8 +756,7 @@ MarkerComboBox::create_marker_image(Geom::IntPoint pixel_size, gchar const *mnam
     }
 
     int device_scale = get_scale_factor();
-    auto const fg = get_foreground_color(get_style_context());
-
+    auto const fg = get_color();
     return Inkscape::create_marker_image(_combo_id, _sandbox.get(), fg, pixel_size, mname, source,
         drawing, checkerboard_color, no_clip, scale, device_scale);
 }
@@ -766,8 +765,7 @@ MarkerComboBox::create_marker_image(Geom::IntPoint pixel_size, gchar const *mnam
 void MarkerComboBox::on_style_updated() {
     auto background = _background_color;
     if (auto wnd = dynamic_cast<Gtk::Window*>(this->get_root())) {
-        auto sc = wnd->get_style_context();
-        auto const color = get_color_with_class(sc, "theme_bg_color");
+        auto const color = get_color_with_class(*wnd, "theme_bg_color");
         background =
             gint32(0xff * color.get_red()) << 24 |
             gint32(0xff * color.get_green()) << 16 |
@@ -775,7 +773,7 @@ void MarkerComboBox::on_style_updated() {
             0xff;
     }
 
-    auto const color = get_foreground_color(get_style_context());
+    auto const color = get_color();
     auto foreground =
         gint32(0xff * color.get_red()) << 24 |
         gint32(0xff * color.get_green()) << 16 |

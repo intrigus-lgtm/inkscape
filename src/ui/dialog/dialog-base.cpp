@@ -131,7 +131,7 @@ void DialogBase::blink()
     if (notebook && notebook->get_is_drawable()) {
         // Switch notebook to this dialog.
         notebook->set_current_page(notebook->page_num(*this));
-        notebook->get_style_context()->add_class("blink");
+        notebook->add_css_class("blink");
 
         // Add timer to turn off blink.
         sigc::slot<bool ()> slot = sigc::mem_fun(*this, &DialogBase::blink_off);
@@ -174,7 +174,7 @@ bool DialogBase::blink_off()
 {
     Gtk::Notebook *notebook = dynamic_cast<Gtk::Notebook *>(get_parent());
     if (notebook && notebook->get_is_drawable()) {
-        notebook->get_style_context()->remove_class("blink");
+        notebook->remove_css_class("blink");
     }
     return false;
 }

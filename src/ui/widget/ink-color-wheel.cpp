@@ -21,7 +21,6 @@
 #include <gdkmm/display.h>
 #include <gdkmm/general.h>
 #include <gtkmm/drawingarea.h>
-#include <gtkmm/stylecontext.h>
 
 #include "ui/controller.h"
 #include "ui/dialog/color-item.h"
@@ -89,7 +88,7 @@ ColorWheel::ColorWheel()
 {
     set_name("ColorWheel");
     set(0.5, 0.5, 1.0, false);
-    get_style_context()->add_class("flat");
+    add_css_class("flat");
 
     _drawing_area->set_visible(true);
     _drawing_area->set_focusable(true);
@@ -484,7 +483,7 @@ bool ColorWheelHSL::on_drawing_area_draw(::Cairo::RefPtr<::Cairo::Context> const
         cr->set_line_width(0.5);
 
         if (_focus_on_ring) {
-            auto const rgba = change_alpha(get_foreground_color(get_style_context()), 0.7);
+            auto const rgba = change_alpha(get_color(), 0.7);
             Gdk::Cairo::set_source_rgba(cr, rgba);
             cr->begin_new_path();
             cr->rectangle(0, 0, width, height);

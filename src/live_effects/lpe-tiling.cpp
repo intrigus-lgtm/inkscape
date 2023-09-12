@@ -649,7 +649,7 @@ Gtk::RadioButton* create_radio_button(Gtk::RadioButtonGroup& group, const Glib::
     button->property_always_show_image() = true;
     button->set_halign(Gtk::Align::CENTER);
     button->set_valign(Gtk::Align::CENTER);
-    button->get_style_context()->add_class("lpe-square-button");
+    button->add_css_class("lpe-square-button");
     return button;
 }
 

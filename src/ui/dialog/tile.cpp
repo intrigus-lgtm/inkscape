@@ -72,7 +72,7 @@ ArrangeDialog::ArrangeDialog()
     _arrangeButton->signal_clicked().connect(sigc::mem_fun(*this, &ArrangeDialog::_apply));
     _arrangeButton->set_use_underline(true);
     _arrangeButton->set_tooltip_text(_("Arrange selected objects"));
-    _arrangeButton->get_style_context()->add_class("wide-apply-button");
+    _arrangeButton->add_css_class("wide-apply-button");
     _arrangeButton->set_no_show_all();
 
     auto const button_box = Gtk::make_managed<Gtk::Box>();

@@ -144,7 +144,7 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
         _entry_page_sizes->set_placeholder_text(_("ex.: 100x100cm"));
         _entry_page_sizes->set_tooltip_text(_("Type in width & height of a page. (ex.: 15x10cm, 10in x 100mm)\n"
                                               "or choose preset from dropdown."));
-        _entry_page_sizes->get_style_context()->add_class("symbolic");
+        _entry_page_sizes->add_css_class("symbolic");
         _entry_page_sizes->signal_activate().connect(sigc::mem_fun(*this, &PageToolbar::sizeChanged));
 
         _entry_page_sizes->signal_icon_press().connect([=](Gtk::EntryIconPosition, const GdkEventButton *) {

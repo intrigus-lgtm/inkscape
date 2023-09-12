@@ -17,6 +17,7 @@
 
 #include <iostream>
 #include <gtkmm/box.h>
+#include <gtkmm/popovermenubar.h>
 #include <sigc++/functors/mem_fun.h>
 
 #include "desktop.h"
@@ -148,17 +149,14 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
     // ================= Shift Icons =================
     // Note: The menu is defined at the app level but shifting icons requires actual widgets and
     // must be done on the window level.
-// TODO: GTK4: We won't be using Gtk::MenuBar anymore, so figure out the replacement later.
-#if 0
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     bool shift_icons = prefs->getInt("/theme/shiftIcons", true);
     for (auto const child : Inkscape::UI::get_children(*this)) {
-        if (auto const menubar = dynamic_cast<Gtk::MenuBar *>(child)) {
+        if (auto const menubar = dynamic_cast<Gtk::PopoverMenuBar *>(child)) {
             bool const shifted = set_tooltips_and_shift_icons(*menubar, shift_icons);
             if (shifted) shift_icons = false;
         }
     }
-#endif
 
     // ========= Update text for Accellerators =======
     Inkscape::Shortcuts::getInstance().update_gui_text_recursive(this);

@@ -18,7 +18,6 @@
 #include <gtkmm/label.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/separator.h>
-#include <gtkmm/stylecontext.h>
 #include <gtkmm/window.h>
 
 #include "ui/menuize.h"
@@ -41,7 +40,7 @@ public:
         , CssNameClassInit{"menu"}
         , Gtk::Grid{}
     {
-        get_style_context()->add_class("menu");
+        add_css_class("menu");
         set_orientation(Gtk::Orientation::VERTICAL);
     }
 };
@@ -52,17 +51,16 @@ PopoverMenu::PopoverMenu(Gtk::Widget &parent, Gtk::PositionType const position)
     , _scrolled_window{*Gtk::make_managed<Gtk::ScrolledWindow>()}
     , _grid           {*Gtk::make_managed<PopoverMenuGrid    >()}
 {
-    auto const style_context = get_style_context();
-    style_context->add_class("popover-menu");
-    style_context->add_class("menu");
+    add_css_class("popover-menu");
+    add_css_class("menu");
 
-    set_relative_to(parent);
+    set_parent(parent);
     set_position(position);
 
     _scrolled_window.set_propagate_natural_width (true);
     _scrolled_window.set_propagate_natural_height(true);
-    _scrolled_window.add(_grid);
-    add(_scrolled_window);
+    _scrolled_window.set_child(_grid);
+    set_child(_scrolled_window);
 
     signal_show().connect([this]
     {
@@ -134,7 +132,7 @@ void PopoverMenu::append_section_label(Glib::ustring const &markup)
     auto const label = Gtk::make_managed<Gtk::Label>();
     label->set_markup(markup);
     auto const item = Gtk::make_managed<PopoverMenuItem>();
-    item->add(*label);
+    item->set_child(*label);
     item->set_sensitive(false);
     append(*item);
 }

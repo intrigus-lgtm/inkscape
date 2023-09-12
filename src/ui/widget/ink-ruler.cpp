@@ -19,7 +19,6 @@
 #include <gdkmm/general.h>
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/popover.h>
-#include <gtkmm/stylecontext.h>
 
 #include "ink-ruler.h"
 #include "inkscape.h"
@@ -65,7 +64,7 @@ Ruler::Ruler(Gtk::Orientation orientation)
     , _position(0)
 {
     set_name("InkRuler");
-    get_style_context()->add_class(_orientation == Gtk::Orientation::HORIZONTAL ? "horz" : "vert");
+    add_css_class(_orientation == Gtk::Orientation::HORIZONTAL ? "horz" : "vert");
 
     _drawing_area->set_visible(true);
     _drawing_area->signal_draw().connect(sigc::mem_fun(*this, &Ruler::on_drawing_area_draw));
@@ -508,20 +507,18 @@ void
 Ruler::on_style_updated() {
     Gtk::Box::on_style_updated();
 
-    Glib::RefPtr<Gtk::StyleContext> style_context = get_style_context();
-
     // Cache all our colors to speed up rendering.
 
-    _foreground = get_foreground_color(style_context);
+    _foreground = get_color();
     _font_size = get_font_size(*this);
 
-    _shadow = get_color_with_class(style_context, "shadow");
-    _page_fill = get_color_with_class(style_context, "page");
+    _shadow = get_color_with_class(*this, "shadow");
+    _page_fill = get_color_with_class(*this, "page");
 
-    style_context->add_class("selection");
-    _select_fill = get_color_with_class(style_context, "background");
-    _select_stroke = get_color_with_class(style_context, "border");
-    style_context->remove_class("selection");
+    add_css_class("selection");
+    _select_fill = get_color_with_class(*this, "background");
+    _select_stroke = get_color_with_class(*this, "border");
+    remove_css_class("selection");
 
     _label_cache.clear();
     _backing_store_valid = false;

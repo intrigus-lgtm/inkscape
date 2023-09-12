@@ -109,9 +109,7 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
 
     // Use StyleContext to check if the child is a context item.
     for (auto child : _toolbar->get_children()) {
-        auto style_context = child->get_style_context();
-        bool is_context_item = style_context->has_class("context_item");
-
+        bool const is_context_item = child->has_css_class("context_item");
         if (is_context_item) {
             _context_items.push_back(child);
         }

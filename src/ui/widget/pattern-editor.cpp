@@ -343,7 +343,7 @@ void PatternEditor::bind_store(Gtk::FlowBox& list, PatternStore& pat) {
         auto name = Glib::ustring(item->label.c_str());
         if (_show_names.get_active()) {
             auto const label = Gtk::make_managed<Gtk::Label>(name);
-            label->get_style_context()->add_class("small-font");
+            label->add_css_class("small-font");
             // limit label size to tile size
             label->set_ellipsize(Pango::EllipsizeMode::END);
             label->set_max_width_chars(0);
@@ -354,7 +354,7 @@ void PatternEditor::bind_store(Gtk::FlowBox& list, PatternStore& pat) {
         box->show_all();
         auto const cbox = Gtk::make_managed<Gtk::FlowBoxChild>();
         cbox->add(*box);
-        cbox->get_style_context()->add_class("pattern-item-box");
+        cbox->add_css_class("pattern-item-box");
         pat.widgets_to_pattern[cbox] = item;
         cbox->set_size_request(_tile_size, _tile_size);
         return cbox;

@@ -66,7 +66,7 @@ InkScale::on_draw(const::Cairo::RefPtr<::Cairo::Context>& cr) {
     auto const alloc = get_allocation();
 
     // Get SpinButton style info...
-    auto const text_color = get_foreground_color(_spinbutton->get_style_context());
+    auto const text_color = _spinbutton->get_color();
 
     // Create Pango layout.
     auto layout_label = create_pango_layout(_label);

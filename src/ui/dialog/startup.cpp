@@ -14,6 +14,7 @@
 #include <string>
 #include <glibmm/i18n.h>
 #include <glibmm/fileutils.h>
+#include <gdkmm/display.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/combobox.h>
@@ -25,6 +26,7 @@
 #include <gtkmm/recentmanager.h>
 #include <gtkmm/settings.h>
 #include <gtkmm/stack.h>
+#include <gtkmm/styleprovider.h>
 #include <gtkmm/switch.h>
 #include <gtkmm/togglebutton.h>
 #include <gtkmm/treeview.h>
@@ -513,11 +515,12 @@ void
 StartScreen::refresh_theme(Glib::ustring theme_name)
 {
     auto const screen = Gdk::Screen::get_default();
-    if (INKSCAPE.themecontext->getContrastThemeProvider()) {
-        Gtk::StyleContext::remove_provider_for_screen(screen, INKSCAPE.themecontext->getContrastThemeProvider());
-    }
-    auto settings = Gtk::Settings::get_default();
 
+    if (INKSCAPE.themecontext->getContrastThemeProvider()) {
+        Gtk::StyleProvider::remove_provider_for_display(display, INKSCAPE.themecontext->getContrastThemeProvider());
+    }
+
+    auto settings = Gtk::Settings::get_default();
     auto prefs = Inkscape::Preferences::get();
 
     settings->property_gtk_theme_name() = theme_name;
@@ -525,16 +528,17 @@ StartScreen::refresh_theme(Glib::ustring theme_name)
     settings->property_gtk_icon_theme_name() = prefs->getString("/theme/iconTheme", prefs->getString("/theme/defaultIconTheme", ""));
 
     if (prefs->getBool("/theme/symbolicIcons", false)) {
-        get_style_context()->add_class("symbolic");
-        get_style_context()->remove_class("regular");
+        add_css_class("symbolic");
+        remove_css_class("regular");
     } else {
-        get_style_context()->add_class("regular");
-        get_style_context()->remove_class("symbolic");
+        add_css_class("regular");
+        remove_css_class("symbolic");
     }
 
     if (INKSCAPE.themecontext->getColorizeProvider()) {
-        Gtk::StyleContext::remove_provider_for_screen(screen, INKSCAPE.themecontext->getColorizeProvider());
+        Gtk::StyleProvider::remove_provider_for_display(display, INKSCAPE.themecontext->getColorizeProvider());
     }
+
     if (!prefs->getBool("/theme/symbolicDefaultHighColors", false)) {
         Gtk::CssProvider::create();
         Glib::ustring css_str = INKSCAPE.themecontext->get_symbolic_colors();
@@ -543,8 +547,8 @@ StartScreen::refresh_theme(Glib::ustring theme_name)
         } catch (const Gtk::CssProviderError &ex) {
             g_critical("CSSProviderError::load_from_data(): failed to load '%s'\n(%s)", css_str.c_str(), ex.what().c_str());
         }
-        Gtk::StyleContext::add_provider_for_screen(screen, INKSCAPE.themecontext->getColorizeProvider(),
-                                                GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        Gtk::StyleProvider::add_provider_for_display(display, INKSCAPE.themecontext->getColorizeProvider(),
+                                                     GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
     // set dark switch and disable if there is no prefer option for dark
     refresh_dark_switch();

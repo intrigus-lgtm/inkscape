@@ -351,15 +351,15 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
     set_tooltips_and_shift_icons(*this, shift_icons);
     // Set the style and icon theme of the new menu based on the desktop
     if (Gtk::Window *window = desktop->getToplevel()) {
-        if (window->get_style_context()->has_class("dark")) {
-            get_style_context()->add_class("dark");
+        if (window->has_css_class("dark")) {
+            add_css_class("dark");
         } else {
-            get_style_context()->add_class("bright");
+            add_css_class("bright");
         }
         if (prefs->getBool("/theme/symbolicIcons", false)) {
-            get_style_context()->add_class("symbolic");
+            add_css_class("symbolic");
         } else {
-            get_style_context()->add_class("regular");
+            add_css_class("regular");
         }
     }
 }

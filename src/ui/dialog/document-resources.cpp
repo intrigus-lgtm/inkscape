@@ -1024,7 +1024,7 @@ void DocumentResources::refresh_page(const Glib::ustring& id) {
     auto tab = "iconview";
     auto has_count = false;
     auto item_width = 90;
-    auto const color = get_foreground_color(get_style_context());
+    auto const color = get_color();
     auto label_editable = false;
     auto items_selectable = true;
     auto can_delete = false; // enable where supported

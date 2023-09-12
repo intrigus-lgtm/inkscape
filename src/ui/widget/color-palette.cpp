@@ -47,7 +47,7 @@ namespace Inkscape::UI::Widget {
     auto const config = Gtk::make_managed<PopoverMenuItem>(_("Configure..."), true);
 
     auto menu = std::make_unique<PopoverMenu>(parent, Gtk::PositionType::TOP);
-    menu->get_style_context()->add_class("ColorPalette");
+    menu->add_css_class("ColorPalette");
     menu->append(*separator);
     menu->append(*config);
     menu->show_all_children();

@@ -29,7 +29,6 @@
 #include <gtkmm/notebook.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/scale.h>
-#include <gtkmm/stylecontext.h>
 
 #include "desktop.h"
 #include "document.h"
@@ -84,7 +83,7 @@ bool SvgFontDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
     cr->set_font_face( Cairo::RefPtr<Cairo::FontFace>(new Cairo::FontFace(_svgfont->get_font_face(), false /* does not have reference */)) );
     cr->set_font_size (_y-20);
     cr->move_to (10, 10);
-    auto const fg = get_foreground_color(get_style_context());
+    auto const fg = get_color();
     cr->set_source_rgb(fg.get_red(), fg.get_green(), fg.get_blue());
     // crash on macos: https://gitlab.com/inkscape/inkscape/-/issues/266
     try {
@@ -113,7 +112,7 @@ void SvgGlyphRenderer::render_vfunc(
 
     auto const selected = (flags & Gtk::CellRendererState::SELECTED) != Gtk::CellRendererState{};
     auto const css_class = selected ? "theme_selected_bg_color" : "";
-    auto const fg = get_color_with_class(_tree->get_style_context(), css_class);
+    auto const fg = get_color_with_class(_tree, css_class);
     cr->set_source_rgb(fg.get_red(), fg.get_green(), fg.get_blue());
 
     // crash on macos: https://gitlab.com/inkscape/inkscape/-/issues/266
@@ -263,7 +262,7 @@ GlyphMenuButton::GlyphMenuButton()
     _label.set_width_chars(2);
 
     auto const arrow = Gtk::make_managed<Gtk::Image>("pan-down-symbolic", Gtk::ICON_SIZE_BUTTON);
-    arrow->get_style_context()->add_class("arrow");
+    arrow->add_css_class("arrow");
 
     auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 2);
     box->add(_label);

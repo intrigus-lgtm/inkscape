@@ -17,8 +17,6 @@
 
 #include <cairomm/pattern.h>
 #include <glibmm/i18n.h>
-#include <gtkmm/bin.h>
-#include <gtkmm/container.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/messagedialog.h>
@@ -125,25 +123,23 @@ void gui_warning(const std::string &msg, Gtk::Window *parent_window) {
 }
 
 void resize_widget_children(Gtk::Widget *widget) {
+    /* TODO: GTK4: Figure out if actually needed, and if so, needs reworked.
     if(widget) {
         Gtk::Allocation allocation;
         int             baseline;
         widget->get_allocated_size(allocation, baseline);
         widget->size_allocate(allocation, baseline);
     }
-}
-
-Gtk::Widget *get_bin_child(Gtk::Widget &widget)
-{
-    auto const bin = dynamic_cast<Gtk::Bin *>(&widget);
-    return bin ? bin->get_child() : nullptr;
+    */
 }
 
 std::vector<Gtk::Widget *> get_children(Gtk::Widget &widget)
 {
-    auto const container = dynamic_cast<Gtk::Container *>(&widget);
-    if (container) return container->get_children();
-    return {};
+    auto children = std::vector<Gtk::Widget *>{};
+    for (auto child = widget.get_first_child(); child; child = child->get_next_sibling()) {
+        children.push_back(child);
+    }
+    return children;
 }
 
 Gtk::Widget *get_first_child(Gtk::Widget &widget)
@@ -171,11 +167,6 @@ void delete_all_children(Gtk::Widget &widget)
         container.remove(*child);
         delete child;
     }
-}
-
-Gtk::Widget *get_parent(Gtk::Widget &widget)
-{
-    return static_cast<Gtk::Widget *>(widget.get_parent());
 }
 
 /**
@@ -267,17 +258,12 @@ double get_luminance(Gdk::RGBA const &rgba)
          + 0.114 * rgba.get_blue ();
 }
 
-Gdk::RGBA get_foreground_color(Glib::RefPtr<Gtk::StyleContext const> const &context)
-{
-    return context->get_color(context->get_state());
-}
-
-Gdk::RGBA get_color_with_class(Glib::RefPtr<Gtk::StyleContext> const &context,
+Gdk::RGBA get_color_with_class(Gtk::Widget &widget,
                                Glib::ustring const &css_class)
 {
-    if (!css_class.empty()) context->add_class(css_class);
-    auto result = get_foreground_color(context);
-    if (!css_class.empty()) context->remove_class(css_class);
+    if (!css_class.empty()) widget.add_css_class(css_class);
+    auto result = widget.get_color();
+    if (!css_class.empty()) widget.remove_css_class(css_class);
     return result;
 }
 

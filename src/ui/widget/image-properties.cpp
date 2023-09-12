@@ -268,7 +268,7 @@ void ImageProperties::update(SPImage* image) {
 
     // prepare preview
     auto device_scale = get_scale_factor();
-    auto const fg = get_foreground_color(get_style_context());
+    auto const fg = get_color();
     auto foreground = conv_gdk_color_to_rgba(fg, 0.30);
     if (!_background_color) {
         update_bg_color();
@@ -278,8 +278,7 @@ void ImageProperties::update(SPImage* image) {
 
 void ImageProperties::update_bg_color() {
     if (auto wnd = dynamic_cast<Gtk::Window*>(get_root())) {
-        auto sc = wnd->get_style_context();
-        auto const color = get_color_with_class(sc, "theme_bg_color");
+        auto const color = get_color_with_class(*wnd, "theme_bg_color");
         _background_color = conv_gdk_color_to_rgba(color);
     }
     else {

@@ -63,7 +63,7 @@ set_tooltips_and_shift_icons(Gtk::Widget &menu, bool const shift_icons)
     int width{}, height{};
 
     if (shift_icons) {
-        menu.get_style_context()->add_class("shifticonmenu");
+        menu.add_css_class("shifticonmenu");
         gtk_icon_size_lookup(GTK_ICON_SIZE_MENU, &width, &height);
     }
 

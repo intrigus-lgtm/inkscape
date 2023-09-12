@@ -152,7 +152,7 @@ Transformation::Transformation()
     applyButton->set_tooltip_text(_("Apply transformation to selection"));
     applyButton->set_sensitive(false);
     applyButton->signal_clicked().connect(sigc::mem_fun(*this, &Transformation::_apply));
-    applyButton->get_style_context()->add_class("wide-apply-button");
+    applyButton->add_css_class("wide-apply-button");
 
     auto const button_box = Gtk::make_managed<Gtk::Box>();
     button_box->set_margin_top(4);

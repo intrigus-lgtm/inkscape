@@ -16,9 +16,10 @@
 #include <string>
 #include <glibmm/i18n.h>
 #include <glibmm/ustring.h>
+#include <gdkmm/display.h>
 #include <gtkmm/cssprovider.h>
 #include <gtkmm/image.h>
-#include <gtkmm/stylecontext.h>
+#include <gtkmm/styleprovider.h>
 #include <sigc++/functors/mem_fun.h>
 
 #include "desktop.h"
@@ -42,14 +43,12 @@ public:
 
         if (!a.empty()) {
             _a = Gtk::manage(sp_get_icon_image(a, size));
-            _a->set_no_show_all(true);
-            add(*_a);
+            append(*_a);
         }
 
         if (!b.empty()) {
             _b = Gtk::manage(sp_get_icon_image(b, size));
-            _b->set_no_show_all(true);
-            add(*_b);
+            append(*_b);
         }
 
         setState(false);
@@ -82,7 +81,7 @@ LayerSelector::LayerSelector(SPDesktop *desktop)
     , _observer{std::make_unique<Inkscape::XML::SignalObserver>()}
 {
     set_name(cssName);
-    get_style_context()->add_class(getThisCssClass());
+    add_css_class(getThisCssClass());
 
     _layer_name.signal_clicked().connect(sigc::mem_fun(*this, &LayerSelector::_layerChoose));
     _layer_name.set_has_frame(false);
@@ -91,7 +90,7 @@ LayerSelector::LayerSelector(SPDesktop *desktop)
 
     _eye_label = Gtk::make_managed<AlternateIcons>(Gtk::IconSize::NORMAL,
         INKSCAPE_ICON("object-visible"), INKSCAPE_ICON("object-hidden"));
-    _eye_toggle.add(*_eye_label);
+    _eye_toggle.set_child(*_eye_label);
     _hide_layer_connection = _eye_toggle.signal_toggled().connect(sigc::mem_fun(*this, &LayerSelector::_hideLayer));
 
     _eye_toggle.set_has_frame(false);
@@ -100,20 +99,20 @@ LayerSelector::LayerSelector(SPDesktop *desktop)
 
     _lock_label = Gtk::make_managed<AlternateIcons>(Gtk::IconSize::NORMAL,
         INKSCAPE_ICON("object-unlocked"), INKSCAPE_ICON("object-locked"));
-    _lock_toggle.add(*_lock_label);
+    _lock_toggle.set_child(*_lock_label);
     _lock_layer_connection = _lock_toggle.signal_toggled().connect(sigc::mem_fun(*this, &LayerSelector::_lockLayer));
 
     _lock_toggle.set_has_frame(false);
     _lock_toggle.set_tooltip_text(_("Lock or unlock current layer"));
     UI::pack_start(*this, _lock_toggle, UI::PackOptions::expand_padding);
 
-    _layer_name.add(_layer_label);
+    _layer_name.set_child(_layer_label);
     _layer_label.set_max_width_chars(16);
     _layer_label.set_ellipsize(Pango::EllipsizeMode::END);
     _layer_label.set_markup("<i>Unset</i>");
     _layer_label.set_valign(Gtk::Align::CENTER);
-    Gtk::StyleContext::add_provider_for_screen(_layer_label.get_screen(), _label_style,
-                                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    Gtk::StyleProvider::add_provider_for_display(_layer_label.get_display(), _label_style,
+                                                 GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     _observer->signal_changed().connect(sigc::mem_fun(*this, &LayerSelector::_layerModified));
     setDesktop(desktop);

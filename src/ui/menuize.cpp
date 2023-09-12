@@ -22,11 +22,9 @@
 #include <gdkmm/window.h>
 #include <gtkmm/eventcontroller.h>
 #include <gtkmm/popovermenu.h>
-#include <gtkmm/stylecontext.h>
 #include <gtkmm/widget.h>
 #include <gtkmm/window.h>
 
-#include "ui/manage.h"
 #include "ui/util.h"
 
 namespace Inkscape::UI {
@@ -89,14 +87,12 @@ static void on_leave_unset_state(GtkEventControllerMotion * const motion, double
 void menuize(Gtk::Widget &widget)
 {
     // If hovered naturally or below, key-focus self & clear focus+hover on rest
-    // GTK3 does not emit these events unless we explicitly request them
-    widget.add_events(Gdk::ENTER_NOTIFY_MASK | Gdk::POINTER_MOTION_MASK | Gdk::LEAVE_NOTIFY_MASK);
-    auto const motion = gtk_event_controller_motion_new(widget.gobj());
+    auto const motion = gtk_event_controller_motion_new();
     gtk_event_controller_set_propagation_phase(motion, GTK_PHASE_TARGET);
     g_signal_connect(motion, "enter" , G_CALLBACK(on_motion_grab_focus), GINT_TO_POINTER(TRUE ));
     g_signal_connect(motion, "motion", G_CALLBACK(on_motion_grab_focus), GINT_TO_POINTER(FALSE));
     g_signal_connect(motion, "leave" , G_CALLBACK(on_leave_unset_state), NULL);
-    manage(Glib::wrap(motion), widget);
+    gtk_widget_add_controller(widget.gobj(), motion);
 
     // If key-focused in/out, ‘fake’ correspondingly appearing as hovered or not
     widget.property_has_focus().signal_changed().connect([&]
@@ -138,14 +134,14 @@ void autohide_tooltip(Gtk::Popover &popover)
 {
     popover.signal_show().connect([&]
     {
-        if (auto const relative_to = popover.get_relative_to()) {
-            relative_to->set_has_tooltip(false);
+        if (auto const parent = popover.get_parent()) {
+            parent->set_has_tooltip(false);
         }
     });
     popover.signal_closed().connect([&]
     {
-        if (auto const relative_to = popover.get_relative_to()) {
-            relative_to->set_has_tooltip(true);
+        if (auto const parent = popover.get_parent()) {
+            parent->set_has_tooltip(true);
         }
     });
 }
@@ -154,22 +150,24 @@ void menuize_popover(Gtk::Popover &popover)
 {
     static Glib::ustring const css_class = "menuize";
 
-    auto const style_context = popover.get_style_context();
-    if (style_context->has_class(css_class)) return;
+    if (popover.has_css_class(css_class)) return;
 
-    style_context->add_class(css_class);
+    popover.add_css_class(css_class);
     menuize_all(popover, "modelbutton");
     autohide_tooltip(popover);
-    // TODO: GTK4.14: Be more GtkMenu-like by using PopoverMenu::Flags::NESTED
+
+#if GTK_CHECK_VERSION(4, 14, 0)
+    if (auto const popover_menu = dynamic_cast<Gtk::PopoverMenu *>(&popover)) {
+        popover_menu->set_flags(Gtk::PopoverMenu::Flags::NESTED);
+    }
+#endif
 }
 
 std::unique_ptr<Gtk::Popover>
 make_menuized_popover(Glib::RefPtr<Gio::MenuModel> model, Gtk::Widget &parent)
 {
-    // TODO: GTK4: Be more GtkMenu-like by using PopoverMenu::Flags::NESTED
-    auto popover = std::make_unique<Gtk::PopoverMenu>();
-    popover->bind_model(std::move(model));
-    popover->set_relative_to(parent);
+    auto popover = std::make_unique<Gtk::PopoverMenu>(model, Gtk::PopoverMenu::Flags::NESTED);
+    popover->set_parent(parent);
     menuize_popover(*popover);
     return popover;
 }

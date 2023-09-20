@@ -29,6 +29,7 @@
 namespace Gtk {
 class Adjustment;
 class GestureClick;
+class Snapshot;
 class SpinButton;
 } // namespace Gtk
 
@@ -42,7 +43,7 @@ public:
     void set_label(Glib::ustring label);
 
 private:
-    bool on_draw(const::Cairo::RefPtr<::Cairo::Context>& cr) final;
+    void snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &snapshot) final;
 
     Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
                                               int n_press, double x, double y);
@@ -89,7 +90,8 @@ private:
     InkScale                      *_scale        = nullptr;
     GtkWidget                     *_focus_widget = nullptr;
 
-    bool on_key_release_event(GdkEventKey* key_event) override;
+    bool on_key_released(GtkEventControllerKey const * controller,
+                         unsigned keyval, unsigned keycode, GdkModifierType state);
 };
 
 #endif // SEEN_INK_SPINSCALE_H

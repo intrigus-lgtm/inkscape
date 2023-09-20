@@ -560,7 +560,7 @@ void DialogMultipaned::add_empty_widget()
 
     // The empty widget is a label
     auto const label = Gtk::make_managed<Gtk::Label>(_("You can drop dockable dialogs here."));
-    label->set_line_wrap();
+    label->set_wrap();
     label->set_justify(Gtk::Justification::CENTER);
     label->set_valign(Gtk::Align::CENTER);
     label->set_vexpand();

@@ -94,7 +94,7 @@ Gtk::Widget *WidgetLabel::get_widget(sigc::signal<void ()> * /*changeSignal*/)
     } else {
         label->set_text(newtext);
     }
-    label->set_line_wrap();
+    label->set_wrap();
     label->set_xalign(0);
 
     // TODO: Ugly "fix" for gtk3 width/height calculation of labels.

@@ -315,7 +315,7 @@ int gui_request_dpi_fix_method(SPDocument *doc)
     explanation.set_markup(Glib::ustring("<b>") + doc->getDocumentName() + "</b>\n" +
                            _("was created in an older version of Inkscape (90 DPI) and we need "
                              "to make it compatible with newer versions (96 DPI). Tell us about this file:\n"));
-    explanation.set_line_wrap(true);
+    explanation.set_wrap(true);
     explanation.set_size_request(600, -1);
     Gtk::RadioButton::Group c1, c2;
 
@@ -351,7 +351,7 @@ int gui_request_dpi_fix_method(SPDocument *doc)
           "More information about this change are available in the <a "
           "href='https://inkscape.org/en/learn/faq#dpi_change'>Inkscape FAQ</a>"
           "</small>"));
-    moreinfo_text.set_line_wrap(true);
+    moreinfo_text.set_wrap(true);
     moreinfo_text.set_margin_bottom(20);
     moreinfo_text.set_margin_top(20);
     moreinfo_text.set_margin_start(30);

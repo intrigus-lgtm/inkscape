@@ -115,7 +115,7 @@ CdrImportDialog::CdrImportDialog(const std::vector<RVNGString> &vec)
     // "Select page:" label
     _labelSelect = Gtk::make_managed<class Gtk::Label>(_("Select page:"));
     _labelTotalPages = Gtk::make_managed<class Gtk::Label>();
-    _labelSelect->set_line_wrap(false);
+    _labelSelect->set_wrap(false);
     _labelSelect->set_use_markup(false);
     _labelSelect->set_selectable(false);
     UI::pack_start(*_page_selector_box, *_labelSelect, UI::PackOptions::shrink);
@@ -129,7 +129,7 @@ CdrImportDialog::CdrImportDialog(const std::vector<RVNGString> &vec)
     _pageNumberSpin->set_wrap(false);
     UI::pack_start(*_page_selector_box, *_pageNumberSpin, UI::PackOptions::shrink);
 
-    _labelTotalPages->set_line_wrap(false);
+    _labelTotalPages->set_wrap(false);
     _labelTotalPages->set_use_markup(false);
     _labelTotalPages->set_selectable(false);
     gchar *label_text = g_strdup_printf(_("out of %i"), num_pages);

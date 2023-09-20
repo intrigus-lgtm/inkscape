@@ -135,8 +135,8 @@ void DialogPage::add_group_note(Glib::ustring name)
                                                             Gtk::Align::START , Gtk::Align::CENTER, true);
     label_widget->set_use_markup(true);
     label_widget->set_valign(Gtk::Align::CENTER);
-    label_widget->set_line_wrap(true);
-    label_widget->set_line_wrap_mode(Pango::WRAP_WORD);
+    label_widget->set_wrap(true);
+    label_widget->set_wrap_mode(Pango::WrapMode::WORD);
     attach_next_to(*label_widget, Gtk::PositionType::BOTTOM, 2, 1);
 }
 

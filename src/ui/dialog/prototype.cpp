@@ -29,7 +29,7 @@ Prototype::Prototype()
 {
     // A widget for demonstration that displays the current SVG's id.
     _label = Gtk::make_managed<Gtk::Label>(_name);
-    _label->set_line_wrap();
+    _label->set_wrap();
 
     _debug_button.set_name("PrototypeDebugButton");
     _debug_button.set_hexpand();

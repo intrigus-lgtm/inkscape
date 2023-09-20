@@ -449,8 +449,8 @@ void Transformation::layoutPageTransform()
     _page_transform.table().attach(*img, 0, 5, 1, 1);
 
     auto const descr = Gtk::make_managed<Gtk::Label>();
-    descr->set_line_wrap();
-    descr->set_line_wrap_mode(Pango::WRAP_WORD);
+    descr->set_wrap();
+    descr->set_wrap_mode(Pango::WrapMode::WORD);
     descr->set_text(
         _("<small>"
         "<a href=\"https://www.w3.org/TR/SVG11/coords.html#TransformMatrixDefined\">"

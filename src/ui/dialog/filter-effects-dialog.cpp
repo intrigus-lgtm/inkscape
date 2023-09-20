@@ -802,8 +802,8 @@ public:
     void add_no_params()
     {
         auto const lbl = Gtk::make_managed<Gtk::Label>(_("This SVG filter effect does not require any parameters."));
-        lbl->set_line_wrap();
-        lbl->set_line_wrap_mode(Pango::WRAP_WORD);
+        lbl->set_wrap();
+        lbl->set_wrap_mode(Pango::WrapMode::WORD);
         add_widget(lbl, "");
     }
 

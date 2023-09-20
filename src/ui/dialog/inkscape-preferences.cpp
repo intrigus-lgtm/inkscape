@@ -3148,7 +3148,7 @@ void InkscapePreferences::initKeyboardShortcuts(Gtk::TreeModel::iterator iter_ui
 
     // Description
     auto desc_renderer = dynamic_cast<Gtk::CellRendererText*>(_kb_tree.get_column_cell_renderer(2));
-    desc_renderer->property_wrap_mode() = Pango::WRAP_WORD;
+    desc_renderer->property_wrap_mode() = Pango::WrapMode::WORD;
     desc_renderer->property_wrap_width() = 600;
     _kb_tree.get_column(2)->set_resizable(true);
     _kb_tree.get_column(2)->set_clickable(true);

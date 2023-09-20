@@ -1771,7 +1771,7 @@ GridWidget::GridWidget(SPGrid *grid)
     UI::pack_start(*left, *_grid_rcb_visible, false, false);
     UI::pack_start(*left, *_grid_rcb_snap_visible_only, false, false);
     if (auto label = dynamic_cast<Gtk::Label*>(_grid_rcb_snap_visible_only->get_child())) {
-        label->set_line_wrap();
+        label->set_wrap();
     }
 
     _grid_rcb_dotted = Gtk::make_managed<Inkscape::UI::Widget::RegisteredCheckButton>(

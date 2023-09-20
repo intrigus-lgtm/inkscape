@@ -884,7 +884,7 @@ void PaintSelector::set_mode_mesh(PaintSelector::Mode mode)
 
             auto const l = Gtk::make_managed<Gtk::Label>();
             l->set_markup(_("Use the <b>Mesh tool</b> to modify the mesh."));
-            l->set_line_wrap(true);
+            l->set_wrap(true);
             l->set_size_request(180, -1);
             UI::pack_start(*hb2, *l, true, true, AUX_BETWEEN_BUTTON_GROUPS);
             UI::pack_start(*_selector_mesh, *hb2, false, false, AUX_BETWEEN_BUTTON_GROUPS);

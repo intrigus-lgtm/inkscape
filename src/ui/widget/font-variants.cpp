@@ -78,8 +78,8 @@ public:
             auto const label = Gtk::make_managed<Gtk::Label>();
 
             // Restrict label width (some fonts have lots of alternatives).
-            label->set_line_wrap( true );
-            label->set_line_wrap_mode( Pango::WRAP_WORD_CHAR );
+            label->set_wrap( true );
+            label->set_wrap_mode( Pango::WrapMode::WORD_CHAR );
             label->set_ellipsize( Pango::EllipsizeMode::END );
             label->set_lines(3);
             label->set_hexpand();
@@ -248,9 +248,9 @@ FontVariants::FontVariants () :
       // up to 5 lines
       label->set_lines(5);
       // multiline
-      label->set_line_wrap();
+      label->set_wrap();
       // break it as needed
-      label->set_line_wrap_mode(Pango::WRAP_WORD_CHAR);
+      label->set_wrap_mode(Pango::WrapMode::WORD_CHAR);
   }
 
   // Allow user to select characters. Not useful as this selects the ligatures.
@@ -491,11 +491,11 @@ FontVariants::FontVariants () :
   _feature_entry.set_tooltip_text( _("Feature settings in CSS form (e.g. \"wxyz\" or \"wxyz\" 3)."));
 
   _feature_substitutions.set_justify( Gtk::Justification::LEFT );
-  _feature_substitutions.set_line_wrap( true );
-  _feature_substitutions.set_line_wrap_mode( Pango::WRAP_WORD_CHAR );
+  _feature_substitutions.set_wrap( true );
+  _feature_substitutions.set_wrap_mode( Pango::WrapMode::WORD_CHAR );
 
   _feature_list.set_justify( Gtk::Justification::LEFT );
-  _feature_list.set_line_wrap( true );
+  _feature_list.set_wrap( true );
 
   // Add to frame
   UI::pack_start(_feature_vbox, _feature_grid,          UI::PackOptions::shrink);

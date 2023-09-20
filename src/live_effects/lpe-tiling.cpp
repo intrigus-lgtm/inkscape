@@ -739,8 +739,7 @@ Gtk::Widget * LPETiling::newWidget()
 
             auto const widgcombo = dynamic_cast<UI::Widget::RegisteredUnitMenu *>(widg);
 
-            // TODO: GTK4: Use Widget.get_first_child().
-            auto const destroy_child = UI::get_children(*widgcombo).at(0);
+            auto const destroy_child = widgcombo->get_first_child();
             widgcombo->remove(*destroy_child);
             delete destroy_child;
 
@@ -782,15 +781,12 @@ Gtk::Widget * LPETiling::newWidget()
             continue;
         } else if (param->param_key == "seed"){
             auto const widgrand = dynamic_cast<UI::Widget::RegisteredRandom *>(widg);
-            auto children = UI::get_children(*widgrand);
 
-            // TODO: GTK4: Use Widget.get_first_child().
-            auto const destroy_child = children.at(0);
+            auto const destroy_child = widgrand->get_first_child();
             widgrand->remove(*destroy_child);
             delete destroy_child;
-            children.erase(children.begin());
 
-            auto const first = children.at(0);
+            auto const first = widgrand->get_first_child();
             first->set_visible(false);
             first->set_no_show_all(true);
 

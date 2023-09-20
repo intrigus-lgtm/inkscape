@@ -239,8 +239,7 @@ StatusBar::zoom_value_changed()
 {
     double const zoom_factor = pow (2, zoom_value->get_value());
 
-    auto container = get_toplevel();
-    if (auto window = dynamic_cast<Gtk::ApplicationWindow*>(container)) {
+    if (auto const window = dynamic_cast<Gtk::ApplicationWindow *>(get_root())) {
         auto variant = Glib::Variant<double>::create(zoom_factor);
         window->activate_action("canvas-zoom-absolute", variant);
     } else {
@@ -289,8 +288,7 @@ StatusBar::rotate_output()
 void
 StatusBar::rotate_value_changed()
 {
-    auto container = get_toplevel();
-    if (auto window = dynamic_cast<Gtk::ApplicationWindow*>(container)) {
+    if (auto const window = dynamic_cast<Gtk::ApplicationWindow *>(get_root())) {
         auto variant = Glib::Variant<double>::create(rotate_value->get_value());
         window->activate_action("canvas-rotate-absolute-degrees", variant);
     } else {

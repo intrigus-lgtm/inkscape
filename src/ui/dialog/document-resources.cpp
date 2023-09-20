@@ -1041,7 +1041,7 @@ void DocumentResources::refresh_page(const Glib::ustring& id) {
     case Symbols:
         {
             auto opt = object_renderer::options();
-            if (auto const window = dynamic_cast<Gtk::Window *>(get_toplevel());
+            if (auto const window = dynamic_cast<Gtk::Window *>(get_root());
                 INKSCAPE.themecontext->isCurrentThemeDark(window))
             {
                 // white background for typically black symbols, so they don't disappear in a dark theme

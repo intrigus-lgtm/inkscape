@@ -80,6 +80,7 @@ set_tooltips_and_shift_icons(Gtk::Widget &menu, bool const shift_icons)
         Gtk::Box *box = nullptr;
         Glib::ustring label;
 
+        // TODO: GTK4: Replace with appropriate widgets/nodes for PopoverMenuBar
         if (auto const menuitem = dynamic_cast<Gtk::MenuItem *>(&child)) {
             widget = menuitem;
 
@@ -96,8 +97,9 @@ set_tooltips_and_shift_icons(Gtk::Widget &menu, bool const shift_icons)
                 }
             }
         } else if (child.get_name() == "modelbutton") {
+            // TODO: GTK4: layout of internal Box/Label children has changed
             widget = &child;
-            box = dynamic_cast<Gtk::Box *>(Inkscape::UI::get_first_child(*widget));
+            box = dynamic_cast<Gtk::Box *>(widget->get_first_child());
             if (box) {
                 label = find_label(*box);
             }
@@ -118,6 +120,7 @@ set_tooltips_and_shift_icons(Gtk::Widget &menu, bool const shift_icons)
 
         width += box->get_spacing();
         auto const margin_side = widget->get_direction() == Gtk::TextDirection::RTL ? "right" : "left";
+        // TODO: GTK4: as per TODOs above.
         auto const css_str = Glib::ustring::compose(".shifticonmenu menuitem box { margin-%1: -%2px; }"
                                                     ".shifticonmenu modelbutton box > label:only-child { margin-%1: %2px; }",
                                                     margin_side, width);

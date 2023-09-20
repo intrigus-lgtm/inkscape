@@ -561,7 +561,7 @@ void SwatchesPanel::rebuild()
 }
 
 bool SwatchesPanel::load_swatches() {
-    auto window = dynamic_cast<Gtk::Window*>(get_toplevel());
+    auto window = dynamic_cast<Gtk::Window *>(get_root());
     auto file = choose_palette_file(window);
     auto loaded = false;
     if (load_swatches(file)) {

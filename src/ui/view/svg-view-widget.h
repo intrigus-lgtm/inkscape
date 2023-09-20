@@ -50,7 +50,7 @@ private:
     UI::Widget::Canvas *_canvas = nullptr;
     bool _clicking = false;
 
-    void on_size_allocate(Gtk::Allocation &allocation) final;
+    void size_allocate_vfunc(int width, int height, int baseline) final;
 
     bool event(CanvasEvent const &event, DrawingItem *drawing_item);
 
@@ -60,7 +60,6 @@ public:
     unsigned        _dkey     = 0;
     CanvasItemGroup   *_parent  = nullptr;
     CanvasItemDrawing *_drawing = nullptr;
-    Gtk::Allocation _allocation;
     double          _hscale   = 1.0;     ///< horizontal scale
     double          _vscale   = 1.0;     ///< vertical scale
     bool            _rescale  = false;   ///< whether to rescale automatically

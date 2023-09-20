@@ -23,6 +23,7 @@
 
 #include <iostream>
 #include <2geom/transforms.h>
+#include <giomm/appinfo.h>
 #include <gtkmm/window.h>
 
 #include "document.h"
@@ -104,17 +105,12 @@ void SVGViewWidget::setResize(int width, int height)
     queue_resize();
 }
 
-void SVGViewWidget::on_size_allocate(Gtk::Allocation &allocation)
+void SVGViewWidget::size_allocate_vfunc(int const width, int const height, int const baseline)
 {
-    if (!(_allocation == allocation)) {
-        _allocation = allocation;
-
-        double width  = allocation.get_width();
-        double height = allocation.get_height();
-
+    if (!(_width == width && _height == height)) {
         if (width < 0.0 || height < 0.0) {
             std::cerr << "SVGViewWidget::size_allocate: negative dimensions!" << std::endl;
-            Gtk::Box::on_size_allocate(allocation);
+            Gtk::Box::size_allocate_vfunc(width, height, baseline);
             return;
         }
 
@@ -126,7 +122,7 @@ void SVGViewWidget::on_size_allocate(Gtk::Allocation &allocation)
         doRescale();
     }
 
-    Gtk::Box::on_size_allocate(allocation);
+    Gtk::Box::size_allocate_vfunc(width, height, baseline);
 }
 
 /**
@@ -149,25 +145,19 @@ bool SVGViewWidget::event(CanvasEvent const &event, DrawingItem *drawing_item)
         },
         [&] (ButtonReleaseEvent const &event) {
             if (event.button == 1 && _clicking && href) {
-                if (auto window = dynamic_cast<Gtk::Window*>(_canvas->get_root())) {
-                    window->show_uri(href, event.time);
-                }
+                Gio::AppInfo::launch_default_for_uri(href);
             }
             _clicking = false;
         },
         [&] (EnterEvent const &event) {
             if (href) {
-                auto display = Gdk::Display::get_default();
-                auto cursor = Gdk::Cursor::create(display, "pointer");
-                auto window = _canvas->get_window(); // GDK Window
-                window->set_cursor(cursor);
+                set_cursor("pointer");
                 set_tooltip_text(href);
             }
         },
         [&] (LeaveEvent const &event) {
             if (href) {
-                auto window = _canvas->get_window(); // GDK Window
-                window->set_cursor();
+                set_cursor(Glib::RefPtr<Gdk::Cursor>{});
                 set_tooltip_text("");
             }
         },

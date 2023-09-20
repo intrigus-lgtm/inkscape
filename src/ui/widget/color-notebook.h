@@ -75,9 +75,9 @@ protected:
     Gtk::Box* _buttonbox = nullptr;
     Gtk::Label* _label = nullptr;
     GtkWidget *_rgbal = nullptr; /* RGBA entry */
-    GtkWidget *_box_outofgamut = nullptr;
-    GtkWidget *_box_colormanaged = nullptr;
-    GtkWidget *_box_toomuchink = nullptr;
+    GtkWidget *_outofgamut = nullptr;
+    GtkWidget *_colormanaged = nullptr;
+    GtkWidget *_toomuchink = nullptr;
     GtkWidget *_btn_picker = nullptr;
     GtkWidget *_p = nullptr; /* Color preview */
     sigc::connection _onetimepick;
@@ -95,6 +95,7 @@ private:
 } // namespace Inkscape::UI::Widget
 
 #endif // SEEN_SP_COLOR_NOTEBOOK_H
+
 /*
   Local Variables:
   mode:c++

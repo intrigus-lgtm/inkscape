@@ -95,14 +95,15 @@ void ColorNotebook::_initUI(bool no_alpha)
 
     _book = Gtk::make_managed<Gtk::Stack>();
     _book->set_visible(true);
-    _book->set_transition_type(Gtk::STACK_TRANSITION_TYPE_CROSSFADE);
+    _book->set_transition_type(Gtk::StackTransitionType::CROSSFADE);
     _book->set_transition_duration(130);
 
     // mode selection switcher widget shows all buttons for color mode selection, side by side
     _switcher = Gtk::make_managed<Gtk::StackSwitcher>();
     _switcher->set_stack(*_book);
     // cannot leave it homogeneous - in some themes switcher gets very wide
-    _switcher->set_homogeneous(false);
+    // TODO: GTK4: Figure out whether this is still needed / possible to do
+    //_switcher->set_homogeneous(false);
     _switcher->set_halign(Gtk::Align::CENTER);
     _switcher->set_visible(true);
     attach(*_switcher, 0, row++, 2);
@@ -158,53 +159,47 @@ void ColorNotebook::_initUI(bool no_alpha)
     _observer->call();
 
     GtkWidget *rgbabox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
-    GtkContainer *rgbabox_container = GTK_CONTAINER(rgbabox);
+    auto const rgbabox_box = GTK_BOX(rgbabox);
 
     /* Create color management icons */
-    _box_colormanaged = gtk_event_box_new();
-    GtkWidget *colormanaged = sp_get_icon_image("color-management", GTK_ICON_SIZE_SMALL_TOOLBAR);
-    gtk_container_add(GTK_CONTAINER(_box_colormanaged), colormanaged);
-    gtk_widget_set_tooltip_text(_box_colormanaged, _("Color Managed"));
-    gtk_widget_set_sensitive(_box_colormanaged, false);
-    gtk_container_add(rgbabox_container, _box_colormanaged);
+    _colormanaged = sp_get_icon_image("color-management", GTK_ICON_SIZE_NORMAL);
+    gtk_widget_set_tooltip_text(_colormanaged, _("Color Managed"));
+    gtk_widget_set_sensitive(_colormanaged, false);
+    gtk_box_append(rgbabox_box, _colormanaged);
 
-    _box_outofgamut = gtk_event_box_new();
-    GtkWidget *outofgamut = sp_get_icon_image("out-of-gamut-icon", GTK_ICON_SIZE_SMALL_TOOLBAR);
-    gtk_container_add(GTK_CONTAINER(_box_outofgamut), outofgamut);
-    gtk_widget_set_tooltip_text(_box_outofgamut, _("Out of gamut!"));
-    gtk_widget_set_sensitive(_box_outofgamut, false);
-    gtk_container_add(rgbabox_container, _box_outofgamut);
+    _outofgamut = sp_get_icon_image("out-of-gamut-icon", GTK_ICON_SIZE_NORMAL);
+    gtk_widget_set_tooltip_text(_outofgamut, _("Out of gamut!"));
+    gtk_widget_set_sensitive(_outofgamut, false);
+    gtk_box_append(rgbabox_box, _outofgamut);
 
-    _box_toomuchink = gtk_event_box_new();
-    GtkWidget *toomuchink = sp_get_icon_image("too-much-ink-icon", GTK_ICON_SIZE_SMALL_TOOLBAR);
-    gtk_container_add(GTK_CONTAINER(_box_toomuchink), toomuchink);
-    gtk_widget_set_tooltip_text(_box_toomuchink, _("Too much ink!"));
-    gtk_widget_set_sensitive(_box_toomuchink, false);
-    gtk_container_add(rgbabox_container, _box_toomuchink);
+    _toomuchink = sp_get_icon_image("too-much-ink-icon", GTK_ICON_SIZE_NORMAL);
+    gtk_widget_set_tooltip_text(_toomuchink, _("Too much ink!"));
+    gtk_widget_set_sensitive(_toomuchink, false);
+    gtk_box_append(rgbabox_box, _toomuchink);
 
     /* Color picker */
-    GtkWidget *picker = sp_get_icon_image("color-picker", GTK_ICON_SIZE_SMALL_TOOLBAR);
+    GtkWidget *picker = sp_get_icon_image("color-picker", GTK_ICON_SIZE_NORMAL);
     _btn_picker = gtk_button_new();
     gtk_button_set_has_frame(GTK_BUTTON(_btn_picker), false);
-    gtk_container_add(GTK_CONTAINER(_btn_picker), picker);
+    gtk_box_append(GTK_BOX(_btn_picker), picker);
     gtk_widget_set_tooltip_text(_btn_picker, _("Pick colors from image"));
-    gtk_container_add(rgbabox_container, _btn_picker);
+    gtk_box_append(rgbabox_box, _btn_picker);
     g_signal_connect(G_OBJECT(_btn_picker), "clicked", G_CALLBACK(ColorNotebook::_onPickerClicked), this);
 
     /* Create RGBA entry and color preview */
     _rgbal = gtk_label_new_with_mnemonic(_("RGBA_:"));
     gtk_widget_set_halign(_rgbal, GTK_ALIGN_END);
     gtk_widget_set_hexpand(_rgbal, TRUE);
-    gtk_container_add(rgbabox_container, _rgbal);
+    gtk_box_append(rgbabox_box, _rgbal);
 
     auto const rgba_entry = Gtk::make_managed<ColorEntry>(_selected_color);
     auto const rgba_entry_widget = rgba_entry->Gtk::Widget::gobj();
     sp_dialog_defocus_on_enter(rgba_entry_widget);
-    gtk_container_add(rgbabox_container, rgba_entry_widget);
+    gtk_box_append(rgbabox_box, rgba_entry_widget);
     gtk_label_set_mnemonic_widget(GTK_LABEL(_rgbal), rgba_entry_widget);
 
     // the "too much ink" icon is initially hidden
-    gtk_widget_set_visible(_box_toomuchink, false);
+    gtk_widget_set_visible(_toomuchink, false);
 
     gtk_widget_set_margin_start(rgbabox, XPAD);
     gtk_widget_set_margin_end(rgbabox, XPAD);
@@ -264,9 +259,9 @@ void ColorNotebook::_updateICCButtons()
     g_return_if_fail((0.0 <= alpha) && (alpha <= 1.0));
 
     /* update color management icon*/
-    gtk_widget_set_sensitive(_box_colormanaged, color.hasColorProfile());
-    gtk_widget_set_sensitive(_box_toomuchink, false);
-    gtk_widget_set_sensitive(_box_outofgamut, false);
+    gtk_widget_set_sensitive(_colormanaged, color.hasColorProfile());
+    gtk_widget_set_sensitive(_toomuchink, false);
+    gtk_widget_set_sensitive(_outofgamut, false);
 
     if (color.hasColors()) {
         auto name = color.getColorProfile();
@@ -278,12 +273,12 @@ void ColorNotebook::_updateICCButtons()
         Inkscape::ColorProfile *target_profile =
             _document->getProfileManager().find(name.c_str());
         if (target_profile)
-            gtk_widget_set_sensitive(_box_outofgamut, target_profile->GamutCheck(color));
+            gtk_widget_set_sensitive(_outofgamut, target_profile->GamutCheck(color));
 
         /* update too-much-ink icon */
         Inkscape::ColorProfile *prof = _document->getProfileManager().find(name.c_str());
         if (prof && prof->isPrintColorSpace()) {
-            gtk_widget_set_visible(_box_toomuchink, true);
+            gtk_widget_set_visible(_toomuchink, true);
             double ink_sum = 0;
             for (double i : color.getColors()) {
                 ink_sum += i;
@@ -293,10 +288,10 @@ void ColorNotebook::_updateICCButtons()
                 which means the paper can get too wet due to an excessive amount of ink. This may lead to several issues
                 such as misalignment and poor quality of printing in general.*/
             if (ink_sum > 3.2)
-                gtk_widget_set_sensitive(_box_toomuchink, true);
+                gtk_widget_set_sensitive(_toomuchink, true);
         }
         else {
-            gtk_widget_set_visible(_box_toomuchink, false);
+            gtk_widget_set_visible(_toomuchink, false);
         }
     } else {
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();

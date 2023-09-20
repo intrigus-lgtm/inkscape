@@ -225,6 +225,7 @@ set(ui_SRC
 	widget/gradient-selector.cpp
 	widget/gradient-vector-selector.cpp
 	widget/gradient-with-stops.cpp
+	widget/icon-combobox.cpp
 	widget/image-properties.cpp
 	widget/imagetoggler.cpp
 	widget/ink-color-wheel.cpp
@@ -514,6 +515,7 @@ set(ui_SRC
 	widget/gradient-selector.h
 	widget/gradient-vector-selector.h
 	widget/gradient-with-stops.h
+	widget/icon-combobox.h
 	widget/image-properties.h
 	widget/imagetoggler.h
 	widget/ink-color-wheel.h

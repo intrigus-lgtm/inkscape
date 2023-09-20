@@ -13,16 +13,31 @@
 #ifndef INK_EXTENSION_PARAM_PATH_H_SEEN
 #define INK_EXTENSION_PARAM_PATH_H_SEEN
 
+#include <vector>
+#include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
+
 #include "parameter.h"
 
+namespace Gio {
+class AsyncResult;
+class File;
+} // namespace Gio
 
-namespace Inkscape {
-namespace Extension {
+namespace Gtk {
+class FileDialog;
+} // namespace Gtk
+
+namespace Inkscape::Extension {
 
 class ParamPathEntry;
 
 class ParamPath : public InxParameter {
 public:
+    enum class Mode {
+        file, folder, file_new, folder_new
+    };
+
     ParamPath(Inkscape::XML::Node *xml, Inkscape::Extension::Extension *ext);
 
     /** \brief  Returns \c _value, with a \i const to protect it. */
@@ -35,32 +50,28 @@ public:
     void string_to_value(const std::string &in) override;
 
 private:
-    enum Mode {
-        FILE, FOLDER, FILE_NEW, FOLDER_NEW
-    };
-
     /** \brief  Internal value. */
     std::string _value;
 
     /** selection mode for the file chooser: files or folders? */
-    Mode _mode = FILE;
+    Mode _mode = Mode::file;
 
     /** selection mode for the file chooser: multiple items? */
     bool _select_multiple = false;
 
     /** filetypes that should be selectable in file chooser */
-    std::vector<std::string> _filetypes;
+    std::vector<Glib::ustring> _filetypes;
 
     /** pointer to the parameters text entry
       * keep this around, so we can update the value accordingly in \a on_button_clicked() */
     ParamPathEntry *_entry;
 
     void on_button_clicked();
+    void on_file_dialog_response(Glib::RefPtr<Gio::AsyncResult> const &result     ,
+                                 Glib::RefPtr<Gtk::FileDialog > const &file_dialog);
 };
 
-
-}  // namespace Extension
-}  // namespace Inkscape
+} // namespace Inkscape::Extension
 
 #endif /* INK_EXTENSION_PARAM_PATH_H_SEEN */
 

@@ -25,6 +25,7 @@
 #include <librevenge-stream/librevenge-stream.h>
 #include <libvisio/libvisio.h>
 #include <sigc++/functors/mem_fun.h>
+#include <gtkmm/adjustment.h>
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
 #include <gtkmm/dialog.h>
@@ -99,7 +100,6 @@ VsdImportDialog::VsdImportDialog(const std::vector<RVNGString> &vec)
     this->set_title(_("Page Selector"));
     this->set_modal(true);
     sp_transientize(this->Gtk::Widget::gobj());  //Make transient
-    this->property_window_position().set_value(Gtk::WIN_POS_NONE);
     this->set_resizable(true);
     this->property_destroy_with_parent().set_value(false);
 
@@ -123,7 +123,6 @@ VsdImportDialog::VsdImportDialog(const std::vector<RVNGString> &vec)
     auto _pageNumberSpin_adj = Gtk::Adjustment::create(1, 1, _vec.size(), 1, 10, 0);
     _pageNumberSpin = Gtk::make_managed<Gtk::SpinButton>(_pageNumberSpin_adj, 1, 0);
     _pageNumberSpin->set_focusable();
-    _pageNumberSpin->set_update_policy(Gtk::UPDATE_ALWAYS);
     _pageNumberSpin->set_numeric(true);
     _pageNumberSpin->set_wrap(false);
     UI::pack_start(*_page_selector_box, *_pageNumberSpin, UI::PackOptions::shrink);

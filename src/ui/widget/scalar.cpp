@@ -14,6 +14,7 @@
 #include "scalar.h"
 
 #include <cmath>
+#include <gtkmm/label.h>
 #include <gtkmm/scale.h>
 
 #include "spinbutton.h"
@@ -100,8 +101,7 @@ void Scalar::setNoLeadingZeros()
     if (getDigits()) {
         auto &spin_button = get_spin_button();
         spin_button.set_numeric(false);
-        spin_button.set_update_policy(Gtk::UPDATE_ALWAYS);
-        spin_button.signal_output().connect(sigc::mem_fun(*this, &Scalar::setNoLeadingZerosOutput));
+        spin_button.signal_output().connect(sigc::mem_fun(*this, &Scalar::setNoLeadingZerosOutput), false);
     }
 }
 

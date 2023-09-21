@@ -37,6 +37,7 @@
 #include <sigc++/functors/mem_fun.h>
 
 #include "extension/extension.h"
+#include "helper/choose-file.h"
 #include "preferences.h"
 #include "ui/pack.h"
 #include "xml/node.h"
@@ -217,9 +218,7 @@ void ParamPath::on_button_clicked()
     }
     dialog_title += "…";
 
-    auto const file_dialog = Gtk::FileDialog::create();
-    file_dialog->set_title(dialog_title);
-    file_dialog->set_accept_label(_("Select"));
+    auto const file_dialog = create_file_dialog(dialog_title, _("Select"));
 
     // set FileFilter according to 'filetype' attribute
     if (!_filetypes.empty() && _mode != Mode::folder && _mode != Mode::folder_new) {
@@ -235,8 +234,7 @@ void ParamPath::on_button_clicked()
 
         auto file_filters = Gio::ListStore<Gtk::FileFilter>::create();
         file_filters->append(file_filter);
-        file_dialog->set_filters(file_filters);
-        file_dialog->set_default_filter(file_filter);
+        set_filters(*file_dialog, file_filters);
     }
 
     // set current file/folder suitable for current value

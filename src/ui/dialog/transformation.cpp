@@ -278,14 +278,14 @@ void Transformation::layoutPageRotate()
     _scalar_rotate.setIncrements(0.1, 1.0);
     _scalar_rotate.set_hexpand();
 
-    auto object_rotate_left_icon = Gtk::manage(sp_get_icon_image("object-rotate-left", Gtk::ICON_SIZE_SMALL_TOOLBAR));
+    auto object_rotate_left_icon = Gtk::manage(sp_get_icon_image("object-rotate-left", Gtk::IconSize::NORMAL));
 
     _counterclockwise_rotate.add(*object_rotate_left_icon);
     _counterclockwise_rotate.set_mode(false);
     _counterclockwise_rotate.set_relief(Gtk::RELIEF_NONE);
     _counterclockwise_rotate.set_tooltip_text(_("Rotate in a counterclockwise direction"));
 
-    auto object_rotate_right_icon = Gtk::manage(sp_get_icon_image("object-rotate-right", Gtk::ICON_SIZE_SMALL_TOOLBAR));
+    auto object_rotate_right_icon = Gtk::manage(sp_get_icon_image("object-rotate-right", Gtk::IconSize::NORMAL));
 
     _clockwise_rotate.add(*object_rotate_right_icon);
     _clockwise_rotate.set_mode(false);
@@ -444,7 +444,7 @@ void Transformation::layoutPageTransform()
     _page_transform.table().attach(_scalar_transform_f, 2, 3, 1, 1);
 
     auto const img = Gtk::make_managed<Gtk::Image>();
-    img->set_from_icon_name("matrix-2d", Gtk::ICON_SIZE_BUTTON);
+    img->set_from_icon_name("matrix-2d");
     img->set_pixel_size(52);
     img->set_margin_top(4);
     img->set_margin_bottom(4);

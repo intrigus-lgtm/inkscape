@@ -154,7 +154,7 @@ StrokeStyle::StrokeStyleButton::StrokeStyleButton(Gtk::CheckButton      &grp,
     set_visible(true);
     set_mode(false);
 
-    auto px = Gtk::manage(sp_get_icon_image(icon, Gtk::ICON_SIZE_LARGE_TOOLBAR));
+    auto px = Gtk::manage(sp_get_icon_image(icon, Gtk::IconSize::LARGE));
     g_assert(px != nullptr);
     px->set_visible(true);
     add(*px);

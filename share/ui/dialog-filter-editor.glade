@@ -156,7 +156,7 @@
           <object class="GtkImage" id="effect-icon">
             <property name="visible">True</property>
             <property name="icon-name">effect</property>
-            <property name="icon-size">5</property>
+            <property name="icon-size">large</property>
           </object>
           <packing>
             <property name="left-attach">0</property>

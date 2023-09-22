@@ -343,7 +343,7 @@ Gtk::Widget *SatelliteArrayParam::param_newWidget()
     UI::pack_start(*vbox, *_scroller, UI::PackOptions::expand_widget);
 
     { // Paste item to link button
-        Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("edit-clone", Gtk::ICON_SIZE_BUTTON));
+        Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("edit-clone", Gtk::IconSize::NORMAL));
         auto const pButton = Gtk::make_managed<Gtk::Button>();
         pButton->set_relief(Gtk::RELIEF_NONE);
         pIcon->set_visible(true);
@@ -355,7 +355,7 @@ Gtk::Widget *SatelliteArrayParam::param_newWidget()
     }
 
     { // Remove linked item
-        Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("list-remove", Gtk::ICON_SIZE_BUTTON));
+        Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("list-remove", Gtk::IconSize::NORMAL));
         auto const pButton = Gtk::make_managed<Gtk::Button>();
         pButton->set_relief(Gtk::RELIEF_NONE);
         pIcon->set_visible(true);
@@ -367,7 +367,7 @@ Gtk::Widget *SatelliteArrayParam::param_newWidget()
     }
 
     { // Move Down
-        Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("go-down", Gtk::ICON_SIZE_BUTTON));
+        Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("go-down", Gtk::IconSize::NORMAL));
         auto const pButton = Gtk::make_managed<Gtk::Button>();
         pButton->set_relief(Gtk::RELIEF_NONE);
         pIcon->set_visible(true);
@@ -379,7 +379,7 @@ Gtk::Widget *SatelliteArrayParam::param_newWidget()
     }
 
     { // Move Down
-        Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("go-up", Gtk::ICON_SIZE_BUTTON));
+        Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("go-up", Gtk::IconSize::NORMAL));
         auto const pButton = Gtk::make_managed<Gtk::Button>();
         pButton->set_relief(Gtk::RELIEF_NONE);
         pIcon->set_visible(true);

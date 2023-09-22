@@ -2704,7 +2704,7 @@ void FilterEffectsDialog::add_effects(Inkscape::UI::Widget::CompletionPopup& pop
     popup.clear_completion_list();
 
     // 2-column menu
-    Inkscape::UI::ColumnMenuBuilder<EffectCategory> builder(menu, 2, Gtk::ICON_SIZE_LARGE_TOOLBAR);
+    Inkscape::UI::ColumnMenuBuilder<EffectCategory> builder(menu, 2, Gtk::IconSize::LARGE);
     for (auto const &effect : effects) {
         // build popup menu
         auto const &type = effect.type;
@@ -2785,7 +2785,7 @@ FilterEffectsDialog::FilterEffectsDialog()
             if (prim->getRepr()) {
                 auto id = FPConverter.get_id_from_key(prim->getRepr()->name());
                 const auto& effect = get_effects().at(id);
-                get_widget<Gtk::Image>(_builder, "effect-icon").set_from_icon_name(effect.icon_name, Gtk::ICON_SIZE_DND);
+                get_widget<Gtk::Image>(_builder, "effect-icon").set_from_icon_name(effect.icon_name);
                 auto buffer = get_widget<Gtk::TextView>(_builder, "effect-info").get_buffer();
                 buffer->set_text("");
                 buffer->insert_markup(buffer->begin(), effect.tooltip);

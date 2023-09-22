@@ -1476,7 +1476,7 @@ void DocumentProperties::build_gridspage()
         {C_("Grid", "Modular"), GridType::MODULAR, "grid-modular"}
     }) {
         auto const btn = Gtk::make_managed<Gtk::Button>(label, false);
-        btn->set_image_from_icon_name(icon, Gtk::ICON_SIZE_MENU);
+        btn->set_image_from_icon_name(icon, Gtk::IconSize::NORMAL);
         btn->set_always_show_image();
         btn_size->add_widget(*btn);
         UI::pack_start(_grids_hbox_crea, *btn, false, true);
@@ -2040,7 +2040,7 @@ void GridWidget::update()
 
     _name_label->set_markup(Glib::ustring("<b>") + _grid->displayName() + "</b>");
     _tab_lbl->set_label(_grid->getId() ? _grid->getId() : "-");
-    _tab_img->set_from_icon_name(_grid->typeName(), Gtk::ICON_SIZE_MENU);
+    _tab_img->set_from_icon_name(_grid->typeName());
 
     _wr.setUpdating (false);
 }

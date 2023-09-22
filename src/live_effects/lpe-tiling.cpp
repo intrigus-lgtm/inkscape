@@ -644,7 +644,7 @@ LPETiling::toItem(size_t i, bool reset, bool &write)
 Gtk::RadioButton* create_radio_button(Gtk::RadioButtonGroup& group, const Glib::ustring& tooltip, const Glib::ustring& icon_name) {
     auto const button = Gtk::make_managed<Gtk::RadioButton>(group, Glib::ustring());
     button->set_tooltip_text(tooltip);
-    button->set_image_from_icon_name(icon_name, Gtk::ICON_SIZE_BUTTON);
+    button->set_image_from_icon_name(icon_name, Gtk::IconSize::NORMAL);
     button->property_draw_indicator() = false;
     button->property_always_show_image() = true;
     button->set_halign(Gtk::Align::CENTER);
@@ -797,7 +797,7 @@ Gtk::Widget * LPETiling::newWidget()
             auto const button = dynamic_cast<Gtk::Button *>(children.at(1));
             g_assert(button);
             auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 6);
-            box->add(*Gtk::manage(sp_get_icon_image(INKSCAPE_ICON("randomize"), Gtk::ICON_SIZE_BUTTON)));
+            box->add(*Gtk::manage(sp_get_icon_image(INKSCAPE_ICON("randomize"), Gtk::IconSize::NORMAL)));
             box->add(*Gtk::make_managed<Gtk::Label>(_("Randomize")));
             button->remove();
             button->add(*box);

@@ -25,7 +25,6 @@ class Image;
 
 // N.B. These return unmanaged widgets, so callers must manage() or delete them!
 Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, int size);
-Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, Gtk::BuiltinIconSize icon_size);
 Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, Gtk::IconSize icon_size);
 GtkWidget  *sp_get_icon_image(Glib::ustring const &icon_name, GtkIconSize icon_size);
 

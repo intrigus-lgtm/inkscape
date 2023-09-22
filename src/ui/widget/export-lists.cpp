@@ -226,7 +226,7 @@ void ExportList::append_row()
     dpi_sb->set_visible(true);
     this->attach(*dpi_sb, _dpi_col, current_row, 1, 1);
 
-    auto const pIcon = Gtk::manage(sp_get_icon_image("window-close", Gtk::ICON_SIZE_SMALL_TOOLBAR));
+    auto const pIcon = Gtk::manage(sp_get_icon_image("window-close", Gtk::IconSize::NORMAL));
     auto const delete_btn = Gtk::make_managed<Gtk::Button>();
     delete_btn->set_relief(Gtk::RELIEF_NONE);
     delete_btn->add(*pIcon);

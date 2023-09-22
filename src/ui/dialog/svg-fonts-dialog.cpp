@@ -823,12 +823,12 @@ Gtk::Box* SvgFontsDialog::global_settings_tab(){
     _header_box.set_margin_end(MARGIN_SPACE);
 
     _font_add.set_valign(Gtk::Align::CENTER);
-    _font_add.set_image_from_icon_name("list-add", Gtk::ICON_SIZE_BUTTON);
+    _font_add.set_image_from_icon_name("list-add", Gtk::IconSize::NORMAL);
     _font_add.signal_clicked().connect(sigc::mem_fun(*this, &SvgFontsDialog::add_font));
 
     _font_remove.set_valign(Gtk::Align::CENTER);
     _font_remove.set_halign(Gtk::Align::CENTER);
-    _font_remove.set_image_from_icon_name("list-remove", Gtk::ICON_SIZE_BUTTON);
+    _font_remove.set_image_from_icon_name("list-remove", Gtk::IconSize::NORMAL);
     _font_remove.signal_clicked().connect([this]{ remove_selected_font(); });
 
     global_vbox.set_name("SVGFontsGlobalSettingsTab");

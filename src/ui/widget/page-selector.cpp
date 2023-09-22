@@ -35,12 +35,12 @@ PageSelector::PageSelector(SPDesktop *desktop)
 {
     set_name("PageSelector");
 
-    _prev_button.add(*Gtk::manage(sp_get_icon_image(INKSCAPE_ICON("pan-start"), Gtk::ICON_SIZE_MENU)));
+    _prev_button.add(*Gtk::manage(sp_get_icon_image(INKSCAPE_ICON("pan-start"), Gtk::IconSize::NORMAL)));
     _prev_button.set_relief(Gtk::RELIEF_NONE);
     _prev_button.set_tooltip_text(_("Move to previous page"));
     _prev_button.signal_clicked().connect(sigc::mem_fun(*this, &PageSelector::prevPage));
 
-    _next_button.add(*Gtk::manage(sp_get_icon_image(INKSCAPE_ICON("pan-end"), Gtk::ICON_SIZE_MENU)));
+    _next_button.add(*Gtk::manage(sp_get_icon_image(INKSCAPE_ICON("pan-end"), Gtk::IconSize::NORMAL)));
     _next_button.set_relief(Gtk::RELIEF_NONE);
     _next_button.set_tooltip_text(_("Move to next page"));
     _next_button.signal_clicked().connect(sigc::mem_fun(*this, &PageSelector::nextPage));

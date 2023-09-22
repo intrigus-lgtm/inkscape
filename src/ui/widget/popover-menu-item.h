@@ -38,7 +38,7 @@ public:
     [[nodiscard]] explicit PopoverMenuItem(Glib::ustring const &text = {},
                                            bool mnemonic = false,
                                            Glib::ustring const &icon_name = {},
-                                           Gtk::IconSize icon_size = Gtk::ICON_SIZE_MENU,
+                                           Gtk::IconSize icon_size = Gtk::IconSize::NORMAL,
                                            bool popdown_on_activate = true);
 
     /// A convenience, “drop-in” alias for signal_clicked().

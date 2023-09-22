@@ -741,7 +741,7 @@ void PrefEntryFileButtonHBox::init(Glib::ustring const &prefs_path,
     
     relatedButton = Gtk::make_managed<Gtk::Button>();
     auto const pixlabel = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 3);
-    Gtk::Image *im = sp_get_icon_image("applications-graphics", Gtk::ICON_SIZE_BUTTON);
+    auto const im = sp_get_icon_image("applications-graphics", Gtk::IconSize::NORMAL);
     UI::pack_start(*pixlabel, *im);
     auto const l = Gtk::make_managed<Gtk::Label>();
     l->set_markup_with_mnemonic(_("_Browse..."));
@@ -823,7 +823,7 @@ void PrefOpenFolder::init(Glib::ustring const &entry_string, Glib::ustring const
     relatedEntry = Gtk::make_managed<Gtk::Entry>();
     relatedButton = Gtk::make_managed<Gtk::Button>();
     auto const pixlabel = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 3);
-    Gtk::Image *im = sp_get_icon_image("document-open", Gtk::ICON_SIZE_BUTTON);
+    auto const im = sp_get_icon_image("document-open", Gtk::IconSize::NORMAL);
     UI::pack_start(*pixlabel, *im);
     auto const l = Gtk::make_managed<Gtk::Label>();
     l->set_markup_with_mnemonic(_("Open"));

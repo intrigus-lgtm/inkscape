@@ -114,7 +114,7 @@ using Inkscape::IO::Resource::UIS;
 [[nodiscard]] static auto reset_icon()
 {
     auto const image = Gtk::make_managed<Gtk::Image>();
-    image->set_from_icon_name("reset", Gtk::ICON_SIZE_BUTTON);
+    image->set_from_icon_name("reset");
     image->set_opacity(0.6);
     image->set_tooltip_text(_("Requires restart to take effect"));
     return image;
@@ -2055,7 +2055,7 @@ void InkscapePreferences::initPageUI()
             auto const label = Gtk::make_managed<Gtk::Label>(picker.label);
             label->set_valign(Gtk::Align::CENTER);
             UI::pack_start(*box, *label);
-            UI::pack_start(*box, *Gtk::make_managed<Gtk::Image>(picker.icon, Gtk::ICON_SIZE_BUTTON));
+            UI::pack_start(*box, *Gtk::make_managed<Gtk::Image>(picker.icon, Gtk::IconSize::NORMAL));
             box->set_spacing(3);
             auto path = picker.visibility_path;
             btn->set_active(prefs->getBool(path));

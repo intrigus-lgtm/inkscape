@@ -30,7 +30,7 @@ ColorTagRenderer::ColorTagRenderer() :
 
     int dummy_width;
     // height size is not critical
-    Gtk::IconSize::lookup(Gtk::ICON_SIZE_MENU, dummy_width, _height);
+    Gtk::IconSize::lookup(Gtk::IconSize::NORMAL, dummy_width, _height);
 }
 
 void ColorTagRenderer::render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr, 

@@ -35,7 +35,7 @@ namespace Inkscape::UI::Dialog {
 Gtk::Box& create_tab_label(const char* label_text, const char* icon_name) {
     auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
     auto const image = Gtk::make_managed<Gtk::Image>();
-    image->set_from_icon_name(icon_name, Gtk::ICON_SIZE_MENU);
+    image->set_from_icon_name(icon_name);
     auto const label = Gtk::make_managed<Gtk::Label>(label_text, true);
     UI::pack_start(*box, *image, false, true);
     UI::pack_start(*box, *label, false, true);

@@ -274,7 +274,7 @@ set_visible_icon(Gtk::Button &button, bool const visible)
 {
     auto &image = dynamic_cast<Gtk::Image &>(*button.get_child());
     auto const icon_name = visible ? "object-visible-symbolic" : "object-hidden-symbolic";
-    image.set_from_icon_name(icon_name, Gtk::ICON_SIZE_SMALL_TOOLBAR);
+    image.set_from_icon_name(icon_name);
 }
 
 void
@@ -333,7 +333,7 @@ void LivePathEffectEditor::add_lpes(Inkscape::UI::Widget::CompletionPopup &popup
     auto &menu = popup.get_menu();
     menu.delete_all();
 
-    ColumnMenuBuilder<LivePathEffect::LPECategory> builder{menu, 3, Gtk::ICON_SIZE_LARGE_TOOLBAR};
+    ColumnMenuBuilder<LivePathEffect::LPECategory> builder{menu, 3, Gtk::IconSize::LARGE};
     auto const tie = [](LPEMetadata const &lpe){ return std::tie(lpe.category, lpe.label); };
     std::sort(lpes.begin(), lpes.end(), [=](auto &l, auto &r){ return tie(l) < tie(r); });
     for (auto const &lpe : lpes) {
@@ -797,7 +797,7 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
         auto const &icon = converter.get_icon(effectype);
         auto const tooltip = get_tooltip(effectype, untranslated_label);
 
-        LPEIconImage->set_from_icon_name(icon, Gtk::IconSize(Gtk::ICON_SIZE_SMALL_TOOLBAR));
+        LPEIconImage->set_from_icon_name(icon);
 
         bool const visible = g_strcmp0(lpe->getRepr()->attribute("is_visible"), "true") == 0;
         set_visible_icon(*LPEHide, visible);

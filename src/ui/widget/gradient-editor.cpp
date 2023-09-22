@@ -72,7 +72,7 @@ private:
 };
 
 void set_icon(Gtk::Button& btn, gchar const* pixmap) {
-    if (Gtk::Image* img = sp_get_icon_image(pixmap, Gtk::ICON_SIZE_BUTTON)) {
+    if (Gtk::Image* img = sp_get_icon_image(pixmap, Gtk::IconSize::NORMAL)) {
         btn.set_image(*img);
     }
 }
@@ -509,7 +509,7 @@ void GradientEditor::set_repeat_mode(SPGradientSpread mode) {
 void GradientEditor::set_repeat_icon(SPGradientSpread mode) {
     auto ico = get_repeat_icon(mode);
     if (!ico.empty()) {
-        _repeat_icon.set_from_icon_name(ico, Gtk::ICON_SIZE_BUTTON);
+        _repeat_icon.set_from_icon_name(ico);
     }
 }
 

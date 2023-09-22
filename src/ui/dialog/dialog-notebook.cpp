@@ -143,7 +143,7 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
         return a.order < b.order;
     });
 
-    auto builder = ColumnMenuBuilder<DialogData::Category>{_menu, 2, Gtk::ICON_SIZE_MENU,
+    auto builder = ColumnMenuBuilder<DialogData::Category>{_menu, 2, Gtk::IconSize::NORMAL,
                                                            row};
     for (auto const &data : all_dialogs) {
         auto callback = [key = data.key]{
@@ -792,7 +792,7 @@ void DialogNotebook::reload_tab_menu()
                     if (symbolic && name.find("-symbolic") == Glib::ustring::npos) {
                         name += Glib::ustring("-symbolic");
                     }
-                    Gtk::Image *iconend  = sp_get_icon_image(name, Gtk::ICON_SIZE_MENU);
+                    Gtk::Image *iconend  = sp_get_icon_image(name, Gtk::IconSize::NORMAL);
                     boxmenu->add(*iconend);
                 }
             }

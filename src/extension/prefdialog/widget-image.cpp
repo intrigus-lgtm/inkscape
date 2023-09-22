@@ -87,7 +87,7 @@ Gtk::Widget *WidgetImage::get_widget(sigc::signal<void ()> * /*changeSignal*/)
     } else if (_width || _height) {
         image = sp_get_icon_image(_icon_name, std::max(_width, _height));
     } else {
-        image = sp_get_icon_image(_icon_name, Gtk::ICON_SIZE_DIALOG);
+        image = sp_get_icon_image(_icon_name, Gtk::IconSize::LARGE);
     }
 
     image->set_visible(true);

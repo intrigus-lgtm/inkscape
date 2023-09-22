@@ -58,7 +58,7 @@ ComboToolItem::ComboToolItem(Glib::ustring group_label,
     _use_label (true),
     _use_icon  (false),
     _use_pixbuf (true),
-    _icon_size ( Gtk::ICON_SIZE_LARGE_TOOLBAR ),
+    _icon_size ( Gtk::IconSize::LARGE ),
     _combobox (nullptr),
     _container(Gtk::make_managed<Gtk::Box>())
 {
@@ -151,7 +151,7 @@ ComboToolItem::populate_combobox()
         }
 
         auto const renderer = Gtk::make_managed<Gtk::CellRendererPixbuf>();
-        renderer->set_property ("stock_size", Gtk::ICON_SIZE_LARGE_TOOLBAR);
+        renderer->set_property ("stock_size", Gtk::IconSize::LARGE);
         _combobox->pack_start (*renderer, false);
         _combobox->add_attribute (*renderer, "icon_name", columns.col_icon );
     } else if (_use_pixbuf) {

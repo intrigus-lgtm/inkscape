@@ -103,7 +103,7 @@ void set_icon_sizes(Gtk::Widget *parent, int pixel_size)
     if (!parent) return;
     for_each_descendant(*parent, [=](Gtk::Widget &widget) {
         if (auto const ico = dynamic_cast<Gtk::Image *>(&widget)) {
-            ico->set_from_icon_name(ico->get_icon_name(), static_cast<Gtk::IconSize>(Gtk::ICON_SIZE_BUTTON));
+            ico->set_from_icon_name(ico->get_icon_name());
             ico->set_pixel_size(pixel_size);
         }
         return ForEachResult::_continue;

@@ -218,10 +218,10 @@ MyHandle::MyHandle(Gtk::Orientation orientation, int size = get_handle_size())
 
     auto const image = Gtk::make_managed<Gtk::Image>();
     if (get_orientation() == Gtk::Orientation::HORIZONTAL) {
-        image->set_from_icon_name("view-more-symbolic", Gtk::ICON_SIZE_SMALL_TOOLBAR);
+        image->set_from_icon_name("view-more-symbolic");
         set_size_request(size, -1);
     } else {
-        image->set_from_icon_name("view-more-horizontal-symbolic", Gtk::ICON_SIZE_SMALL_TOOLBAR);
+        image->set_from_icon_name("view-more-horizontal-symbolic");
         set_size_request(-1, size);
     }
     image->set_pixel_size(size);

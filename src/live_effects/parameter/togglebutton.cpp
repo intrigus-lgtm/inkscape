@@ -28,7 +28,7 @@ namespace Inkscape::LivePathEffect {
 ToggleButtonParam::ToggleButtonParam(const Glib::ustring &label, const Glib::ustring &tip, const Glib::ustring &key,
                                      Inkscape::UI::Widget::Registry *wr, Effect *effect, bool default_value,
                                      Glib::ustring inactive_label, char const *_icon_active, char const *_icon_inactive,
-                                     Gtk::BuiltinIconSize _icon_size)
+                                     Gtk::IconSize _icon_size)
     : Parameter(label, tip, key, wr, effect)
     , value(default_value)
     , defvalue(default_value)
@@ -172,8 +172,7 @@ ToggleButtonParam::refresh_button()
         auto const im = dynamic_cast<Gtk::Image *>(children.front());
         if (!im) return;
 
-        gtk_image_set_from_icon_name(im->gobj(), value ? _icon_active : _icon_inactive,
-                                     GTK_ICON_SIZE_BUTTON);
+        gtk_image_set_from_icon_name(im->gobj(), value ? _icon_active : _icon_inactive);
         gtk_image_set_pixel_size(im->gobj(), _icon_size);
     }
 }

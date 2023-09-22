@@ -25,9 +25,9 @@ template <typename SectionData = std::nullptr_t> // nullptr_t means no sections.
 class ColumnMenuBuilder {
 public:
     ColumnMenuBuilder(Widget::PopoverMenu& menu, int columns,
-                      Gtk::IconSize icon_size = Gtk::ICON_SIZE_MENU,
+                      Gtk::IconSize icon_size = Gtk::IconSize::NORMAL,
                       int const first_row = 0)
-       : _menu(menu)
+        : _menu(menu)
         , _row(first_row)
         , _columns(columns)
         , _icon_size(static_cast<int>(icon_size))

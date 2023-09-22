@@ -173,7 +173,7 @@ Gtk::Widget *DialogContainer::create_notebook_tab(Glib::ustring const &label_str
     auto const label = Gtk::make_managed<Gtk::Label>(label_str);
     auto const image = Gtk::make_managed<Gtk::Image>();
     auto const close = Gtk::make_managed<Gtk::Button>();
-    image->set_from_icon_name(image_str, Gtk::ICON_SIZE_MENU);
+    image->set_from_icon_name(image_str);
     auto const tab = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
     close->set_image_from_icon_name("window-close");
     close->set_tooltip_text(_("Close Tab"));

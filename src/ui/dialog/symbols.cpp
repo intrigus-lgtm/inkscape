@@ -308,7 +308,7 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
 
     /*************************Overlays******************************/
     // No results
-    overlay_icon = sp_get_icon_image("searching", Gtk::ICON_SIZE_DIALOG);
+    overlay_icon = sp_get_icon_image("searching", Gtk::IconSize::LARGE);
     overlay_icon->set_pixel_size(40);
     overlay_icon->set_halign(Gtk::Align::CENTER);
     overlay_icon->set_valign(Gtk::Align::START);

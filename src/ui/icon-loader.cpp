@@ -30,7 +30,7 @@
 Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, int size)
 {
     Gtk::Image *icon = new Gtk::Image();
-    icon->set_from_icon_name(icon_name, Gtk::IconSize(Gtk::ICON_SIZE_BUTTON));
+    icon->set_from_icon_name(icon_name);
     icon->set_pixel_size(size);
     return icon;
 }
@@ -38,14 +38,8 @@ Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, int size)
 Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, Gtk::IconSize icon_size)
 {
     Gtk::Image *icon = new Gtk::Image();
-    icon->set_from_icon_name(icon_name, icon_size);
-    return icon;
-}
-
-Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, Gtk::BuiltinIconSize icon_size)
-{
-    Gtk::Image *icon = new Gtk::Image();
-    icon->set_from_icon_name(icon_name, icon_size);
+    icon->set_from_icon_name(icon_name);
+    icon->set_icon_size(icon_size);
     return icon;
 }
 

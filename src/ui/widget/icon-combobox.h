@@ -18,7 +18,7 @@ public:
         _model = Gtk::ListStore::create(_columns);
 
         pack_start(_renderer, false);
-        _renderer.set_property("stock_size", Gtk::ICON_SIZE_BUTTON);
+        _renderer.set_property("stock_size", Gtk::IconSize::NORMAL);
         _renderer.set_padding(2, 0);
         add_attribute(_renderer, "icon_name", _columns.icon_name);
 

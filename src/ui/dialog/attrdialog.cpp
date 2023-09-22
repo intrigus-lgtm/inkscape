@@ -165,7 +165,7 @@ AttrDialog::AttrDialog()
     _treeView.append_column("", *delete_renderer);
 
     if (auto const col = _treeView.get_column(0)) {
-        auto add_icon = Gtk::manage(sp_get_icon_image("list-add", Gtk::ICON_SIZE_SMALL_TOOLBAR));
+        auto add_icon = Gtk::manage(sp_get_icon_image("list-add", Gtk::IconSize::NORMAL));
         col->set_clickable(true);
         col->set_widget(*add_icon);
         add_icon->set_tooltip_text(_("Add a new attribute"));

@@ -73,7 +73,7 @@ public:
     int get_active() const { return _active; }
     Glib::ustring get_active_text();
     void set_active(int active);
-    void set_icon_size( Gtk::BuiltinIconSize size ) { _icon_size = size; }
+    void set_icon_size( Gtk::IconSize size ) { _icon_size = size; }
 
     Glib::RefPtr<Gtk::ListStore> const &get_store() { return _store; }
 
@@ -99,7 +99,7 @@ private:
     bool _use_label;
     bool _use_icon;   // Applies to menu item only
     bool _use_pixbuf;
-    Gtk::BuiltinIconSize _icon_size;
+    Gtk::IconSize _icon_size;
 
     /* Combobox in tool */
     Gtk::ComboBox* _combobox;

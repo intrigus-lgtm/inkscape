@@ -35,7 +35,7 @@ namespace Inkscape::UI::Widget {
 
 class AlternateIcons final : public Gtk::Box {
 public:
-    AlternateIcons(Gtk::BuiltinIconSize size, Glib::ustring const &a, Glib::ustring const &b)
+    AlternateIcons(Gtk::IconSize const size, Glib::ustring const &a, Glib::ustring const &b)
     : Gtk::Box(Gtk::Orientation::HORIZONTAL)
     {
         set_name("AlternateIcons");
@@ -89,7 +89,7 @@ LayerSelector::LayerSelector(SPDesktop *desktop)
     _layer_name.set_tooltip_text(_("Current layer"));
     UI::pack_start(*this, _layer_name, UI::PackOptions::expand_widget);
 
-    _eye_label = Gtk::make_managed<AlternateIcons>(Gtk::ICON_SIZE_MENU,
+    _eye_label = Gtk::make_managed<AlternateIcons>(Gtk::IconSize::NORMAL,
         INKSCAPE_ICON("object-visible"), INKSCAPE_ICON("object-hidden"));
     _eye_toggle.add(*_eye_label);
     _hide_layer_connection = _eye_toggle.signal_toggled().connect(sigc::mem_fun(*this, &LayerSelector::_hideLayer));
@@ -98,7 +98,7 @@ LayerSelector::LayerSelector(SPDesktop *desktop)
     _eye_toggle.set_tooltip_text(_("Toggle current layer visibility"));
     UI::pack_start(*this, _eye_toggle, UI::PackOptions::expand_padding);
 
-    _lock_label = Gtk::make_managed<AlternateIcons>(Gtk::ICON_SIZE_MENU,
+    _lock_label = Gtk::make_managed<AlternateIcons>(Gtk::IconSize::NORMAL,
         INKSCAPE_ICON("object-unlocked"), INKSCAPE_ICON("object-locked"));
     _lock_toggle.add(*_lock_label);
     _lock_layer_connection = _lock_toggle.signal_toggled().connect(sigc::mem_fun(*this, &LayerSelector::_lockLayer));

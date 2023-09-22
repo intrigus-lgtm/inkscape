@@ -208,7 +208,7 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
         /* Expander */
         // Label icon
         auto const expander_icon = Gtk::manage(
-                sp_get_icon_image("color-wheel", Gtk::ICON_SIZE_BUTTON)
+                sp_get_icon_image("color-wheel", Gtk::IconSize::NORMAL)
         );
         expander_icon->set_visible(true);
         expander_icon->set_margin_start(2 * XPAD);

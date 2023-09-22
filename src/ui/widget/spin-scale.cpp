@@ -150,7 +150,7 @@ DualSpinScale::DualSpinScale(Glib::ustring label1, Glib::ustring label2,
 
 void DualSpinScale::set_link_active(bool link) {
     _linked = link;
-    _link.set_image_from_icon_name(_linked ? "entries-linked" : "entries-unlinked", Gtk::ICON_SIZE_LARGE_TOOLBAR);
+    _link.set_image_from_icon_name(_linked ? "entries-linked" : "entries-unlinked", Gtk::IconSize::LARGE);
 }
 
 Glib::ustring DualSpinScale::get_as_attribute() const

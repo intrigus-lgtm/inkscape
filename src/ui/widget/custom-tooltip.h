@@ -16,7 +16,7 @@ sp_query_custom_tooltip(
     gint id, 
     Glib::ustring tooltip, 
     Glib::ustring icon = "", 
-    Gtk::IconSize iconsize = Gtk::ICON_SIZE_DIALOG, 
+    Gtk::IconSize iconsize = Gtk::IconSize::LARGE, 
     int delaytime = 1000.0);
 
 #endif // INKSCAPE_UI_WIDGET_CUSTOM_TOOLTIP_H

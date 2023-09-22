@@ -28,7 +28,7 @@ public:
   ToggleButtonParam(const Glib::ustring &label, const Glib::ustring &tip, const Glib::ustring &key,
                     Inkscape::UI::Widget::Registry *wr, Effect *effect, bool default_value = false,
                     Glib::ustring inactive_label = "", char const *icon_active = nullptr,
-                    char const *icon_inactive = nullptr, Gtk::BuiltinIconSize icon_size = Gtk::ICON_SIZE_SMALL_TOOLBAR);
+                    char const *icon_inactive = nullptr, Gtk::IconSize icon_size = Gtk::IconSize::NORMAL);
   ~ToggleButtonParam() override;
   ToggleButtonParam(const ToggleButtonParam &) = delete;
   ToggleButtonParam &operator=(const ToggleButtonParam &) = delete;
@@ -58,7 +58,7 @@ private:
     const Glib::ustring inactive_label;
     const char * _icon_active;
     const char * _icon_inactive;
-    Gtk::BuiltinIconSize _icon_size;
+    Gtk::IconSize _icon_size;
     Inkscape::UI::Widget::RegisteredToggleButton * checkwdg;
 
     sigc::signal<void ()> _signal_toggled;

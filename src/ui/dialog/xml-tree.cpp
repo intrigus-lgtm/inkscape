@@ -212,7 +212,7 @@ XmlTree::XmlTree()
         } else if (layout == Vertical) {
             icon = "layout-vertical";
         }
-        get_widget<Gtk::Image>(_builder, "layout-img").set_from_icon_name(icon + "-symbolic", Gtk::ICON_SIZE_SMALL_TOOLBAR);
+        get_widget<Gtk::Image>(_builder, "layout-img").set_from_icon_name(icon + "-symbolic");
         prefs->setInt("/dialogs/xml/layout", layout);
         arrange_panels(layout);
         _layout = layout;

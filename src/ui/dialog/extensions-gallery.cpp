@@ -285,11 +285,11 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
 
     auto paned = &get_widget<Gtk::Paned>(_builder, "paned");
     auto show_categories_list = [=](bool show){
-        paned->get_child1()->set_visible(show);
+        paned->get_start_child()->set_visible(show);
     };
     paned->set_position(position);
     paned->property_position().signal_changed().connect([=](){
-        if (auto w = paned->get_child1()) {
+        if (auto const w = paned->get_start_child()) {
             if (w->is_visible()) prefs->setInt(_prefs_path + "/position", paned->get_position());
         }
     });
@@ -339,18 +339,23 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
 
     _grid.pack_start(_image_renderer);
     _grid.add_attribute(_image_renderer, "surface", g_effect_columns.image);
-    _grid.set_cell_data_func(_image_renderer, [=](const Gtk::TreeModel::const_iterator& it){
+    _grid.set_cell_data_func(_image_renderer, [=](Gtk::TreeModel::const_iterator const &const_it){
         Gdk::Rectangle rect;
-        Gtk::TreeModel::Path path(it);
-        if (_grid.get_cell_rect(path, rect)) {
-            auto height = _grid.get_allocated_height();
-            bool visible = !(rect.get_x() < 0 && rect.get_y() < 0);
-            // cell rect coordinates are not affected by scrolling
-            if (visible && (rect.get_y() + rect.get_height() < 0 || rect.get_y() > 0 + height)) {
-                visible = false;
-            }
-            get_cell_data_func(&_image_renderer, *it, visible);
+        // https://gitlab.gnome.org/GNOME/gtkmm/-/issues/145
+        auto const it = const_cast<GtkTreeIter *>(const_it.gobj());
+        auto const path = gtk_tree_model_get_path(model->Gtk::TreeModel::gobj(), it);
+        if (!gtk_icon_view_get_cell_rect(_grid.gobj(), path, nullptr, rect.gobj())) {
+            return;
         }
+
+        auto const height = _grid.get_height();
+        bool visible = !(rect.get_x() < 0 && rect.get_y() < 0);
+        // cell rect coordinates are not affected by scrolling
+        if (visible && (rect.get_y() + rect.get_height() < 0 || rect.get_y() > 0 + height)) {
+            visible = false;
+        }
+        auto const store = GTK_LIST_STORE(model->get_model()->gobj());
+        get_cell_data_func(_image_renderer, const_it, store, it, visible);
     });
 
     _grid.set_text_column(g_effect_columns.name);
@@ -360,7 +365,7 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
     _grid.set_row_spacing(0);
     _grid.set_model(model);
     _grid.signal_item_activated().connect([=](const Gtk::TreeModel::Path& path){
-        _run.clicked();
+        _run.activate();
     });
 
     _search.signal_search_changed().connect([=](){
@@ -426,7 +431,7 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
 
     refilter();
 
-    add(get_widget<Gtk::Box>(_builder, "main"));
+    append(get_widget<Gtk::Box>(_builder, "main"));
 }
 
 void ExtensionsGallery::update_name() {
@@ -440,7 +445,7 @@ void ExtensionsGallery::update_name() {
 
         // set action name
         std::string id = row[g_effect_columns.id];
-        gtk_actionable_set_action_name(GTK_ACTIONABLE(_run.gobj()), ("app." + id).c_str());
+        _run.set_action_name("app." + id);
         _run.set_sensitive();
         // add ellipsis if extension takes input
         auto& effect = *row[g_effect_columns.effect];
@@ -519,8 +524,13 @@ Geom::Point get_thumbnail_size(int index, ExtensionsGallery::Type type) {
 
 // This is an attempt to render images on-demand (visible only), as opposed to all of them in the store.
 // Hopefully this can be simplified in gtk4.
-void ExtensionsGallery::get_cell_data_func(Gtk::CellRenderer* cell_renderer, Gtk::TreeModel::Row row, bool visible)
+// Yes! In gtkmm4 this passes a ConstRow, but we modify the row... ugh! Get over to GridView, ASAP!
+void ExtensionsGallery::get_cell_data_func(Gtk::CellRenderer &cell_renderer,
+                                           Gtk::TreeModel::const_iterator const &const_it,
+                                           GtkListStore * const store, GtkTreeIter * const iter,
+                                           bool const visible)
 {
+    auto const &row = *const_it;
     std::string icon_file = (row)[g_effect_columns.icon];
     std::string cache_key = (row)[g_effect_columns.id];
 
@@ -530,7 +540,9 @@ void ExtensionsGallery::get_cell_data_func(Gtk::CellRenderer* cell_renderer, Gtk
     if (!visible) {
         // cell is not visible, so this is layout pass; return empty image of the right size
         if (!_blank_image || _blank_image->get_width() != icon_size.x() || _blank_image->get_height() != icon_size.y()) {
-            _blank_image = _blank_image.cast_static(render_icon(nullptr, {}, icon_size, get_scale_factor()));
+            auto const icon = render_icon(nullptr, {}, icon_size, get_scale_factor());
+            _blank_image = std::dynamic_pointer_cast<Cairo::ImageSurface>(icon);
+            g_assert(_blank_image);
         }
         surface = _blank_image;
     }
@@ -544,11 +556,13 @@ void ExtensionsGallery::get_cell_data_func(Gtk::CellRenderer* cell_renderer, Gtk
             // render
             Extension::Effect* effect = row[g_effect_columns.effect];
             surface = render_icon(effect, icon_file, icon_size, get_scale_factor());
-            row[g_effect_columns.image] = surface;
+            // FIXME: Doing this seems v wrong, as evidence by how hard it is in gtkmm4. →GridView!
+            // row[g_effect_columns.image] = surface;
+            gtk_list_store_set(store, iter, g_effect_columns.image.index(), surface->cobj(), -1);
             _image_cache.insert(cache_key, surface);
         }
     }
-    cell_renderer->set_property("surface", surface);
+    cell_renderer.set_property("surface", surface);
 }
 
 } // namespace Inkscape::UI::Dialog

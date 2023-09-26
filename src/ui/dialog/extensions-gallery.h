@@ -16,6 +16,7 @@
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/cellrendererpixbuf.h>
+#include <gtkmm/treemodel.h>
 #include <boost/compute/detail/lru_cache.hpp>
 
 #include "helper/auto-connection.h"
@@ -28,7 +29,6 @@ class IconView;
 class ListStore;
 class SearchEntry;
 class TreeModelFilter;
-class TreeRow;
 class TreeSelection;
 class TreeView;
 } // namespace Gtk
@@ -66,7 +66,10 @@ private:
     void show_category(const Glib::ustring& id);
     void refilter();
     void rebuild();
-    void get_cell_data_func(Gtk::CellRenderer *cell_renderer, Gtk::TreeRow row, bool visible);
+    void get_cell_data_func(Gtk::CellRenderer &cell_renderer,
+                            Gtk::TreeModel::const_iterator const &const_it,
+                            GtkListStore *store, GtkTreeIter *it, // argh! See comments in cpp.
+                            bool visible);
 };
 
 } // namespace Inkscape::UI::Dialog

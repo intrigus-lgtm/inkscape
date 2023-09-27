@@ -135,9 +135,9 @@ static constexpr int SPACE_SIZE_Y = 10;
 
 static void docprops_style_button(Gtk::Button& btn, char const* iconName)
 {
-    GtkWidget *child = sp_get_icon_image(iconName, GTK_ICON_SIZE_SMALL_TOOLBAR);
+    GtkWidget *child = sp_get_icon_image(iconName, GTK_ICON_SIZE_NORMAL);
     gtk_widget_set_visible(child, true);
-    btn.add(*Gtk::manage(Glib::wrap(child)));
+    btn.set_child(*Gtk::manage(Glib::wrap(child)));
     btn.set_has_frame(false);
 }
 
@@ -258,14 +258,8 @@ void attach_all(Gtk::Grid &table, Gtk::Widget *const arr[], unsigned const n)
             table.attach(*arr[i+1], 1, r, 1, 1);
         } else {
             if (arr[i+1]) {
-                Gtk::AttachOptions yoptions = (Gtk::AttachOptions)0;
                 arr[i+1]->set_hexpand();
-
-                if (yoptions & Gtk::EXPAND)
-                    arr[i+1]->set_vexpand();
-                else
-                    arr[i+1]->set_valign(Gtk::Align::CENTER);
-
+                arr[i+1]->set_valign(Gtk::Align::CENTER);
                 table.attach(*arr[i+1], 0, r, 2, 1);
             } else if (arr[i]) {
                 auto &label = dynamic_cast<Gtk::Label &>(*arr[i]);
@@ -590,10 +584,10 @@ void DocumentProperties::build_guides()
     _rcp_hgui.set_hexpand();
     _rcb_sgui.set_hexpand();
     auto const inner = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
-    inner->add(_rcb_sgui);
-    inner->add(_rcb_lgui);
-    inner->add(_rcp_gui);
-    inner->add(_rcp_hgui);
+    inner->append(_rcb_sgui);
+    inner->append(_rcb_lgui);
+    inner->append(_rcp_gui);
+    inner->append(_rcp_hgui);
     auto const spacer = Gtk::make_managed<Gtk::Label>();
     Gtk::Widget *const widget_array[] =
     {
@@ -875,7 +869,7 @@ void DocumentProperties::build_cms()
 
     populate_linked_profiles_box();
 
-    _LinkedProfilesListScroller.add(_LinkedProfilesList);
+    _LinkedProfilesListScroller.set_child(_LinkedProfilesList);
     _LinkedProfilesListScroller.set_has_frame(true);
     _LinkedProfilesListScroller.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::ALWAYS);
     _LinkedProfilesListScroller.set_size_request(-1, 90);
@@ -969,8 +963,8 @@ void DocumentProperties::build_scripting()
     _embed_remove_btn.set_tooltip_text(_("Remove"));
     docprops_style_button(_embed_remove_btn, INKSCAPE_ICON("list-remove"));
 
-    _embed_button_box.add(_embed_new_btn);
-    _embed_button_box.add(_embed_remove_btn);
+    _embed_button_box.append(_embed_new_btn);
+    _embed_button_box.append(_embed_remove_btn);
     _embed_button_box.set_halign(Gtk::Align::END);
 
     row = 0;
@@ -1024,7 +1018,7 @@ void DocumentProperties::build_scripting()
     _EmbeddedContentScroller.set_valign(Gtk::Align::CENTER);
     _page_embedded_scripts->table().attach(_EmbeddedContentScroller, 0, row, 3, 1);
 
-    _EmbeddedContentScroller.add(_EmbeddedContent);
+    _EmbeddedContentScroller.set_child(_EmbeddedContent);
     _EmbeddedContentScroller.set_has_frame(true);
     _EmbeddedContentScroller.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     _EmbeddedContentScroller.set_size_request(-1, 140);
@@ -1038,14 +1032,14 @@ void DocumentProperties::build_scripting()
 
     populate_script_lists();
 
-    _ExternalScriptsListScroller.add(_ExternalScriptsList);
+    _ExternalScriptsListScroller.set_child(_ExternalScriptsList);
     _ExternalScriptsListScroller.set_has_frame(true);
     _ExternalScriptsListScroller.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::ALWAYS);
     _ExternalScriptsListScroller.set_size_request(-1, 90);
 
     _external_add_btn.signal_clicked().connect(sigc::mem_fun(*this, &DocumentProperties::addExternalScript));
 
-    _EmbeddedScriptsListScroller.add(_EmbeddedScriptsList);
+    _EmbeddedScriptsListScroller.set_child(_EmbeddedScriptsList);
     _EmbeddedScriptsListScroller.set_has_frame(true);
     _EmbeddedScriptsListScroller.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::ALWAYS);
     _EmbeddedScriptsListScroller.set_size_request(-1, 90);
@@ -1454,7 +1448,7 @@ void DocumentProperties::build_gridspage()
     _grids_label_def.add_css_class("heading");
     _grids_hbox_crea.set_spacing(5);
     UI::pack_start(_grids_hbox_crea, *Gtk::make_managed<Gtk::Label>("Add grid:"), false, true);
-    auto btn_size = Gtk::SizeGroup::create(Gtk::SizeGroupMode::SIZE_GROUP_HORIZONTAL);
+    auto const btn_size = Gtk::SizeGroup::create(Gtk::SizeGroup::Mode::HORIZONTAL);
     for (auto const &[label, type, icon]: {std::tuple
         {C_("Grid", "Rectangular"), GridType::RECTANGULAR, "grid-rectangular"},
         {C_("Grid", "Axonometric"), GridType::AXONOMETRIC, "grid-axonometric"},
@@ -1827,8 +1821,7 @@ GridWidget::GridWidget(SPGrid *grid)
             // ignoring user input error for now
         }
     });
-    subgrid->show_all();
-    angle_popover->add(*subgrid);
+    angle_popover->set_child(*subgrid);
     angle_popover->signal_show().connect([=](){
         if (!_grid) return;
 

@@ -227,12 +227,12 @@ void FontLister::apply_collections(std::set <Glib::ustring>& selected_collection
     FontCollections *font_collections = Inkscape::FontCollections::get();
 
     for (auto const &col : selected_collections) {
-        if (col == Inkscape::DOCUMENT_FONTS) {
+        if (col.raw() == Inkscape::DOCUMENT_FONTS) {
             DocumentFonts* document_fonts = Inkscape::DocumentFonts::get();
             for (auto const &font : document_fonts->get_fonts()) {
                 fonts.insert(font);
             }
-        } else if (col == Inkscape::RECENTLY_USED_FONTS) {
+        } else if (col.raw() == Inkscape::RECENTLY_USED_FONTS) {
             RecentlyUsedFonts *recently_used = Inkscape::RecentlyUsedFonts::get();
             for (auto const &font : recently_used->get_fonts()) {
                 fonts.insert(font);
@@ -1094,7 +1094,7 @@ Gtk::TreeModel::Row FontLister::get_row_for_font(Glib::ustring const &family)
 
 Gtk::TreePath FontLister::get_path_for_font(Glib::ustring const &family)
 {
-    return font_list_store->get_path(get_row_for_font(family));
+    return font_list_store->get_path(get_row_for_font(family).get_iter());
 }
 
 bool FontLister::is_path_for_font(Gtk::TreePath path, Glib::ustring family)
@@ -1345,7 +1345,7 @@ void font_lister_style_cell_data_func(Gtk::CellRenderer *const renderer,
                                       Gtk::TreeModel::const_iterator const &iter)
 {
     Inkscape::FontLister* font_lister = Inkscape::FontLister::get_instance();
-    auto &row = *iter;
+    auto const &row = *iter;
 
     Glib::ustring family = font_lister->get_font_family();
     Glib::ustring style  = row[font_lister->font_style_list.cssStyle];

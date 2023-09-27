@@ -30,7 +30,7 @@
 #include <glibmm/regex.h>
 #include <glibmm/ustring.h>
 #include <gdkmm/display.h>
-#include <gtkmm/accelgroup.h>
+#include <gtkmm/accelerator.h>
 #include <gtkmm/box.h>
 #include <gtkmm/cssprovider.h>
 #include <gtkmm/dialog.h>
@@ -3346,7 +3346,7 @@ void InkscapePreferences::onKBTreeEdited (const Glib::ustring& path, guint accel
 
     // Check if there is currently an actions assigned to this shortcut; if yes ask if the shortcut should be reassigned
     Glib::ustring action_name;
-    Glib::ustring accel = Gtk::AccelGroup::name(accel_key, accel_mods);
+    Glib::ustring accel = Gtk::Accelerator::name(accel_key, accel_mods);
     auto *app = InkscapeApplication::instance()->gtk_app();
     std::vector<Glib::ustring> actions = app->get_actions_for_accel(accel);
     if (!actions.empty()) {
@@ -3563,8 +3563,8 @@ void InkscapePreferences::onKBListKeyboardShortcuts()
             }
             unsigned int key = 0;
             Gdk::ModifierType mod = Gdk::ModifierType(0);
-            Gtk::AccelGroup::parse(accel, key, mod);
-            shortcut_label += Gtk::AccelGroup::get_label(key, mod) + ", ";
+            Gtk::Accelerator::parse(accel, key, mod);
+            shortcut_label += Gtk::Accelerator::get_label(key, mod) + ", ";
         }
 
         if (shortcut_label.size() > 1) {
@@ -3576,7 +3576,7 @@ void InkscapePreferences::onKBListKeyboardShortcuts()
         if (accels.size() > 0) {
             unsigned int key = 0;
             Gdk::ModifierType mod = Gdk::ModifierType(0);
-            Gtk::AccelGroup::parse(accels[0], key, mod);
+            Gtk::Accelerator::parse(accels[0], key, mod);
             shortcut_key = Gtk::AccelKey(key, mod);
         }
 

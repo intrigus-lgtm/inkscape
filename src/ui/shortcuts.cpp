@@ -31,7 +31,7 @@
 #include <glibmm/regex.h>
 #include <giomm/file.h>
 #include <giomm/simpleaction.h>
-#include <gtkmm/accelgroup.h>
+#include <gtkmm/accelerator.h>
 #include <gtkmm/application.h>
 #include <gtkmm/window.h>
 
@@ -154,7 +154,7 @@ bool
 Shortcuts::invoke_action(Gtk::AccelKey const &shortcut)
 {
     // This can be simplified in GTK4.
-    Glib::ustring accel = Gtk::AccelGroup::name(shortcut.get_key(), shortcut.get_mod());
+    Glib::ustring accel = Gtk::Accelerator::name(shortcut.get_key(), shortcut.get_mod());
     std::vector<Glib::ustring> actions = app->get_actions_for_accel(accel);
     if (!actions.empty()) {
         Glib::ustring const &action = actions[0];
@@ -680,7 +680,7 @@ Shortcuts::get_label(const Gtk::AccelKey& shortcut)
             label += " ";
         }
 
-        label += Gtk::AccelGroup::get_label(shortcut.get_key(), shortcut.get_mod());
+        label += Gtk::Accelerator::get_label(shortcut.get_key(), shortcut.get_mod());
     }
 
     return label;
@@ -886,8 +886,8 @@ Shortcuts::update_gui_text_recursive(Gtk::Widget* widget)
                 // Convert to more user friendly notation.
                 unsigned int key = 0;
                 Gdk::ModifierType mod = Gdk::ModifierType(0);
-                Gtk::AccelGroup::parse(accels[0], key, mod);
-                tooltip += "(" + Gtk::AccelGroup::get_label(key, mod) + ")";
+                Gtk::Accelerator::parse(accels[0], key, mod);
+                tooltip += "(" + Gtk::Accelerator::get_label(key, mod) + ")";
             }
 
             // Update tooltip.
@@ -988,7 +988,7 @@ Shortcuts::dump() {
     for (auto mod : modifiers) {
         for (char key = '!'; key <= '~'; ++key) {
             Glib::ustring action;
-            Glib::ustring accel = Gtk::AccelGroup::name(key, mod);
+            Glib::ustring accel = Gtk::Accelerator::name(key, mod);
             std::vector<Glib::ustring> actions = app->get_actions_for_accel(accel);
             if (!actions.empty()) {
                 action = actions[0];

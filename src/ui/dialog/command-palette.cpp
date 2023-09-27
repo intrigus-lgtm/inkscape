@@ -23,6 +23,7 @@
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
 #include <glibmm/variant.h>
+#include <gtkmm/accelerator.h>
 #include <giomm/action.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/box.h>
@@ -296,8 +297,8 @@ bool CommandPalette::generate_action_operation(const ActionPtrName &action_ptr_n
         for (const auto &accel : accels) {
             guint key = 0;
             Gdk::ModifierType mods;
-            Gtk::AccelGroup::parse(accel, key, mods);
-            Glib::ustring label = Gtk::AccelGroup::get_label(key, mods);
+            Gtk::Accelerator::parse(accel, key, mods);
+            Glib::ustring label = Gtk::Accelerator::get_label(key, mods);
             accel_label.append(label.raw()).append(1, ' ');
         }
 

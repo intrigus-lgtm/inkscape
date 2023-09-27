@@ -16,6 +16,7 @@
 #include <glibmm/i18n.h>
 #include <glibmm/keyfile.h>
 #include <giomm/file.h>
+#include <gtkmm/accelerator.h>
 #include <gtkmm/box.h>
 #include <gtkmm/eventbox.h>
 #include <gtkmm/image.h>
@@ -264,8 +265,8 @@ DialogBase* DialogContainer::find_existing_dialog(const Glib::ustring& dialog_ty
 
     unsigned key{};
     Gdk::ModifierType mods{};
-    Gtk::AccelGroup::parse(accels[0], key, mods);
-    return Gtk::AccelGroup::get_label(key, mods);
+    Gtk::Accelerator::parse(accels[0], key, mods);
+    return Gtk::Accelerator::get_label(key, mods);
 }
 
 /**

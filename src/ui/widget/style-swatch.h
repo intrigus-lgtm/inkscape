@@ -16,7 +16,6 @@
 
 #include <memory>
 #include <gtkmm/box.h>
-#include <gtkmm/eventbox.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <gtkmm/label.h>
 
@@ -67,18 +66,15 @@ private:
     std::unique_ptr<PrefObs> _tool_obs;
     std::unique_ptr<PrefObs> _style_obs;
     Glib::ustring _tool_path;
-    Gtk::EventBox _swatch;
     Gtk::Grid *_table;
     Gtk::Label _label[2];
     Gtk::Box _empty_space;
-    Gtk::EventBox _place[2];
-    Gtk::EventBox _opacity_place;
     Gtk::Label _value[2];
+    Gtk::Box _place[2];
     Gtk::Label _opacity_value;
     std::unique_ptr<ColorPreview> _color_preview[2];
     Glib::ustring _color[2];
     Gtk::Box _stroke;
-    Gtk::EventBox _stroke_width_place;
     Gtk::Label _stroke_width;
     Util::Unit *_sw_unit;
 

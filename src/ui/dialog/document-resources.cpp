@@ -19,7 +19,7 @@
 #include <gdkmm/pixbuf.h>
 #include <gdkmm/rgba.h>
 #include <glib/gi18n.h>
-#include <glibmm/exception.h>
+#include <glibmm/error.h>
 #include <glibmm/fileutils.h>
 #include <glibmm/main.h>
 #include <glibmm/markup.h>
@@ -207,8 +207,8 @@ void save_gimp_palette(std::string fname, const std::vector<int>& colors, const 
         }
         Glib::file_set_contents(fname, ost.str());
     }
-    catch (Glib::Exception& ex) {
-        g_warning("Error saving color palette: %s", ex.what().c_str());
+    catch (Glib::Error const &ex) {
+        g_warning("Error saving color palette: %s", ex.what());
     }
     catch (...) {
         g_warning("Error saving color palette.");
@@ -317,7 +317,7 @@ DocumentResources::DocumentResources()
     auto model = Gtk::TreeModelSort::create(filtered_items);
     model->set_sort_column(g_item_columns.label.index(), Gtk::SortType::ASCENDING);
 
-    add(get_widget<Gtk::Box>(_builder, "main"));
+    append(get_widget<Gtk::Box>(_builder, "main"));
 
     _iconview.set_model(model);
     _iconview.set_text_column(g_item_columns.label);

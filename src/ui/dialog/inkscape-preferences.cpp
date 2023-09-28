@@ -1899,7 +1899,7 @@ void InkscapePreferences::initPageUI()
         for_each_descendant(toolbox, [=](Gtk::Widget &widget) {
             if (auto const button = dynamic_cast<Gtk::ToggleButton *>(&widget)) {
                 // do not execute any action:
-                gtk_actionable_set_action_name(GTK_ACTIONABLE(button->gobj()), "");
+                button->set_action_name("");
 
                 button->set_sensitive();
                 auto action_name = sp_get_action_target(button);

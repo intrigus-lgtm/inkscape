@@ -29,9 +29,11 @@
 #include <glibmm/i18n.h>
 #include <glibmm/miscutils.h>
 #include <glibmm/regex.h>
+#include <glibmm/variant.h>
 #include <giomm/file.h>
 #include <giomm/simpleaction.h>
 #include <gtkmm/accelerator.h>
+#include <gtkmm/actionable.h>
 #include <gtkmm/application.h>
 #include <gtkmm/window.h>
 
@@ -825,27 +827,16 @@ Shortcuts::get_file_names()
 void
 Shortcuts::update_gui_text_recursive(Gtk::Widget* widget)
 {
-    // NOT what we want
-    // auto activatable = dynamic_cast<Gtk::Activatable *>(widget);
-
-    // We must do this until GTK4
-    GtkWidget* gwidget = widget->gobj();
-    bool is_actionable = GTK_IS_ACTIONABLE(gwidget);
-
-    if (is_actionable) {
-        char const * const gaction = gtk_actionable_get_action_name(GTK_ACTIONABLE(gwidget));
-        if (gaction) {
-            Glib::ustring action = gaction;
-
+    if (auto const actionable = dynamic_cast<Gtk::Actionable *>(widget)) {
+        if (auto action = actionable->get_action_name(); !action.empty()) {
             Glib::ustring variant;
-            GVariant* gvariant = gtk_actionable_get_action_target_value(GTK_ACTIONABLE(gwidget));
-            if (gvariant) {
-                Glib::ustring type = g_variant_get_type_string(gvariant);
+            if (auto const value = actionable->get_action_target_value()) {
+                auto const type = value.get_type_string();
                 if (type == "s") {
-                    variant = g_variant_get_string(gvariant, nullptr);
+                    variant = static_cast<Glib::Variant<Glib::ustring> const &>(value).get();
                     action += "('" + variant + "')";
                 } else if (type == "i") {
-                    variant = std::to_string(g_variant_get_int32(gvariant));
+                    variant = std::to_string(static_cast<Glib::Variant<std::int32_t> const &>(value).get());
                     action += "(" + variant + ")";
                 } else {
                     std::cerr << "Shortcuts::update_gui_text_recursive: unhandled variant type: " << type.raw() << std::endl;
@@ -995,18 +986,8 @@ Shortcuts::dump_all_recursive(Gtk::Widget* widget)
     ++indent;
     for (int i = 0; i < indent; ++i) std::cout << "  ";
 
-    // NOT what we want
-    // auto activatable = dynamic_cast<Gtk::Activatable *>(widget);
-
-    // We must do this until GTK4
-    GtkWidget* gwidget = widget->gobj();
-    bool is_actionable = GTK_IS_ACTIONABLE(gwidget);
-    Glib::ustring action;
-    if (is_actionable) {
-        const gchar* gaction = gtk_actionable_get_action_name( GTK_ACTIONABLE(gwidget) );
-        if (gaction) {
-            action = gaction;
-        }
+    if (auto const actionable = dynamic_cast<Gtk::Actionable *>(widget)) {
+        action = actionable->get_action_name();
     }
 
     std::cout << widget->get_name()

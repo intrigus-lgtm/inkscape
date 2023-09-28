@@ -13,18 +13,18 @@
 
 #include "spw-utilities.h"
 
-#include <cstring>
-#include <gtk/gtk.h>
+#include <glibmm/variant.h>
+#include <gtkmm/actionable.h>
 #include <gtkmm/widget.h>
 
 Glib::ustring sp_get_action_target(Gtk::Widget* widget) {
     Glib::ustring target;
 
-    if (widget && GTK_IS_ACTIONABLE(widget->gobj())) {
-        auto variant = gtk_actionable_get_action_target_value(GTK_ACTIONABLE(widget->gobj()));
-        auto type = variant ? g_variant_get_type_string(variant) : nullptr;
-        if (type && std::strcmp(type, "s") == 0) {
-            target = g_variant_get_string(variant, nullptr);
+    if (auto const actionable = dynamic_cast<Gtk::Actionable *>(widget)) {
+        if (auto const variant = actionable->get_action_target_value();
+            variant && variant.get_type_string() == "s")
+        {
+            target = static_cast<Glib::Variant<Glib::ustring> const &>(variant).get();
         }
     }
 

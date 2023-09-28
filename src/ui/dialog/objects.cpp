@@ -1190,8 +1190,7 @@ Gtk::Button* ObjectsPanel::_addBarButton(char const* iconName, char const* toolt
     btn->add(*child);
     btn->set_has_frame(false);
     btn->set_tooltip_text(tooltip);
-    // Must use C API until GTK4.
-    gtk_actionable_set_action_name(GTK_ACTIONABLE(btn->gobj()), action_name);
+    btn->set_action_name(action_name);
     return btn;
 }
 

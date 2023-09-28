@@ -600,9 +600,8 @@ void DocumentProperties::build_guides()
     attach_all(_page_guides->table(), widget_array, G_N_ELEMENTS(widget_array));
     inner->set_hexpand(false);
 
-    // Must use C API until GTK4.
-    gtk_actionable_set_action_name(GTK_ACTIONABLE(_create_guides_btn.gobj()), "doc.create-guides-around-page");
-    gtk_actionable_set_action_name(GTK_ACTIONABLE(_delete_guides_btn.gobj()), "doc.delete-all-guides");
+    _create_guides_btn.set_action_name("doc.create-guides-around-page");
+    _delete_guides_btn.set_action_name("doc.delete-all-guides");
 }
 
 /// Populates the available color profiles combo box

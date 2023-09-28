@@ -176,13 +176,6 @@ Shortcuts::invoke_action(Gtk::AccelKey const &shortcut)
 }
 
 /**  Trigger action from a shortcut. Useful if we want to intercept the event from GTK */
-bool
-Shortcuts::invoke_action(GdkEventKey const * const event)
-{
-    auto const shortcut = get_from_event(event);
-    return invoke_action(shortcut);
-}
-
 bool Shortcuts::invoke_action(KeyEvent const &event)
 {
     auto const shortcut = get_from_event(event);
@@ -723,15 +716,6 @@ get_from_event_impl(unsigned const event_keyval, unsigned const event_keycode,
     //           << " Key: " << std::hex << keyval << " (" << (char)keyval << ")"
     //           << " Mod: " << std::hex << unused_modifiers << std::endl;
     return (Gtk::AccelKey(keyval, unused_modifiers));
-}
-
-/// See/prefer get_from(controller, ...) for a more modern/GTK4-ready equivalent
-Gtk::AccelKey
-Shortcuts::get_from_event(GdkEventKey const * const event, bool const fix)
-{
-    return get_from_event_impl(event->keyval, event->hardware_keycode,
-                               static_cast<GdkModifierType>(event->state), event->group,
-                               fix);
 }
 
 /**

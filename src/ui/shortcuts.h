@@ -97,7 +97,6 @@ public:
 
     // Invoke action corresponding to key
     bool invoke_action(Gtk::AccelKey const &shortcut);
-    bool invoke_action(GdkEventKey const *event);
     bool invoke_action(GtkEventControllerKey const *controller,
                        unsigned keyval, unsigned keycode, GdkModifierType state);
     bool invoke_action(KeyEvent const &event);
@@ -105,7 +104,6 @@ public:
     // Utility
     sigc::connection connect_changed(sigc::slot<void ()> const &slot);
     static Glib::ustring get_label(const Gtk::AccelKey& shortcut);
-    static Gtk::AccelKey get_from_event(GdkEventKey const *event, bool fix = false);
     /// Controller provides the group. It can be nullptr; if so, we use group 0.
     static Gtk::AccelKey get_from(GtkEventControllerKey const *controller,
                                   unsigned keyval, unsigned keycode, GdkModifierType state,

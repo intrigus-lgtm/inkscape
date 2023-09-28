@@ -132,7 +132,7 @@ Glib::RefPtr<Gtk::ListStore> TemplateList::generate_category(std::string const &
     icons->signal_selection_changed().connect([this]() { _item_selected_signal.emit(); });
     icons->signal_item_activated().connect([this](const Gtk::TreeModel::Path) { _item_activated_signal.emit(); });
 
-    return Glib::RefPtr<Gtk::ListStore>::cast_dynamic(icons->get_model());
+    return std::dynamic_pointer_cast<Gtk::ListStore>(icons->get_model());
 }
 
 /**

@@ -67,7 +67,7 @@ object_align_on_canvas(InkscapeApplication *app)
         return;
     }
 
-    auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(action);
+    auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(action);
     if (!saction) {
         show_output("object_align_on_canvas: action not SimpleAction!");
         return;

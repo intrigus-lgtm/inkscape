@@ -221,7 +221,7 @@ shape_builder_mode(int value, InkscapeWindow* win)
     Inkscape::Preferences *pref = Inkscape::Preferences::get();
 
     auto action = win->lookup_action("shape-builder-mode");
-    auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(action);
+    auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(action);
     saction->change_state((int)value);
     pref->setInt("/tools/booleans/mode", value);
 }

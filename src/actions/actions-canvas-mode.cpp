@@ -68,7 +68,7 @@ canvas_display_mode(int value, InkscapeWindow *win)
         return;
     }
 
-    auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(action);
+    auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(action);
     if (!saction) {
         show_output("canvas_display_mode: action 'canvas-display-mode' not SimpleAction!");
         return;
@@ -89,7 +89,7 @@ canvas_display_mode_cycle(InkscapeWindow *win)
         return;
     }
 
-    auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(action);
+    auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(action);
     if (!saction) {
         show_output("canvas_display_mode_cycle: action 'canvas-display-mode' not SimpleAction!");
         return;
@@ -117,7 +117,7 @@ canvas_display_mode_toggle(InkscapeWindow *win)
         return;
     }
 
-    auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(action);
+    auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(action);
     if (!saction) {
         show_output("canvas_display_mode_toogle: action 'canvas-display-mode' not SimpleAction!");
         return;
@@ -156,7 +156,7 @@ canvas_split_mode(int value, InkscapeWindow *win)
         return;
     }
 
-    auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(action);
+    auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(action);
     if (!saction) {
         show_output("canvas_split_mode: action 'canvas-split-mode' not SimpleAction!");
         return;
@@ -207,7 +207,7 @@ canvas_color_mode_toggle(InkscapeWindow *win)
         return;
     }
 
-    auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(action);
+    auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(action);
     if (!saction) {
         show_output("canvas_color_mode_toggle: action not SimpleAction!");
         return;
@@ -241,7 +241,7 @@ canvas_color_manage_toggle(InkscapeWindow *win)
         return;
     }
 
-    auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(action);
+    auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(action);
     if (!saction) {
         show_output("canvas_color_manage_toggle: action not SimpleAction!");
         return;

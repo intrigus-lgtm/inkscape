@@ -244,7 +244,7 @@ canvas_rotate_lock(InkscapeWindow *win)
         return;
     }
 
-    auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(action);
+    auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(action);
     if (!saction) {
         show_output("canvas_rotate_lock: action not SimpleAction!");
         return;

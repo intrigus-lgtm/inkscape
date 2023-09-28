@@ -27,7 +27,7 @@ CompletionPopup::CompletionPopup() :
 {
     _button.set_popover(_popover_menu);
 
-    _list = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(_builder->get_object("list"));
+    _list = std::dynamic_pointer_cast<Gtk::ListStore>(_builder->get_object("list"));
     assert(_list);
 
     add(get_widget<Gtk::Box>(_builder, "main-box"));

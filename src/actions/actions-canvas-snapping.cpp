@@ -327,7 +327,7 @@ set_actions_canvas_snapping_helper(Gio::ActionMap& map, Glib::ustring action_nam
         return;
     }
 
-    auto simple = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(action);
+    auto simple = std::dynamic_pointer_cast<Gio::SimpleAction>(action);
     if (!simple) {
         show_output(Glib::ustring("set_actions_canvas_snapping_helper: action ") + action_name.raw() + " not SimpleAction!");
         return;

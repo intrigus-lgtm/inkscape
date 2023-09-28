@@ -993,7 +993,7 @@ Gtk::EventSequenceState Canvas::on_button_released(Gtk::GestureClick const &cont
                 return Gtk::EventSequenceState::CLAIMED;
             }
 
-            auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(action);
+            auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(action);
             if (!saction) {
                 std::cerr << "Canvas::on_motion_notify_event: action 'canvas-split-mode' not SimpleAction!" << std::endl;
                 return Gtk::EventSequenceState::CLAIMED;

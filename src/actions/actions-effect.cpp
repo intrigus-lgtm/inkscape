@@ -60,8 +60,8 @@ void enable_effect_actions(InkscapeApplication* app, bool enabled)
     auto gapp = app->gio_app();
     auto le_action = gapp->lookup_action("last-effect");
     auto lep_action = gapp->lookup_action("last-effect-pref");
-    auto le_saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(le_action);
-    auto lep_saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(lep_action);
+    auto le_saction = std::dynamic_pointer_cast<Gio::SimpleAction>(le_action);
+    auto lep_saction = std::dynamic_pointer_cast<Gio::SimpleAction>(lep_action);
     // GTK4
     // auto le_saction = dynamic_cast<Gio::SimpleAction*>(le_action);
     // auto lep_saction = dynamic_cast<Gio::SimpleAction*>(lep_action);

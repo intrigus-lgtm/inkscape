@@ -60,7 +60,7 @@ build_menu()
     }
 
     const auto object = refBuilder->get_object("menus");
-    const auto gmenu = Glib::RefPtr<Gio::Menu>::cast_dynamic(object);
+    const auto gmenu = std::dynamic_pointer_cast<Gio::Menu>(object);
 
     if (!gmenu) {
         std::cerr << "build_menu: failed to build Main menu!" << std::endl;
@@ -75,8 +75,8 @@ build_menu()
     { // Filters and Extensions
         auto effects_object = refBuilder->get_object("effect-menu-effects");
         auto filters_object = refBuilder->get_object("filter-menu-filters");
-        auto effects_menu   = Glib::RefPtr<Gio::Menu>::cast_dynamic(effects_object);
-        auto filters_menu   = Glib::RefPtr<Gio::Menu>::cast_dynamic(filters_object);
+        auto effects_menu   = std::dynamic_pointer_cast<Gio::Menu>(effects_object);
+        auto filters_menu   = std::dynamic_pointer_cast<Gio::Menu>(filters_object);
 
         if (!filters_menu) {
             std::cerr << "build_menu(): Couldn't find Filters menu entry!" << std::endl;
@@ -129,7 +129,7 @@ build_menu()
     // Recent file
     auto recent_manager = Gtk::RecentManager::get_default();
     auto sub_object = refBuilder->get_object("recent-files");
-    auto sub_gmenu = Glib::RefPtr<Gio::Menu>::cast_dynamic(sub_object);
+    auto sub_gmenu = std::dynamic_pointer_cast<Gio::Menu>(sub_object);
     auto recent_menu_quark = Glib::Quark("recent-manager");
     sub_gmenu->set_data(recent_menu_quark, recent_manager.get()); // mark submenu, so we can find it
 

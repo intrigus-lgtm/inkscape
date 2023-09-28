@@ -118,7 +118,9 @@ TextEdit::TextEdit()
     auto notebook = &get_widget<Gtk::Notebook>(builder, "notebook");
     auto font_box = &get_widget<Gtk::Box>     (builder, "font_box");
     auto feat_box = &get_widget<Gtk::Box>     (builder, "feat_box");
-    text_buffer = Glib::RefPtr<Gtk::TextBuffer>::cast_static(builder->get_object("text_buffer"));
+
+    text_buffer = std::dynamic_pointer_cast<Gtk::TextBuffer>(builder->get_object("text_buffer"));
+    g_assert(text_buffer);
 
     UI::pack_start(*font_box, font_selector, true, true);
     font_box->reorder_child(font_selector, 2);

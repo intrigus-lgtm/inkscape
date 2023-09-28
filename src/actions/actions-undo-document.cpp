@@ -75,8 +75,8 @@ enable_undo_actions(SPDocument* document, bool undo, bool redo)
         return;
     auto undo_action = group->lookup_action("undo");
     auto redo_action = group->lookup_action("redo");
-    auto undo_saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(undo_action);
-    auto redo_saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(redo_action);
+    auto undo_saction = std::dynamic_pointer_cast<Gio::SimpleAction>(undo_action);
+    auto redo_saction = std::dynamic_pointer_cast<Gio::SimpleAction>(redo_action);
     // GTK4
     // auto undo_saction = dynamic_cast<Gio::SimpleAction*>(undo_action);
     // auto redo_saction = dynamic_cast<Gio::SimpleAction*>(redo_action);

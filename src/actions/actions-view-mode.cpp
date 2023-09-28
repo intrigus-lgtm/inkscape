@@ -40,7 +40,7 @@ canvas_set_state(InkscapeWindow *win, Glib::ustring action_name, bool state)
         return;
     }
 
-    auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(action);
+    auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(action);
     if (!saction) {
         show_output(Glib::ustring("canvas_set_state: ") + action_name.raw() + " not SimpleAction!");
         return;
@@ -61,7 +61,7 @@ canvas_toggle_state(InkscapeWindow *win, Glib::ustring action_name)
         return false;
     }
 
-    auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(action);
+    auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(action);
     if (!saction) {
         show_output(Glib::ustring("canvas_toggle_state: ") + action_name.raw() + " not SimpleAction!");
         return false;

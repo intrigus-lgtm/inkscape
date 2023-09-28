@@ -196,7 +196,7 @@ void SPNamedView::modified(unsigned int flags)
         }
         // Update unit action group
         auto action = document->getActionGroup()->lookup_action("set-display-unit");
-        if (auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(action)) {
+        if (auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(action)) {
             Glib::VariantType String(Glib::VARIANT_TYPE_STRING);
             saction->change_state(getDisplayUnit()->abbr);
         }

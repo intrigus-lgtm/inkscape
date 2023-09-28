@@ -193,8 +193,8 @@ void CanvasGrid::on_realize() {
         set_display_icon();
 
         // when display mode state changes, update icon
-        auto cms_action = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(map->lookup_action("canvas-color-manage"));
-        auto disp_action = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(map->lookup_action("canvas-display-mode"));
+        auto cms_action = std::dynamic_pointer_cast<Gio::SimpleAction>(map->lookup_action("canvas-color-manage"));
+        auto disp_action = std::dynamic_pointer_cast<Gio::SimpleAction>(map->lookup_action("canvas-display-mode"));
 
         if (cms_action && disp_action) {
             disp_action->signal_activate().connect([=](const Glib::VariantBase& state){ set_display_icon(); });

@@ -1303,7 +1303,8 @@ void SymbolsDialog::get_cell_data_func(Gtk::CellRenderer* cell_renderer, Gtk::Tr
         int device_scale = get_scale_factor();
         unsigned psize = SYMBOL_ICON_SIZES[pack_size] * device_scale;
         if (!g_dummy || g_dummy->get_width() != psize) {
-            g_dummy = g_dummy.cast_static(draw_symbol(nullptr));
+            g_dummy = std::dynamic_pointer_cast<Cairo::ImageSurface>(draw_symbol(nullptr));
+            g_assert(g_dummy);
         }
         surface = g_dummy;
     }

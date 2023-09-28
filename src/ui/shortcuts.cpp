@@ -59,7 +59,7 @@ namespace Inkscape {
 Shortcuts::Shortcuts()
 {
     Glib::RefPtr<Gio::Application> gapp = Gio::Application::get_default();
-    app = Glib::RefPtr<Gtk::Application>::cast_dynamic(gapp); // Save as we constantly use it.
+    app = std::dynamic_pointer_cast<Gtk::Application>(gapp); // Save as we constantly use it.
     if (!app) {
         std::cerr << "Shortcuts::Shortcuts: No app! Shortcuts cannot be used without a Gtk::Application!" << std::endl;
     }

@@ -125,7 +125,7 @@ dialog_toggle(InkscapeWindow *win)
     //     return;
     // }
 
-    // auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(action);
+    // auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(action);
     // if (!saction) {
     //     show_output("dialog_toogle: action 'dialog_switch' not SimpleAction!");
     //     return;

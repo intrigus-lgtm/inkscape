@@ -22,7 +22,6 @@
 #include <gtkmm/dialog.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
-#include <gtkmm/radiobutton.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/treemodel.h>
 

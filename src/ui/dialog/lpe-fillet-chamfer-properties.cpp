@@ -60,13 +60,12 @@ FilletChamferPropertiesDialog::FilletChamferPropertiesDialog()
     _layout_table.attach(_fillet_chamfer_chamfer_subdivisions_label, 0, 1, 1, 1);
     _layout_table.attach(_fillet_chamfer_chamfer_subdivisions, 1, 1, 1, 1);
     _fillet_chamfer_type_fillet.set_label(_("Fillet"));
-    _fillet_chamfer_type_fillet.set_group(_fillet_chamfer_type_group);
     _fillet_chamfer_type_inverse_fillet.set_label(_("Inverse fillet"));
-    _fillet_chamfer_type_inverse_fillet.set_group(_fillet_chamfer_type_group);
+    _fillet_chamfer_type_inverse_fillet.set_group(_fillet_chamfer_type_fillet);
     _fillet_chamfer_type_chamfer.set_label(_("Chamfer"));
-    _fillet_chamfer_type_chamfer.set_group(_fillet_chamfer_type_group);
+    _fillet_chamfer_type_chamfer.set_group(_fillet_chamfer_type_fillet);
     _fillet_chamfer_type_inverse_chamfer.set_label(_("Inverse chamfer"));
-    _fillet_chamfer_type_inverse_chamfer.set_group(_fillet_chamfer_type_group);
+    _fillet_chamfer_type_inverse_chamfer.set_group(_fillet_chamfer_type_fillet);
 
     UI::pack_start(*mainVBox, _layout_table, true, true, 4);
     UI::pack_start(*mainVBox, _fillet_chamfer_type_fillet, true, true, 4);

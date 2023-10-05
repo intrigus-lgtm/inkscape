@@ -2195,7 +2195,7 @@ void SPDocument::_importDefsNode(SPDocument *source, Inkscape::XML::Node *defs, 
                 // Check that it really is a duplicate
                 for (auto& trg: getDefs()->children) {
                     if (is<SPSymbol>(&trg) && src != &trg) {
-                        std::string id2 = trg.getRepr()->attribute("id");
+                        Glib::ustring id2 = trg.getRepr()->attribute("id");
 
                         if( !id.compare( id2 ) ) {
                             duplicate = true;

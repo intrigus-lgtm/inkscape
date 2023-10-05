@@ -272,7 +272,7 @@ LPELattice2::newWidget()
     }
 
     expander = Gtk::make_managed<Gtk::Expander>(Glib::ustring(_("Show Points")));
-    expander->add(*vbox_expander);
+    expander->set_child(*vbox_expander);
     expander->set_expanded(expanded);
     UI::pack_start(*vbox, *expander, true, true, 2);
     expander->property_expanded().signal_changed().connect(sigc::mem_fun(*this, &LPELattice2::onExpanderChanged) );

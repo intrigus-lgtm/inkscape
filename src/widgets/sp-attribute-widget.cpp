@@ -18,6 +18,7 @@
 #include <glibmm/i18n.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/grid.h>
+#include <gtkmm/label.h>
 #include <sigc++/adaptors/bind.h>
 
 #include "document-undo.h"

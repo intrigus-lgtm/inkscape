@@ -28,11 +28,11 @@
  * @param url    URL to be opened
  * @param window Parent window for which the URL is opened
  */
-// TODO: Do we really need a window reference here? It's the way recommended by gtk, though.
-void help_open_url(const Glib::ustring &url, Gtk::Window *window)
+// TODO: Remove unused window parameter.
+void help_open_url(const Glib::ustring &url, Gtk::Window *)
 {
     try {
-        window->show_uri(url, GDK_CURRENT_TIME);
+        Gio::AppInfo::launch_default_for_uri(url);
     } catch (const Glib::Error &e) {
         g_warning("Unable to show '%s': %s", url.c_str(), e.what());
     }

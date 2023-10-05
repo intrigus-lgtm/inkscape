@@ -129,7 +129,7 @@ ToggleButtonParam::param_newWidget()
        UI::pack_start(*box_button, *label, false, false, 1);
    }
 
-   checkwdg->add(*box_button);
+   checkwdg->set_child(*box_button);
    checkwdg->setActive(value);
    checkwdg->setProgrammatically = false;
    checkwdg->set_undo_parameters(_("Change togglebutton parameter"), INKSCAPE_ICON("dialog-path-effects"));
@@ -173,7 +173,7 @@ ToggleButtonParam::refresh_button()
         if (!im) return;
 
         gtk_image_set_from_icon_name(im->gobj(), value ? _icon_active : _icon_inactive);
-        gtk_image_set_pixel_size(im->gobj(), _icon_size);
+        im->set_icon_size(_icon_size);
     }
 }
 

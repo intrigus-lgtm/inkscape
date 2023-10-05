@@ -409,7 +409,7 @@ void TraceTask::do_async_work(std::unique_ptr<TraceTask> self)
         // If SIOX has been enabled, run SIOX processing.
         if (sioxEnabled) {
             gdkpixbuf = sioxProcessImage(gdkpixbuf, siox_mask, *sub_siox);
-            siox_mask.clear();
+            siox_mask.reset();
             sub_siox->report_or_throw(1.0);
         }
 

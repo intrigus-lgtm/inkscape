@@ -1807,7 +1807,7 @@ void SPObject::setExportFilename(Glib::ustring filename)
 {
     // Is this svg has been saved before.
     const char *doc_filename = document->getDocumentFilename();
-    std::string base = Glib::path_get_dirname(doc_filename ? doc_filename : filename);
+    std::string base = Glib::path_get_dirname(doc_filename ? doc_filename : filename.c_str());
 
     filename = Inkscape::optimizePath(filename, base);
     repr->setAttributeOrRemoveIfEmpty("inkscape:export-filename", filename.c_str());

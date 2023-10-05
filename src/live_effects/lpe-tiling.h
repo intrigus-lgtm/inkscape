@@ -30,7 +30,6 @@
 
 namespace Gtk {
 class Box;
-class RadioButtonGroup;
 class Widget;
 } // namespace Gtk
 
@@ -90,7 +89,7 @@ private:
     bool _updating = false;
     void setMirroring(int index);
     Glib::ustring getMirrorMap(int index);
-    void generate_buttons(Gtk::Box *container, Gtk::RadioButtonGroup &group, int pos);
+    void generate_buttons(Gtk::Box *container, Gtk::ToggleButton *&group, int pos);
     UnitParam unit;
     SatelliteArrayParam lpesatellites;
     ScalarParam gapx;

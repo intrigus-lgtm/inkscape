@@ -14,7 +14,6 @@
 #include <gtkmm/dialog.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
-#include <gtkmm/radiobutton.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/treemodel.h>
 
@@ -45,11 +44,10 @@ protected:
 
     Gtk::Label _fillet_chamfer_position_label;
     Gtk::SpinButton _fillet_chamfer_position_numeric;
-    Gtk::RadioButton::Group _fillet_chamfer_type_group;
-    Gtk::RadioButton _fillet_chamfer_type_fillet;
-    Gtk::RadioButton _fillet_chamfer_type_inverse_fillet;
-    Gtk::RadioButton _fillet_chamfer_type_chamfer;
-    Gtk::RadioButton _fillet_chamfer_type_inverse_chamfer;
+    Gtk::CheckButton _fillet_chamfer_type_fillet;
+    Gtk::CheckButton _fillet_chamfer_type_inverse_fillet;
+    Gtk::CheckButton _fillet_chamfer_type_chamfer;
+    Gtk::CheckButton _fillet_chamfer_type_inverse_chamfer;
     Gtk::Label _fillet_chamfer_chamfer_subdivisions_label;
     Gtk::SpinButton _fillet_chamfer_chamfer_subdivisions;
 

@@ -88,7 +88,7 @@ bool SVGBox::fromString(const std::string &value, const std::string &unit, const
     if (!value.size()) return false;
 
     // A. Split by spaces.
-    std::vector<Glib::ustring> elements = Glib::Regex::split_simple("\\s*[,\\s]\\s*", value);
+    std::vector<Glib::ustring> elements = Glib::Regex::split_simple("\\s*[,\\s]\\s*", value.c_str());
     
     // Take item zero
     for (int i = 0; i < 4; i++) {

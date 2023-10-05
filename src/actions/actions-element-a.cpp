@@ -38,6 +38,7 @@
 // XML not modified. Requires GUI.
 void anchor_open_link(InkscapeApplication* app)
 {
+    // Todo: Remove no-longer necessary window check.
     auto window = app->get_active_window();
     if (window) {
         auto selection = app->get_active_selection();
@@ -47,9 +48,9 @@ void anchor_open_link(InkscapeApplication* app)
                 const char* href = anchor->href;
                 if (href) {
                     try {
-                        window->show_uri(href, GDK_CURRENT_TIME);
+                        Gio::AppInfo::launch_default_for_uri(href);
                     } catch (const Glib::Error &e) {
-                        show_output(Glib::ustring("anchor_open_link: cannot open ") + href + " " + e.what().raw());
+                        show_output(Glib::ustring("anchor_open_link: cannot open ") + href + " " + e.what());
                     }
                 }
             }

@@ -19,7 +19,7 @@
 #include <giomm/application.h>
 #include <glib/gstdio.h> // for g_file_set_contents etc., used in _onGet and paste
 #include <glibmm/i18n.h>
-#include <gtkmm/clipboard.h>
+#include <gdkmm/clipboard.h>
 
 #include <2geom/transforms.h>
 #include <2geom/path-sink.h>
@@ -175,7 +175,7 @@ private:
     // the standard _clipnode is only available in an SVG tree, hence this special storage
     SPCSSAttr *_text_style; ///< Style copied along with plain text fragment
 
-    Glib::RefPtr<Gtk::Clipboard> _clipboard; ///< Handle to the system wide clipboard - for convenience
+    Glib::RefPtr<Gdk::Clipboard> _clipboard; ///< Handle to the system wide clipboard - for convenience
     std::list<Glib::ustring> _preferred_targets; ///< List of supported clipboard targets
 };
 
@@ -186,7 +186,7 @@ ClipboardManagerImpl::ClipboardManagerImpl()
       _clipnode(nullptr),
       _doc(nullptr),
       _text_style(nullptr),
-      _clipboard( Gtk::Clipboard::get() )
+      _clipboard( Gdk::Clipboard::get() )
 {
     // Clipboard Formats: http://msdn.microsoft.com/en-us/library/ms649013(VS.85).aspx
     // On Windows, most graphical applications can handle CF_DIB/CF_BITMAP and/or CF_ENHMETAFILE
@@ -1448,7 +1448,7 @@ bool ClipboardManagerImpl::_pasteText(SPDesktop *desktop)
     }
 
     // Parse the clipboard text as if it was a color string.
-    Glib::RefPtr<Gtk::Clipboard> clipboard = Gtk::Clipboard::get();
+    Glib::RefPtr<Gdk::Clipboard> clipboard = Gdk::Clipboard::get();
     Glib::ustring const clip_text = clipboard->wait_for_text();
     if (clip_text.length() < 30) {
         // Zero makes it impossible to paste a 100% transparent black, but it's useful.

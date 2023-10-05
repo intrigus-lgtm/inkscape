@@ -20,6 +20,7 @@
 
 #include <gdk/gdkkeysyms.h>
 #include <glibmm/i18n.h>
+#include <giomm/application.h>
 
 #include <2geom/transforms.h>
 

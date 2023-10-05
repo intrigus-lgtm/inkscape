@@ -117,7 +117,7 @@ void PathArrayParam::initui()
         _scroller = std::make_unique<Gtk::ScrolledWindow>();
         //quick little hack -- newer versions of gtk gave the item zero space allotment
         _scroller->set_size_request(-1, 120);
-        _scroller->add(*_tree);
+        _scroller->set_child(*_tree);
         _scroller->set_policy( Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC );
     }
     param_readSVGValue(param_getSVGValue().c_str());

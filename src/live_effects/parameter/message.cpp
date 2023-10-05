@@ -98,7 +98,7 @@ MessageParam::param_newWidget()
     _label->set_margin_end(_marginend);
     _label->set_margin_start(_marginstart);
 
-    frame->add(*_label);
+    frame->set_child(*_label);
     return frame;
 }
 

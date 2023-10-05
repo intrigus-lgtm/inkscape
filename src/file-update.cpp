@@ -317,20 +317,21 @@ int gui_request_dpi_fix_method(SPDocument *doc)
                              "to make it compatible with newer versions (96 DPI). Tell us about this file:\n"));
     explanation.set_wrap(true);
     explanation.set_size_request(600, -1);
-    Gtk::RadioButton::Group c1, c2;
 
     Gtk::Label choice1_label;
     choice1_label.set_markup(_("This file contains digital artwork for screen display. <b>(Choose if unsure.)</b>"));
-    Gtk::RadioButton choice1(c1);
-    choice1.add(choice1_label);
-    Gtk::RadioButton choice2(c1, _("This file is intended for physical output, such as paper or 3D prints."));
+    Gtk::CheckButton choice1;
+    choice1.set_child(choice1_label);
+    Gtk::CheckButton choice2(_("This file is intended for physical output, such as paper or 3D prints."));
+    choice2.set_group(choice1);
     Gtk::Label choice2_1_label;
     choice2_1_label.set_markup(_("The appearance of elements such as clips, masks, filters, and clones\n"
                                  "is most important. <b>(Choose if unsure.)</b>"));
-    Gtk::RadioButton choice2_1(c2);
-    choice2_1.add(choice2_1_label);
-    Gtk::RadioButton choice2_2(c2, _("The accuracy of the physical unit size and position values of objects\n"
-                                     "in the file is most important. (Experimental.)"));
+    Gtk::CheckButton choice2_1;
+    choice2_1.set_child(choice2_1_label);
+    Gtk::CheckButton choice2_2(_("The accuracy of the physical unit size and position values of objects\n"
+                                 "in the file is most important. (Experimental.)"));
+    choice2_2.set_group(choice2_1);
     Gtk::CheckButton backup_button(_("Create a backup file in same directory."));
     Gtk::Expander moreinfo(_("More details..."));
     Gtk::Label moreinfo_text("", Gtk::Align::START);
@@ -381,10 +382,10 @@ int gui_request_dpi_fix_method(SPDocument *doc)
     Inkscape::UI::pack_start(*content, backup_button, false, false, 5);
     Inkscape::UI::pack_start(*content, moreinfo,      false, false, 5);
     // clang-format on
-    moreinfo.add(moreinfo_text);
+    moreinfo.set_child(moreinfo_text);
     b.set_visible(false);
-    choice1.signal_clicked().connect(sigc::mem_fun(b, &Gtk::Box::hide));
-    choice2.signal_clicked().connect(sigc::mem_fun(b, &Gtk::Box::show));
+    choice1.signal_toggled().connect(sigc::mem_fun(b, &Gtk::Box::hide));
+    choice2.signal_toggled().connect(sigc::mem_fun(b, &Gtk::Box::show));
 
     int response = prefs->getInt("/options/dpiupdatemethod", FILE_DPI_UNCHANGED);
     if (response != FILE_DPI_UNCHANGED) {

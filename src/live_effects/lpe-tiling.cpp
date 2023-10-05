@@ -28,8 +28,6 @@
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/object.h>
-#include <gtkmm/radiobutton.h>
-#include <gtkmm/radiobuttongroup.h>
 #include <gtkmm/spinbutton.h>
 
 #include "inkscape.h"
@@ -641,12 +639,15 @@ LPETiling::toItem(size_t i, bool reset, bool &write)
     return cast<SPItem>(elemref);
 }
 
-Gtk::RadioButton* create_radio_button(Gtk::RadioButtonGroup& group, const Glib::ustring& tooltip, const Glib::ustring& icon_name) {
-    auto const button = Gtk::make_managed<Gtk::RadioButton>(group, Glib::ustring());
+Gtk::ToggleButton* create_radio_button(Gtk::ToggleButton *&group, const Glib::ustring& tooltip, const Glib::ustring& icon_name) {
+    auto const button = Gtk::make_managed<Gtk::ToggleButton>();
+    if (group) {
+        button->set_group(*group);
+    } else {
+        group = button;
+    }
     button->set_tooltip_text(tooltip);
     button->set_image_from_icon_name(icon_name, Gtk::IconSize::NORMAL);
-    button->property_draw_indicator() = false;
-    button->property_always_show_image() = true;
     button->set_halign(Gtk::Align::CENTER);
     button->set_valign(Gtk::Align::CENTER);
     button->add_css_class("lpe-square-button");
@@ -672,8 +673,8 @@ void align_widgets(const std::vector<Gtk::Widget*>& widgets, int spinbutton_char
     auto const get_natural_width = [](Gtk::Widget const &widget)
     {
         g_assert(widget.get_visible());
-        int minimum{}, natural{};
-        widget.get_preferred_width(minimum, natural);
+        int natural{}, ignore{};
+        widget.measure(Gtk::Orientation::HORIZONTAL, -1, ignore, natural, ignore, ignore);
         return natural;
     };
 
@@ -747,7 +748,7 @@ Gtk::Widget * LPETiling::newWidget()
 
             if (!usemirroricons) continue;
 
-            Gtk::RadioButton::Group group;
+            Gtk::ToggleButton *group = nullptr;
             auto const frame  = Gtk::make_managed<Gtk::Frame>(_("Mirroring mode"));
             frame->set_halign(Gtk::Align::START);
             auto const cbox  = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL,0);
@@ -767,7 +768,7 @@ Gtk::Widget * LPETiling::newWidget()
             cbox->set_halign(Gtk::Align::START);
             hbox1->set_margin_bottom(3);
             hbox3->set_margin_bottom(3);
-            frame->add(*cbox);
+            frame->set_child(*cbox);
             UI::pack_start(*vbox, *frame, false, false, 1);
             UI::pack_start(*vbox1, *hbox1, false, false);
             UI::pack_start(*vbox1, *hbox2, false, false);
@@ -788,15 +789,15 @@ Gtk::Widget * LPETiling::newWidget()
 
             auto const first = widgrand->get_first_child();
             first->set_visible(false);
-            first->set_no_show_all(true);
 
-            auto const button = dynamic_cast<Gtk::Button *>(children.at(1));
+            auto const button = dynamic_cast<Gtk::Button *>(first->get_next_sibling());
             g_assert(button);
+
             auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 6);
-            box->add(*Gtk::manage(sp_get_icon_image(INKSCAPE_ICON("randomize"), Gtk::IconSize::NORMAL)));
-            box->add(*Gtk::make_managed<Gtk::Label>(_("Randomize")));
-            button->remove();
-            button->add(*box);
+            box->append(*Gtk::manage(sp_get_icon_image(INKSCAPE_ICON("randomize"), Gtk::IconSize::NORMAL)));
+            box->append(*Gtk::make_managed<Gtk::Label>(_("Randomize")));
+            button->set_child(*box);
+
             button->set_tooltip_markup(_("Randomization seed for random mode for scaling, rotation and gaps"));
             button->set_has_frame(true);
             button->set_valign(Gtk::Align::START);
@@ -826,7 +827,7 @@ Gtk::Widget * LPETiling::newWidget()
         } else if (param->param_key == "offset") {
             UI::pack_start(*movestart, *widg, false, false, 2);
             auto const container = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL,0);
-            Gtk::RadioButton::Group group;
+            Gtk::ToggleButton *group = nullptr;
             auto rows = create_radio_button(group, _("Offset rows"), INKSCAPE_ICON("rows"));
             auto cols = create_radio_button(group, _("Offset columns"), INKSCAPE_ICON("cols"));
             rows->set_tooltip_markup(_("Offset alternate rows"));
@@ -843,7 +844,7 @@ Gtk::Widget * LPETiling::newWidget()
             UI::pack_start(*moveend, *container, false, false, 2);
         } else if (param->param_key == "scale") {
             auto const container = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL,0);
-            Gtk::RadioButton::Group group;
+            Gtk::ToggleButton *group = nullptr;
             auto cols = create_radio_button(group, _("Interpolate X"), INKSCAPE_ICON("interpolate-scale-x"));
             auto rows = create_radio_button(group, _("Interpolate Y"), INKSCAPE_ICON("interpolate-scale-y"));
             auto both = create_radio_button(group, _("Interpolate both"), INKSCAPE_ICON("interpolate-scale-both"));
@@ -880,7 +881,7 @@ Gtk::Widget * LPETiling::newWidget()
         } else if (param->param_key == "rotate") {
             UI::pack_start(*movestart, *widg, false, false, 2);
             auto const container = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL,0);
-            Gtk::RadioButton::Group group;
+            Gtk::ToggleButton *group = nullptr;
             auto cols = create_radio_button(group, _("Interpolate X"), INKSCAPE_ICON("interpolate-rotate-x"));
             auto rows = create_radio_button(group, _("Interpolate Y"), INKSCAPE_ICON("interpolate-rotate-y"));
             auto both = create_radio_button(group, _("Interpolate both"), INKSCAPE_ICON("interpolate-rotate-both"));
@@ -920,7 +921,7 @@ Gtk::Widget * LPETiling::newWidget()
             moveend->set_homogeneous();
             moveend->set_valign(Gtk::Align::FILL);
             auto const container = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL,0);
-            Gtk::RadioButton::Group group;
+            Gtk::ToggleButton *group = nullptr;
             auto normal = create_radio_button(group, _("Normal"), INKSCAPE_ICON("interpolate-scale-none"));
             auto randx = create_radio_button(group, _("Random"), INKSCAPE_ICON("gap-random-x"));
             if (random_gap_x) {
@@ -947,7 +948,7 @@ Gtk::Widget * LPETiling::newWidget()
         } else if (param->param_key == "gapy") {
             UI::pack_start(*movestart, *widg, true, true, 2);
             auto const container = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL,0);
-            Gtk::RadioButton::Group group;
+            Gtk::ToggleButton *group = nullptr;
             auto normal = create_radio_button(group, _("Normal"), INKSCAPE_ICON("interpolate-scale-none"));
             auto randy = create_radio_button(group, _("Random"), INKSCAPE_ICON("gap-random-y"));
             if (random_gap_y) {
@@ -1011,15 +1012,13 @@ Gtk::Widget * LPETiling::newWidget()
         }
     }
 
-    // must show children 1st, as align_widgets() measures them! TODO: GTK4: n/a
-    vbox->show_all();
     align_widgets(scalars, 5);
 
     return vbox;
 }
 
 void
-LPETiling::generate_buttons(Gtk::Box * const container, Gtk::RadioButton::Group &group, int const pos)
+LPETiling::generate_buttons(Gtk::Box * const container, Gtk::ToggleButton *&group, int const pos)
 {
     for (int i = 0; i < 4; i++) {
         int const position = (pos * 4) + i;

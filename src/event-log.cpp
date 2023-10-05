@@ -180,7 +180,7 @@ EventLog::EventLog(SPDocument* document) :
 {
     // add initial pseudo event
     Gtk::TreeRow curr_row = *(_event_list_store->append());
-    _curr_event = _last_saved = _last_event = curr_row;
+    _curr_event = _last_saved = _last_event = curr_row.get_iter();
     
     auto &_columns = getColumns();
     curr_row[_columns.description] = _("[Unchanged]");
@@ -302,7 +302,7 @@ EventLog::notifyUndoCommitEvent(Event* log)
     auto &_columns = getColumns();
 
     // if the new event is of the same type as the previous then create a new branch
-    if ( icon_name == (*_curr_event)[_columns.icon_name] ) {
+    if ( icon_name == Glib::ustring{(*_curr_event)[_columns.icon_name]} ) {
         if ( !_curr_event_parent ) {
             _curr_event_parent = _curr_event;
         }
@@ -312,7 +312,7 @@ EventLog::notifyUndoCommitEvent(Event* log)
         curr_row = *(_event_list_store->append());
         curr_row[_columns.child_count] = 1;
 
-        _curr_event = _last_event = curr_row;
+        _curr_event = _last_event = curr_row.get_iter();
 
         // collapse if we're leaving a branch
         if (_curr_event_parent) {
@@ -320,9 +320,9 @@ EventLog::notifyUndoCommitEvent(Event* log)
         }
 
         _curr_event_parent = (iterator)(nullptr);
-    }      
+    }
 
-    _curr_event = _last_event = curr_row;
+    _curr_event = _last_event = curr_row.get_iter();
 
     curr_row[_columns.event] = log;
     curr_row[_columns.icon_name] = icon_name;

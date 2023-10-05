@@ -27,7 +27,6 @@
 #include <boost/range/adaptor/reversed.hpp>
 #include <cstring>
 #include <glibmm/i18n.h>
-#include <gtkmm/clipboard.h>
 #include <map>
 #include <string>
 

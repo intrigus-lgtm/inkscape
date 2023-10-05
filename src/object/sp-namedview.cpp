@@ -608,7 +608,7 @@ void sp_namedview_window_from_document(SPDesktop *desktop)
             h = MIN(monitor_geometry.get_height(), nv->window_height);
             move_to_screen = true;
         } else if (default_size == PREFS_WINDOW_SIZE_LARGE) {
-            Gdk::Rectangle monitor_geometry = Inkscape::UI::get_monitor_geometry_at_window(win->get_window());
+            Gdk::Rectangle monitor_geometry = Inkscape::UI::get_monitor_geometry_at_surface(win->get_surface());
             w = MAX(0.75 * monitor_geometry.get_width(), MIN_WINDOW_SIZE);
             h = MAX(0.75 * monitor_geometry.get_height(), MIN_WINDOW_SIZE);
         } else if (default_size == PREFS_WINDOW_SIZE_SMALL) {
@@ -617,7 +617,7 @@ void sp_namedview_window_from_document(SPDesktop *desktop)
             // don't set size (i.e. keep the gtk+ default, which will be the natural size)
             w = h = 0;
             // unless gtk+ decided it would be a good idea to show a window that is larger than the screen
-            Gdk::Rectangle monitor_geometry = Inkscape::UI::get_monitor_geometry_at_window(win->get_window());
+            Gdk::Rectangle monitor_geometry = Inkscape::UI::get_monitor_geometry_at_surface(win->get_surface());
             int monitor_width =  monitor_geometry.get_width();
             int monitor_height = monitor_geometry.get_height();
             int window_width = win->get_width();
@@ -879,7 +879,7 @@ void SPNamedView::newGridCreated() {
 
 void SPNamedView::updateGrids()
 {
-    if (auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(
+    if (auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(
                 document->getActionGroup()->lookup_action("show-grids"))) {
 
         saction->change_state(getShowGrids());
@@ -894,13 +894,13 @@ void SPNamedView::updateGrids()
 
 void SPNamedView::updateGuides()
 {
-    if (auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(
+    if (auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(
                 document->getActionGroup()->lookup_action("show-all-guides"))) {
 
         saction->change_state(getShowGuides());
     }
 
-    if (auto saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(
+    if (auto saction = std::dynamic_pointer_cast<Gio::SimpleAction>(
                 document->getActionGroup()->lookup_action("lock-all-guides"))) {
 
         bool is_locked = getLockGuides();

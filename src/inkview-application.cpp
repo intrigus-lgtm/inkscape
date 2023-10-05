@@ -82,7 +82,7 @@ InkviewApplication::InkviewApplication()
     add_main_option_entry(OptionType::BOOL,   "preload",    'p', N_("Preload files"),                               "");
     // clang-format on
 
-    signal_handle_local_options().connect(sigc::mem_fun(*this, &InkviewApplication::on_handle_local_options));
+    signal_handle_local_options().connect(sigc::mem_fun(*this, &InkviewApplication::on_handle_local_options), true);
 
     // This is normally called for us... but after the "handle_local_options" signal is emitted. If
     // we want to rely on actions for handling options, we need to call it here. This appears to
@@ -124,7 +124,7 @@ InkviewApplication::on_activate()
 
     int res = Inkscape::UI::dialog_run(file_chooser);
     if (res == 42) {
-        auto files = file_chooser.get_files();
+        auto files = file_chooser.get_files2();
         if (!files.empty()) {
             on_open(files, "");
         }

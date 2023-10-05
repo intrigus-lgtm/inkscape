@@ -10,12 +10,13 @@
  */
 
 #include "ui/widget/objects-dialog-cells.h"
+
+#include <gtkmm/snapshot.h>
+
 #include "color-rgba.h"
 #include "preferences.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 /**
  * A colored tag cell which indicates which layer an object is in.
@@ -25,23 +26,30 @@ ColorTagRenderer::ColorTagRenderer() :
     Gtk::CellRenderer(),
     _property_color(*this, "tagcolor", 0),
     _property_hover(*this, "taghover", false)
+    , _height{16} // TODO: GTK4: What do we do about the lack of…
 {
     property_mode() = Gtk::CellRendererMode::ACTIVATABLE;
 
+    // …this?
+    /*
     int dummy_width;
     // height size is not critical
     Gtk::IconSize::lookup(Gtk::IconSize::NORMAL, dummy_width, _height);
+    */
 }
 
-void ColorTagRenderer::render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr, 
-                      Gtk::Widget& widget,
-                      const Gdk::Rectangle& background_area,
-                      const Gdk::Rectangle& cell_area,
-                      Gtk::CellRendererState flags) {
+void ColorTagRenderer::snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &snapshot,
+                                      Gtk::Widget &widget,
+                                      const Gdk::Rectangle &background_area,
+                                      const Gdk::Rectangle &cell_area,
+                                      Gtk::CellRendererState flags)
+{
+    auto const cr = snapshot->append_cairo(cell_area);
     cr->rectangle(cell_area.get_x(), cell_area.get_y(), cell_area.get_width(), cell_area.get_height());
     ColorRGBA color(_property_color.get_value());
     cr->set_source_rgb(color[0], color[1], color[2]);
     cr->fill();
+
     if (_property_hover.get_value()) {
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         Glib::ustring themeiconname = prefs->getString("/theme/iconTheme", prefs->getString("/theme/defaultIconTheme", ""));
@@ -65,16 +73,18 @@ void ColorTagRenderer::get_preferred_height_vfunc(Gtk::Widget& widget, int& min_
     nat_h = _height;
 }
 
-bool ColorTagRenderer::activate_vfunc(GdkEvent* event, Gtk::Widget& /*widget*/, const Glib::ustring& path,
-        const Gdk::Rectangle& /*background_area*/, const Gdk::Rectangle& /*cell_area*/,
-        Gtk::CellRendererState /*flags*/) {
+bool ColorTagRenderer::activate_vfunc(Glib::RefPtr<Gdk::Event const> const &event,
+                                      Gtk::Widget &/*widget*/,
+                                      const Glib::ustring &path,
+                                      const Gdk::Rectangle &/*background_area*/,
+                                      const Gdk::Rectangle &/*cell_area*/,
+                                      Gtk::CellRendererState /*flags*/)
+{
     _signal_clicked.emit(path);
     return false;
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:
@@ -86,5 +96,3 @@ bool ColorTagRenderer::activate_vfunc(GdkEvent* event, Gtk::Widget& /*widget*/, 
   End:
 */
 // vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :
-
-

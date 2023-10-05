@@ -1,6 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_UI_WIDGET_OBJECTS_CELLS_H
-#define SEEN_UI_WIDGET_OBJECTS_CELLS_H
 /*
  * Authors:
  *   Mike Kowalski
@@ -11,18 +9,27 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/cellrenderer.h>
-#include <gtkmm/widget.h>
-#include <glibmm/property.h>
+#ifndef SEEN_UI_WIDGET_OBJECTS_CELLS_H
+#define SEEN_UI_WIDGET_OBJECTS_CELLS_H
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+#include <gtkmm/cellrenderer.h>
+#include <glibmm/property.h>
+#include <glibmm/refptr.h>
+
+namespace Gdk {
+class Event;
+} // namespace Gdk
+
+namespace Gtk {
+class Snapshot;
+class Widget;
+} // namespace Gtk
+
+namespace Inkscape::UI::Widget {
 
 class ColorTagRenderer : public Gtk::CellRenderer {
 public:
     ColorTagRenderer();
-    ~ColorTagRenderer() override = default;
 
     Glib::PropertyProxy<unsigned int> property_color() {
         return _property_color.get_proxy();
@@ -37,17 +44,21 @@ public:
     int get_width() const { return _width; }
 
 private:
-    void render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr, 
-                      Gtk::Widget& widget,
-                      const Gdk::Rectangle& background_area,
-                      const Gdk::Rectangle& cell_area,
-                      Gtk::CellRendererState flags) override;
+    void snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &snapshot,
+                        Gtk::Widget &widget,
+                        const Gdk::Rectangle& background_area,
+                        const Gdk::Rectangle& cell_area,
+                        Gtk::CellRendererState flags ) override;
 
     void get_preferred_width_vfunc(Gtk::Widget& widget, int& min_w, int& nat_w) const override;
     void get_preferred_height_vfunc(Gtk::Widget& widget, int& min_h, int& nat_h) const override;
-    bool activate_vfunc(GdkEvent* event, Gtk::Widget& /*widget*/, const Glib::ustring& path,
-            const Gdk::Rectangle& /*background_area*/, const Gdk::Rectangle& /*cell_area*/,
-            Gtk::CellRendererState /*flags*/) override;
+
+    bool activate_vfunc(Glib::RefPtr<Gdk::Event const> const &event,
+                        Gtk::Widget &widget,
+                        const Glib::ustring &path,
+                        const Gdk::Rectangle &background_area,
+                        const Gdk::Rectangle &cell_area,
+                        Gtk::CellRendererState flags) override;
 
     int _width = 8;
     int _height;
@@ -56,10 +67,7 @@ private:
     sigc::signal<void (const Glib::ustring&)> _signal_clicked;
 };
 
-
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 #endif // SEEN_UI_WIDGET_OBJECTS_CELLS_H
 

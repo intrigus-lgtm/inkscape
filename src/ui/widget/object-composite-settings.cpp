@@ -52,8 +52,6 @@ ObjectCompositeSettings::ObjectCompositeSettings(Glib::ustring icon_name, char c
     _filter_modifier.signal_opacity_changed().connect(sigc::mem_fun(*this, &ObjectCompositeSettings::_opacityValueChanged));
     _filter_modifier.signal_isolation_changed().connect(
         sigc::mem_fun(*this, &ObjectCompositeSettings::_isolationValueChanged));
-
-    show_all_children();
 }
 
 ObjectCompositeSettings::~ObjectCompositeSettings() {

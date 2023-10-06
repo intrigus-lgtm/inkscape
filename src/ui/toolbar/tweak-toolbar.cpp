@@ -115,9 +115,7 @@ TweakToolbar::TweakToolbar(SPDesktop *desktop)
 
     add(*_toolbar);
 
-    show_all();
-
-    // Elements must be hidden after show_all() is called
+    // Elements must be hidden after being initially visible.
     if (mode == Inkscape::UI::Tools::TWEAK_MODE_COLORPAINT || mode == Inkscape::UI::Tools::TWEAK_MODE_COLORJITTER) {
         _fidelity_box.set_visible(false);
     } else {

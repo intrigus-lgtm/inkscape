@@ -203,8 +203,6 @@ void ColorNotebook::_initUI(bool no_alpha)
     gtk_container_add(rgbabox_container, rgba_entry_widget);
     gtk_label_set_mnemonic_widget(GTK_LABEL(_rgbal), rgba_entry_widget);
 
-    gtk_widget_show_all(rgbabox);
-
     // the "too much ink" icon is initially hidden
     gtk_widget_set_visible(_box_toomuchink, false);
 

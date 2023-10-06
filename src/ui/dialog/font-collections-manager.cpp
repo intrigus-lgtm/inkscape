@@ -66,7 +66,6 @@ FontCollectionsManager::FontCollectionsManager()
 
     change_font_count_label();
     _font_selector.hide_others();
-    show_all_children();
 
     // Setup the signals.
     _font_count_changed_connection = Inkscape::FontLister::get_instance()->connectUpdate(sigc::mem_fun(*this, &FontCollectionsManager::change_font_count_label));

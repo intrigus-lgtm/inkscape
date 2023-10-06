@@ -39,7 +39,6 @@ Gtk::Box& create_tab_label(const char* label_text, const char* icon_name) {
     auto const label = Gtk::make_managed<Gtk::Label>(label_text, true);
     UI::pack_start(*box, *image, false, true);
     UI::pack_start(*box, *label, false, true);
-    box->show_all();
     return *box;
 }
 
@@ -73,7 +72,7 @@ ArrangeDialog::ArrangeDialog()
     _arrangeButton->set_use_underline(true);
     _arrangeButton->set_tooltip_text(_("Arrange selected objects"));
     _arrangeButton->add_css_class("wide-apply-button");
-    _arrangeButton->set_no_show_all();
+    _arrangeButton->set_visible(false);
 
     auto const button_box = Gtk::make_managed<Gtk::Box>();
     button_box->set_halign(Gtk::Align::CENTER);
@@ -83,7 +82,7 @@ ArrangeDialog::ArrangeDialog()
     UI::pack_start(*this, *button_box);
 
     set_visible(true);
-    show_all_children();
+
     update_arrange_btn();
 }
 

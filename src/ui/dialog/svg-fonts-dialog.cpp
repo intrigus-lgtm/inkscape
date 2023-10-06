@@ -252,7 +252,6 @@ Gtk::Box* SvgFontsDialog::AttrCombo(gchar* lbl, const SPAttr /*attr*/){
     auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
     hbox->add(* Gtk::make_managed<Gtk::Label>(lbl) );
     hbox->add(* Gtk::make_managed<Gtk::ComboBox>() );
-    hbox->show_all();
     return hbox;
 }
 
@@ -1414,7 +1413,6 @@ Gtk::Box* SvgFontsDialog::glyphs_tab() {
     _glyphs_grid.set_model(_GlyphsListStore);
     _glyphs_grid.set_item_width(cell_width);
     _glyphs_grid.set_selection_mode(Gtk::SelectionMode::SINGLE);
-    _glyphs_grid.show_all_children();
     _glyphs_grid.set_margin(0);
     _glyphs_grid.set_item_padding(0);
     _glyphs_grid.set_row_spacing(0);
@@ -1473,8 +1471,8 @@ Gtk::Box* SvgFontsDialog::glyphs_tab() {
     UI::pack_start(glyphs_vbox, _glyphs_icon_scroller, true, true);
     UI::pack_start(glyphs_vbox, *hbox, false,false);
 
-    _GlyphsListScroller.set_no_show_all();
-    _glyphs_icon_scroller.set_no_show_all();
+    _GlyphsListScroller.set_visible(false);
+    _glyphs_icon_scroller.set_visible(false);
     (_show_glyph_list ? list : grid)->set_active();
     set_glyphs_view_mode(_show_glyph_list);
 
@@ -1727,7 +1725,7 @@ SvgFontsDialog::SvgFontsDialog()
     preview_entry_hbox->set_margin_start(MARGIN_SPACE);
     preview_entry_hbox->set_margin_end(MARGIN_SPACE);
 
-    show_all();
+    set_visible(true);
 }
 
 SvgFontsDialog::~SvgFontsDialog() = default;

@@ -3,7 +3,10 @@
 #ifndef INKSCAPE_UI_WIDGET_CUSTOM_TOOLTIP_H
 #define INKSCAPE_UI_WIDGET_CUSTOM_TOOLTIP_H
 
-#include <gtkmm/tooltip.h>
+#include <glibmm/refptr.h>
+#include <gtkmm/enums.h>
+
+namespace Gtk { class Tooltip; }
 
 void sp_clear_custom_tooltip();
 
@@ -20,3 +23,14 @@ sp_query_custom_tooltip(
     int delaytime = 1000.0);
 
 #endif // INKSCAPE_UI_WIDGET_CUSTOM_TOOLTIP_H
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

@@ -91,8 +91,6 @@ PowerstrokePropertiesDialog::PowerstrokePropertiesDialog()
 
     _apply_button.grab_default();
 
-    show_all_children();
-
     set_focus(_powerstroke_width_entry);
 }
 

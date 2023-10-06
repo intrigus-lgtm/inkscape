@@ -104,7 +104,6 @@ RectToolbar::RectToolbar(SPDesktop *desktop)
     add(*_toolbar);
 
     sensitivize();
-    show_all();
 }
 
 void RectToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,

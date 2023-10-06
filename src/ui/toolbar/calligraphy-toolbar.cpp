@@ -164,8 +164,6 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
     get_widget<Gtk::Button>(_builder, "profile_edit_btn")
         .signal_clicked()
         .connect(sigc::mem_fun(*this, &CalligraphyToolbar::edit_profile));
-
-    show_all();
 }
 
 CalligraphyToolbar::~CalligraphyToolbar() = default;

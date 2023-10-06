@@ -71,8 +71,6 @@ SpiralToolbar::SpiralToolbar(SPDesktop *desktop)
 
     _connection.reset(new sigc::connection(
         desktop->getSelection()->connectChanged(sigc::mem_fun(*this, &SpiralToolbar::selection_changed))));
-
-    show_all();
 }
 
 void SpiralToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,

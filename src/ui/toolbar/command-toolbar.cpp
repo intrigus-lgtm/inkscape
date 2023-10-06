@@ -82,8 +82,6 @@ CommandToolbar::CommandToolbar(SPDesktop *desktop)
     addCollapsibleButton(menu_btn7);
 
     add(*_toolbar);
-
-    show_all();
 }
 
 CommandToolbar::~CommandToolbar() = default;

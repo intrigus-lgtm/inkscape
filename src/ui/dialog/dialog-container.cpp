@@ -94,8 +94,6 @@ DialogContainer::DialogContainer(InkscapeWindow* inkscape_window)
     columns = std::make_unique<DialogMultipaned>(Gtk::Orientation::HORIZONTAL);
     setup_drag_and_drop(columns.get());
     add(*columns.get());
-
-    show_all_children();
 }
 
 DialogMultipaned *DialogContainer::create_column()
@@ -332,7 +330,7 @@ void DialogContainer::new_dialog(const Glib::ustring& dialog_type, DialogNoteboo
 
     if (auto panel = dynamic_cast<DialogMultipaned*>(notebook->get_parent())) {
         // if panel is collapsed, show it now, or else new dialog will be mysteriously missing
-        panel->show_all();
+        panel->set_visible(true);
     }
 }
 
@@ -463,11 +461,12 @@ bool DialogContainer::recreate_dialogs_from_state(InkscapeWindow* inkscape_windo
 
         if (has_position) {
             dm_restore_window_position(*dialog_window, pos);
-        }
-        else {
+        } else {
             dialog_window->update_window_size_to_fit_children();
         }
-        dialog_window->show_all();
+
+        dialog_window->set_visible(true);
+
         // Set the style and icon theme of the new menu based on the desktop
         INKSCAPE.themecontext->getChangeThemeSignal().emit();
         INKSCAPE.themecontext->add_gtk_css(true);
@@ -793,11 +792,12 @@ void DialogContainer::load_container_state(Glib::KeyFile *keyfile, bool include_
         if (dialog_window) {
             if (has_position) {
                 dm_restore_window_position(*dialog_window, pos);
-            }
-            else {
+            } else {
                 dialog_window->update_window_size_to_fit_children();
             }
-            dialog_window->show_all();
+
+            dialog_window->set_visible(true);
+
             // Set the style and icon theme of the new menu based on the desktop
         }
     }

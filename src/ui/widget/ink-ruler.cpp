@@ -75,7 +75,7 @@ Ruler::Ruler(Gtk::Orientation orientation)
     Controller::add_motion<nullptr, &Ruler::on_motion, nullptr>(*_drawing_area, *this);
     Controller::add_click(*_drawing_area, sigc::mem_fun(*this, &Ruler::on_click_pressed), {}, Controller::Button::right);
 
-    set_no_show_all();
+    set_visible(false);
 
     auto prefs = Inkscape::Preferences::get();
     _watch_prefs = prefs->createObserver("/options/ruler/show_bbox", sigc::mem_fun(*this, &Ruler::on_prefs_changed));

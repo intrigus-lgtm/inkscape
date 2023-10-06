@@ -230,8 +230,6 @@ void ExportList::append_row()
     auto const delete_btn = Gtk::make_managed<Gtk::Button>();
     delete_btn->set_has_frame(false);
     delete_btn->add(*pIcon);
-    delete_btn->show_all();
-    delete_btn->set_no_show_all(true);
     this->attach(*delete_btn, _delete_col, current_row, 1, 1);
     delete_btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &ExportList::delete_row), delete_btn));
 

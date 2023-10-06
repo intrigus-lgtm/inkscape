@@ -109,7 +109,6 @@ void Licensor::init (Registry& wr)
     UI::pack_start(*this, *box, true, true, 0);
     UI::pack_start(*box, _eentry->_label, false, false, 5);
     UI::pack_start(*box, *_eentry->_packable, true, true, 0);
-    show_all_children();
 }
 
 LicenseItem *Licensor::add_item(Registry &wr, rdf_license_t const &license,

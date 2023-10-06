@@ -102,8 +102,6 @@ FontSelectorToolbar::FontSelectorToolbar ()
     family_combo.signal_changed().connect ([=](){ on_family_changed(); });
     style_combo.signal_changed().connect ([=](){ on_style_changed(); });
 
-    show_all_children();
-
     // Initialize font family lists. (May already be done.) Should be done on document change.
     font_lister->update_font_list(SP_ACTIVE_DESKTOP->getDocument());
 

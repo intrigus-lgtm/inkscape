@@ -78,8 +78,6 @@ ComboToolItem::ComboToolItem(Glib::ustring group_label,
     _combobox->signal_changed().connect(
             sigc::mem_fun(*this, &ComboToolItem::on_changed_combobox));
     UI::pack_start(*_container, *_combobox);
-
-    show_all();
 }
 
 ComboToolItem::~ComboToolItem() = default;

@@ -4,17 +4,18 @@
 
 #include <utility>
 #include <glibmm/main.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/button.h>
+#include <gtkmm/image.h>
+#include <gtkmm/label.h>
 
 #include "ui/builder-utils.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
-
-CanvasNotice::CanvasNotice(BaseObjectType *cobject, Glib::RefPtr<Gtk::Builder> builder)
+CanvasNotice::CanvasNotice(BaseObjectType *cobject, Glib::RefPtr<Gtk::Builder> const &builder)
     : Gtk::Revealer(cobject)
-    , _builder(std::move(builder))
+    , _builder(builder)
     , _icon(get_widget<Gtk::Image>(_builder, "notice-icon"))
     , _label(get_widget<Gtk::Label>(_builder, "notice-label"))
 {
@@ -48,4 +49,15 @@ CanvasNotice *CanvasNotice::create()
     return widget;
 }
 
-}}} // namespaces
+} // namespace Inkscape::UI::Widget
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

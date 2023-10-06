@@ -142,8 +142,6 @@ PolarArrangeTab::PolarArrangeTab(ArrangeDialog *parent_)
 
     set_margin(8);
 
-    parametersTable.show_all();
-    parametersTable.set_no_show_all();
     parametersTable.set_visible(false);
 }
 

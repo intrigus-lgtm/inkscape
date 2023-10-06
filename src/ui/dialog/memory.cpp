@@ -182,8 +182,6 @@ Memory::Memory()
     UI::pack_end(*this, *button_box, UI::PackOptions::shrink);
 
     _private->start_update_task();
-
-    show_all_children();
 }
 
 Memory::~Memory()

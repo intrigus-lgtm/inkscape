@@ -78,7 +78,6 @@ void ToolToolbar::set_visible_buttons()
     for_each_descendant(*this, [&](Gtk::Widget &widget) {
         if (auto const flowbox = dynamic_cast<Gtk::FlowBox *>(&widget)) {
             flowbox->set_visible(true);
-            flowbox->set_no_show_all();
             flowbox->set_max_children_per_line(1);
             last_box = flowbox;
         } else if (auto const btn = dynamic_cast<Gtk::Button *>(&widget)) {

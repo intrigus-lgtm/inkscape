@@ -239,8 +239,6 @@ MyHandle::MyHandle(Gtk::Orientation orientation, int size = get_handle_size())
                           sigc::mem_fun(*this, &MyHandle::on_click_pressed ),
                           sigc::mem_fun(*this, &MyHandle::on_click_released),
                           Controller::Button::any, Gtk::PropagationPhase::TARGET);
-
-    show_all();
 }
 
 // draw rectangle with rounded corners
@@ -481,7 +479,7 @@ DialogMultipaned::DialogMultipaned(Gtk::Orientation orientation)
     // add empty widget to initiate the container
     add_empty_widget();
 
-    show_all();
+    set_visible(true);
 }
 
 DialogMultipaned::~DialogMultipaned()
@@ -544,10 +542,6 @@ void DialogMultipaned::insert(int const pos, Gtk::Widget &child)
     if (!parent) {
         child.set_parent(*this);
     }
-
-    // Ideally, we would only call child->set_visible(true) here and assume that the
-    // child has already configured visibility of all its own children.
-    child.show_all();
 }
 
 void DialogMultipaned::prepend(Gtk::Widget &child)

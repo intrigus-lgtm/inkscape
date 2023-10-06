@@ -139,8 +139,6 @@ PencilToolbar::PencilToolbar(SPDesktop *desktop, bool pencil_mode)
 
     add(*_toolbar);
 
-    show_all();
-
     hide_extra_widgets();
 }
 
@@ -256,7 +254,7 @@ void PencilToolbar::hide_extra_widgets()
             false);
     }
 
-    // Elements must be hidden after show_all() is called
+    // Elements must be hidden after being initially visible.
     int freehandMode = Preferences::get()->getInt(
         (_tool_is_pencil ? "/tools/freehand/pencil/freehand-mode" : "/tools/freehand/pen/freehand-mode"), 0);
 

@@ -988,7 +988,6 @@ ObjectsPanel::ObjectsPanel()
     _watch_object_mode = prefs->createObserver("/dialogs/objects/layers_only", [=]() { setRootWatcher(); });
 
     update();
-    show_all_children();
 }
 
 ObjectsPanel::~ObjectsPanel() = default;

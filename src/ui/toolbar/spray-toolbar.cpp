@@ -212,7 +212,6 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop)
 
     int mode = prefs->getIntLimited("/tools/spray/mode", 1, 0, _mode_buttons.size() - 1);
     _mode_buttons[mode]->set_active();
-    show_all();
     init();
 }
 

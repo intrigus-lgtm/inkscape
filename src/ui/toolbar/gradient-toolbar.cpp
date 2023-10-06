@@ -493,8 +493,6 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
 
     // Signals.
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &GradientToolbar::check_ec));
-
-    show_all();
 }
 
 GradientToolbar::~GradientToolbar() = default;

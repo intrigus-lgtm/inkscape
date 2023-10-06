@@ -531,8 +531,6 @@ GlyphsPanel::GlyphsPanel()
     table->attach(*box, 0, row, 3, 1);
 
     row++;
-
-    show_all_children();
 }
 
 GlyphsPanel::~GlyphsPanel() = default;

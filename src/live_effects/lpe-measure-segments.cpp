@@ -266,10 +266,6 @@ LPEMeasureSegments::newWidget()
     notebook->append_page (*vbox1, Glib::ustring(_("Projection")));
     notebook->append_page (*vbox2, Glib::ustring(_("Options")));
     notebook->append_page (*vbox3, Glib::ustring(_("Help")));
-    vbox0->show_all();
-    vbox1->show_all();
-    vbox2->show_all();
-    vbox3->show_all();
     UI::pack_start(*vbox, *notebook, true, true, 2);
     notebook->set_current_page(pagenumber);
     notebook->signal_switch_page().connect(sigc::mem_fun(*this, &LPEMeasureSegments::on_my_switch_page));

@@ -56,7 +56,7 @@ extern guint update_in_progress;
             GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO,         \
                                                        GTK_BUTTONS_OK, __VA_ARGS__);                                   \
             g_signal_connect_swapped(dialog, "response", G_CALLBACK(gtk_widget_destroy), dialog);                      \
-            gtk_widget_show_all(dialog);                                                                               \
+            gtk_widget_set_visible(dialog, true);                                                                      \
         }                                                                                                              \
     }
 #endif // DEBUG_LCMS
@@ -360,7 +360,6 @@ void ColorICCSelector::init(bool no_alpha)
 
         gtk_widget_set_halign(_impl->_compUI[i]._label, GTK_ALIGN_END);
         gtk_widget_set_visible(_impl->_compUI[i]._label, true);
-        gtk_widget_set_no_show_all(_impl->_compUI[i]._label, TRUE);
 
         attachToGridOrTable(t, _impl->_compUI[i]._label, 0, row, 1, 1);
 
@@ -376,7 +375,6 @@ void ColorICCSelector::init(bool no_alpha)
             Gtk::make_managed<Inkscape::UI::Widget::ColorSlider>(_impl->_compUI[i]._adj);
         _impl->_compUI[i]._slider->set_tooltip_text((i < things.size()) ? things[i].tip.c_str() : "");
         _impl->_compUI[i]._slider->set_visible(true);
-        _impl->_compUI[i]._slider->set_no_show_all();
 
         attachToGridOrTable(t, _impl->_compUI[i]._slider->Gtk::Widget::gobj(), 1, row, 1, 1, true);
 
@@ -386,7 +384,6 @@ void ColorICCSelector::init(bool no_alpha)
         sp_dialog_defocus_on_enter(_impl->_compUI[i]._btn);
         gtk_label_set_mnemonic_widget(GTK_LABEL(_impl->_compUI[i]._label), _impl->_compUI[i]._btn);
         gtk_widget_set_visible(_impl->_compUI[i]._btn, true);
-        gtk_widget_set_no_show_all(_impl->_compUI[i]._btn, TRUE);
 
         attachToGridOrTable(t, _impl->_compUI[i]._btn, 2, row, 1, 1, false, true);
 

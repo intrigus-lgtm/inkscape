@@ -79,8 +79,6 @@ LayerPropertiesDialog::LayerPropertiesDialog(LayerPropertiesDialogType type)
     add_action_widget(_apply_button, Gtk::ResponseType::APPLY);
 
     _apply_button.grab_default();
-
-    show_all_children();
 }
 
 LayerPropertiesDialog::~LayerPropertiesDialog() = default;
@@ -267,8 +265,6 @@ void LayerPropertiesDialog::_setup_position_controls()
     UI::pack_start(vbox, _layer_position_radio[2], false, false);
 
     _layout_table.attach(vbox, 1, 1, 1, 1);
-
-    show_all_children();
 }
 
 /** Sets up the tree view of current layers */
@@ -330,8 +326,6 @@ void LayerPropertiesDialog::_setup_layers_controls()
     _scroller.set_propagate_natural_width(true);
     _scroller.set_propagate_natural_height(true);
     _layout_table.attach(_scroller, 0, 1, 2, 1);
-
-    show_all_children();
 }
 
 /** Inserts the new layer into the document */

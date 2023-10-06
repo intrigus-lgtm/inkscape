@@ -265,8 +265,8 @@ StrokeStyle::StrokeStyle() :
     table->attach(*_pattern, 1, i, 4, 1);
     _pattern_label = spw_label(table, _("_Pattern:"), 0, i, _pattern);
     _pattern_label->set_tooltip_text(_("Repeating \"dash gap ...\" pattern"));
-    _pattern->set_no_show_all();
-    _pattern_label->set_no_show_all();
+    _pattern->set_visible(false);
+    _pattern_label->set_visible(false);
     _pattern->signal_changed().connect([=](){
         if (update || _editing_pattern) return;
 

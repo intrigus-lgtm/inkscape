@@ -89,8 +89,6 @@ DropperToolbar::DropperToolbar(SPDesktop *desktop)
 
     _pick_alpha_btn.signal_toggled().connect(pick_alpha_button_toggled_cb);
     _set_alpha_btn.signal_toggled().connect(set_alpha_button_toggled_cb);
-
-    show_all();
 }
 
 DropperToolbar::~DropperToolbar() = default;

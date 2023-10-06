@@ -273,8 +273,10 @@ void ObjectProperties::_init()
 
     /* Interactivity options */
     _exp_interactivity.set_vexpand(false);
+
     UI::pack_start(*this, _exp_interactivity, UI::PackOptions::shrink);
-    show_all();
+
+    set_visible(true);
 }
 
 void ObjectProperties::update_entries()
@@ -389,7 +391,6 @@ void ObjectProperties::update_entries()
         } else {
             _attr_table->change_object(obj);
         }
-        _attr_table->show_all();
     }
     _current_item = item;
     _blocked = false;

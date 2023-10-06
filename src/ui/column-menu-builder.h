@@ -63,7 +63,6 @@ public:
             sep->add_css_class("menu-category");
             sep->set_sensitive(false);
             sep->set_halign(Gtk::Align::START);
-            sep->show_all();
             _menu.attach(*sep, 0, _columns, _row, _row + 1);
             _section = sep;
             _row++;
@@ -92,7 +91,6 @@ public:
         }
         item->set_sensitive(sensitive);
         item->signal_activate().connect(std::move(callback));
-        item->show_all();
 
         add_item(*item, section);
 

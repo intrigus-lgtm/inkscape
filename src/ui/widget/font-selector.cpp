@@ -146,7 +146,7 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
     size_combobox.signal_changed().connect(sigc::mem_fun(*this, &FontSelector::on_size_changed));
     font_variations.connectChanged(sigc::mem_fun(*this, &FontSelector::on_variations_changed));
     family_treeview.signal_realize().connect(sigc::mem_fun(*this, &FontSelector::on_realize_list));
-    show_all_children();
+
     font_variations_scroll.set_vexpand(false);
 
     // Initialize font family lists. (May already be done.) Should be done on document change.
@@ -169,13 +169,9 @@ gboolean FontSelector::set_cell_markup(gpointer data)
 
 void FontSelector::hide_others()
 {
-    style_frame.set_no_show_all();
     style_frame.set_visible(false);
-    size_label.set_no_show_all();
     size_label.set_visible(false);
-    size_combobox.set_no_show_all();
     size_combobox.set_visible(false);
-    font_variations.set_no_show_all();
     font_variations_scroll.set_visible(false);
     font_variations_scroll.set_vexpand(false);
 }

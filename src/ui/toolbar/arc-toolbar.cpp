@@ -121,8 +121,6 @@ ArcToolbar::ArcToolbar(SPDesktop *desktop)
     sensitivize(_start_item.get_adjustment()->get_value(), _end_item.get_adjustment()->get_value());
 
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &ArcToolbar::check_ec));
-
-    show_all();
 }
 
 void ArcToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name)

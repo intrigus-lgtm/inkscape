@@ -467,8 +467,6 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
 
     // We emit a selection change on tool switch to text.
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &TextToolbar::watch_ec));
-
-    show_all();
 }
 
 TextToolbar::~TextToolbar() = default;
@@ -2201,7 +2199,6 @@ void TextToolbar::display_font_collections()
         auto const row = Gtk::make_managed<Gtk::ListBoxRow>();
         row->set_focusable(false);
         row->add(*btn);
-        row->show_all();
         _font_collections_list.append(*row);
     }
 
@@ -2211,7 +2208,6 @@ void TextToolbar::display_font_collections()
     auto const sep_row = Gtk::make_managed<Gtk::ListBoxRow>();
     sep_row->set_focusable(false);
     sep_row->add(*sep);
-    sep_row->show_all();
     _font_collections_list.append(*sep_row);
 
     // Insert user collections.
@@ -2227,7 +2223,6 @@ void TextToolbar::display_font_collections()
         auto const row = Gtk::make_managed<Gtk::ListBoxRow>();
         row->set_focusable(false);
         row->add(*btn);
-        row->show_all();
         _font_collections_list.append(*row);
     }
 }

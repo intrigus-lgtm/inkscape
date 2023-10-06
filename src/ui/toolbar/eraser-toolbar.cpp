@@ -103,7 +103,6 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
     _usepressure_btn->signal_toggled().connect(sigc::mem_fun(*this, &EraserToolbar::usepressure_toggled));
     _split_btn.signal_toggled().connect(sigc::mem_fun(*this, &EraserToolbar::toggle_break_apart));
 
-    show_all();
     set_eraser_mode_visibility(eraser_mode);
 }
 

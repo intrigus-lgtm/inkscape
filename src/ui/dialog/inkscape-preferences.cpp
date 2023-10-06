@@ -260,7 +260,6 @@ InkscapePreferences::InkscapePreferences()
         UI::Widget::SpinButton sb;
         sb.set_width_chars(6);
         add(sb);
-        show_all_children();
         Gtk::Requisition sreq;
         Gtk::Requisition sreq_natural;
         sb.get_preferred_size(sreq_natural, sreq);
@@ -1383,27 +1382,30 @@ void InkscapePreferences::contrastThemeChange()
 void InkscapePreferences::themeChange(bool contrastslider)
 {
     Gtk::Window *window = SP_ACTIVE_DESKTOP->getToplevel();
+
     if (window) {
         auto const display = Gdk::Display::get_default();
+
         if (INKSCAPE.themecontext->getContrastThemeProvider()) {
             Gtk::StyleProvider::remove_provider_for_display(display, INKSCAPE.themecontext->getContrastThemeProvider());
         }
+
         if (INKSCAPE.themecontext->getThemeProvider() ) {
             Gtk::StyleProvider::remove_provider_for_display(display, INKSCAPE.themecontext->getThemeProvider() );
         }
+
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         Glib::ustring current_theme = prefs->getString("/theme/gtkTheme", prefs->getString("/theme/defaultGtkTheme", ""));
-        _dark_theme.get_parent()->set_no_show_all(false);
-        if (dark_themes[current_theme]) {
-            _dark_theme.get_parent()->show_all();
-        } else {
-            _dark_theme.get_parent()->set_visible(false);
-        }
+
+        _dark_theme.get_parent()->set_visible(dark_themes[current_theme]);
+
         auto settings = Gtk::Settings::get_default();
         settings->property_gtk_theme_name() = current_theme;
+
         auto const dark = INKSCAPE.themecontext->isCurrentThemeDark(window);
         bool toggled = prefs->getBool("/theme/darkTheme", false) != dark;
         prefs->setBool("/theme/darkTheme", dark);
+
         INKSCAPE.themecontext->getChangeThemeSignal().emit();
         INKSCAPE.themecontext->add_gtk_css(true, contrastslider);
         resetIconsColors(toggled);
@@ -1719,13 +1721,8 @@ void InkscapePreferences::initPageUI()
                          _("Make background brighter or darker to adjust contrast"), true, space);
     _contrast_theme.getSlider()->signal_value_changed().connect(sigc::mem_fun(*this, &InkscapePreferences::contrastThemeChange));
 
-    if (dark_themes[current_theme]) {
-        _dark_theme.get_parent()->set_no_show_all(false);
-        _dark_theme.get_parent()->show_all();
-    } else {
-        _dark_theme.get_parent()->set_no_show_all(true);
-        _dark_theme.get_parent()->set_visible(false);
-    }
+    _dark_theme.get_parent()->set_visible(dark_themes[current_theme]);
+
     _dark_theme.signal_clicked().connect(sigc::mem_fun(*this, &InkscapePreferences::preferDarkThemeChange));
 
     // Icons
@@ -2077,7 +2074,6 @@ void InkscapePreferences::initPageUI()
             UI::pack_start(*container, *btn);
         }
 
-        container->show_all();
         container->set_spacing(5);
         _page_color_pickers.add_line(true, "", *container, "", _("Select color pickers"), false);
     }
@@ -3809,7 +3805,6 @@ bool InkscapePreferences::GetSizeRequest(const Gtk::TreeModel::iterator& iter)
     Gtk::TreeModel::Row row = *iter;
     DialogPage* page = row[_page_list_columns._col_page];
     _page_frame.add(*page);
-    this->show_all_children();
     Gtk::Requisition sreq_minimum;
     Gtk::Requisition sreq_natural;
     get_preferred_size(sreq_minimum, sreq_natural);
@@ -3875,7 +3870,6 @@ void InkscapePreferences::show_not_found()
     _page_title.set_markup(_("<span size='large'><b>No Results</b></span>"));
     _page_frame.add(*_current_page);
     _current_page->set_visible(true);
-    this->show_all_children();
     if (prefs->getInt("/dialogs/preferences/page", 0) == PREFS_PAGE_UI_THEME) {
         symbolicThemeCheck();
     }
@@ -3906,7 +3900,6 @@ void InkscapePreferences::on_pagelist_selection_changed()
         _page_title.set_markup("<span size='large'><b>" + col_name_escaped + "</b></span>");
         _page_frame.add(*_current_page);
         _current_page->set_visible(true);
-        this->show_all_children();
         if (prefs->getInt("/dialogs/preferences/page", 0) == PREFS_PAGE_UI_THEME) {
             symbolicThemeCheck();
         }

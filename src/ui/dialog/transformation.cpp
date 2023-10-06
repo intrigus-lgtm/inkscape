@@ -161,8 +161,6 @@ Transformation::Transformation()
     UI::pack_start(*button_box, *applyButton);
     UI::pack_start(*button_box, *resetButton);
     UI::pack_start(*this, *button_box, UI::PackOptions::shrink);
-
-    show_all_children();
 }
 
 void Transformation::selectionChanged(Inkscape::Selection *selection)

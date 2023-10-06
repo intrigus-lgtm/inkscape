@@ -111,7 +111,6 @@ SimpleFilterModifier::SimpleFilterModifier(int flags)
     if (flags & OPACITY) {
         add(_opacity);
     }
-    show_all_children();
 
     _blend.signal_changed().connect(signal_blend_changed());
     _blur.signal_value_changed().connect(signal_blur_changed());

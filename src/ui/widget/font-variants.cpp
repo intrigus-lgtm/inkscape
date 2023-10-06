@@ -512,9 +512,6 @@ FontVariants::FontVariants () :
 
   // Add signals
   _feature_entry.signal_changed().connect( sigc::mem_fun(*this, &FontVariants::feature_callback) );
-  
-  show_all_children();
-
 }
 
 void
@@ -1154,8 +1151,6 @@ FontVariants::update_opentype (Glib::ustring& font_spec) {
                 grid_row++;
             }
         }
-
-        _feature_grid.show_all();
 
         _feature_substitutions.set_markup ( markup.c_str() );
 

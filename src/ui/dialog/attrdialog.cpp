@@ -320,7 +320,6 @@ void AttrDialog::set_current_textedit(Syntax::TextEditView* edit)
     _current_text_edit = edit ? edit : _attr_edit.get();
     _scrolled_text_view.remove();
     _scrolled_text_view.add(_current_text_edit->getTextView());
-    _scrolled_text_view.show_all();
 }
 
 void AttrDialog::adjust_popup_edit_size()

@@ -62,8 +62,6 @@ PageSelector::PageSelector(SPDesktop *desktop)
     _doc_replaced_connection =
         _desktop->connectDocumentReplaced(sigc::hide<0>(sigc::mem_fun(*this, &PageSelector::setDocument)));
 
-    this->show_all();
-    this->set_no_show_all();
     setDocument(desktop->getDocument());
 }
 

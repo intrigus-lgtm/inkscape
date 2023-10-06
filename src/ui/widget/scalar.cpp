@@ -164,8 +164,6 @@ Glib::SignalProxy<void()> Scalar::signal_value_changed()
 void Scalar::hide_label() {
     if (auto const label = getLabel()) {
         label->set_visible(false);
-        label->set_no_show_all();
-        label->set_hexpand(true);
     }
 
     if (auto const widget = getWidget()) {

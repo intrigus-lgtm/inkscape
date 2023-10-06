@@ -382,7 +382,6 @@ int gui_request_dpi_fix_method(SPDocument *doc)
     Inkscape::UI::pack_start(*content, moreinfo,      false, false, 5);
     // clang-format on
     moreinfo.add(moreinfo_text);
-    scale_dialog.show_all_children();
     b.set_visible(false);
     choice1.signal_clicked().connect(sigc::mem_fun(b, &Gtk::Box::hide));
     choice2.signal_clicked().connect(sigc::mem_fun(b, &Gtk::Box::show));

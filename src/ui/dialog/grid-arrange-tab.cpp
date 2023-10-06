@@ -630,8 +630,6 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
     SpaceByBBoxRadioButton.set_active(!ManualSpacing);
     XPadding.set_sensitive (ManualSpacing);
     YPadding.set_sensitive (ManualSpacing);
-
-    show_all_children();
 }
 
 GridArrangeTab::~GridArrangeTab() {

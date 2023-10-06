@@ -244,8 +244,6 @@ MeshToolbar::MeshToolbar(SPDesktop *desktop)
     get_widget<Gtk::Button>(_builder, "warning_btn").signal_clicked().connect([this] { warning_popup(); });
 
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &MeshToolbar::watch_ec));
-
-    show_all();
 }
 
 MeshToolbar::~MeshToolbar() = default;

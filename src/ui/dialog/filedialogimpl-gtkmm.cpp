@@ -317,7 +317,6 @@ FileSaveDialogImplGtk::FileSaveDialogImplGtk(Gtk::Window &parentWindow, const st
                 std::cerr << "FileDialogImplGtk: Unknown file type: " << (int)type << std::endl;
         }
     }
-    show_all_children();
 
     property_filter().signal_changed().connect([this]() { filefilterChanged(); });
     signal_selection_changed().connect([this]() { filenameChanged(); });

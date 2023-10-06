@@ -35,6 +35,7 @@ SpinScale::SpinScale(Glib::ustring label, double value,
     , _inkspinscale(value, lower, upper, step_increment, page_increment, 0)
 {
     set_name("SpinScale");
+
     _inkspinscale.drag_dest_unset();
     _inkspinscale.set_label(std::move(label));
     _inkspinscale.set_digits (digits);
@@ -45,8 +46,6 @@ SpinScale::SpinScale(Glib::ustring label, double value,
     signal_value_changed().connect(signal_attr_changed().make_slot());
 
     UI::pack_start(*this, _inkspinscale);
-
-    show_all_children();
 }
 
 SpinScale::SpinScale(Glib::ustring label,
@@ -65,8 +64,6 @@ SpinScale::SpinScale(Glib::ustring label,
     signal_value_changed().connect(signal_attr_changed().make_slot());
 
     UI::pack_start(*this, _inkspinscale);
-
-    show_all_children();
 }
 
 Glib::ustring SpinScale::get_as_attribute() const
@@ -144,8 +141,6 @@ DualSpinScale::DualSpinScale(Glib::ustring label1, Glib::ustring label2,
     UI::pack_start(*this, _link, false, false);
     set_link_active(true);
     _s2.set_sensitive(false);
-
-    show_all();
 }
 
 void DualSpinScale::set_link_active(bool link) {

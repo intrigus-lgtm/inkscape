@@ -185,8 +185,6 @@ SpellCheck::SpellCheck()
     dictionary_combo.signal_changed().connect(sigc::mem_fun(*this, &SpellCheck::onLanguageChanged));
     pref_button.signal_clicked().connect(sigc::ptr_fun(show_spellcheck_preferences_dialog));
 
-    show_all_children ();
-
     tree_view.set_sensitive(false);
     accept_button.set_sensitive(false);
     ignore_button.set_sensitive(false);

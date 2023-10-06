@@ -229,15 +229,7 @@ PaintSelector::PaintSelector(FillOrStroke kind)
     // from _new function
     setMode(PaintSelector::MODE_MULTIPLE);
 
-    if (kind == FILL)
-        _fillrulebox->show_all();
-    else
-        _fillrulebox->set_visible(false);
-
-    show_all();
-
-    // don't let docking manager uncover hidden widgets
-    set_no_show_all();
+    _fillrullbox.set_visible(kind == FILL);
 }
 
 StyleToggleButton *PaintSelector::style_button_add(gchar const *pixmap, PaintSelector::Mode mode, gchar const *tip)
@@ -896,7 +888,6 @@ void PaintSelector::set_mode_mesh(PaintSelector::Mode mode)
             l->set_size_request(180, -1);
             UI::pack_start(*hb2, *l, true, true, AUX_BETWEEN_BUTTON_GROUPS);
             UI::pack_start(*_selector_mesh, *hb2, false, false, AUX_BETWEEN_BUTTON_GROUPS);
-            _selector_mesh->show_all();
 
             _frame->add(*_selector_mesh);
         }
@@ -1015,7 +1006,6 @@ void PaintSelector::set_mode_pattern(PaintSelector::Mode mode)
             _selector_pattern->signal_changed().connect([=](){ _signal_changed.emit(); });
             _selector_pattern->signal_color_changed().connect([=](unsigned){ _signal_changed.emit(); });
             _selector_pattern->signal_edit().connect([=](){ _signal_edit_pattern.emit(); });
-            _selector_pattern->show_all();
             _frame->add(*_selector_pattern);
         }
 

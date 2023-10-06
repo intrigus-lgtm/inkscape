@@ -166,8 +166,8 @@ void CommandPalette::open()
         _win_doc_actions_loaded = true;
     }
 
-    _CPBase.show_all();
     _CPFilter.grab_focus();
+
     _is_open = true;
 
 }
@@ -220,7 +220,6 @@ void CommandPalette::append_recent_file_operation(const Glib::ustring &path, boo
         }
 
         // Hide for recent_file, not required
-        CPActionFullButton.set_no_show_all();
         CPActionFullButton.set_visible(false);
 
         CPName.set_text((is_import ? _("Import") : _("Open")) + (": " + file_name));
@@ -283,7 +282,6 @@ bool CommandPalette::generate_action_operation(const ActionPtrName &action_ptr_n
     CPActionFullLabel.set_text(action_ptr_name.second);
 
     if (not show_full_action_name) {
-        CPActionFullButton.set_no_show_all();
         CPActionFullButton.set_visible(false);
     } else {
         CPActionFullButton.signal_clicked().connect(
@@ -307,7 +305,6 @@ bool CommandPalette::generate_action_operation(const ActionPtrName &action_ptr_n
             accel_label.pop_back();
             CPShortcut.set_text(accel_label);
         } else {
-            CPShortcut.set_no_show_all();
             CPShortcut.set_visible(false);
         }
     }
@@ -435,7 +432,7 @@ void CommandPalette::hide_suggestions()
 void CommandPalette::show_suggestions()
 {
     _CPBase.set_size_request(-1, _max_height_requestable);
-    _CPListBase.show_all();
+    _CPListBase.set_visible(true);
 }
 
 void CommandPalette::on_action_fullname_clicked(const Glib::ustring &action_fullname)
@@ -1100,11 +1097,8 @@ void CommandPalette::set_mode(CPMode mode)
             show_suggestions();
 
             // Show Suggestions instead of history
-            _CPHistoryScroll.set_no_show_all();
             _CPHistoryScroll.set_visible(false);
-
-            _CPSuggestionsScroll.set_no_show_all(false);
-            _CPSuggestionsScroll.show_all();
+            _CPSuggestionsScroll.set_visible(true);
 
             _CPSuggestions.unset_filter_func();
             _CPSuggestions.set_filter_func(sigc::mem_fun(*this, &CommandPalette::on_filter_general));
@@ -1149,10 +1143,8 @@ void CommandPalette::set_mode(CPMode mode)
             }
 
             // Show history instead of suggestions
-            _CPSuggestionsScroll.set_no_show_all();
-            _CPHistoryScroll.set_no_show_all(false);
             _CPSuggestionsScroll.set_visible(false);
-            _CPHistoryScroll.show_all();
+            _CPHistoryScroll.set_visible(true);
 
             set_sensitive(_CPFilter, false);
             _CPFilter.set_icon_from_icon_name("format-justify-fill");

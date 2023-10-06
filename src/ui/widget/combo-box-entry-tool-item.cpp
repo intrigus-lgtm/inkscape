@@ -118,8 +118,6 @@ ComboBoxEntryToolItem::ComboBoxEntryToolItem(Glib::ustring name,
     }
 
     set_tooltip(_tooltip.c_str());
-
-    show_all();
 }
 
 // Setters/Getters ---------------------------------------------------

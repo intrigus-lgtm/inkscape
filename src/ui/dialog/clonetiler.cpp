@@ -1194,11 +1194,9 @@ CloneTiler::CloneTiler()
                 UI::pack_start(*hb, *b, false, false);
             }
         }
-
-        mainbox->show_all();
     }
 
-    show_all();
+    set_visible(true);
 }
 
 CloneTiler::~CloneTiler ()

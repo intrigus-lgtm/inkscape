@@ -42,7 +42,7 @@ SaveTemplate::SaveTemplate(Gtk::Window &parent)
     dialog.set_default_response(Gtk::ResponseType::CANCEL);
 
     dialog.set_transient_for(parent);
-    dialog.show_all();
+    dialog.set_visible(true);
 }
 
 void SaveTemplate::on_name_changed() {

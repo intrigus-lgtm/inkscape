@@ -25,7 +25,6 @@ CompletionPopup::CompletionPopup() :
     _popover_menu{*this, Gtk::PositionType::BOTTOM},
     _completion(get_object<Gtk::EntryCompletion>(_builder, "completion"))
 {
-    _popover_menu.show_all_children();
     _button.set_popover(_popover_menu);
 
     _list = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(_builder->get_object("list"));

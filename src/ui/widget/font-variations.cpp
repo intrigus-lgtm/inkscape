@@ -65,7 +65,6 @@ FontVariations::FontVariations () :
     set_orientation( Gtk::Orientation::VERTICAL );
     set_name ("FontVariations");
     size_group = Gtk::SizeGroup::create(Gtk::SizeGroup::Mode::HORIZONTAL);
-    show_all_children();
 }
 
 
@@ -90,8 +89,6 @@ void FontVariations::update(Glib::ustring const &font_spec)
             sigc::mem_fun(*this, &FontVariations::on_variations_change)
             );
     }
-
-    show_all_children();
 }
 
 void

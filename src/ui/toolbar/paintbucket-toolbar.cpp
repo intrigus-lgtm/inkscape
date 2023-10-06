@@ -136,8 +136,6 @@ PaintbucketToolbar::PaintbucketToolbar(SPDesktop *desktop)
     get_widget<Gtk::Button>(_builder, "reset_btn")
         .signal_clicked()
         .connect(sigc::mem_fun(*this, &PaintbucketToolbar::defaults));
-
-    show_all();
 }
 
 PaintbucketToolbar::~PaintbucketToolbar() = default;

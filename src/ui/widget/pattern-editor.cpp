@@ -351,7 +351,7 @@ void PatternEditor::bind_store(Gtk::FlowBox& list, PatternStore& pat) {
             UI::pack_end(*box, *label);
         }
         image->set_tooltip_text(name);
-        box->show_all();
+
         auto const cbox = Gtk::make_managed<Gtk::FlowBoxChild>();
         cbox->add(*box);
         cbox->add_css_class("pattern-item-box");

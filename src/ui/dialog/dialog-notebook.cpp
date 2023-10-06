@@ -165,8 +165,6 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
         _menu.add_css_class("symbolic");
     }
 
-    _menu.show_all_children();
-
     auto const menubtn = Gtk::make_managed<Gtk::MenuButton>();
     menubtn->set_image_from_icon_name("go-down-symbolic");
     menubtn->set_popover(_menu);
@@ -189,7 +187,7 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
     // ============= Finish setup ===============
     _reload_context = true;
     add(_notebook);
-    show_all();
+    set_visible(true);
 
     _instances.push_back(this);
 }
@@ -304,7 +302,6 @@ void DialogNotebook::add_page(Gtk::Widget &page, Gtk::Widget &tab, Glib::ustring
     int page_number = _notebook.append_page(page, tab);
     _notebook.set_tab_reorderable(page);
     _notebook.set_tab_detachable(page);
-    _notebook.show_all();
     _notebook.set_current_page(page_number);
 }
 
@@ -336,7 +333,6 @@ void DialogNotebook::move_page(Gtk::Widget &page)
     // Set default settings for a new page
     _notebook.set_tab_reorderable(page);
     _notebook.set_tab_detachable(page);
-    _notebook.show_all();
     _reload_context = true;
 }
 
@@ -416,7 +412,7 @@ DialogWindow* DialogNotebook::pop_tab_callback()
     // Move page to notebook in new dialog window (attached to active InkscapeWindow).
     auto inkscape_window = _container->get_inkscape_window();
     auto window = new DialogWindow(inkscape_window, page);
-    window->show_all();
+    window->set_visible(true);
 
     if (_notebook.get_n_pages() == 0) {
         close_notebook_callback();
@@ -637,7 +633,7 @@ void DialogNotebook::on_size_allocate_notebook(Gtk::Allocation &a)
 
     for_each_child(_notebook, [this](Gtk::Widget &page){
         auto const cover = dynamic_cast<Gtk::EventBox *>(_notebook.get_tab_label(page));
-        if (cover) cover->show_all();
+        if (cover) cover->set_visible(true);
         return ForEachResult::_continue;
     });
     _notebook.get_preferred_width(total_width, nat_width); // get full notebook allocation (all open)
@@ -808,8 +804,6 @@ void DialogNotebook::reload_tab_menu()
             return ForEachResult::_continue;
         });
     }
-
-    _menutabs.show_all();
 }
 
 /**
@@ -859,10 +853,6 @@ void DialogNotebook::toggle_tab_labels_callback(bool show)
 
 void DialogNotebook::on_page_switch(Gtk::Widget *curr_page, guint)
 {
-    if (auto container = dynamic_cast<Gtk::Container *>(curr_page)) {
-        container->show_all_children();
-    }
-
     for_each_child(_notebook, [=, this](Gtk::Widget &page){
         if (auto const dialogbase = dynamic_cast<DialogBase *>(&page)) {
             if (auto const widgs = UI::get_children(*dialogbase); !widgs.empty()) {

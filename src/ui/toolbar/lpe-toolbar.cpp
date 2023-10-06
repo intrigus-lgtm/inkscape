@@ -147,8 +147,6 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &LPEToolbar::watch_ec));
 
     add(*_toolbar);
-
-    show_all();
 }
 
 LPEToolbar::~LPEToolbar() = default;

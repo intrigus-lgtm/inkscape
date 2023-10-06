@@ -117,8 +117,6 @@ StarToolbar::StarToolbar(SPDesktop *desktop)
         .signal_clicked()
         .connect(sigc::mem_fun(*this, &StarToolbar::defaults));
 
-    show_all();
-
     _spoke_item.set_visible(!is_flat_sided);
 }
 

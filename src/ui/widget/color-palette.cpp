@@ -50,7 +50,6 @@ namespace Inkscape::UI::Widget {
     menu->add_css_class("ColorPalette");
     menu->append(*separator);
     menu->append(*config);
-    menu->show_all_children();
 
     return std::make_pair(std::move(menu), std::ref(*config));
 }
@@ -651,9 +650,6 @@ void ColorPalette::rebuild_widgets()
         _pinned_box.add(*_get_widget(item));
     }
 
-    _normal_box.show_all();
-    _pinned_box.show_all();
-
     set_up_scrolling();
 
     _normal_box.thaw_child_notify();
@@ -678,7 +674,6 @@ public:
         box->add(*_radio_button);
         box->add(*_preview     );
         add(*box);
-        show_all();
     }
 
     void set_active(bool const active) { _radio_button->set_active(active); }

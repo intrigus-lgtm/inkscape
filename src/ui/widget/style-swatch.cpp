@@ -271,7 +271,6 @@ void StyleSwatch::setStyle(SPStyle *query)
         } else if (paint->set && paint->isColor()) {
             guint32 color = paint->value.color.toRGBA32( SP_SCALE24_TO_FLOAT ((i == SS_FILL)? query->fill_opacity.value : query->stroke_opacity.value) );
             _color_preview[i]->setRgba32(color);
-            _color_preview[i]->show_all();
             place->add(*_color_preview[i]);
             gchar *tip;
             if (i == SS_FILL) {
@@ -354,8 +353,6 @@ void StyleSwatch::setStyle(SPStyle *query)
         _opacity_value.set_markup("");
         _opacity_value.set_has_tooltip(false);
     }
-
-    show_all();
 }
 
 } // namespace Inkscape::UI::Widget

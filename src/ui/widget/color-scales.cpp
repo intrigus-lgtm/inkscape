@@ -300,11 +300,6 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
         _s[i]->signal_value_changed.connect([this](){ _sliderAnyChanged(); });
     }
 
-    // Prevent 5th bar from being shown by PanelDialog::show_all_children
-    _l[4]->set_no_show_all(true);
-    _s[4]->set_no_show_all(true);
-    _b[4]->set_no_show_all(true);
-
     setupMode(no_alpha);
 
     if constexpr (
@@ -792,9 +787,6 @@ void ColorScales<MODE>::setupMode(bool no_alpha)
         _l[alpha_index]->set_visible(false);
         _s[alpha_index]->set_visible(false);
         _b[alpha_index]->set_visible(false);
-        _l[alpha_index]->set_no_show_all(true);
-        _s[alpha_index]->set_no_show_all(true);
-        _b[alpha_index]->set_no_show_all(true);
     }
 }
 

@@ -41,8 +41,6 @@ FontCollectionSelector::FontCollectionSelector()
     treeview->set_model(store);
 
     setup_signals();
-
-    show_all_children();
 }
 
 FontCollectionSelector::~FontCollectionSelector() = default;

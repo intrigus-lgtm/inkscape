@@ -144,7 +144,7 @@ GradientSelector::GradientSelector()
     _edit->set_sensitive(false);
     _edit->set_has_frame(false);
     _edit->set_tooltip_text(_("Edit gradient"));
-    _edit->set_no_show_all();
+    _edit->set_visible(false);
 
     _del = Gtk::make_managed<Gtk::Button>();
     style_button(_del, INKSCAPE_ICON("list-remove"));
@@ -155,8 +155,6 @@ GradientSelector::GradientSelector()
     _del->set_sensitive(false);
     _del->set_has_frame(false);
     _del->set_tooltip_text(_("Delete swatch"));
-
-    hb->show_all();
 }
 
 GradientSelector::~GradientSelector() = default;
@@ -176,7 +174,7 @@ void GradientSelector::setMode(SelectorMode mode)
                 it->set_visible(false);
             }
             for (auto &swatch_widget : _swatch_widgets) {
-                swatch_widget->show_all();
+                swatch_widget->set_visible(true);
             }
 
             auto icon_column = _treeview->get_column(0);
@@ -185,7 +183,7 @@ void GradientSelector::setMode(SelectorMode mode)
             _vectors->setSwatched();
         } else {
             for (auto &it : _nonsolid) {
-                it->show_all();
+                it->set_visible(true);
             }
             for (auto &swatch_widget : _swatch_widgets) {
                 swatch_widget->set_visible(false);
@@ -415,7 +413,7 @@ void GradientSelector::setVector(SPDocument *doc, SPGradient *vector)
                 }
             } else {
                 for (auto &it : _nonsolid) {
-                    it->show_all();
+                    it->set_visible(true);
                 }
             }
         } else if (_mode != MODE_SWATCH) {
@@ -424,7 +422,7 @@ void GradientSelector::setVector(SPDocument *doc, SPGradient *vector)
                 swatch_widget->set_visible(false);
             }
             for (auto &it : _nonsolid) {
-                it->show_all();
+                it->set_visible(true);
             }
         }
 

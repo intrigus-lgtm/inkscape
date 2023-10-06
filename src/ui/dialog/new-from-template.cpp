@@ -52,7 +52,7 @@ NewFromTemplate::NewFromTemplate()
         _create_template_button.set_sensitive(templates->has_selected_preset());
     });
 
-    show_all();
+    set_visible(true);
 }
 
 void NewFromTemplate::_createFromTemplate()

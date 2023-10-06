@@ -165,8 +165,6 @@ TextEdit::TextEdit()
 
     font_selector.set_name("TextEdit");
     change_font_count_label();
-
-    show_all_children();
 }
 
 TextEdit::~TextEdit() = default;
@@ -508,11 +506,9 @@ void TextEdit::display_font_collections()
             // toggle font system collection
             font_collections->update_selected_collections(col);
         });
-// g_message("tag: %s", tag.display_name.c_str());
         auto const row = Gtk::make_managed<Gtk::ListBoxRow>();
         row->set_focusable(false);
         row->add(*btn);
-        row->show_all();
         collections_list.append(*row);
     }
 
@@ -522,7 +518,6 @@ void TextEdit::display_font_collections()
     auto const sep_row = Gtk::make_managed<Gtk::ListBoxRow>();
     sep_row->set_focusable(false);
     sep_row->add(*sep);
-    sep_row->show_all();
     collections_list.append(*sep_row);
 
     // Insert user collections.
@@ -534,11 +529,9 @@ void TextEdit::display_font_collections()
             // toggle font collection
             font_collections->update_selected_collections(col);
         });
-// g_message("tag: %s", tag.display_name.c_str());
         auto const row = Gtk::make_managed<Gtk::ListBoxRow>();
         row->set_focusable(false);
         row->add(*btn);
-        row->show_all();
         collections_list.append(*row);
     }
 }

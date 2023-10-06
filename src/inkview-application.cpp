@@ -141,7 +141,7 @@ void InkviewApplication::on_open(Gio::Application::type_vec_files const &files, 
         return; // Fixme: Exit with code 1 - see https://gitlab.com/inkscape/inkscape/-/issues/270.
     }
 
-    window->show_all();
+    window->set_visible(true);
     add_window(*window);
 }
 

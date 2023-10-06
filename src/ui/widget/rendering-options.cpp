@@ -88,8 +88,6 @@ RenderingOptions::RenderingOptions () :
 
     // initialize states
     _toggled();
-
-    show_all_children ();
 }
 
 bool

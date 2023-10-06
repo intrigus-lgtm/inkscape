@@ -120,7 +120,6 @@ XmlTree::XmlTree()
     attributes->get_scrolled_window().set_has_frame(true);
     attributes->set_visible(true);
     attributes->get_status_box().set_visible(false);
-    attributes->get_status_box().set_no_show_all();
     _paned.pack2(*attributes, true, false);
 
     /* Signal handlers */
@@ -149,7 +148,7 @@ XmlTree::XmlTree()
 
     set_name("XMLAndAttributesDialog");
     set_spacing(0);
-    show_all();
+    set_visible(true);
 
     int panedpos = prefs->getInt("/dialogs/xml/panedpos", 200);
     _paned.property_position() = panedpos;

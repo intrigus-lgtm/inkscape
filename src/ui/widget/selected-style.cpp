@@ -154,14 +154,12 @@ SelectedStyle::SelectedStyle(bool /*layout*/)
 
         // CSS sets width to 54.
         gradient_preview[i] = std::make_unique<GradientImage>(nullptr);
-        gradient_preview[i]->hide();
-        gradient_preview[i]->set_no_show_all();
+        gradient_preview[i]->set_visible(false);
 
         color_preview[i] = std::make_unique<Inkscape::UI::Widget::ColorPreview>(0);
         color_preview[i]->set_size_request(SELECTED_STYLE_PLACE_WIDTH, -1);
         color_preview[i]->set_hexpand(true);
-        color_preview[i]->hide();
-        color_preview[i]->set_no_show_all();
+        color_preview[i]->set_visible(false);
 
         // Shows one or two children at a time.
         type_box[i] = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
@@ -228,7 +226,6 @@ SelectedStyle::SelectedStyle(bool /*layout*/)
     grid->attach(*opacity_sb,       5, 0, 1, 2);
 
     grid->set_column_spacing(4);
-    grid->show_all();
     add(*grid);
 
     make_popup_units();
@@ -707,8 +704,6 @@ void SelectedStyle::make_popup(FillOrStroke const i)
              _("Unset Stroke")        , &SelectedStyle::on_stroke_unset       );
     add_item(_("Remove Fill"  )       , &SelectedStyle::  on_fill_remove      ,
              _("Remove Stroke")       , &SelectedStyle::on_stroke_remove      );
-
-    _popup[i]->show_all_children();
 }
 
 void SelectedStyle::make_popup_units()
@@ -745,8 +740,6 @@ void SelectedStyle::make_popup_units()
 
     _popup_sw->append(*make_menu_item(_("Remove Stroke"),
           sigc::mem_fun(*this, &SelectedStyle::on_stroke_remove)));
-
-    _popup_sw->show_all_children();
 }
 
 void SelectedStyle::on_popup_units(Inkscape::Util::Unit const *unit) {
@@ -784,8 +777,8 @@ SelectedStyle::update()
 
         // New
         type_label[i]->show(); // Used by all types except solid color.
-        gradient_preview[i]->hide();
-        color_preview[i]->hide();
+        gradient_preview[i]->set_visible(false);
+        color_preview[i]->set_visible(false);
 
         _mode[i] = SS_NA;
         _paintserver_id[i].clear();
@@ -885,7 +878,7 @@ SelectedStyle::update()
                 // No type_label.
                 swatch[i]->set_tooltip_text(type_strings[SS_COLOR][i][1] + ": " + c_string +
                                             _(", drag to adjust, middle-click to remove"));
-                type_label[i]->hide();
+                type_label[i]->set_visible(false);
                 color_preview[i]->setRgba32(color);
                 color_preview[i]->show();
 

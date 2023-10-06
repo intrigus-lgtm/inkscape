@@ -145,8 +145,8 @@ CdrImportDialog::CdrImportDialog(const std::vector<RVNGString> &vec)
     this->add_action_widget(*cancelbutton, Gtk::ResponseType::CANCEL);
     this->add_action_widget(*okbutton, Gtk::ResponseType::OK);
 
-    // Show all widgets in dialog
-    this->show_all();
+    // Show dialog
+    this->set_visible(true);
 
     // Connect signals
     _pageNumberSpin->signal_value_changed().connect(sigc::mem_fun(*this, &CdrImportDialog::_onPageNumberChanged));
@@ -235,7 +235,6 @@ void CdrImportDialog::_setPreviewPage()
     }
 
     _previewArea->setResize(400, 400);
-    _previewArea->show_all();
 }
 
 SPDocument *CdrInput::open(Inkscape::Extension::Input * /*mod*/, const gchar * uri)

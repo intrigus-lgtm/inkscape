@@ -116,8 +116,6 @@ ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
         _repr->addObserver(*this);
         _repr->synthesizeEvents(*this);
     }
-
-    show_all();
 }
 
 ConnectorToolbar::~ConnectorToolbar() = default;

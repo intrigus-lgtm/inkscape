@@ -150,8 +150,6 @@ void Toolbars::create_toolbars(SPDesktop *desktop)
                 grid->attach(*swatch, 1, 0, 1, 1);
             }
 
-            grid->show_all();
-
             add(*grid);
 
         } else if (aux_toolboxes[i].swatch_tip) {

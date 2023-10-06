@@ -189,7 +189,6 @@ FillAndStroke::_createPageTabLabel(const Glib::ustring& label, const char *label
     auto const _tab_label = Gtk::make_managed<Gtk::Label>(label, true);
     _tab_label_box->append(*_tab_label);
 
-    _tab_label_box->show_all();
     return *_tab_label_box;
 }
 

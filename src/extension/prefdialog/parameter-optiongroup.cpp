@@ -27,8 +27,7 @@
 #include "ui/pack.h"
 #include "xml/node.h"
 
-namespace Inkscape {
-namespace Extension {
+namespace Inkscape::Extension {
 
 ParamOptionGroup::ParamOptionGroup(Inkscape::XML::Node *xml, Inkscape::Extension::Extension *ext)
     : InxParameter(xml, ext)
@@ -294,10 +293,8 @@ Gtk::Widget *ParamOptionGroup::get_widget(sigc::signal<void ()> *changeSignal)
         UI::pack_end(*hbox, *radios, false, false);
     }
 
-    hbox->show_all();
-    return static_cast<Gtk::Widget *>(hbox);
+    return hbox;
 }
-
 
 ParamOptionGroup::ParamOptionGroupOption::ParamOptionGroupOption(Inkscape::XML::Node *xml, Inkscape::Extension::Extension *ext,
                                                                  const Inkscape::Extension::ParamOptionGroup *parent)
@@ -338,10 +335,7 @@ ParamOptionGroup::ParamOptionGroupOption::ParamOptionGroupOption(Inkscape::XML::
     }
 }
 
-
-
-}  /* namespace Extension */
-}  /* namespace Inkscape */
+} // namespace Inkscape::Extension
 
 /*
   Local Variables:

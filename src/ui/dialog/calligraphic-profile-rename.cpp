@@ -78,8 +78,6 @@ CalligraphicProfileRename::CalligraphicProfileRename() :
     add_action_widget(_apply_button, Gtk::ResponseType::APPLY);
 
     _apply_button.grab_default();
-
-    show_all_children();
 }
 
 void CalligraphicProfileRename::_apply()

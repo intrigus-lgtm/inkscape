@@ -780,7 +780,7 @@ public:
         }
 
         if (t >= 0) {
-            _groups[t]->set_visible(true); // Do not use show_all(), it shows children than should be hidden
+            _groups[t]->set_visible(true);
         }
 
         _dialog.set_attrs_locked(true);
@@ -2949,11 +2949,6 @@ void FilterEffectsDialog::selectionModified(Inkscape::Selection *selection, guin
 void FilterEffectsDialog::set_attrs_locked(const bool l)
 {
     _locked = l;
-}
-
-void FilterEffectsDialog::show_all_vfunc()
-{
-    update_settings_view();
 }
 
 void FilterEffectsDialog::init_settings_widgets()

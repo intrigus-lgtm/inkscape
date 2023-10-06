@@ -256,7 +256,7 @@ SelectorsDialog::SelectorsDialog()
     _treeView.signal_row_collapsed().connect(sigc::mem_fun(*this, &SelectorsDialog::_rowCollapse));
 
     _showWidgets();
-    show_all();
+    set_visible(true);
 }
 
 void SelectorsDialog::_vscroll()
@@ -327,8 +327,6 @@ void SelectorsDialog::_showWidgets()
     UI::pack_start(*contents, _button_box, false, false);
     contents->set_valign(Gtk::Align::FILL);
     UI::pack_start(*this, *contents, UI::PackOptions::expand_widget);
-
-    show_all();
 
     _updating = true;
     _paned.property_position() = 200;
@@ -412,8 +410,6 @@ void SelectorsDialog::_readStyleElement()
         _updating = false;
         return;
     }
-
-    _treeView.show_all();
 
     std::map<Glib::ustring, bool> expanderstatus;
     for (std::size_t i = 0; i < tokens.size() - 1; i += 2) {

@@ -180,7 +180,6 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     _columns->append(*_canvas_grid.get());
 
     // ------------------ Finish Up -------------------- //
-    show_all();
     _canvas_grid->ShowCommandPalette(false);
 
     _canvas->grab_focus();
@@ -586,38 +585,38 @@ void SPDesktopWidget::layoutWidgets()
     if (!prefs->getBool(pref_root + "commands/state", true)) {
         command_toolbar->set_visible(false);
     } else {
-        command_toolbar->show_all();
+        command_toolbar->set_visible(true);
     }
 
     if (!prefs->getBool(pref_root + "snaptoolbox/state", true)) {
         snap_toolbar->set_visible(false);
     } else {
-        snap_toolbar->set_visible(true); // Not show_all()!
+        snap_toolbar->set_visible(true);
     }
 
     if (!prefs->getBool(pref_root + "toppanel/state", true)) {
         tool_toolbars->set_visible(false);
     } else {
-        tool_toolbars->set_visible(true); // Not show_all()!
+        tool_toolbars->set_visible(true);
     }
 
     if (!prefs->getBool(pref_root + "toolbox/state", true)) {
         tool_toolbox->set_visible(false);
     } else {
-        tool_toolbox->show_all();
+        tool_toolbox->set_visible(true);
     }
 
     if (!prefs->getBool(pref_root + "statusbar/state", true)) {
         _statusbar->set_visible(false);
     } else {
-        _statusbar->show_all();
+        _statusbar->set_visible(true);
     }
     _statusbar->update_visibility(); // Individual items in bar
 
     if (!prefs->getBool(pref_root + "panels/state", true)) {
         _panels->set_visible(false);
     } else {
-        _panels->show_all();
+        _panels->set_visible(true);
     }
 
     _canvas_grid->ShowScrollbars(prefs->getBool(pref_root + "scrollbars/state", true));

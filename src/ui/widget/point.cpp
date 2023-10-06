@@ -51,7 +51,6 @@ Point::Point(Glib::ustring const &label, Glib::ustring const &tooltip,
     auto &box = dynamic_cast<Gtk::Box &>(*getWidget());
     UI::pack_start(box, xwidget, true, true);
     UI::pack_start(box, ywidget, true, true);
-    box.show_all_children();
 }
 
 unsigned Point::getDigits() const

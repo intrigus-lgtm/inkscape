@@ -209,8 +209,6 @@ IconPreviewPanel::IconPreviewPanel()
 
     UI::pack_start(*this, iconBox, UI::PackOptions::shrink);
 
-    show_all_children();
-
     refreshPreview();
 }
 

@@ -61,10 +61,12 @@ InkviewWindow::InkviewWindow(Gio::Application::type_vec_files files,
     }
 
     // Actions
-    add_action("show_first", sigc::mem_fun(*this, &InkviewWindow::show_first));
-    add_action("show_prev",  sigc::mem_fun(*this, &InkviewWindow::show_prev) );
-    add_action("show_next",  sigc::mem_fun(*this, &InkviewWindow::show_next) );
-    add_action("show_last",  sigc::mem_fun(*this, &InkviewWindow::show_last) );
+    _group = Gio::SimpleActionGroup::create();
+    _group->add_action("show_first", sigc::mem_fun(*this, &InkviewWindow::show_first));
+    _group->add_action("show_prev",  sigc::mem_fun(*this, &InkviewWindow::show_prev) );
+    _group->add_action("show_next",  sigc::mem_fun(*this, &InkviewWindow::show_next) );
+    _group->add_action("show_last",  sigc::mem_fun(*this, &InkviewWindow::show_last) );
+    insert_action_group("win", _group);
 
     // ToDo: Add Pause, Resume.
 
@@ -85,12 +87,12 @@ std::vector<Glib::RefPtr<Gio::File>> InkviewWindow::create_file_list(std::vector
     for (auto const &file : files) {
         Gio::FileType type = file->query_file_type();
         switch (type) {
-            case Gio::FILE_TYPE_NOT_KNOWN:
+            case Gio::FileType::UNKNOWN:
                 std::cerr << "InkviewWindow: File or directory does not exist: "
                           << file->get_basename() << std::endl;
                 break;
 
-            case Gio::FILE_TYPE_REGULAR: {
+            case Gio::FileType::REGULAR: {
                 // Only look at SVG and SVGZ files.
                 std::string basename = file->get_basename();
                 std::string extension = basename.substr(basename.find_last_of(".") + 1);
@@ -100,7 +102,7 @@ std::vector<Glib::RefPtr<Gio::File>> InkviewWindow::create_file_list(std::vector
                 break;
             }
 
-            case Gio::FILE_TYPE_DIRECTORY:
+            case Gio::FileType::DIRECTORY:
                 if (_recursive || first) {
                     // No easy way to get children of directory!
                     Glib::RefPtr<Gio::FileEnumerator> children = file->enumerate_children();
@@ -114,7 +116,7 @@ std::vector<Glib::RefPtr<Gio::File>> InkviewWindow::create_file_list(std::vector
                 break;
 
             default:
-                std::cerr << "InkviewWindow: Unknown file type: " << type << std::endl;
+                std::cerr << "InkviewWindow: Unknown file type: " << (int)type << std::endl;
                 break;
         }
         first = false;
@@ -143,13 +145,13 @@ bool InkviewWindow::show_document(SPDocument *document)
     Gdk::Rectangle monitor_geometry = Inkscape::UI::get_monitor_geometry_primary();
     int width  = std::min<int>(document->getWidth().value("px")  * _scale, monitor_geometry.get_width());
     int height = std::min<int>(document->getHeight().value("px") * _scale, monitor_geometry.get_height());
-    resize(width, height);
+    set_default_size(width, height);
 
     if (_view) {
         _view->setDocument(document);
     } else {
         _view = Gtk::make_managed<Inkscape::UI::View::SVGViewWidget>(document);
-        add(*_view);
+        set_child(*_view);
     }
 
     update_title();
@@ -205,13 +207,10 @@ void InkviewWindow::show_control()
     _controlwindow = &Inkscape::UI::get_widget<Gtk::Window>(builder, "ControlWindow");
 
     // Need to give control window access to viewer window's actions.
-    auto viewer = get_action_group("win");
-    if (viewer) {
-        _controlwindow->insert_action_group("viewer", viewer);
-    }
+    _controlwindow->insert_action_group("viewer", _group);
 
     _controlwindow->set_transient_for(*this);
-    _controlwindow->show_all();
+    _controlwindow->set_visible(true);
 }
 
 // Next document

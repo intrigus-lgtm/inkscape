@@ -23,6 +23,7 @@
 
 namespace Gio {
 class File;
+class SimpleActionGroup;
 } // namespace Gio
 
 class SPDocument;
@@ -58,6 +59,7 @@ private:
 
     Inkscape::UI::View::SVGViewWidget *_view = nullptr;
     Gtk::Window *_controlwindow = nullptr;
+    Glib::RefPtr<Gio::SimpleActionGroup> _group;
 
     // Callbacks
     void show_control();

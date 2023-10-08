@@ -986,12 +986,11 @@ Shortcuts::dump_all_recursive(Gtk::Widget* widget)
     ++indent;
     for (int i = 0; i < indent; ++i) std::cout << "  ";
 
-    if (auto const actionable = dynamic_cast<Gtk::Actionable *>(widget)) {
-        action = actionable->get_action_name();
-    }
+    auto const actionable = dynamic_cast<Gtk::Actionable *>(widget);
+    auto const action = actionable ? actionable->get_action_name() : "";
 
     std::cout << widget->get_name()
-              << ":   actionable: " << std::boolalpha << is_actionable
+              << ":   actionable: " << std::boolalpha << static_cast<bool>(actionable)
               << ":   " << widget->get_tooltip_text()
               << ":   " << action
               << std::endl;

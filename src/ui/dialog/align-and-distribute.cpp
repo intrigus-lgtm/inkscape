@@ -64,7 +64,7 @@ AlignAndDistribute::AlignAndDistribute(Inkscape::UI::Dialog::DialogBase* dlg)
 {
     set_name("AlignAndDistribute");
 
-    add(align_and_distribute_box);
+    append(align_and_distribute_box);
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 

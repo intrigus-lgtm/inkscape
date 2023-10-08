@@ -26,8 +26,8 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/notebook.h>
-#include <gtkmm/radiobutton.h>
 #include <gtkmm/sizegroup.h>
+#include <gtkmm/togglebutton.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -820,60 +820,68 @@ CloneTiler::CloneTiler()
                 table->set_row_spacing(4);
                 table->set_column_spacing(6);
                 table->set_margin(4);
-                frame->add(*table);
+                frame->set_child(*table);
 
-                Gtk::RadioButtonGroup rb_group;
+                Gtk::CheckButton *rb_group;
                 {
-                    auto const radio = Gtk::make_managed<Gtk::RadioButton>(rb_group, _("Color"));
+                    auto const radio = Gtk::make_managed<Gtk::CheckButton>(_("Color"));
+                    rb_group = radio;
                     radio->set_tooltip_text(_("Pick the visible color and opacity"));
                     table_attach(table, radio, 0.0, 1, 1);
                     radio->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &CloneTiler::pick_switched), PICK_COLOR));
                     radio->set_active(prefs->getInt(prefs_path + "pick", 0) == PICK_COLOR);
                 }
                 {
-                    auto const radio = Gtk::make_managed<Gtk::RadioButton>(rb_group, _("Opacity"));
+                    auto const radio = Gtk::make_managed<Gtk::CheckButton>(_("Opacity"));
+                    radio->set_group(*rb_group);
                     radio->set_tooltip_text(_("Pick the total accumulated opacity"));
                     table_attach (table, radio, 0.0, 2, 1);
                     radio->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &CloneTiler::pick_switched), PICK_OPACITY));
                     radio->set_active(prefs->getInt(prefs_path + "pick", 0) == PICK_OPACITY);
                 }
                 {
-                    auto const radio = Gtk::make_managed<Gtk::RadioButton>(rb_group, _("R"));
+                    auto const radio = Gtk::make_managed<Gtk::CheckButton>(_("R"));
+                    radio->set_group(*rb_group);
                     radio->set_tooltip_text(_("Pick the Red component of the color"));
                     table_attach (table, radio, 0.0, 1, 2);
                     radio->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &CloneTiler::pick_switched), PICK_R));
                     radio->set_active(prefs->getInt(prefs_path + "pick", 0) == PICK_R);
                 }
                 {
-                    auto const radio = Gtk::make_managed<Gtk::RadioButton>(rb_group, _("G"));
+                    auto const radio = Gtk::make_managed<Gtk::CheckButton>(_("G"));
+                    radio->set_group(*rb_group);
                     radio->set_tooltip_text(_("Pick the Green component of the color"));
                     table_attach (table, radio, 0.0, 2, 2);
                     radio->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &CloneTiler::pick_switched), PICK_G));
                     radio->set_active(prefs->getInt(prefs_path + "pick", 0) == PICK_G);
                 }
                 {
-                    auto const radio = Gtk::make_managed<Gtk::RadioButton>(rb_group, _("B"));
+                    auto const radio = Gtk::make_managed<Gtk::CheckButton>(_("B"));
+                    radio->set_group(*rb_group);
                     radio->set_tooltip_text(_("Pick the Blue component of the color"));
                     table_attach (table, radio, 0.0, 3, 2);
                     radio->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &CloneTiler::pick_switched), PICK_B));
                     radio->set_active(prefs->getInt(prefs_path + "pick", 0) == PICK_B);
                 }
                 {
-                    auto const radio = Gtk::make_managed<Gtk::RadioButton>(rb_group, C_("Clonetiler color hue", "H"));
+                    auto const radio = Gtk::make_managed<Gtk::CheckButton>(C_("Clonetiler color hue", "H"));
+                    radio->set_group(*rb_group);
                     radio->set_tooltip_text(_("Pick the hue of the color"));
                     table_attach (table, radio, 0.0, 1, 3);
                     radio->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &CloneTiler::pick_switched), PICK_H));
                     radio->set_active(prefs->getInt(prefs_path + "pick", 0) == PICK_H);
                 }
                 {
-                    auto const radio = Gtk::make_managed<Gtk::RadioButton>(rb_group, C_("Clonetiler color saturation", "S"));
+                    auto const radio = Gtk::make_managed<Gtk::CheckButton>(C_("Clonetiler color saturation", "S"));
+                    radio->set_group(*rb_group);
                     radio->set_tooltip_text(_("Pick the saturation of the color"));
                     table_attach (table, radio, 0.0, 2, 3);
                     radio->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &CloneTiler::pick_switched), PICK_S));
                     radio->set_active(prefs->getInt(prefs_path + "pick", 0) == PICK_S);
                 }
                 {
-                    auto const radio = Gtk::make_managed<Gtk::RadioButton>(rb_group, C_("Clonetiler color lightness", "L"));
+                    auto const radio = Gtk::make_managed<Gtk::CheckButton>(C_("Clonetiler color lightness", "L"));
+                    radio->set_group(*rb_group);
                     radio->set_tooltip_text(_("Pick the lightness of the color"));
                     table_attach (table, radio, 0.0, 3, 3);
                     radio->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &CloneTiler::pick_switched), PICK_L));
@@ -891,7 +899,7 @@ CloneTiler::CloneTiler()
                 table->set_row_spacing(4);
                 table->set_column_spacing(6);
                 table->set_margin(4);
-                frame->add(*table);
+                frame->set_child(*table);
 
                 {
                     auto const l = Gtk::make_managed<Gtk::Label>("");
@@ -935,7 +943,7 @@ CloneTiler::CloneTiler()
                 table->set_row_spacing(4);
                 table->set_column_spacing(6);
                 table->set_margin(4);
-                frame->add(*table);
+                frame->set_child(*table);
 
                 {
                     auto const b = Gtk::make_managed<Gtk::CheckButton>(_("Presence"));
@@ -1086,9 +1094,10 @@ CloneTiler::CloneTiler()
             }
 
             // Switch
-            Gtk::RadioButtonGroup rb_group;
+            Gtk::CheckButton *rb_group;
             {
-                auto const radio = Gtk::make_managed<Gtk::RadioButton>(rb_group, _("Rows, columns: "));
+                auto const radio = Gtk::make_managed<Gtk::CheckButton>(_("Rows, columns: "));
+                rb_group = radio;
                 radio->set_tooltip_text(_("Create the specified number of rows and columns"));
                 table_attach(table, radio, 0.0, 1, 1);
 
@@ -1099,7 +1108,8 @@ CloneTiler::CloneTiler()
                 radio->signal_toggled().connect(sigc::mem_fun(*this, &CloneTiler::switch_to_create));
             }
             {
-                auto const radio = Gtk::make_managed<Gtk::RadioButton>(rb_group, _("Width, height: "));
+                auto const radio = Gtk::make_managed<Gtk::CheckButton>(_("Width, height: "));
+                radio->set_group(*rb_group);
                 radio->set_tooltip_text(_("Fill the specified width and height with the tiling"));
                 table_attach(table, radio, 0.0, 2, 1);
 
@@ -1146,7 +1156,7 @@ CloneTiler::CloneTiler()
                 auto const b = Gtk::make_managed<Gtk::Button>();
                 auto const l = Gtk::make_managed<Gtk::Label>("");
                 l->set_markup_with_mnemonic(_(" <b>_Create</b> "));
-                b->add(*l);
+                b->set_child(*l);
                 b->set_tooltip_text(_("Create and tile the clones of the selection"));
                 b->signal_clicked().connect(sigc::mem_fun(*this, &CloneTiler::apply));
                 UI::pack_end(*hb, *b, false, false);
@@ -2525,7 +2535,7 @@ Gtk::Widget * CloneTiler::checkbox(const char          *tip,
     b->set_active(value);
 
     UI::pack_start(*hb, *b, false, true);
-    b->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &CloneTiler::checkbox_toggled), b, attr));
+    b->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &CloneTiler::checkbox_toggled), b, attr));
 
     b->set_uncheckable();
 

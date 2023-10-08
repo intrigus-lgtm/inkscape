@@ -222,10 +222,14 @@ Application::Application(bool use_gui) :
 
     if (use_gui) {
         using namespace Inkscape::IO::Resource;
-        auto icon_theme = Gtk::IconTheme::get_default();
-        icon_theme->prepend_search_path(get_path_string(SYSTEM, ICONS));
-        icon_theme->prepend_search_path(get_path_string(SHARED, ICONS));
-        icon_theme->prepend_search_path(get_path_string(USER, ICONS));
+
+        auto display = Gdk::Display::get_default();
+        auto icon_theme = Gtk::IconTheme::get_for_display(display);
+        // Fixme: Previously prepend_search_path() in the reverse order.
+        icon_theme->add_search_path(get_path_ustring(USER, ICONS));
+        icon_theme->add_search_path(get_path_ustring(SHARED, ICONS));
+        icon_theme->add_search_path(get_path_ustring(SYSTEM, ICONS));
+
         themecontext = new Inkscape::UI::ThemeContext();
         themecontext->add_gtk_css(false);
         auto scale = prefs->getDoubleLimited(UI::ThemeContext::get_font_scale_pref_path(), 100, 50, 150);
@@ -237,7 +241,7 @@ Application::Application(bool use_gui) :
     Glib::ustring ui_language = prefs->getString("/ui/language");
     if(!ui_language.empty())
     {
-        setenv("LANGUAGE", ui_language, true);
+        Glib::setenv("LANGUAGE", ui_language.raw(), true);
 #ifdef _WIN32
         // locale may be set to C with some Windows Region Formats (like English(Europe)).
         // forcing the LANGUAGE variable to be ignored

@@ -32,12 +32,12 @@ Glib::RefPtr<Gdk::Cursor> load_svg_cursor(Gtk::Widget &widget,
                                           double fill_opacity = 1.0,
                                           double stroke_opacity = 1.0);
 
-Glib::RefPtr<Gdk::Cursor> set_svg_cursor(Gtk::Widget &widget,
-                                         std::string const &file_name,
-                                         std::uint32_t fill = 0xffffffff,
-                                         std::uint32_t stroke = 0x000000ff,
-                                         double fill_opacity = 1.0,
-                                         double stroke_opacity = 1.0);
+void set_svg_cursor(Gtk::Widget &widget,
+                    std::string const &file_name,
+                    std::uint32_t fill = 0xffffffff,
+                    std::uint32_t stroke = 0x000000ff,
+                    double fill_opacity = 1.0,
+                    double stroke_opacity = 1.0);
 
 } // namespace Inkscape
 

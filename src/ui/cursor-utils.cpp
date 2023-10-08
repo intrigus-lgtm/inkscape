@@ -237,14 +237,14 @@ load_svg_cursor(Gtk::Widget &widget,
  * of the given widget.
  */
 void
-load_svg_cursor(Gtk::Widget &widget,
+set_svg_cursor(Gtk::Widget &widget,
                 std::string const &file_name,
                 std::uint32_t const fill,
                 std::uint32_t const stroke,
                 double fill_opacity,
                 double stroke_opacity)
 {
-    auto cursor = load_svg_cursor(widget, file_name, fill, stroke, fill_opacity, stroke_opacity));
+    auto cursor = load_svg_cursor(widget, file_name, fill, stroke, fill_opacity, stroke_opacity);
     widget.set_cursor(std::move(cursor));
 }
 

@@ -23,8 +23,8 @@
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
 #include <glibmm/variant.h>
-#include <gtkmm/accelerator.h>
 #include <giomm/action.h>
+#include <gtkmm/accelerator.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
@@ -438,9 +438,8 @@ void CommandPalette::show_suggestions()
 
 void CommandPalette::on_action_fullname_clicked(const Glib::ustring &action_fullname)
 {
-    static auto clipboard = Gtk::Clipboard::get();
+    static auto clipboard = Gdk::Display::get_default()->get_clipboard();
     clipboard->set_text(action_fullname);
-    clipboard->store();
 }
 
 void CommandPalette::on_row_activated(Gtk::ListBoxRow *activated_row)
@@ -1078,8 +1077,8 @@ int CommandPalette::on_sort(Gtk::ListBoxRow *row1, Gtk::ListBoxRow *row2)
 static void set_sensitive(Gtk::Entry &entry, bool const sensitive)
 {
     entry.set_editable(sensitive);
-    entry.set_icon_activatable(sensitive, Gtk::ENTRY_ICON_PRIMARY  );
-    entry.set_icon_activatable(sensitive, Gtk::ENTRY_ICON_SECONDARY);
+    entry.set_icon_activatable(sensitive, Gtk::Entry::IconPosition::PRIMARY);
+    entry.set_icon_activatable(sensitive, Gtk::Entry::IconPosition::SECONDARY);
 }
 
 void CommandPalette::set_mode(CPMode mode)

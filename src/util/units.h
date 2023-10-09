@@ -17,24 +17,13 @@
 #include <unordered_map>
 #include <boost/operators.hpp>
 #include <glibmm/ustring.h>
+#include <glibmm/ustring_hash.h>
 #include <2geom/coord.h>
+
 #include "svg/svg-length.h"
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-
 #define DEFAULT_UNIT_NAME "mm"
-
-namespace std {
-template <>
-struct hash<Glib::ustring>
-{
-    std::size_t operator()(Glib::ustring const &s) const
-    {
-        return hash<std::string>()(s.raw());
-    }
-};
-} // namespace std
-
 #endif
 
 namespace Inkscape {

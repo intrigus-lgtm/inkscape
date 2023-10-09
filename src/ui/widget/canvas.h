@@ -140,11 +140,11 @@ public:
 
     void enable_autoscroll();
 
-    sigc::connection connect_before_snapshot(sigc::slot<void ()> slot);
+    sigc::connection connectPreDraw(sigc::slot<void ()> &&slot) { return _signal_pre_draw.connect(std::move(slot)); }
+    sigc::connection connectFocusIn(sigc::slot<void ()> &&slot) { return _signal_focus_in.connect(std::move(slot)); }
+    sigc::connection connectFocusOut(sigc::slot<void ()> &&slot) { return _signal_focus_out.connect(std::move(slot)); }
 
 private:
-    void snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &snapshot) final;
-
     // EventControllerScroll
     bool on_scroll(GtkEventControllerScroll const *controller,
                    double dx, double dy);
@@ -160,8 +160,11 @@ private:
     void on_enter (GtkEventControllerMotion const *controller, double x, double y);
     void on_leave (GtkEventControllerMotion const *controller);
 
+    // EventControllerFocus
+    void on_focus_in();
+    void on_focus_out();
+
     // EventControllerKey
-    void on_focus_in    (GtkEventControllerKey const *controller);
     bool on_key_pressed (GtkEventControllerKey const *controller,
                          unsigned keyval, unsigned keycode, GdkModifierType state);
     bool on_key_released(GtkEventControllerKey const *controller,
@@ -220,7 +223,9 @@ private:
     bool _split_dragging;
     Geom::IntPoint _split_drag_start;
 
-    sigc::signal<void ()> _signal_before_snapshot;
+    sigc::signal<void ()> _signal_pre_draw;
+    sigc::signal<void ()> _signal_focus_in;
+    sigc::signal<void ()> _signal_focus_out;
 
     void update_cursor();
 

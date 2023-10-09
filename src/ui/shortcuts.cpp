@@ -740,13 +740,13 @@ Shortcuts::get_from(GtkEventControllerKey const * const controller,
                     unsigned const keyval, unsigned const keycode, GdkModifierType const state,
                     bool const fix)
 {
-    auto const group = controller ? gtk_event_controller_key_get_group(controller) : 0u;
+    auto const group = controller ? gtk_event_controller_key_get_group(const_cast<GtkEventControllerKey*>(controller)) : 0u;
     return get_from_event_impl(keyval, keycode, state, group, fix);
 }
 
 Gtk::AccelKey Shortcuts::get_from_event(KeyEvent const &event, bool fix)
 {
-    return get_from_event_impl(event.keyval, event.hardware_keycode,
+    return get_from_event_impl(event.keyval, event.keycode,
                                static_cast<GdkModifierType>(event.modifiers), event.group, fix);
 }
 
@@ -771,7 +771,7 @@ Shortcuts::get_file_names()
     // Check file exists and extract out label if it does.
     std::vector<std::pair<Glib::ustring, std::string>> names_and_paths;
     for (auto const &filename : filenames) {
-        Glib::ustring label = Glib::path_get_basename(filename);
+        Glib::ustring label = Glib::path_get_basename(filename.raw());
         auto filename_relative = sp_relative_path_from_path(filename, get_path_string(SYSTEM, KEYS));
 
         XML::Document *document = sp_repr_read_file(filename.c_str(), nullptr, true);
@@ -839,7 +839,7 @@ Shortcuts::update_gui_text_recursive(Gtk::Widget* widget)
                     variant = std::to_string(static_cast<Glib::Variant<std::int32_t> const &>(value).get());
                     action += "(" + variant + ")";
                 } else {
-                    std::cerr << "Shortcuts::update_gui_text_recursive: unhandled variant type: " << type.raw() << std::endl;
+                    std::cerr << "Shortcuts::update_gui_text_recursive: unhandled variant type: " << type << std::endl;
                 }
             }
 
@@ -970,7 +970,7 @@ Shortcuts::dump() {
             }
 
             std::cout << "  shortcut:"
-                      << "  " << std::setw(8) << std::hex << mod
+                      << "  " << std::setw(8) << std::hex << (unsigned)mod
                       << "  " << std::setw(8) << std::hex << key
                       << "  " << std::setw(30) << std::left << accel
                       << "  " << action

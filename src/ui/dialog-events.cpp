@@ -15,6 +15,10 @@
 #include <gtkmm/entry.h>
 #include <gtkmm/window.h>
 
+#ifdef GDK_WINDOWING_X11
+#include <gdk/x11/gdkx.h>
+#endif
+
 #include "desktop.h"
 #include "inkscape.h"
 #include "enums.h"
@@ -65,13 +69,22 @@ void sp_transientize(GtkWidget *dialog)
 {
     auto prefs = Inkscape::Preferences::get();
 
-#ifndef _WIN32
+#ifdef GDK_WINDOWING_X11
     // FIXME: Temporary Win32 special code to enable transient dialogs
     // _set_skip_taskbar_hint makes transient dialogs NON-transient! When dialogs
     // are made transient (_set_transient_for), they are already removed from
     // the taskbar in Win32.
-    if (prefs->getBool( "/options/dialogsskiptaskbar/value")) {
-        gtk_window_set_skip_taskbar_hint(GTK_WINDOW (dialog), TRUE);
+    if (prefs->getBool("/options/dialogsskiptaskbar/value")) {
+        // https://discourse.gnome.org/t/how-to-hide-app-from-taskbar-in-gtk4/7084
+        auto root = gtk_widget_get_root(dialog);
+        if (GTK_IS_NATIVE(root)) {
+            auto native = GTK_NATIVE(root);
+            auto surface = gtk_native_get_surface(native);
+            if (GDK_IS_X11_SURFACE(surface)) {
+                auto x11surface = GDK_X11_SURFACE(surface);
+                gdk_x11_surface_set_skip_taskbar_hint(x11surface, TRUE);
+            }
+        }
     }
 #endif
 

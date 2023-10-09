@@ -26,6 +26,10 @@
 #include <vector>
 #include <boost/asio/thread_pool.hpp>
 #include <boost/asio/post.hpp>
+#include <gtkmm/eventcontrollerfocus.h>
+#include <gtkmm/eventcontrollerkey.h>
+#include <gtkmm/eventcontrollermotion.h>
+#include <gtkmm/eventcontrollerscroll.h>
 #include <gdkmm/frameclock.h>
 #include <gdkmm/glcontext.h>
 #include <gtkmm/applicationwindow.h>
@@ -99,7 +103,6 @@
  */
 
 namespace Inkscape::UI::Widget {
-
 namespace {
 
 /*
@@ -322,11 +325,14 @@ Canvas::Canvas()
                           (*this, *this, GTK_EVENT_CONTROLLER_SCROLL_BOTH_AXES);
     Controller::add_click(*this, sigc::mem_fun(*this, &Canvas::on_button_pressed ),
                                  sigc::mem_fun(*this, &Canvas::on_button_released));
-    // N.B. Iʼm not convinced that Key::focus-in works in GTK3, but try it… —djb
-    Controller::add_key<&Canvas::on_key_pressed, &Canvas::on_key_released, nullptr,
-                        &Canvas::on_focus_in>(*this, *this);
-    Controller::add_motion<&Canvas::on_enter, &Canvas::on_motion, &Canvas::on_leave>
-                          (*this, *this);
+    Controller::add_key<&Canvas::on_key_pressed, &Canvas::on_key_released, nullptr>(*this, *this);
+    Controller::add_motion<&Canvas::on_enter, &Canvas::on_motion, &Canvas::on_leave>(*this, *this);
+
+    auto focus = Gtk::EventControllerFocus::create();
+    focus->set_propagation_phase(Gtk::PropagationPhase::BUBBLE);
+    add_controller(focus);
+    focus->signal_enter().connect([this] { on_focus_in(); });
+    focus->signal_leave().connect([this] { on_focus_out(); });
 
     // Updater
     d->updater = Updater::create(pref_to_updater(d->prefs.update_strategy));
@@ -443,10 +449,6 @@ void CanvasPrivate::activate()
 
     // Split view
     q->_split_dragging = false;
-
-    // Todo: Disable GTK event compression again when doing so is no longer buggy.
-    // Note: ToolBase::set_high_motion_precision() will keep turning it back on.
-    // q->get_window()->set_event_compression(false);
 
     active = true;
 
@@ -894,19 +896,18 @@ void Canvas::enable_autoscroll()
  * Event handling
  */
 
-bool Canvas::on_scroll(GtkEventControllerScroll const * const controller,
-                       double /*dx*/, double /*dy*/)
+bool Canvas::on_scroll(GtkEventControllerScroll const *controller_c, double dx, double dy)
 {
-    auto gdkevent = GdkEventUniqPtr(gtk_get_current_event());
-    assert(gdkevent->type == GDK_SCROLL);
-    _state = gdkevent->scroll.state;
+    auto controller = const_wrap(controller_c, true);
+    auto gdkevent = controller->get_current_event();
+    _state = (int)controller->get_current_event_state();
 
     auto event = ScrollEvent();
     event.modifiers = _state;
-    event.source_device = Util::GObjectPtr(gdk_event_get_source_device(gdkevent.get()), true);
-    event.delta = { gdkevent->scroll.delta_x, gdkevent->scroll.delta_y };
-    event.direction = gdkevent->scroll.direction;
-    event.extinput = extinput_from_gdkevent(gdkevent.get());
+    event.device = controller->get_current_event_device();
+    event.delta = { dx, dy };
+    event.direction = gdkevent->get_direction();
+    event.extinput = extinput_from_gdkevent(*gdkevent);
 
     return d->process_event(event);
 }
@@ -914,9 +915,7 @@ bool Canvas::on_scroll(GtkEventControllerScroll const * const controller,
 Gtk::EventSequenceState Canvas::on_button_pressed(Gtk::GestureClick const &controller,
                                                   int const n_press, double const x, double const y)
 {
-    auto gdkevent = GdkEventUniqPtr(gtk_get_current_event());
-    assert(gdkevent->type == GDK_BUTTON_PRESS);
-    _state = gdkevent->button.state;
+    _state = (int)controller.get_current_event_state();
     d->last_mouse = Geom::IntPoint(x, y);
 
     grab_focus();
@@ -941,12 +940,12 @@ Gtk::EventSequenceState Canvas::on_button_pressed(Gtk::GestureClick const &contr
 
     auto event = ButtonPressEvent();
     event.modifiers = _state;
-    event.source_device = Util::GObjectPtr(gdk_event_get_source_device(gdkevent.get()), true);
+    event.device = controller.get_current_event_device();
     event.pos = *d->last_mouse;
-    event.button = gdkevent->button.button;
-    event.time = gdkevent->button.time;
+    event.button = controller.get_current_button();
+    event.time = controller.get_current_event_time();
     event.num_press = 1;
-    event.extinput = extinput_from_gdkevent(gdkevent.get());
+    event.extinput = extinput_from_gdkevent(*controller.get_current_event());
 
     bool result = d->process_event(event);
 
@@ -961,9 +960,7 @@ Gtk::EventSequenceState Canvas::on_button_pressed(Gtk::GestureClick const &contr
 Gtk::EventSequenceState Canvas::on_button_released(Gtk::GestureClick const &controller,
                                                    int /*n_press*/, double const x, double const y)
 {
-    auto gdkevent = GdkEventUniqPtr(gtk_get_current_event());
-    assert(gdkevent->type == GDK_BUTTON_RELEASE);
-    _state = gdkevent->button.state;
+    _state = (int)controller.get_current_event_state();
     d->last_mouse = Geom::IntPoint(x, y);
 
     // Drag the split view controller.
@@ -1010,20 +1007,18 @@ Gtk::EventSequenceState Canvas::on_button_released(Gtk::GestureClick const &cont
 
     auto event = ButtonReleaseEvent();
     event.modifiers = _state;
-    event.source_device = Util::GObjectPtr(gdk_event_get_source_device(gdkevent.get()), true);
+    event.device = controller.get_current_event_device();
     event.pos = *d->last_mouse;
-    event.button = gdkevent->button.button;
-    event.time = gdkevent->button.time;
+    event.button = controller.get_current_button();
+    event.time = controller.get_current_event_time();
 
     return d->process_event(event) ? Gtk::EventSequenceState::CLAIMED : Gtk::EventSequenceState::NONE;
 }
 
-void Canvas::on_enter(GtkEventControllerMotion const * const controller,
-                      double const x, double const y)
+void Canvas::on_enter(GtkEventControllerMotion const *controller_c, double x, double y)
 {
-    auto gdkevent = GdkEventUniqPtr(gtk_get_current_event());
-    assert(gdkevent->type == GDK_ENTER_NOTIFY);
-    _state = gdkevent->crossing.state;
+    auto controller = const_wrap(controller_c, true);
+    _state = (int)controller->get_current_event_state();
     d->last_mouse = Geom::IntPoint(x, y);
 
     auto event = EnterEvent();
@@ -1033,11 +1028,10 @@ void Canvas::on_enter(GtkEventControllerMotion const * const controller,
     d->process_event(event);
 }
 
-void Canvas::on_leave(GtkEventControllerMotion const * const controller)
+void Canvas::on_leave(GtkEventControllerMotion const *controller_c)
 {
-    auto gdkevent = GdkEventUniqPtr(gtk_get_current_event());
-    assert(gdkevent->type == GDK_LEAVE_NOTIFY);
-    _state = gdkevent->crossing.state;
+    auto controller = const_wrap(controller_c, true);
+    _state = (int)controller->get_current_event_state();
     d->last_mouse = {};
 
     auto event = LeaveEvent();
@@ -1046,57 +1040,57 @@ void Canvas::on_leave(GtkEventControllerMotion const * const controller)
     d->process_event(event);
 }
 
-void Canvas::on_focus_in(GtkEventControllerKey const * /*controller*/)
+void Canvas::on_focus_in()
 {
-    grab_focus();
+    grab_focus(); // Why? Is this even needed anymore?
+    _signal_focus_in.emit();
 }
 
-bool Canvas::on_key_pressed(GtkEventControllerKey const * /*controller*/,
-                            unsigned /*keyval*/, unsigned /*keycode*/, GdkModifierType const state)
+void Canvas::on_focus_out()
 {
-    auto gdkevent = GdkEventUniqPtr(gtk_get_current_event());
-    assert(gdkevent->type == GDK_KEY_PRESS);
-    _state = gdkevent->key.state;
+    _signal_focus_out.emit();
+}
+
+bool Canvas::on_key_pressed(GtkEventControllerKey const *controller_c,
+                            unsigned keyval, unsigned keycode, GdkModifierType const state)
+{
+    auto controller = const_wrap(controller_c, true);
+    _state = state;
 
     auto event = KeyPressEvent();
     event.modifiers = _state;
-    event.source_device = Util::GObjectPtr(gdk_event_get_source_device(gdkevent.get()), true);
-    event.keyval = gdkevent->key.keyval;
-    event.hardware_keycode = gdkevent->key.hardware_keycode;
-    event.group = gdkevent->key.group;
-    event.time = gdkevent->key.time;
-    event.original = std::move(gdkevent);
+    event.device = controller->get_current_event_device();
+    event.keyval = keyval;
+    event.keycode = keycode;
+    event.group = controller->get_group();
+    event.time = controller->get_current_event_time();
     event.pos = d->last_mouse;
 
     return d->process_event(event);
 }
 
-bool Canvas::on_key_released(GtkEventControllerKey const * /*controller*/,
-                             unsigned /*keyval*/, unsigned /*keycode*/, GdkModifierType const state)
+bool Canvas::on_key_released(GtkEventControllerKey const *controller_c,
+                             unsigned keyval, unsigned keycode, GdkModifierType const state)
 {
-    auto gdkevent = GdkEventUniqPtr(gtk_get_current_event());
-    assert(gdkevent->type == GDK_KEY_RELEASE);
-    _state = gdkevent->key.state;
+    auto controller = const_wrap(controller_c, true);
+    _state = state;
 
     auto event = KeyReleaseEvent();
     event.modifiers = _state;
-    event.source_device = Util::GObjectPtr(gdk_event_get_source_device(gdkevent.get()), true);
-    event.keyval = gdkevent->key.keyval;
-    event.hardware_keycode = gdkevent->key.hardware_keycode;
-    event.group = gdkevent->key.group;
-    event.time = gdkevent->key.time;
-    event.original = std::move(gdkevent);
+    event.device = controller->get_current_event_device();
+    event.keyval = keyval;
+    event.keycode = keycode;
+    event.group = controller->get_group();
+    event.time = controller->get_current_event_time();
     event.pos = d->last_mouse;
 
     return d->process_event(event);
 }
 
-void Canvas::on_motion(GtkEventControllerMotion const * const controller,
-                       double const x, double const y)
+void Canvas::on_motion(GtkEventControllerMotion const *controller_c, double x, double y)
 {
-    auto gdkevent = GdkEventUniqPtr(gtk_get_current_event());
-    assert(gdkevent->type == GDK_MOTION_NOTIFY);
-    _state = gdkevent->motion.state;
+    auto controller = const_wrap(controller_c, true);
+    _state = (int)controller->get_current_event_state();
     d->last_mouse = Geom::IntPoint(x, y);
 
     // Handle interactions with the split view controller.
@@ -1170,10 +1164,10 @@ void Canvas::on_motion(GtkEventControllerMotion const * const controller,
 
     auto event = MotionEvent();
     event.modifiers = _state;
-    event.source_device = Util::GObjectPtr(gdk_event_get_source_device(gdkevent.get()), true);
+    event.device = controller->get_current_event_device();
     event.pos = *d->last_mouse;
-    event.time = gdkevent->motion.time;
-    event.extinput = extinput_from_gdkevent(gdkevent.get());
+    event.time = controller->get_current_event_time();
+    event.extinput = extinput_from_gdkevent(*controller->get_current_event());
 
     d->process_event(event);
 }
@@ -1536,13 +1530,9 @@ const Geom::Affine &Canvas::get_geom_affine() const
 
 void CanvasPrivate::queue_draw_area(const Geom::IntRect &rect)
 {
-    if (q->get_opengl_enabled()) {
-        // Note: GTK glitches out when you use queue_draw_area in OpenGL mode.
-        // It's also pointless, because it seems to just call queue_draw anyway.
-        q->queue_draw();
-    } else {
-        q->queue_draw_area(rect.left(), rect.top(), rect.width(), rect.height());
-    }
+    q->queue_draw();
+    // Todo: Use the following if/when gtk supports partial invalidations again.
+    // q->queue_draw_area(rect.left(), rect.top(), rect.width(), rect.height());
 }
 
 /**
@@ -1849,7 +1839,7 @@ void Canvas::update_cursor()
 void Canvas::size_allocate_vfunc(int const width, int const height, int const baseline)
 {
     auto const old_dimensions = get_dimensions();
-    parent_type::on_size_allocate(allocation);
+    parent_type::size_allocate_vfunc(width, height, baseline);
     auto const new_dimensions = get_dimensions();
 
     // Necessary as GTK seems to somehow invalidate the current pipeline state upon resize.
@@ -1884,7 +1874,7 @@ Glib::RefPtr<Gdk::GLContext> Canvas::create_context()
     Glib::RefPtr<Gdk::GLContext> result;
 
     try {
-        result = get_window()->create_gl_context();
+        result = dynamic_cast<Gtk::Window &>(*get_root()).get_surface()->create_gl_context();
     } catch (const Gdk::GLError &e) {
         std::cerr << "Failed to create OpenGL context: " << e.what() << std::endl;
         return {};
@@ -1908,6 +1898,8 @@ void Canvas::paint_widget(Cairo::RefPtr<Cairo::Context> const &cr)
         std::cerr << "Canvas::paint_widget: Called while not active!" << std::endl;
         return;
     }
+
+    _signal_pre_draw.emit();
 
     if constexpr (false) d->canvasitem_ctx->root()->canvas_item_print_tree();
 
@@ -1947,18 +1939,6 @@ void Canvas::paint_widget(Cairo::RefPtr<Cairo::Context> const &cr)
         auto dim = _desktop && _desktop->doc() ? _desktop->doc()->getDimensions() : Geom::Point();
         set_pos(Geom::Point((0.5 + 0.3 * cos(t * 2)) * dim.x(), (0.5 + 0.3 * sin(t * 3)) * dim.y()) * affine - Geom::Point(get_dimensions()) * 0.5);
     }
-}
-
-void Canvas::snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &snapshot)
-{
-    _signal_before_snapshot.emit();
-
-    parent_type::snapshot_vfunc(snapshot);
-}
-
-sigc::connection Canvas::connect_before_snapshot(sigc::slot<void ()> slot)
-{
-    return _signal_before_snapshot.connect(std::move(slot));
 }
 
 /*

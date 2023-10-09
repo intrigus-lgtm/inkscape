@@ -1325,9 +1325,9 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                 Geom::Point const scroll_dt = _desktop->point();;
 
                 switch (event.direction) {
-                    case GDK_SCROLL_DOWN:
-                    case GDK_SCROLL_UP:
-                    case GDK_SCROLL_SMOOTH:
+                    case Gdk::ScrollDirection::DOWN:
+                    case Gdk::ScrollDirection::UP:
+                    case Gdk::ScrollDirection::SMOOTH:
                         if (Inkscape::have_viable_layer(_desktop, defaultMessageContext())) {
                             last_push = _desktop->dt2doc(scroll_dt);
                             sp_spray_extinput(this, event.extinput);
@@ -1340,10 +1340,10 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                             ret = true;
                         }
                         break;
-                    case GDK_SCROLL_RIGHT:
-                       {} break;
-                    case GDK_SCROLL_LEFT:
-                       {} break;
+                    case Gdk::ScrollDirection::RIGHT:
+                       break;
+                    case Gdk::ScrollDirection::LEFT:
+                       break;
                 }
             }
         },

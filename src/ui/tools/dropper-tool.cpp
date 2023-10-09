@@ -369,7 +369,7 @@ bool DropperTool::root_handler(CanvasEvent const &event)
                                 : (stroke ? "dropper-pick-stroke.svg" : "dropper-pick-fill.svg");
 
     // We do this ourselves to get color correct.
-    set_svg_cursor(*desktop->getCanvas(), _cursor_filename, get_color(invert)));
+    set_svg_cursor(*_desktop->getCanvas(), _cursor_filename, get_color(invert));
 
     if (!ret) {
         ret = ToolBase::root_handler(event);

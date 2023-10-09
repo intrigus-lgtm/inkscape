@@ -26,8 +26,9 @@
 #include <glibmm/main.h>
 #include <glibmm/regex.h>
 #include <gdk/gdkkeysyms.h>
-#include <gtkmm/clipboard.h>
+#include <gdkmm/clipboard.h>
 #include <gtkmm/settings.h>
+#include <gtkmm/window.h>
 
 #include "context-fns.h"
 #include "desktop-style.h"
@@ -112,11 +113,11 @@ TextTool::TextTool(SPDesktop *desktop)
          * entered.
          */
         gtk_im_context_set_use_preedit(imc, FALSE);
-        gtk_im_context_set_client_window(imc, canvas->get_window()->gobj());
+        gtk_im_context_set_client_widget(imc, canvas->Gtk::Widget::gobj());
 
         // Note: Connecting to property_is_focus().signal_changed() would result in slight regression due to signal emisssion ordering.
-        focus_in_conn = canvas->signal_focus_in_event().connect([this] (GdkEventFocus*) { gtk_im_context_focus_in(imc); return false; });
-        focus_out_conn = canvas->signal_focus_out_event().connect([this] (GdkEventFocus*) { gtk_im_context_focus_out(imc); return false; });
+        focus_in_conn = canvas->connectFocusIn([this] { gtk_im_context_focus_in(imc); });
+        focus_out_conn = canvas->connectFocusOut([this] { gtk_im_context_focus_out(imc); });
         g_signal_connect(G_OBJECT(imc), "commit", Util::make_g_callback<&TextTool::_commit>, this);
 
         if (canvas->has_focus()) {
@@ -585,7 +586,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
             auto const group0_keyval = get_latin_keyval(event);
 
             if (group0_keyval == GDK_KEY_KP_Add || group0_keyval == GDK_KEY_KP_Subtract) {
-                if (!(event.modifiers & GDK_MOD2_MASK)) { // mod2 is NumLock; if on, type +/- keys
+                if (!(event.modifiers & GDK_CONTROL_MASK)) { // mod2 is NumLock; if on, type +/- keys
                     return; // otherwise pass on keypad +/- so they can zoom
                 }
             }
@@ -598,7 +599,8 @@ bool TextTool::root_handler(CanvasEvent const &event)
                 bool preedit_activation = mod_ctrl(event) && mod_shift(event) && !mod_alt(event)
                                           && (group0_keyval == GDK_KEY_U || group0_keyval == GDK_KEY_u);
 
-                if (unimode || !imc || preedit_activation || !gtk_im_context_filter_keypress(imc, &event.original->key)) {
+                auto surface = _desktop->getToplevel()->get_surface()->gobj();
+                if (unimode || !imc || preedit_activation || !gtk_im_context_filter_key(imc, true, surface, const_cast<GdkDevice*>(event.device->gobj()), event.time, event.keycode, (GdkModifierType)event.modifiers, event.group)) {
                     // IM did not consume the key, or we're in unimode
 
                     if (!mod_ctrl_only(event) && unimode) {
@@ -1193,7 +1195,8 @@ bool TextTool::root_handler(CanvasEvent const &event)
             }
         },
         [&] (KeyReleaseEvent const &event) {
-            if (!unimode && imc && gtk_im_context_filter_keypress(imc, &event.original->key)) {
+            auto surface = _desktop->getToplevel()->get_surface()->gobj();
+            if (!unimode && imc && gtk_im_context_filter_key(imc, false, surface, const_cast<GdkDevice*>(event.device->gobj()), event.time, event.keycode, (GdkModifierType)event.modifiers, event.group)) {
                 ret = true;
             }
         },
@@ -1211,7 +1214,7 @@ bool TextTool::pasteInline()
     if (text || nascent_object) {
         // There is an active text object, or a new object was just created.
 
-        auto const clip_text = Gtk::Clipboard::get()->wait_for_text();
+        auto const clip_text = Gdk::Clipboard::get()->wait_for_text();
 
         if (!clip_text.empty()) {
 

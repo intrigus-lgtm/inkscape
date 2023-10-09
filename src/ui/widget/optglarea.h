@@ -46,7 +46,7 @@ public:
      */
     void bind_framebuffer() const;
 
-private:
+protected:
     void on_realize() override;
     void on_unrealize() override;
     void size_allocate_vfunc(int width, int height, int baseline) override;
@@ -63,6 +63,7 @@ private:
      */
     virtual void paint_widget(const Cairo::RefPtr<Cairo::Context>&) {}
 
+private:
     void init_opengl();
     void create_framebuffer();
     void delete_framebuffer();

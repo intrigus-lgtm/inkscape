@@ -179,7 +179,7 @@ public:
         auto mapping = (int)(uintptr_t)cairo_surface_get_user_data(surface->cobj(), &key);
 
         // Flush all changes from the image surface to the buffer, and delete it.
-        surface.clear();
+        surface.reset();
 
         auto &m = mappings[mapping];
         auto &b = buffers[m.buf];
@@ -345,7 +345,7 @@ public:
     void finish(Cairo::RefPtr<Cairo::ImageSurface> surface, bool junk) override
     {
         auto mapping = (int)(uintptr_t)cairo_surface_get_user_data(surface->cobj(), &key);
-        surface.clear();
+        surface.reset();
 
         auto &m = mappings[mapping];
         auto &b = buckets[m.bucket];
@@ -445,7 +445,7 @@ public:
     void finish(Cairo::RefPtr<Cairo::ImageSurface> surface, bool junk) override
     {
         auto mapping = (int)(uintptr_t)cairo_surface_get_user_data(surface->cobj(), &key);
-        surface.clear();
+        surface.reset();
 
         auto &m = mappings[mapping];
 

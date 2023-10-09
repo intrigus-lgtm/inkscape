@@ -249,8 +249,8 @@ void Stores::snapshot_combine(Fragment const &view)
 void Stores::reset()
 {
     _mode = Mode::None;
-    _store.drawn.clear();
-    _snapshot.drawn.clear();
+    _store.drawn.reset();
+    _snapshot.drawn.reset();
 }
 
 // Handle transitions and actions in response to viewport changes.

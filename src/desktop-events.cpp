@@ -24,6 +24,7 @@
 #include <gdkmm/display.h>
 #include <gdkmm/seat.h>
 #include <glibmm/i18n.h>
+#include <glibmm/ustring_hash.h>
 #include <gtk/gtk.h>
 
 #include "desktop.h"
@@ -345,9 +346,9 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
 
 static constexpr bool DEBUG_TOOL_SWITCHER = false;
 
-static std::map<std::string, Glib::ustring> name_to_tool;
-static std::string last_name;
-static GdkInputSource last_source = GDK_SOURCE_MOUSE;
+static std::unordered_map<Glib::ustring, Glib::ustring> name_to_tool;
+static Glib::ustring last_name;
+static Gdk::InputSource last_source = Gdk::InputSource::MOUSE;
 
 static void init_extended()
 {
@@ -398,19 +399,18 @@ void snoop_extended(Inkscape::CanvasEvent const &event, SPDesktop *desktop)
             return;
     }
 
-    // Extract information about the source device of the event.
-    auto source_device = event.source_device.get();
-    if (!source_device) {
+    // Extract information about the device of the event.
+    auto device = event.device.get();
+    if (!device) {
         // Not all event structures include a GdkDevice field but the above should!
         std::cerr << "snoop_extended: missing source device! " << (int)event.type() << std::endl;
         return;
     }
 
-    // Note: The event's device may not point to the original device that generated the event.
-    auto source = gdk_device_get_source(source_device);
-    auto name = gdk_device_get_name(source_device);
+    auto source = device->get_source();
+    auto name = device->get_name();
 
-    if (name[0] == '\0') {
+    if (name.empty()) {
         std::cerr << "snoop_extended: name empty!" << std::endl;
         return;
     } else if (source == last_source && name == last_name) {

@@ -21,6 +21,7 @@
 #include <utility>
 #include <gdk/gdkkeysyms.h>
 #include <gdkmm/display.h>
+#include <gtkmm/window.h>
 #include <glibmm/i18n.h>
 
 #include "desktop-events.h"
@@ -173,7 +174,7 @@ Glib::RefPtr<Gdk::Cursor> ToolBase::get_cursor(Gtk::Widget &widget, std::string 
  */
 void ToolBase::use_tool_cursor()
 {
-    auto &widget = dynamic_cast<Gtk::Widget &>(*desktop->getCanvas());
+    auto &widget = dynamic_cast<Gtk::Widget &>(*_desktop->getCanvas());
     widget.set_cursor(get_cursor(widget, _cursor_filename));
 
     _desktop->waiting_cursor = false;
@@ -186,55 +187,9 @@ void ToolBase::use_tool_cursor()
  */
 void ToolBase::use_cursor(Glib::RefPtr<Gdk::Cursor> cursor)
 {
-    if (auto window = _desktop->getCanvas()->get_window()) {
+    if (auto window = dynamic_cast<Gtk::Window *>(_desktop->getCanvas()->get_root())) {
         window->set_cursor(cursor ? cursor : _cursor);
     }
-}
-
-/**
- * Gobbles next key events on the queue with the same keyval and mask. Returns the number of events consumed.
- */
-gint gobble_key_events(guint keyval, guint mask) {
-    GdkEvent *event_next;
-    gint i = 0;
-
-    event_next = gdk_event_get();
-    // while the next event is also a key notify with the same keyval and mask,
-    while (event_next && (event_next->type == GDK_KEY_PRESS || event_next->type
-            == GDK_KEY_RELEASE) && event_next->key.keyval == keyval && (!mask
-            || (event_next->key.state & mask))) {
-        if (event_next->type == GDK_KEY_PRESS)
-            i++;
-        // kill it
-        gdk_event_free(event_next);
-        // get next
-        event_next = gdk_event_get();
-    }
-    // otherwise, put it back onto the queue
-    if (event_next)
-        gdk_event_put(event_next);
-
-    return i;
-}
-
-/**
- * Gobbles next motion notify events on the queue with the same mask. Returns the number of events consumed.
- */
-void gobble_motion_events(guint mask) {
-    GdkEvent *event_next;
-
-    event_next = gdk_event_get();
-    // while the next event is also a key notify with the same keyval and mask,
-    while (event_next && event_next->type == GDK_MOTION_NOTIFY
-            && (event_next->motion.state & mask)) {
-        // kill it
-        gdk_event_free(event_next);
-        // get next
-        event_next = gdk_event_get();
-    }
-    // otherwise, put it back onto the queue
-    if (event_next)
-        gdk_event_put(event_next);
 }
 
 /**
@@ -508,9 +463,8 @@ bool ToolBase::root_handler(CanvasEvent const &event)
 
                 if (panning_cursor == 0) {
                     panning_cursor = 1;
-                    auto display = _desktop->getCanvas()->get_display();
-                    auto window = _desktop->getCanvas()->get_window();
-                    auto cursor = Gdk::Cursor::create(display, "move");
+                    auto window = dynamic_cast<Gtk::Window *>(_desktop->getCanvas()->get_root());
+                    auto cursor = Gdk::Cursor::create("move");
                     window->set_cursor(cursor);
                 }
 
@@ -574,7 +528,7 @@ bool ToolBase::root_handler(CanvasEvent const &event)
 
         if (panning_cursor == 1) {
             panning_cursor = 0;
-            _desktop->getCanvas()->get_window()->set_cursor(_cursor);
+            dynamic_cast<Gtk::Window &>(*_desktop->getCanvas()->get_root()).set_cursor(_cursor);
         }
 
         if (event.button == 2 && rotating) {
@@ -789,7 +743,7 @@ bool ToolBase::root_handler(CanvasEvent const &event)
 
         if (panning_cursor == 1) {
             panning_cursor = 0;
-            _desktop->getCanvas()->get_window()->set_cursor(_cursor);
+            dynamic_cast<Gtk::Window &>(*_desktop->getCanvas()->get_root()).set_cursor(_cursor);
         }
 
         switch (get_latin_keyval(event)) {
@@ -847,15 +801,15 @@ bool ToolBase::root_handler(CanvasEvent const &event)
             rotate_inc *= M_PI / 180.0;
 
             switch (event.direction) {
-            case GDK_SCROLL_UP:
+            case Gdk::ScrollDirection::UP:
                 // Do nothing
                 break;
 
-            case GDK_SCROLL_DOWN:
+            case Gdk::ScrollDirection::DOWN:
                 rotate_inc = -rotate_inc;
                 break;
 
-            case GDK_SCROLL_SMOOTH: {
+            case Gdk::ScrollDirection::SMOOTH: {
                 delta = event.delta;
 #ifdef GDK_WINDOWING_QUARTZ
                 // MacBook trackpad scroll event gives pixel delta
@@ -880,19 +834,19 @@ bool ToolBase::root_handler(CanvasEvent const &event)
            /* shift + wheel, pan left--right */
 
             switch (event.direction) {
-            case GDK_SCROLL_UP:
-            case GDK_SCROLL_LEFT:
+            case Gdk::ScrollDirection::UP:
+            case Gdk::ScrollDirection::LEFT:
                 _desktop->scroll_relative(Geom::Point(wheel_scroll, 0));
                 ret = true;
                 break;
 
-            case GDK_SCROLL_DOWN:
-            case GDK_SCROLL_RIGHT:
+            case Gdk::ScrollDirection::DOWN:
+            case Gdk::ScrollDirection::RIGHT:
                 _desktop->scroll_relative(Geom::Point(-wheel_scroll, 0));
                 ret = true;
                 break;
 
-            case GDK_SCROLL_SMOOTH: {
+            case Gdk::ScrollDirection::SMOOTH: {
                 delta = event.delta;
 #ifdef GDK_WINDOWING_QUARTZ
                 // MacBook trackpad scroll event gives pixel delta
@@ -913,15 +867,15 @@ bool ToolBase::root_handler(CanvasEvent const &event)
             double const zoom_inc = prefs->getDoubleLimited("/options/zoomincrement/value", M_SQRT2, 1.01, 10);
 
             switch (event.direction) {
-            case GDK_SCROLL_UP:
+            case Gdk::ScrollDirection::UP:
                 rel_zoom = zoom_inc;
                 break;
 
-            case GDK_SCROLL_DOWN:
+            case Gdk::ScrollDirection::DOWN:
                 rel_zoom = 1 / zoom_inc;
                 break;
 
-            case GDK_SCROLL_SMOOTH: {
+            case Gdk::ScrollDirection::SMOOTH: {
                 delta = event.delta;
 #ifdef GDK_WINDOWING_QUARTZ
                 // MacBook trackpad scroll event gives pixel delta
@@ -951,23 +905,23 @@ bool ToolBase::root_handler(CanvasEvent const &event)
             /* no modifier, pan up--down (left--right on multiwheel mice?) */
         } else if (action == Type::CANVAS_PAN_Y) {
             switch (event.direction) {
-            case GDK_SCROLL_UP:
+            case Gdk::ScrollDirection::UP:
                 _desktop->scroll_relative(Geom::Point(0, wheel_scroll));
                 break;
 
-            case GDK_SCROLL_DOWN:
+            case Gdk::ScrollDirection::DOWN:
                 _desktop->scroll_relative(Geom::Point(0, -wheel_scroll));
                 break;
 
-            case GDK_SCROLL_LEFT:
+            case Gdk::ScrollDirection::LEFT:
                 _desktop->scroll_relative(Geom::Point(wheel_scroll, 0));
                 break;
 
-            case GDK_SCROLL_RIGHT:
+            case Gdk::ScrollDirection::RIGHT:
                 _desktop->scroll_relative(Geom::Point(-wheel_scroll, 0));
                 break;
 
-            case GDK_SCROLL_SMOOTH:
+            case Gdk::ScrollDirection::SMOOTH:
                 delta = event.delta;
 #ifdef GDK_WINDOWING_QUARTZ
                 // MacBook trackpad scroll event gives pixel delta
@@ -1028,9 +982,9 @@ void ToolBase::set_on_buttons(CanvasEvent const &event)
             }
         },
         [&] (MotionEvent const &event) {
-            _button1on = event.modifiers & Gdk::ModifierType::BUTTON1_MASK;
-            _button2on = event.modifiers & Gdk::ModifierType::BUTTON2_MASK;
-            _button3on = event.modifiers & Gdk::ModifierType::BUTTON3_MASK;
+            _button1on = event.modifiers & (unsigned)Gdk::ModifierType::BUTTON1_MASK;
+            _button2on = event.modifiers & (unsigned)Gdk::ModifierType::BUTTON2_MASK;
+            _button3on = event.modifiers & (unsigned)Gdk::ModifierType::BUTTON3_MASK;
         },
         [&] (CanvasEvent const &event) {}
     );
@@ -1169,9 +1123,8 @@ void ToolBase::ungrabCanvasEvents()
   * to draw a line). Make sure to call it again and restore standard precision afterwards. **/
 void ToolBase::set_high_motion_precision(bool high_precision)
 {
-    if (auto window = _desktop->getToplevel()->get_window()) {
-        window->set_event_compression(!high_precision);
-    }
+    // Todo: High-precision mode must now be implemented on a tool-by-tool basis.
+    // This function stub allows us to see where this is required.
 }
 
 void ToolBase::setup_for_drag_start(ButtonPressEvent const &ev)
@@ -1467,13 +1420,13 @@ unsigned get_latin_keyval(GtkEventControllerKey const * const controller,
                           unsigned const keyval, unsigned const keycode, GdkModifierType const state,
                           unsigned *consumed_modifiers /*= nullptr*/)
 {
-    auto const group = gtk_event_controller_key_get_group(controller);
+    auto const group = gtk_event_controller_key_get_group(const_cast<GtkEventControllerKey *>(controller));
     return get_latin_keyval_impl(keyval, keycode, state, group, consumed_modifiers);
 }
 
 unsigned get_latin_keyval(KeyEvent const &event, unsigned *consumed_modifiers)
 {
-    return get_latin_keyval_impl(event.keyval, event.hardware_keycode,
+    return get_latin_keyval_impl(event.keyval, event.keycode,
                                  static_cast<GdkModifierType>(event.modifiers),
                                  event.group, consumed_modifiers);
 }

@@ -221,7 +221,7 @@ bool InkscapeWindow::on_key_press_event(GdkEventKey *event)
 {
     if constexpr (false) {
         std::cout << "InkscapeWindow::on_key_press_event: GDK_KEY_PRESS: " << std::hex
-                  << " hardware: " << event->hardware_keycode
+                  << " hardware: " << event->keycode
                   << " state: "    << event->state
                   << " keyval: "   << event->keyval << std::endl;
     }

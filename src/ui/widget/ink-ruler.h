@@ -13,6 +13,7 @@
 
 /* Rewrite of the C Ruler. */
 
+#include <memory>
 #include <unordered_map>
 #include <utility>
 #include <cairomm/refptr.h>
@@ -23,7 +24,9 @@
 #include <gtkmm/box.h>
 #include <gtkmm/enums.h> // Gtk::Orientation
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
+
 #include "preferences.h"
+#include "ui/widget/css-changed-class-init.h"
 
 namespace Cairo {
 class Context;
@@ -43,7 +46,9 @@ namespace Inkscape::UI::Widget {
   
 // Box because GTK3 does not bother applying CSS bits like border-*|min-width|height on DrawingArea
 // TODO: GTK4: Revisit whether that is still the case; hopefully it isnʼt, then just be DrawingArea
-class Ruler : public Gtk::Box
+class Ruler
+    : public CssChangedClassInit
+    , public Gtk::Box
 {
 public:
     Ruler(Gtk::Orientation orientation);
@@ -60,8 +65,8 @@ private:
     bool draw_scale(const Cairo::RefPtr<::Cairo::Context>& cr);
     void draw_marker(const Cairo::RefPtr<::Cairo::Context>& cr);
     Cairo::RectangleInt marker_rect();
-    bool on_drawing_area_draw(Cairo::RefPtr<::Cairo::Context> const &cr);
-    void on_style_updated() override;
+    void draw_func(Cairo::RefPtr<Cairo::Context> const &cr, int width, int height);
+    void css_changed(GtkCssStyleChange *) final;
     void on_prefs_changed();
 
     void on_motion(GtkEventControllerMotion const *motion, double x, double y);
@@ -73,7 +78,7 @@ private:
 
     Gtk::DrawingArea *_drawing_area;
     Inkscape::PrefObserver _watch_prefs;
-    Gtk::Popover* _popover = nullptr;
+    std::unique_ptr<Gtk::Popover> _popover;
     Gtk::Orientation    _orientation;
     Inkscape::Util::Unit const* _unit;
     double _lower;

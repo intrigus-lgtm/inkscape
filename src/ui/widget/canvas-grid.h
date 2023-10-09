@@ -30,6 +30,7 @@
 namespace Gtk {
 class Adjustment;
 class Builder;
+class CheckButton;
 class GestureClick;
 } // namespace Gtk
 

@@ -554,7 +554,7 @@ Inkscape::Pixbuf const *FontInstance::PixBuf(int glyph_id)
     viewbox += "\"";
 
     // Search for existing viewbox
-    static auto regex = Glib::Regex::create("viewBox=\"\\s*(\\d*\\.?\\d+)\\s*,?\\s*(\\d*\\.?\\d+)\\s*,?\\s*(\\d+\\.?\\d+)\\s*,?\\s*(\\d+\\.?\\d+)\\s*\"", Glib::RegexCompileFlags::REGEX_OPTIMIZE);
+    static auto regex = Glib::Regex::create("viewBox=\"\\s*(\\d*\\.?\\d+)\\s*,?\\s*(\\d*\\.?\\d+)\\s*,?\\s*(\\d+\\.?\\d+)\\s*,?\\s*(\\d+\\.?\\d+)\\s*\"", Glib::Regex::CompileFlags::OPTIMIZE);
     Glib::MatchInfo matchInfo;
     regex->match(svg, matchInfo);
 

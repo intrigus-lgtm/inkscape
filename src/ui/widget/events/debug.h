@@ -59,12 +59,12 @@ inline void dump_event(CanvasEvent const &event, char const *prefix, bool merge 
 
         [] (KeyPressEvent const &event) {
             std::cout << "KeyPressEvent: " << std::hex
-                      << " hardware: " << event.hardware_keycode
+                      << " keycode:  " << event.keycode
                       << " state: "    << event.modifiers
                       << " keyval: "   << event.keyval << std::endl;
         },
         [] (KeyReleaseEvent const &event) {
-            std::cout << "KeyReleaseEvent: " << event.hardware_keycode << std::endl;
+            std::cout << "KeyReleaseEvent: " << event.keycode << std::endl;
         },
 
         [] (MotionEvent const &event) {

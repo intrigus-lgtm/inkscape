@@ -231,9 +231,10 @@ private:
 
 void sp_event_context_read(ToolBase *tool, char const *key);
 
-// Todo: These functions are destined for removal, since events cannot be gobbled in GTK4.
-gint gobble_key_events(guint keyval, guint mask);
-void gobble_motion_events(guint mask);
+// Gobbling is no longer possible in GTK4. The following stubs
+// are left in place in case an alternative solution is required.
+inline int gobble_key_events(unsigned keyval, unsigned mask) { return 0; }
+inline void gobble_motion_events(unsigned mask) {}
 
 void sp_event_show_modifier_tip(MessageContext *message_context, KeyEvent const &event,
                                 char const *ctrl_tip, char const *shift_tip, char const *alt_tip);

@@ -19,6 +19,7 @@
 #include <unordered_map>
 #include <vector>
 #include <glibmm/ustring.h>
+#include <glibmm/ustring_hash.h>
 
 enum class ParamType
 {
@@ -51,8 +52,7 @@ public:
                                          bool expanded   = false         ) const;
 
 private:
-    // TODO: Once we require new enough glibmm, #include <glibmm/ustring_hash.h> & make key ustring
-    std::unordered_map<std::string, InkActionExtraDatum> data;
+    std::unordered_map<Glib::ustring, InkActionExtraDatum> data;
 };
 
 #endif // INK_ACTIONS_EXTRA_DATA_H

@@ -726,7 +726,7 @@ void SPDesktop::schedule_zoom_from_document()
         return;
     }
 
-    _schedule_zoom_from_document_connection = canvas->connect_before_snapshot([this]{
+    _schedule_zoom_from_document_connection = canvas->connectPreDraw([this] {
         sp_namedview_zoom_and_view_from_document(this);
         _schedule_zoom_from_document_connection.disconnect(); // one-shot
     });

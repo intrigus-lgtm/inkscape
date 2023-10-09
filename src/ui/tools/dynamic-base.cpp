@@ -39,7 +39,7 @@ void DynamicBase::set(Preferences::Entry const &value)
     auto prefs = Preferences::get();
     auto const unit = Util::UnitTable::get().getUnit(prefs->getString("/tools/calligraphic/unit"));
 
-    if (full_path.compare(0, presets_path.size(), presets_path) == 0) {
+    if (full_path.compare(0, presets_path.size(), presets_path.c_str()) == 0) {
     	return;
     }
 

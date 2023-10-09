@@ -29,6 +29,7 @@
 #include <glibmm/i18n.h>
 #include <glibmm/quark.h>
 #include <glibmm/ustring.h>
+#include <glibmm/ustring_hash.h>
 #include <giomm/menu.h>
 #include <giomm/menuattributeiter.h>
 #include <giomm/menuitem.h>
@@ -237,8 +238,7 @@ void rebuild_menu(Glib::RefPtr<Gio::MenuModel> const &menu, Glib::RefPtr<Gio::Me
         Glib::VariantBase icon;
         Glib::ustring use_icon;
 
-        // TODO: Once we require new enough glibmm, #include <glibmm/ustring_hash.h> & make key ustring
-        std::unordered_map<std::string, Glib::VariantBase> attributes;
+        std::unordered_map<Glib::ustring, Glib::VariantBase> attributes;
 
         auto attribute_iter = menu->iterate_item_attributes(i);
         while (attribute_iter->next()) {
@@ -258,7 +258,7 @@ void rebuild_menu(Glib::RefPtr<Gio::MenuModel> const &menu, Glib::RefPtr<Gio::Me
                 use_icon =  attribute_iter->get_value().print();
             } else {
                 // All the remaining attributes.
-                attributes[attribute_iter->get_name().raw()] = attribute_iter->get_value();
+                attributes[attribute_iter->get_name()] = attribute_iter->get_value();
             }
         }
         Glib::ustring detailed_action = action;

@@ -43,7 +43,7 @@ private:
                                     int &min_h,
                                     int &nat_h) const override;
 
-    bool activate_vfunc(GdkEvent *event,
+    bool activate_vfunc(Glib::RefPtr<Gdk::Event const> const &event,
                         Gtk::Widget &widget,
                         const Glib::ustring &path,
                         const Gdk::Rectangle &background_area,

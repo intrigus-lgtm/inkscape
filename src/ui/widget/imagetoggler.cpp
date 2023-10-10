@@ -11,6 +11,7 @@
 
 #include "ui/widget/imagetoggler.h"
 
+#include <gtkmm/snapshot.h>
 #include <sigc++/functors/mem_fun.h>
 
 namespace Inkscape::UI::Widget {
@@ -51,11 +52,11 @@ void ImageToggler::set_icon_name()
     property_icon_name().set_value(icon_name);
 }
 
-void ImageToggler::render_vfunc(const Cairo::RefPtr<Cairo::Context> &cr,
-                                Gtk::Widget &widget,
-                                const Gdk::Rectangle &background_area,
-                                const Gdk::Rectangle &cell_area,
-                                Gtk::CellRendererState flags)
+void ImageToggler::snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &snapshot,
+                                  Gtk::Widget &widget,
+                                  const Gdk::Rectangle &background_area,
+                                  const Gdk::Rectangle &cell_area,
+                                  Gtk::CellRendererState flags)
 {
     // Hide when not being used.
     double alpha = 1.0;
@@ -74,15 +75,15 @@ void ImageToggler::render_vfunc(const Cairo::RefPtr<Cairo::Context> &cr,
     }
 
     // Apply alpha to output of Gtk::CellRendererPixbuf, plus x offset to replicate prev behaviour.
-    cr->push_group();
-    cr->translate(-0.5 * property_xpad().get_value(), 0.0);
-    Gtk::CellRendererPixbuf::render_vfunc(cr, widget, background_area, cell_area, flags);
-    cr->pop_group_to_source();
-    cr->paint_with_alpha(alpha);
+    snapshot->push_opacity(alpha);
+    auto const point = GRAPHENE_POINT_INIT(-0.5f * property_xpad().get_value(), 0);
+    gtk_snapshot_translate(snapshot->gobj(), &point);
+    Gtk::CellRendererPixbuf::snapshot_vfunc(snapshot, widget, background_area, cell_area, flags);
+    snapshot->pop();
 }
 
 bool
-ImageToggler::activate_vfunc(GdkEvent * /*event*/,
+ImageToggler::activate_vfunc(Glib::RefPtr<Gdk::Event const> const &/*event*/,
                              Gtk::Widget &/*widget*/,
                              const Glib::ustring &path,
                              const Gdk::Rectangle &/*background_area*/,

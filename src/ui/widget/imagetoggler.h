@@ -37,13 +37,13 @@ public:
 
 private:
     void set_icon_name();
-    void render_vfunc(const Cairo::RefPtr<Cairo::Context> &cr,
-                      Gtk::Widget &widget,
-                      const Gdk::Rectangle &background_area,
-                      const Gdk::Rectangle &cell_area,
-                      Gtk::CellRendererState flags) override;
+    void snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &snapshot,
+                        Gtk::Widget &widget,
+                        const Gdk::Rectangle &background_area,
+                        const Gdk::Rectangle &cell_area,
+                        Gtk::CellRendererState flags) override;
 
-    bool activate_vfunc(GdkEvent *event,
+    bool activate_vfunc(Glib::RefPtr<Gdk::Event const> const &event,
                         Gtk::Widget &widget,
                         const Glib::ustring &path,
                         const Gdk::Rectangle &background_area,

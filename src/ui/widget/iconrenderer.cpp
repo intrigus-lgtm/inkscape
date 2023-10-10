@@ -66,7 +66,7 @@ void IconRenderer::get_preferred_width_vfunc(Gtk::Widget &widget,
     }
 }
 
-bool IconRenderer::activate_vfunc(GdkEvent * /*event*/,
+bool IconRenderer::activate_vfunc(Glib::RefPtr<Gdk::Event const> const &/*event*/,
                                   Gtk::Widget &/*widget*/,
                                   const Glib::ustring &path,
                                   const Gdk::Rectangle &/*background_area*/,

@@ -61,6 +61,8 @@ public:
     void add_track_widget(Gtk::Widget& widget);
 
 private:
+    void size_allocate_vfunc(int width, int height, int baseline) final;
+
     std::pair<int, int> get_drawing_size();
     bool draw_scale(const Cairo::RefPtr<::Cairo::Context>& cr);
     void draw_marker(const Cairo::RefPtr<::Cairo::Context>& cr);
@@ -73,7 +75,7 @@ private:
     Gtk::EventSequenceState on_click_pressed(Gtk::GestureClick const &click,
                                              int n_press, double x, double y);
 
-    void set_context_menu();
+    [[nodiscard]] std::unique_ptr<Gtk::Popover> create_context_menu();
     Cairo::RefPtr<Cairo::Surface> draw_label(Cairo::RefPtr<Cairo::Surface> const &surface_in, int label_value);
 
     Gtk::DrawingArea *_drawing_area;

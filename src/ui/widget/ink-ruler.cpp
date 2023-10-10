@@ -59,6 +59,7 @@ Ruler::Ruler(Gtk::Orientation orientation)
     , Gtk::Box{orientation}
     , _orientation(orientation)
     , _drawing_area(Gtk::make_managed<Gtk::DrawingArea>())
+    , _popover{create_context_menu()}
     , _backing_store(nullptr)
     , _lower(0)
     , _upper(1000)
@@ -84,8 +85,6 @@ Ruler::Ruler(Gtk::Orientation orientation)
     auto prefs = Inkscape::Preferences::get();
     _watch_prefs = prefs->createObserver("/options/ruler/show_bbox", sigc::mem_fun(*this, &Ruler::on_prefs_changed));
     on_prefs_changed();
-
-    set_context_menu();
 
     INKSCAPE.themecontext->getChangeThemeSignal().connect([this]{ css_changed(nullptr); });
 }
@@ -166,6 +165,12 @@ Ruler::add_track_widget(Gtk::Widget& widget)
         Gtk::PropagationPhase::TARGET, Controller::When::before); // We connected 1st to event, so continue
 }
 
+void
+Ruler::size_allocate_vfunc(int const width, int const height, int const baseline)
+{
+    _popover->present();
+}
+
 // Draws marker in response to motion events from canvas.  Position is defined in ruler pixel
 // coordinates. The routine assumes that the ruler is the same width (height) as the canvas. If
 // not, one could use Gtk::Widget::translate_coordinates() to convert the coordinates.
@@ -194,7 +199,6 @@ Gtk::EventSequenceState
 Ruler::on_click_pressed(Gtk::GestureClick const & /*click*/,
                         int /*n_press*/, double const x, double const y)
 {
-    // TODO: GTK4: ALL Popovers will need rewritten to call present() [better named allocate], etc.
     UI::popup_at(*_popover, *this, x, y);
     return Gtk::EventSequenceState::CLAIMED;
 }
@@ -533,7 +537,7 @@ Ruler::css_changed(GtkCssStyleChange * const change)
 /**
  * Return a contextmenu for the ruler
  */
-void Ruler::set_context_menu()
+std::unique_ptr<Gtk::Popover> Ruler::create_context_menu()
 {
     auto unit_menu = Gio::Menu::create();
 
@@ -544,8 +548,10 @@ void Ruler::set_context_menu()
         unit_menu->append_item(item);
     }
 
-    _popover = std::make_unique<Gtk::PopoverMenu>(unit_menu);
-    _popover->set_autohide(true);
+    auto popover = std::make_unique<Gtk::PopoverMenu>(unit_menu);
+    popover->set_parent(*this);
+    popover->set_autohide(true);
+    return popover;
 }
 
 } // namespace Inkscape::UI::Widget

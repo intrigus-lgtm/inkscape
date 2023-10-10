@@ -204,7 +204,6 @@ set(ui_SRC
 	widget/color-slider.cpp
 	widget/combo-box-entry-tool-item.cpp
 	widget/combo-tool-item.cpp
-	widget/css-changed-class-init.cpp
 	widget/css-name-class-init.cpp
 	widget/custom-tooltip.cpp
 	widget/dash-selector.cpp
@@ -492,7 +491,6 @@ set(ui_SRC
 	widget/combo-enums.h
 	widget/combo-box-entry-tool-item.h
 	widget/combo-tool-item.h
-	widget/css-changed-class-init.h
 	widget/css-name-class-init.h
 	widget/custom-tooltip.h
 	widget/dash-selector.h

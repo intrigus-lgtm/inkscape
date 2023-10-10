@@ -26,7 +26,7 @@
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 
 #include "preferences.h"
-#include "ui/widget/css-changed-class-init.h"
+#include "ui/widget/widget-vfuncs-class-init.h"
 
 namespace Cairo {
 class Context;
@@ -47,7 +47,7 @@ namespace Inkscape::UI::Widget {
 // Box because GTK3 does not bother applying CSS bits like border-*|min-width|height on DrawingArea
 // TODO: GTK4: Revisit whether that is still the case; hopefully it isnʼt, then just be DrawingArea
 class Ruler
-    : public CssChangedClassInit
+    : public WidgetVfuncsClassInit
     , public Gtk::Box
 {
 public:

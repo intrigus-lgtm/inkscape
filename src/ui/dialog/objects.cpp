@@ -66,7 +66,7 @@
 #include "ui/tools/node-tool.h"
 #include "ui/util.h"
 #include "ui/widget/canvas.h"
-#include "ui/widget/css-changed-class-init.h"
+#include "ui/widget/widget-vfuncs-class-init.h"
 #include "ui/widget/filter-effect-chooser.h"
 #include "ui/widget/imagetoggler.h"
 #include "ui/widget/objects-dialog-cells.h"
@@ -93,13 +93,13 @@ using namespace Inkscape::UI::Widget;
 
 // This was the 1 widget where we used signal_style_updated(), so just hack together a replacement!
 class ObjectsPanel::TreeViewWithCssChanged final
-    : public UI::Widget::CssChangedClassInit
+    : public UI::Widget::WidgetVfuncsClassInit
     , public Gtk::TreeView
 {
 public:
     TreeViewWithCssChanged()
         : Glib::ObjectBase{"TreeViewWithCssChanged"}
-        , CssChangedClassInit{}
+        , WidgetVfuncsClassInit{}
         , Gtk::TreeView{}
     {
     }

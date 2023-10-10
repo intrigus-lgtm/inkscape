@@ -112,7 +112,7 @@ void set_aspect_ratio(SPImage* image, bool preserve_aspect_ratio) {
 } // unnamed namespace
 
 ImageProperties::ImageProperties() :
-    Glib::ObjectBase{"ImageProperties"}, CssChangedClassInit{}, // They are both needed w ClassInit
+    Glib::ObjectBase{"ImageProperties"}, WidgetVfuncsClassInit{}, // They are both needed w ClassInit
     Gtk::Box(Gtk::Orientation::HORIZONTAL),
     _builder(create_builder("image-properties.glade")),
     _preview(get_widget<Gtk::DrawingArea>(_builder, "preview")),

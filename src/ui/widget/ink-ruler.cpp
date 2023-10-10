@@ -55,7 +55,7 @@ namespace Inkscape::UI::Widget {
 
 Ruler::Ruler(Gtk::Orientation orientation)
     : Glib::ObjectBase{"InkRuler"}
-    , CssChangedClassInit{}
+    , WidgetVfuncsClassInit{}
     , Gtk::Box{orientation}
     , _orientation(orientation)
     , _drawing_area(Gtk::make_managed<Gtk::DrawingArea>())

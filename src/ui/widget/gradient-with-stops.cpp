@@ -44,6 +44,9 @@ std::string get_stop_template_path(const char* filename) {
 }
 
 GradientWithStops::GradientWithStops() :
+    Glib::ObjectBase{"GradientWithStops"},
+    WidgetVfuncsClassInit{},
+    Gtk::Box{},
     _drawing_area{Gtk::make_managed<Gtk::DrawingArea>()},
     _template(get_stop_template_path("gradient-stop.svg").c_str()),
     _tip_template(get_stop_template_path("gradient-tip.svg").c_str())
@@ -55,10 +58,10 @@ GradientWithStops::GradientWithStops() :
     set_name("GradientEdit");
 
     _drawing_area->set_visible(true);
-    _drawing_area->signal_draw().connect(sigc::mem_fun(*this, &GradientWithStops::on_drawing_area_draw));
+    _drawing_area->set_draw_func(sigc::mem_fun(*this, &GradientWithStops::draw_func));
     _drawing_area->set_expand(true); // DrawingArea fills self Box,
     set_expand(false);               // but the Box doesnʼt expand.
-    add(*_drawing_area);
+    append(*_drawing_area);
 
     Controller::add_click(*_drawing_area, sigc::mem_fun(*this, &GradientWithStops::on_click_pressed ),
                                           sigc::mem_fun(*this, &GradientWithStops::on_click_released),
@@ -66,8 +69,6 @@ GradientWithStops::GradientWithStops() :
     Controller::add_motion<nullptr, &GradientWithStops::on_motion, nullptr>(*_drawing_area, *this);
     Controller::add_key<&GradientWithStops::on_key_pressed>(*_drawing_area, *this);
     _drawing_area->set_focusable(true);
-    _drawing_area->property_has_focus().signal_changed().connect(
-        sigc::mem_fun(*this, &GradientWithStops::on_drawing_area_has_focus));
 }
 
 GradientWithStops::~GradientWithStops() = default;
@@ -110,20 +111,18 @@ void GradientWithStops::update() {
 }
 
 // capture background color when styles change
-void GradientWithStops::on_style_updated() {
-    Gtk::Box::on_style_updated();
-
+void GradientWithStops::css_changed(GtkCssStyleChange * /*change*/)
+{
     if (auto wnd = dynamic_cast<Gtk::Window*>(this->get_root())) {
         _background_color = get_color_with_class(*wnd, "theme_bg_color");
     }
 
     // load and cache cursors
-    auto const wnd = _drawing_area->get_window();
-    if (wnd && !_cursor_mouseover) {
-        _cursor_mouseover = Gdk::Cursor::create(get_display(), "grab");
-        _cursor_dragging =  Gdk::Cursor::create(get_display(), "grabbing");
-        _cursor_insert =    Gdk::Cursor::create(get_display(), "crosshair");
-        wnd->set_cursor();
+    if (!_cursor_mouseover) {
+        _cursor_mouseover = Gdk::Cursor::create("grab");
+        _cursor_dragging =  Gdk::Cursor::create("grabbing");
+        _cursor_insert =    Gdk::Cursor::create("crosshair");
+        set_stop_cursor(nullptr);
     }
 }
 
@@ -244,7 +243,7 @@ GradientWithStops::limits_t GradientWithStops::get_stop_limits(int maybe_index) 
     }
 }
 
-bool GradientWithStops::on_focus(Gtk::DirectionType const direction)
+std::optional<bool> GradientWithStops::focus(Gtk::DirectionType const direction)
 {
     // On arrow key, let ::key-pressed move focused stop (horz) / nothing (vert)
     if (!(direction == Gtk::DirectionType::TAB_FORWARD || direction == Gtk::DirectionType::TAB_BACKWARD)) {
@@ -273,33 +272,19 @@ bool GradientWithStops::on_focus(Gtk::DirectionType const direction)
     return true;
 }
 
-// TODO: GTK4: Replace .focus-within with then-built-in :focus-within, so delete
-void GradientWithStops::on_drawing_area_has_focus()
-{
-    if (_drawing_area->has_focus()) {
-        add_css_class("focus-within");
-    } else {
-        remove_css_class("focus-within");
-    }
-}
-
 bool GradientWithStops::on_key_pressed(GtkEventControllerKey const * /*controller*/,
-                                       unsigned /*keyval*/, unsigned const keycode,
+                                       unsigned const keyval, unsigned /*keycode*/,
                                        GdkModifierType const state)
 {
     // currently all keyboard activity involves acting on focused stop handle; bail if nothing's selected
     if (_focused_stop < 0) return false;
-
-    unsigned int key = 0;
-    gdk_keymap_translate_keyboard_state(Gdk::Display::get_default()->get_keymap(),
-                                        keycode, state, 0, &key, nullptr, nullptr, nullptr);
 
     auto delta = _stop_move_increment;
     if (Controller::has_flag(state, GDK_SHIFT_MASK)) {
         delta *= 10;
     }
 
-    switch (key) {
+    switch (keyval) {
         case GDK_KEY_Left:
         case GDK_KEY_KP_Left:
             move_stop(_focused_stop, -delta);
@@ -353,7 +338,7 @@ Gtk::EventSequenceState GradientWithStops::on_click_pressed(Gtk::GestureClick co
             _stop_offset = _stops.at(index).offset;
 
             if (_cursor_dragging) {
-                set_cursor(&_cursor_dragging);
+                set_stop_cursor(&_cursor_dragging);
             }
         }
     } else if (n_press == 2) {
@@ -376,7 +361,7 @@ Gtk::EventSequenceState GradientWithStops::on_click_released(Gtk::GestureClick c
                                                              int /*n_press*/,
                                                              double const x, double const y)
 {
-    set_cursor(get_cursor(x, y));
+    set_stop_cursor(get_cursor(x, y));
     _dragging = false;
     return Gtk::EventSequenceState::NONE;
 }
@@ -413,7 +398,7 @@ void GradientWithStops::on_motion(GtkEventControllerMotion const * /*motion*/,
             }
         }
     } else { // !drag but may need to change cursor
-        set_cursor(get_cursor(x, y));
+        set_stop_cursor(get_cursor(x, y));
     }
 }
 
@@ -436,31 +421,32 @@ GradientWithStops::get_cursor(double const x, double const y) const
     return nullptr;
 }
 
-void GradientWithStops::set_cursor(Glib::RefPtr<Gdk::Cursor> const * const cursor)
+void GradientWithStops::set_stop_cursor(Glib::RefPtr<Gdk::Cursor> const * const cursor)
 {
     if (_cursor_current == cursor) return;
 
     if (cursor != nullptr) {
-        _drawing_area->get_window()->set_cursor(*cursor);
+        _drawing_area->set_cursor(*cursor);
     } else {
-        _drawing_area->get_window()->set_cursor({}); // empty/default
+        _drawing_area->set_cursor(""); // empty/default
     }
 
     _cursor_current = cursor;
 }
 
-bool GradientWithStops::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr)
+void GradientWithStops::draw_func(Cairo::RefPtr<Cairo::Context> const &cr,
+                                  int /*width*/, int /*height*/)
 {
     const double scale = _drawing_area->get_scale_factor();
     const auto layout = get_layout();
 
-    if (layout.width <= 0) return true;
+    if (layout.width <= 0) return;
 
     // empty gradient checkboard or gradient itself
     cr->rectangle(layout.x, layout.y, layout.width, GRADIENT_IMAGE_HEIGHT);
     draw_gradient(cr, _gradient, layout.x, layout.width);
 
-    if (!_gradient) return true;
+    if (!_gradient) return;
 
     // draw stop handles
 
@@ -522,8 +508,6 @@ bool GradientWithStops::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const
         cr->restore();
         cr->reset_clip();
     }
-
-    return true;
 }
 
 // focused/selected stop indicator

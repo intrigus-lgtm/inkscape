@@ -10,7 +10,7 @@
 #include "helper/auto-connection.h"
 #include "object/sp-image.h"
 #include "ui/operation-blocker.h"
-#include "ui/widget/css-changed-class-init.h"
+#include "ui/widget/widget-vfuncs-class-init.h"
 
 namespace Cairo {
 class Surface;
@@ -27,7 +27,7 @@ class DrawingArea;
 namespace Inkscape::UI::Widget {
 
 class ImageProperties final
-    : public CssChangedClassInit
+    : public WidgetVfuncsClassInit
     , public Gtk::Box
 {
 public:

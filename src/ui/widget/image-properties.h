@@ -1,37 +1,50 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+
 #ifndef SEEN_IMAGE_PROPERTIES_H
 #define SEEN_IMAGE_PROPERTIES_H
 
+#include <cairomm/refptr.h>
+#include <glibmm/refptr.h>
 #include <gtkmm/box.h>
-#include <gtkmm/builder.h>
-#include <gtkmm/button.h>
-#include <gtkmm/comboboxtext.h>
-#include <gtkmm/drawingarea.h>
-#include <gtkmm/radiobutton.h>
+
 #include "helper/auto-connection.h"
 #include "object/sp-image.h"
 #include "ui/operation-blocker.h"
+#include "ui/widget/css-changed-class-init.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Cairo {
+class Surface;
+} // namespace Cairo
 
-class ImageProperties : public Gtk::Box {
+namespace Gtk {
+class Builder;
+class Button;
+class CheckButton;
+class ComboBoxText;
+class DrawingArea;
+} // namespace Gtk
+
+namespace Inkscape::UI::Widget {
+
+class ImageProperties final
+    : public CssChangedClassInit
+    , public Gtk::Box
+{
 public:
     ImageProperties();
-    ~ImageProperties() override = default;
+    ~ImageProperties() override;
 
     void update(SPImage* image);
 
 private:
-    void on_style_updated() override;
+    void css_changed(GtkCssStyleChange *change) final;
     void update_bg_color();
 
     Glib::RefPtr<Gtk::Builder> _builder;
 
     Gtk::DrawingArea& _preview;
-    Gtk::RadioButton& _aspect;
-    Gtk::RadioButton& _stretch;
+    Gtk::CheckButton &_aspect;
+    Gtk::CheckButton &_stretch;
     Gtk::ComboBoxText& _rendering;
     Gtk::Button& _embed;
     int _preview_max_height;
@@ -42,6 +55,17 @@ private:
     uint32_t _background_color = 0;
 };
 
-}}} // namespaces
+} // namespace Inkscape::UI::Widget
 
 #endif // SEEN_IMAGE_PROPERTIES_H
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :

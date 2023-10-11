@@ -8,22 +8,25 @@
  */
 
 #include "image-properties.h"
+
 #include <array>
+#include <sstream>
+#include <string>
+#include <cairomm/context.h>
 #include <glib/gi18n.h>
 #include <glibmm/convert.h>
 #include <glibmm/markup.h>
 #include <glibmm/ustring.h>
+#include <gtkmm/builder.h>
 #include <gtkmm/button.h>
+#include <gtkmm/checkbutton.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
-#include <gtkmm/radiobutton.h>
-#include <gtkmm/window.h>
-#include <sstream>
-#include <string>
+
 #include "display/cairo-utils.h"
 #include "document-undo.h"
 #include "enums.h"
@@ -38,9 +41,9 @@
 #include "util/object-renderer.h"
 #include "xml/href-attribute-helper.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
+
+namespace {
 
 Cairo::RefPtr<Cairo::Surface> draw_preview(SPImage* image, double width, double height, int device_scale, uint32_t frame_color, uint32_t background) {
     if (!image || !image->pixbuf) return Cairo::RefPtr<Cairo::Surface>();
@@ -75,7 +78,7 @@ void link_image(Gtk::Window* window, SPImage* image) {
         setHrefAttribute(*image->getRepr(), uri);
     }
     catch (Glib::ConvertError const &e) {
-        g_warning("Error converting path to URI: %s", e.what().c_str());
+        g_warning("Error converting path to URI: %s", e.what());
         setHrefAttribute(*image->getRepr(), file);
     }
     // SPImage modifies size when href changes; trigger it now before undo concludes
@@ -106,16 +109,18 @@ void set_aspect_ratio(SPImage* image, bool preserve_aspect_ratio) {
     DocumentUndo::done(image->document, _("Preserve image aspect ratio"), INKSCAPE_ICON("shape-image"));
 }
 
+} // unnamed namespace
+
 ImageProperties::ImageProperties() :
+    Glib::ObjectBase{"ImageProperties"}, CssChangedClassInit{}, // They are both needed w ClassInit
     Gtk::Box(Gtk::Orientation::HORIZONTAL),
     _builder(create_builder("image-properties.glade")),
     _preview(get_widget<Gtk::DrawingArea>(_builder, "preview")),
-    _aspect(get_widget<Gtk::RadioButton>(_builder, "preserve")),
-    _stretch(get_widget<Gtk::RadioButton>(_builder, "stretch")),
+    _aspect(get_widget<Gtk::CheckButton>(_builder, "preserve")),
+    _stretch(get_widget<Gtk::CheckButton>(_builder, "stretch")),
     _rendering(get_widget<Gtk::ComboBoxText>(_builder, "rendering")),
     _embed(get_widget<Gtk::Button>(_builder, "embed"))
 {
-
     auto& main = get_widget<Gtk::Grid>(_builder, "main");
     UI::pack_start(*this, main, true, true);
 
@@ -123,12 +128,11 @@ ImageProperties::ImageProperties() :
     _preview_max_width = 120;
     _preview_max_height = 90;
 
-    _preview.signal_draw().connect([=](const Cairo::RefPtr<Cairo::Context>& ctx){
+    _preview.set_draw_func([this](Cairo::RefPtr<Cairo::Context> const &ctx, int /*width*/, int /*height*/) {
         if (_preview_image) {
             ctx->set_source(_preview_image, 0, 0);
             ctx->paint();
         }
-        return true;
     });
 
     auto& change = get_widget<Gtk::Button>(_builder, "change-img");
@@ -168,6 +172,8 @@ ImageProperties::ImageProperties() :
         set_aspect_ratio(_image, !_stretch.get_active());
     });
 }
+
+ImageProperties::~ImageProperties() = default;
 
 void ImageProperties::update(SPImage* image) {
     if (!image && !_image) return; // nothing to do
@@ -270,9 +276,7 @@ void ImageProperties::update(SPImage* image) {
     auto device_scale = get_scale_factor();
     auto const fg = get_color();
     auto foreground = conv_gdk_color_to_rgba(fg, 0.30);
-    if (!_background_color) {
-        update_bg_color();
-    }
+    update_bg_color();
     _preview_image = draw_preview(_image, width, height, device_scale, foreground, _background_color);
 }
 
@@ -286,9 +290,21 @@ void ImageProperties::update_bg_color() {
     }
 }
 
-void ImageProperties::on_style_updated() {
+void ImageProperties::css_changed(GtkCssStyleChange * /*change*/)
+{
     update_bg_color();
     update(_image);
 }
 
-}}} // namespaces
+} // namespace Inkscape::UI::Widget
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :

@@ -13,13 +13,6 @@
 #ifndef SEEN_DIALOGS_OBJECT_ATTRIBUTES_H
 #define SEEN_DIALOGS_OBJECT_ATTRIBUTES_H
 
-#include "desktop.h"
-#include "object/sp-object.h"
-#include "ui/dialog/dialog-base.h"
-#include "ui/operation-blocker.h"
-#include "ui/widget/spinbutton.h"
-#include "ui/widget/style-swatch.h"
-#include "ui/widget/unit-tracker.h"
 #include <glibmm/ustring.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
@@ -28,41 +21,49 @@
 #include <string>
 #include <map>
 
+#include "desktop.h"
+#include "object/sp-object.h"
+#include "ui/dialog/dialog-base.h"
+#include "ui/operation-blocker.h"
+#include "ui/widget/spinbutton.h"
+#include "ui/widget/style-swatch.h"
+#include "ui/widget/unit-tracker.h"
+
 class SPAttributeTable;
 class SPItem;
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 namespace details {
-    class AttributesPanel {
-    public:
-        AttributesPanel();
-        virtual ~AttributesPanel() = default;
 
-        void update_panel(SPObject* object, SPDesktop* desktop);
-        Gtk::Widget& widget() { if(!_widget) throw "crap"; return *_widget; }
-        Glib::ustring get_title() const { return _title; }
-        bool supports_fill_stroke() const {return _show_fill_stroke; }
+class AttributesPanel {
+public:
+    AttributesPanel();
+    virtual ~AttributesPanel() = default;
 
-    protected:
-        virtual void update(SPObject* object) = 0;
-        // value with units changed by the user; modify current object
-        void change_value_px(SPObject* object, const Glib::RefPtr<Gtk::Adjustment>& adj, const char* attr, std::function<void (double)>&& setter);
-        // angle in degrees changed by the user; modify current object
-        void change_angle(SPObject* object, const Glib::RefPtr<Gtk::Adjustment>& adj, std::function<void (double)>&& setter);
-        // modify current object
-        void change_value(SPObject* object, const Glib::RefPtr<Gtk::Adjustment>& adj, std::function<void (double)>&& setter);
+    void update_panel(SPObject* object, SPDesktop* desktop);
+    Gtk::Widget& widget() { if(!_widget) throw "crap"; return *_widget; }
+    Glib::ustring get_title() const { return _title; }
+    bool supports_fill_stroke() const {return _show_fill_stroke; }
 
-        SPDesktop* _desktop = nullptr;
-        OperationBlocker _update;
-        bool _show_fill_stroke = true;
-        Glib::ustring _title;
-        Gtk::Widget* _widget = nullptr;
-        std::unique_ptr<UI::Widget::UnitTracker> _tracker;
-    };
-}
+protected:
+    virtual void update(SPObject* object) = 0;
+    // value with units changed by the user; modify current object
+    void change_value_px(SPObject* object, const Glib::RefPtr<Gtk::Adjustment>& adj, const char* attr, std::function<void (double)>&& setter);
+    // angle in degrees changed by the user; modify current object
+    void change_angle(SPObject* object, const Glib::RefPtr<Gtk::Adjustment>& adj, std::function<void (double)>&& setter);
+    // modify current object
+    void change_value(SPObject* object, const Glib::RefPtr<Gtk::Adjustment>& adj, std::function<void (double)>&& setter);
+
+    SPDesktop* _desktop = nullptr;
+    OperationBlocker _update;
+    bool _show_fill_stroke = true;
+    Glib::ustring _title;
+    Gtk::Widget* _widget = nullptr;
+    std::unique_ptr<UI::Widget::UnitTracker> _tracker;
+};
+
+} // namespace details
 
 /**
  * A dialog widget to show object attributes (currently for images and links).
@@ -100,11 +101,9 @@ private:
     Inkscape::UI::Widget::StyleSwatch _style_swatch;
 };
 
-}
-}
-}
+} // namespace Inkscape::UI::Dialog
 
-#endif
+#endif // SEEN_DIALOGS_OBJECT_ATTRIBUTES_H
 
 /*
   Local Variables:

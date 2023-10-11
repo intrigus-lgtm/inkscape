@@ -24,9 +24,8 @@
 #include <gtkmm/enums.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
-#include <gtkmm/object.h>
-#include <gtkmm/radiobutton.h>
 #include <gtkmm/spinbutton.h>
+#include <gtkmm/togglebutton.h>
 #include <gtkmm/treemodel.h>
 #include <2geom/rect.h>
 
@@ -65,13 +64,11 @@
 #include "widgets/sp-attribute-widget.h"
 #include "xml/href-attribute-helper.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 struct SPAttrDesc {
-    gchar const *label;
-    gchar const *attribute;
+    char const *label;
+    char const *attribute;
 };
 
 static const SPAttrDesc anchor_desc[] = {
@@ -104,7 +101,7 @@ ObjectAttributes::ObjectAttributes()
     _style_swatch.set_hexpand(false);
     _style_swatch.set_valign(Gtk::Align::CENTER);
     UI::pack_end(get_widget<Gtk::Box>(_builder, "main-header"), _style_swatch, false, true);
-    add(main);
+    append(main);
     create_panels();
     _style_swatch.set_visible(false);
 }
@@ -517,9 +514,9 @@ public:
         _ry(get_derived_widget<Inkscape::UI::Widget::SpinButton>(builder, "el-ry")),
         _start(get_derived_widget<Inkscape::UI::Widget::SpinButton>(builder, "el-start")),
         _end(get_derived_widget<Inkscape::UI::Widget::SpinButton>(builder, "el-end")),
-        _slice(get_widget<Gtk::RadioButton>(builder, "el-slice")),
-        _arc(get_widget<Gtk::RadioButton>(builder, "el-arc")),
-        _chord(get_widget<Gtk::RadioButton>(builder, "el-chord")),
+        _slice(get_widget<Gtk::ToggleButton>(builder, "el-slice")),
+        _arc(get_widget<Gtk::ToggleButton>(builder, "el-arc")),
+        _chord(get_widget<Gtk::ToggleButton>(builder, "el-chord")),
         _whole(get_widget<Gtk::Button>(builder, "el-whole"))
     {
         _title = _("Ellipse");
@@ -628,11 +625,11 @@ private:
     Inkscape::UI::Widget::SpinButton& _ry;
     Inkscape::UI::Widget::SpinButton& _start;
     Inkscape::UI::Widget::SpinButton& _end;
-    Gtk::RadioButton& _slice;
-    Gtk::RadioButton& _arc;
-    Gtk::RadioButton& _chord;
+    Gtk::ToggleButton &_slice;
+    Gtk::ToggleButton &_arc;
+    Gtk::ToggleButton &_chord;
     Gtk::Button& _whole;
-    Gtk::RadioButton* _type[3];
+    Gtk::ToggleButton *_type[3];
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -645,8 +642,8 @@ public:
         _ratio(get_derived_widget<Inkscape::UI::Widget::SpinButton>(builder, "star-ratio")),
         _rounded(get_derived_widget<Inkscape::UI::Widget::SpinButton>(builder, "star-rounded")),
         _rand(get_derived_widget<Inkscape::UI::Widget::SpinButton>(builder, "star-rand")),
-        _poly(get_widget<Gtk::RadioButton>(builder, "star-poly")),
-        _star(get_widget<Gtk::RadioButton>(builder, "star-star")),
+        _poly(get_widget<Gtk::ToggleButton>(builder, "star-poly")),
+        _star(get_widget<Gtk::ToggleButton>(builder, "star-star")),
         _align(get_widget<Gtk::Button>(builder, "star-align")),
         _clear_rnd(get_widget<Gtk::Button>(builder, "star-rnd-clear")),
         _clear_round(get_widget<Gtk::Button>(builder, "star-round-clear")),
@@ -747,8 +744,8 @@ private:
     Gtk::Button& _clear_round;
     Gtk::Button& _clear_ratio;
     Gtk::Button& _align;
-    Gtk::RadioButton& _poly;
-    Gtk::RadioButton& _star;
+    Gtk::ToggleButton &_poly;
+    Gtk::ToggleButton &_star;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -790,9 +787,7 @@ void ObjectAttributes::create_panels() {
     _panels[typeid(SPAnchor).name()] = std::make_unique<AnchorPanel>();
 }
 
-}
-}
-}
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

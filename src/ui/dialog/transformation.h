@@ -15,7 +15,7 @@
 #include <glibmm/i18n.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/notebook.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/togglebutton.h>
 
 #include "helper/auto-connection.h"
 #include "ui/dialog/dialog-base.h"
@@ -134,8 +134,8 @@ protected:
     UI::Widget::ScalarUnit        _scalar_transform_e;
     UI::Widget::ScalarUnit        _scalar_transform_f;
 
-    Gtk::RadioButton         _counterclockwise_rotate;
-    Gtk::RadioButton         _clockwise_rotate;
+    Gtk::ToggleButton _counterclockwise_rotate;
+    Gtk::ToggleButton _clockwise_rotate;
 
     Gtk::CheckButton  _check_move_relative;
     Gtk::CheckButton  _check_scale_proportional;

@@ -13,9 +13,9 @@
 #include <algorithm>
 #include <utility>
 #include <glibmm/ustring.h>
-#include <gdkmm/general.h>
 #include <gtkmm/cssprovider.h>
 #include <gtkmm/enums.h>
+#include <gtkmm/snapshot.h>
 #include <gtkmm/widget.h>
 
 #include "color.h"
@@ -42,11 +42,11 @@ void CellRendererItemIcon::set_icon_name()
     _color_class = std::move(color_class);
 }
 
-void CellRendererItemIcon::render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr,
-                                        Gtk::Widget &widget,
-                                        const Gdk::Rectangle &background_area,
-                                        const Gdk::Rectangle &cell_area,
-                                        Gtk::CellRendererState flags)
+void CellRendererItemIcon::snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &snapshot,
+                                          Gtk::Widget &widget,
+                                          const Gdk::Rectangle &background_area,
+                                          const Gdk::Rectangle &cell_area,
+                                          Gtk::CellRendererState flags)
 {
     if (property_icon_name().get_value().empty()) {
         return;
@@ -61,7 +61,7 @@ void CellRendererItemIcon::render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr,
     }
     // GTK4 will not let us recolor symbolic icons any other way I can find, so…
     widget.add_css_class(_color_class);
-    Gtk::CellRendererPixbuf::render_vfunc(cr, widget, background_area, cell_area, flags);
+    Gtk::CellRendererPixbuf::snapshot_vfunc(snapshot, widget, background_area, cell_area, flags);
     widget.remove_css_class(_color_class);
 
     int clipmask = _property_clipmask.get_value();
@@ -77,11 +77,11 @@ void CellRendererItemIcon::render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr,
     } else if (clipmask == OVERLAY_BOTH) {
         property_icon_name().set_value("overlay-clipmask");
     }
-    Gtk::CellRendererPixbuf::render_vfunc(cr, widget, background_area, cell_area, flags);
+    Gtk::CellRendererPixbuf::snapshot_vfunc(snapshot, widget, background_area, cell_area, flags);
     property_icon_name().set_value(std::move(icon_name));
 }
 
-bool CellRendererItemIcon::activate_vfunc(GdkEvent *event,
+bool CellRendererItemIcon::activate_vfunc(Glib::RefPtr<Gdk::Event const> const &event,
                                           Gtk::Widget &widget,
                                           const Glib::ustring &path,
                                           const Gdk::Rectangle &background_area,

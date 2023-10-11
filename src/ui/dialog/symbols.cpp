@@ -537,7 +537,7 @@ void SymbolsDialog::rebuild(Gtk::TreeModel::iterator current) {
             else {
                 t->set_fixed_height_from_font(-1);
                 t->property_ellipsize() = Pango::EllipsizeMode::NONE;
-                // t->property_wrap_mode() = Pango::WrapMode::WRAP_CHAR;
+                // t->property_wrap_mode() = Pango::WrapMode::CHAR;
             }
         }
     }

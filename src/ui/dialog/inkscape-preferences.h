@@ -609,31 +609,26 @@ protected:
     Gtk::ToggleButton _kb_mod_alt;
     Gtk::ToggleButton _kb_mod_meta;
     Gtk::CheckButton _kb_mod_enabled;
-    bool _kb_is_updated;
 
-    int _minimum_width;
-    int _minimum_height;
-    int _natural_width;
-    int _natural_height;
+    bool _kb_is_updated = false;
+
+    int _minimum_width  = 0;
+    int _minimum_height = 0;
+    int _natural_width  = 0;
+    int _natural_height = 0;
+
     bool GetSizeRequest(const Gtk::TreeModel::iterator& iter);
-    void get_preferred_width_vfunc (int& minimum_width, int& natural_width) const final {
-        minimum_width = _minimum_width;
-        natural_width = _natural_width;
+
+    void measure_vfunc(Gtk::Orientation const orientation, int const for_size,
+                       int &minimum, int &natural,
+                       int &minimum_baseline, int &natural_baseline) const final
+    {
+        minimum = (orientation == Gtk::Orientation::HORIZONTAL ? _minimum_width : _minimum_height);
+        natural = (orientation == Gtk::Orientation::HORIZONTAL ? _natural_width : _natural_height);
     }
-    void get_preferred_width_for_height_vfunc (int height, int& minimum_width, int& natural_width) const final {
-        minimum_width = _minimum_width;
-        natural_width = _natural_width;
-    }
-    void get_preferred_height_vfunc (int& minimum_height, int& natural_height) const final {
-        minimum_height = _minimum_height;
-        natural_height = _natural_height;
-    }
-    void get_preferred_height_for_width_vfunc (int width, int& minimum_height, int& natural_height) const final {
-        minimum_height = _minimum_height;
-        natural_height = _natural_height;
-    }
-    int _sb_width;
-    UI::Widget::DialogPage* _current_page;
+
+    int _sb_width = 0;
+    UI::Widget::DialogPage *_current_page = nullptr;
 
     Gtk::TreeModel::iterator AddPage(UI::Widget::DialogPage& p, Glib::ustring title, int id);
     Gtk::TreeModel::iterator AddPage(UI::Widget::DialogPage& p, Glib::ustring title, Gtk::TreeModel::iterator parent, int id);

@@ -23,10 +23,12 @@
 #include "xml/node-observer.h"
 
 namespace Gtk {
+class Box;
 class Builder;
 class CellEditable;
 class CellRendererText;
 class Entry;
+class Label;
 class ListStore;
 class Popover;
 class ScrolledWindow;

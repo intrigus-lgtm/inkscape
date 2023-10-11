@@ -22,6 +22,7 @@
 #include <glibmm/regex.h>
 #include <gtkmm/box.h>
 #include <gtkmm/scale.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include "desktop.h"
 #include "inkscape.h"
@@ -173,11 +174,12 @@ void PrefRadioButton::init(Glib::ustring const &label, Glib::ustring const &pref
     _string_value = string_value;
     (void)default_value;
     this->set_label(label);
+
     if (group_member)
     {
-        Gtk::RadioButtonGroup rbg = group_member->get_group();
-        this->set_group(rbg);
+        this->set_group(*group_member);
     }
+
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     Glib::ustring val = prefs->getString(_prefs_path);
     if ( !val.empty() )
@@ -193,11 +195,12 @@ void PrefRadioButton::init(Glib::ustring const &label, Glib::ustring const &pref
     _value_type = VAL_INT;
     _int_value = int_value;
     this->set_label(label);
+
     if (group_member)
     {
-        Gtk::RadioButtonGroup rbg = group_member->get_group();
-        this->set_group(rbg);
+        this->set_group(*group_member);
     }
+
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     if (default_value)
         this->set_active( prefs->getInt(_prefs_path, int_value) == _int_value );
@@ -227,7 +230,7 @@ PrefRadioButtons::PrefRadioButtons(const std::vector<PrefItem>& buttons, const G
         auto* btn = Gtk::make_managed<PrefRadioButton>();
         btn->init(item.label, prefs_path, item.int_value, item.is_default, group);
         btn->set_tooltip_text(item.tooltip);
-        add(*btn);
+        append(*btn);
         if (!group) group = btn;
     }
 }
@@ -262,6 +265,7 @@ void PrefSpinButton::init(Glib::ustring const &prefs_path,
     else
         this->set_digits(2);
 
+    signal_value_changed().connect(sigc::mem_fun(*this, &PrefSpinButton::on_value_changed));
 }
 
 void PrefSpinButton::on_value_changed()
@@ -309,7 +313,7 @@ void PrefSpinUnit::init(Glib::ustring const &prefs_path,
     }
     setValue(value, unitstr);
 
-    signal_value_changed().connect_notify(sigc::mem_fun(*this, &PrefSpinUnit::on_my_value_changed));
+    signal_value_changed().connect(sigc::mem_fun(*this, &PrefSpinUnit::on_my_value_changed));
 }
 
 void PrefSpinUnit::on_my_value_changed()
@@ -329,6 +333,8 @@ ZoomCorrRuler::ZoomCorrRuler(int width, int height) :
     _border(5)
 {
     set_size(width, height);
+
+    set_draw_func(sigc::mem_fun(*this, &ZoomCorrRuler::on_draw));
 }
 
 void ZoomCorrRuler::set_size(int x, int y)
@@ -372,7 +378,9 @@ draw_number(cairo_t *cr, Geom::Point pos, double num) {
  * \arg major_interval Number of marks after which to draw a major mark
  */
 void
-ZoomCorrRuler::draw_marks(Cairo::RefPtr<Cairo::Context> cr, double dist, int major_interval) {
+ZoomCorrRuler::draw_marks(Cairo::RefPtr<Cairo::Context> const &cr,
+                          double const dist, int const major_interval)
+{
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     const double zoomcorr = prefs->getDouble("/options/zoomcorrection/value", 1.0);
     double mark = 0;
@@ -408,9 +416,10 @@ ZoomCorrRuler::draw_marks(Cairo::RefPtr<Cairo::Context> cr, double dist, int maj
     }
 }
 
-bool
-ZoomCorrRuler::on_draw(const Cairo::RefPtr<Cairo::Context>& cr) {
-    auto const w = get_width();
+void
+ZoomCorrRuler::on_draw(Cairo::RefPtr<Cairo::Context> const &cr, int const width, int const height)
+{
+    auto const &w = width;
     _drawing_width = w - _border * 2;
 
     auto const fg = get_color();
@@ -439,8 +448,6 @@ ZoomCorrRuler::on_draw(const Cairo::RefPtr<Cairo::Context>& cr) {
         draw_marks(cr, 1, 1);
     }
     cr->stroke();
-
-    return true;
 }
 
 void
@@ -745,7 +752,7 @@ void PrefEntryFileButtonHBox::init(Glib::ustring const &prefs_path,
     auto const l = Gtk::make_managed<Gtk::Label>();
     l->set_markup_with_mnemonic(_("_Browse..."));
     UI::pack_start(*pixlabel, *l);
-    relatedButton->add(*pixlabel); 
+    relatedButton->set_child(*pixlabel);
 
     UI::pack_end(*this, *relatedButton, false, false, 4);
     UI::pack_start(*this, *relatedEntry, true, true);
@@ -827,7 +834,7 @@ void PrefOpenFolder::init(Glib::ustring const &entry_string, Glib::ustring const
     auto const l = Gtk::make_managed<Gtk::Label>();
     l->set_markup_with_mnemonic(_("Open"));
     UI::pack_start(*pixlabel, *l);
-    relatedButton->add(*pixlabel);
+    relatedButton->set_child(*pixlabel);
     relatedButton->set_tooltip_text(tooltip);
     relatedEntry->set_text(entry_string);
     relatedEntry->set_sensitive(false);
@@ -888,7 +895,7 @@ void PrefMultiEntry::init(Glib::ustring const &prefs_path, int height)
     set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     set_has_frame(true);
 
-    add(_text);
+    set_child(_text);
 
     _prefs_path = prefs_path;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();

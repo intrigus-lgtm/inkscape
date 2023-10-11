@@ -35,6 +35,7 @@
 #include <exception>
 #include <sstream>
 #include <string>
+#include <glib.h>
 
 /**
  * @file

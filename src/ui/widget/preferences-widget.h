@@ -25,7 +25,6 @@
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/grid.h>
-#include <gtkmm/radiobutton.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/textview.h>
 
@@ -59,7 +58,7 @@ private:
     void on_toggled() override;
 };
 
-class PrefRadioButton : public Gtk::RadioButton
+class PrefRadioButton : public Gtk::CheckButton
 {
 public:
     void init(Glib::ustring const &label, Glib::ustring const &prefs_path,
@@ -100,7 +99,8 @@ private:
     Glib::ustring _prefs_path;
     bool _is_int;
     bool _is_percent;
-    void on_value_changed() override;
+
+    void on_value_changed();
 };
 
 class PrefSpinUnit : public ScalarUnit
@@ -131,9 +131,8 @@ public:
     static const double textpadding;
 
 private:
-    bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
-
-    void draw_marks(Cairo::RefPtr<Cairo::Context> cr, double dist, int major_interval);
+    void on_draw(Cairo::RefPtr<Cairo::Context> const &cr, int width, int height);
+    void draw_marks(Cairo::RefPtr<Cairo::Context> const &cr, double dist, int major_interval);
 
     double _unitconv;
     int _min_width;

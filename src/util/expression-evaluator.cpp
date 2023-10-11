@@ -28,9 +28,6 @@
  */
 
 #include "util/expression-evaluator.h"
-#include "util/units.h"
-
-#include <glib/gconvert.h>
 
 #include <cmath>
 #include <cstring>

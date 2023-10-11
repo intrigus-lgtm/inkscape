@@ -222,22 +222,20 @@ Find::Find()
     entry_find.getEntry()->set_width_chars(25);
     entry_replace.getEntry()->set_width_chars(25);
 
-    Gtk::RadioButtonGroup grp_searchin = check_searchin_text.get_group();
-    check_searchin_property.set_group(grp_searchin);
+    check_searchin_property.set_group(check_searchin_text);
     UI::pack_start(vbox_searchin, check_searchin_text, UI::PackOptions::shrink);
     UI::pack_start(vbox_searchin, check_searchin_property, UI::PackOptions::shrink);
-    frame_searchin.add(vbox_searchin);
+    frame_searchin.set_child(vbox_searchin);
 
-    Gtk::RadioButtonGroup grp_scope = check_scope_all.get_group();
-    check_scope_layer.set_group(grp_scope);
-    check_scope_selection.set_group(grp_scope);
+    check_scope_layer    .set_group(check_scope_all);
+    check_scope_selection.set_group(check_scope_all);
     UI::pack_start(vbox_scope, check_scope_all, UI::PackOptions::shrink);
     UI::pack_start(vbox_scope, check_scope_layer, UI::PackOptions::shrink);
     UI::pack_start(vbox_scope, check_scope_selection, UI::PackOptions::shrink);
     hbox_searchin.set_spacing(12);
     UI::pack_start(hbox_searchin, frame_searchin, UI::PackOptions::shrink);
     UI::pack_start(hbox_searchin, frame_scope, UI::PackOptions::shrink);
-    frame_scope.add(vbox_scope);
+    frame_scope.set_child(vbox_scope);
 
     UI::pack_start(vbox_options1, check_case_sensitive, UI::PackOptions::shrink);
     UI::pack_start(vbox_options1, check_include_hidden, UI::PackOptions::shrink);
@@ -250,7 +248,7 @@ Find::Find()
     hbox_options.set_spacing(4);
     UI::pack_start(hbox_options, vbox_options1, UI::PackOptions::shrink);
     UI::pack_start(hbox_options, vbox_options2, UI::PackOptions::shrink);
-    frame_options.add(hbox_options);
+    frame_options.set_child(hbox_options);
 
     UI::pack_start(vbox_properties1, check_ids, UI::PackOptions::shrink);
     UI::pack_start(vbox_properties1, check_style, UI::PackOptions::shrink);
@@ -270,7 +268,7 @@ Find::Find()
     hbox_properties.set_spacing(4);
     UI::pack_start(hbox_properties, vbox_properties1, UI::PackOptions::shrink);
     UI::pack_start(hbox_properties, vbox_properties2, UI::PackOptions::shrink);
-    frame_properties.add(hbox_properties);
+    frame_properties.set_child(hbox_properties);
 
     UI::pack_start(vbox_types1, check_alltypes, UI::PackOptions::shrink);
     UI::pack_start(vbox_types1, check_paths, UI::PackOptions::shrink);
@@ -298,7 +296,7 @@ Find::Find()
     hbox_types.set_spacing(4);
     UI::pack_start(hbox_types, vbox_types1, UI::PackOptions::shrink);
     UI::pack_start(hbox_types, vbox_types2, UI::PackOptions::shrink);
-    frame_types.add(hbox_types);
+    frame_types.set_child(hbox_types);
 
     vbox_expander.set_spacing(4);
     UI::pack_start(vbox_expander, frame_options, true, true);
@@ -306,7 +304,7 @@ Find::Find()
     UI::pack_start(vbox_expander, frame_types, true, true);
 
     expander_options.set_use_underline();
-    expander_options.add(vbox_expander);
+    expander_options.set_child(vbox_expander);
 
     box_buttons.set_spacing(6);
     box_buttons.set_homogeneous(true);
@@ -346,22 +344,22 @@ Find::Find()
     expander_options.property_expanded().signal_changed().connect(sigc::mem_fun(*this, &Find::onExpander));
     button_find.signal_clicked().connect(sigc::mem_fun(*this, &Find::onFind));
     button_replace.signal_clicked().connect(sigc::mem_fun(*this, &Find::onReplace));
-    check_searchin_text.signal_clicked().connect(sigc::mem_fun(*this, &Find::onSearchinText));
-    check_searchin_property.signal_clicked().connect(sigc::mem_fun(*this, &Find::onSearchinProperty));
-    check_alltypes.signal_clicked().connect(sigc::mem_fun(*this, &Find::onToggleAlltypes));
+    check_searchin_text.signal_toggled().connect(sigc::mem_fun(*this, &Find::onSearchinText));
+    check_searchin_property.signal_toggled().connect(sigc::mem_fun(*this, &Find::onSearchinProperty));
+    check_alltypes.signal_toggled().connect(sigc::mem_fun(*this, &Find::onToggleAlltypes));
 
     for (auto & checkProperty : checkProperties) {
-        checkProperty->signal_clicked().connect(sigc::mem_fun(*this, &Find::onToggleCheck));
+        checkProperty->signal_toggled().connect(sigc::mem_fun(*this, &Find::onToggleCheck));
     }
 
     for (auto & checkType : checkTypes) {
-        checkType->signal_clicked().connect(sigc::mem_fun(*this, &Find::onToggleCheck));
+        checkType->signal_toggled().connect(sigc::mem_fun(*this, &Find::onToggleCheck));
     }
 
     onSearchinText();
     onToggleAlltypes();
 
-    button_find.set_can_default();
+    button_find.set_receives_default();
     //button_find.grab_default(); // activatable by Enter
 
     entry_find.getEntry()->grab_focus();

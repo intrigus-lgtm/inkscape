@@ -15,9 +15,10 @@
 
 #include <glibmm/refptr.h>
 #include <gtkmm/box.h>
+#include <gtkmm/button.h>
+#include <gtkmm/checkbutton.h>
 #include <gtkmm/expander.h>
 #include <gtkmm/label.h>
-#include <gtkmm/radiobutton.h>
 
 #include "ui/dialog/dialog-base.h"
 #include "ui/widget/entry.h"
@@ -204,11 +205,11 @@ private:
     /**
      * Scope and search in widgets
      */
-    Gtk::RadioButton    check_scope_all;
-    Gtk::RadioButton    check_scope_layer;
-    Gtk::RadioButton    check_scope_selection;
-    Gtk::RadioButton    check_searchin_text;
-    Gtk::RadioButton    check_searchin_property;
+    Gtk::CheckButton check_scope_all;
+    Gtk::CheckButton check_scope_layer;
+    Gtk::CheckButton check_scope_selection;
+    Gtk::CheckButton check_searchin_text;
+    Gtk::CheckButton check_searchin_property;
     Gtk::Box hbox_searchin;
     Gtk::Box vbox_scope;
     Gtk::Box vbox_searchin;

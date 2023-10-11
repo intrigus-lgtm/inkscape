@@ -59,19 +59,19 @@ public:
             // flow box children into the flow box when the flow box has minimum width. (Crazy if you ask me!)
             scrolled_window = Gtk::make_managed<Gtk::ScrolledWindow>();
             scrolled_window->set_policy (Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
-            scrolled_window->add(*flow_box);
+            scrolled_window->set_child(*flow_box);
         }
 
-        Gtk::RadioButton::Group group;
+        Gtk::CheckButton *group = nullptr;
         for (int i = 0; i < options; ++i) {
             // Create radio button and create or add to button group.
-            auto const button = Gtk::make_managed<Gtk::RadioButton>();
+            auto const button = Gtk::make_managed<Gtk::CheckButton>();
             if (i == 0) {
-                group = button->get_group();
+                group = button;
             } else {
-                button->set_group (group);
+                button->set_group(*group);
             }
-            button->signal_clicked().connect ( sigc::mem_fun(*parent, &FontVariants::feature_callback) );
+            button->signal_toggled().connect ( sigc::mem_fun(*parent, &FontVariants::feature_callback) );
             buttons.push_back (button);
 
             // Create label.
@@ -106,10 +106,10 @@ public:
 
                 // Pack button and label into a box so they stay together.
                 auto const box = Gtk::make_managed<Gtk::Box>();
-                box->add(*button);
-                box->add(*label);
+                box->append(*button);
+                box->append(*label);
 
-                flow_box->add(*box);
+                flow_box->append(*box);
             }
         }
 
@@ -150,7 +150,7 @@ public:
 
 private:
     Glib::ustring _name;
-    std::vector <Gtk::RadioButton*> buttons;
+    std::vector<Gtk::CheckButton *> buttons;
 };
 
 FontVariants::FontVariants () :
@@ -228,10 +228,10 @@ FontVariants::FontVariants () :
     _("Contextual forms. On by default. OpenType table: 'calt'"));
 
   // Add signals
-  _ligatures_common.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::ligatures_callback) );
-  _ligatures_discretionary.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::ligatures_callback) );
-  _ligatures_historical.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::ligatures_callback) );
-  _ligatures_contextual.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::ligatures_callback) );
+  _ligatures_common.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::ligatures_callback) );
+  _ligatures_discretionary.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::ligatures_callback) );
+  _ligatures_historical.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::ligatures_callback) );
+  _ligatures_contextual.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::ligatures_callback) );
 
   // Restrict label widths (some fonts have lots of ligatures). Must also set ellipsize mode.
   Gtk::Label* labels[] = {
@@ -272,7 +272,7 @@ FontVariants::FontVariants () :
   _ligatures_grid.set_margin_start(15);
   _ligatures_grid.set_margin_end(15);
 
-  _ligatures_frame.add( _ligatures_grid );
+  _ligatures_frame.set_child( _ligatures_grid );
   UI::pack_start(*this, _ligatures_frame, UI::PackOptions::shrink);
 
   ligatures_init();
@@ -285,14 +285,14 @@ FontVariants::FontVariants () :
   _position_super.set_tooltip_text( _("Superscript. OpenType table: 'sups'") );
 
   // Group buttons
-  Gtk::RadioButton::Group position_group = _position_normal.get_group();
+  auto &position_group = _position_normal;
   _position_sub.set_group(position_group);
   _position_super.set_group(position_group);
 
   // Add signals
-  _position_normal.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::position_callback) );
-  _position_sub.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::position_callback) );
-  _position_super.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::position_callback) );
+  _position_normal.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::position_callback) );
+  _position_sub.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::position_callback) );
+  _position_super.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::position_callback) );
 
   // Add to frame
   _position_grid.attach( _position_normal, 0, 0, 1, 1);
@@ -302,7 +302,7 @@ FontVariants::FontVariants () :
   _position_grid.set_margin_start(15);
   _position_grid.set_margin_end(15);
 
-  _position_frame.add( _position_grid );
+  _position_frame.set_child( _position_grid );
   UI::pack_start(*this, _position_frame, UI::PackOptions::shrink);
 
   position_init();
@@ -319,7 +319,7 @@ FontVariants::FontVariants () :
   _caps_titling.set_tooltip_text( _("Titling caps (lighter-weight uppercase for use in titles). OpenType table: 'titl'"));
 
   // Group buttons
-  Gtk::RadioButton::Group caps_group = _caps_normal.get_group();
+  auto &caps_group = _caps_normal;
   _caps_small.set_group(caps_group);
   _caps_all_small.set_group(caps_group);
   _caps_petite.set_group(caps_group);
@@ -328,13 +328,13 @@ FontVariants::FontVariants () :
   _caps_titling.set_group(caps_group);
 
   // Add signals
-  _caps_normal.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::caps_callback) );
-  _caps_small.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::caps_callback) );
-  _caps_all_small.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::caps_callback) );
-  _caps_petite.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::caps_callback) );
-  _caps_all_petite.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::caps_callback) );
-  _caps_unicase.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::caps_callback) );
-  _caps_titling.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::caps_callback) );
+  _caps_normal.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::caps_callback) );
+  _caps_small.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::caps_callback) );
+  _caps_all_small.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::caps_callback) );
+  _caps_petite.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::caps_callback) );
+  _caps_all_petite.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::caps_callback) );
+  _caps_unicase.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::caps_callback) );
+  _caps_titling.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::caps_callback) );
 
   // Add to frame
   _caps_grid.attach( _caps_normal,     0, 0, 1, 1);
@@ -348,7 +348,7 @@ FontVariants::FontVariants () :
   _caps_grid.set_margin_start(15);
   _caps_grid.set_margin_end(15);
 
-  _caps_frame.add( _caps_grid );
+  _caps_frame.set_child( _caps_grid );
   UI::pack_start(*this, _caps_frame, UI::PackOptions::shrink);
 
   caps_init();
@@ -369,30 +369,30 @@ FontVariants::FontVariants () :
   _numeric_slashed_zero.set_tooltip_text( _("Slashed zeros. OpenType table: 'zero'"));
 
   // Group buttons
-  Gtk::RadioButton::Group style_group = _numeric_default_style.get_group();
+  auto &style_group = _numeric_default_style;
   _numeric_lining.set_group(style_group);
   _numeric_old_style.set_group(style_group);
 
-  Gtk::RadioButton::Group width_group = _numeric_default_width.get_group();
+  auto &width_group = _numeric_default_width;
   _numeric_proportional.set_group(width_group);
   _numeric_tabular.set_group(width_group);
 
-  Gtk::RadioButton::Group fraction_group = _numeric_default_fractions.get_group();
+  auto &fraction_group = _numeric_default_fractions;
   _numeric_diagonal.set_group(fraction_group);
   _numeric_stacked.set_group(fraction_group);
 
   // Add signals
-  _numeric_default_style.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::numeric_callback) );
-  _numeric_lining.signal_clicked().connect (        sigc::mem_fun(*this, &FontVariants::numeric_callback) );
-  _numeric_old_style.signal_clicked().connect (     sigc::mem_fun(*this, &FontVariants::numeric_callback) );
-  _numeric_default_width.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::numeric_callback) );
-  _numeric_proportional.signal_clicked().connect (  sigc::mem_fun(*this, &FontVariants::numeric_callback) );
-  _numeric_tabular.signal_clicked().connect (       sigc::mem_fun(*this, &FontVariants::numeric_callback) );
-  _numeric_default_fractions.signal_clicked().connect ( sigc::mem_fun(*this, &FontVariants::numeric_callback) );
-  _numeric_diagonal.signal_clicked().connect (      sigc::mem_fun(*this, &FontVariants::numeric_callback) );
-  _numeric_stacked.signal_clicked().connect (       sigc::mem_fun(*this, &FontVariants::numeric_callback) );
-  _numeric_ordinal.signal_clicked().connect (       sigc::mem_fun(*this, &FontVariants::numeric_callback) );
-  _numeric_slashed_zero.signal_clicked().connect (  sigc::mem_fun(*this, &FontVariants::numeric_callback) );
+  _numeric_default_style.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::numeric_callback) );
+  _numeric_lining.signal_toggled().connect (        sigc::mem_fun(*this, &FontVariants::numeric_callback) );
+  _numeric_old_style.signal_toggled().connect (     sigc::mem_fun(*this, &FontVariants::numeric_callback) );
+  _numeric_default_width.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::numeric_callback) );
+  _numeric_proportional.signal_toggled().connect (  sigc::mem_fun(*this, &FontVariants::numeric_callback) );
+  _numeric_tabular.signal_toggled().connect (       sigc::mem_fun(*this, &FontVariants::numeric_callback) );
+  _numeric_default_fractions.signal_toggled().connect ( sigc::mem_fun(*this, &FontVariants::numeric_callback) );
+  _numeric_diagonal.signal_toggled().connect (      sigc::mem_fun(*this, &FontVariants::numeric_callback) );
+  _numeric_stacked.signal_toggled().connect (       sigc::mem_fun(*this, &FontVariants::numeric_callback) );
+  _numeric_ordinal.signal_toggled().connect (       sigc::mem_fun(*this, &FontVariants::numeric_callback) );
+  _numeric_slashed_zero.signal_toggled().connect (  sigc::mem_fun(*this, &FontVariants::numeric_callback) );
 
   // Add to frame
   _numeric_grid.attach (_numeric_default_style,        0, 0, 1, 1);
@@ -422,7 +422,7 @@ FontVariants::FontVariants () :
   _numeric_grid.set_margin_start(15);
   _numeric_grid.set_margin_end(15);
 
-  _numeric_frame.add( _numeric_grid );
+  _numeric_frame.set_child( _numeric_grid );
   UI::pack_start(*this, _numeric_frame, UI::PackOptions::shrink);
   
   // East Asian
@@ -441,17 +441,17 @@ FontVariants::FontVariants () :
   _asian_ruby.set_tooltip_text(              _("Ruby variants. OpenType table: 'ruby'."));
 
   // Add signals
-  _asian_default_variant.signal_clicked().connect (   sigc::mem_fun(*this, &FontVariants::asian_callback) );
-  _asian_jis78.signal_clicked().connect (             sigc::mem_fun(*this, &FontVariants::asian_callback) );
-  _asian_jis83.signal_clicked().connect (             sigc::mem_fun(*this, &FontVariants::asian_callback) );
-  _asian_jis90.signal_clicked().connect (             sigc::mem_fun(*this, &FontVariants::asian_callback) );
-  _asian_jis04.signal_clicked().connect (             sigc::mem_fun(*this, &FontVariants::asian_callback) );
-  _asian_simplified.signal_clicked().connect (        sigc::mem_fun(*this, &FontVariants::asian_callback) );
-  _asian_traditional.signal_clicked().connect (       sigc::mem_fun(*this, &FontVariants::asian_callback) );
-  _asian_default_width.signal_clicked().connect (     sigc::mem_fun(*this, &FontVariants::asian_callback) );
-  _asian_full_width.signal_clicked().connect (        sigc::mem_fun(*this, &FontVariants::asian_callback) );
-  _asian_proportional_width.signal_clicked().connect (sigc::mem_fun(*this, &FontVariants::asian_callback) );
-  _asian_ruby.signal_clicked().connect(               sigc::mem_fun(*this, &FontVariants::asian_callback) );
+  _asian_default_variant.signal_toggled().connect (   sigc::mem_fun(*this, &FontVariants::asian_callback) );
+  _asian_jis78.signal_toggled().connect (             sigc::mem_fun(*this, &FontVariants::asian_callback) );
+  _asian_jis83.signal_toggled().connect (             sigc::mem_fun(*this, &FontVariants::asian_callback) );
+  _asian_jis90.signal_toggled().connect (             sigc::mem_fun(*this, &FontVariants::asian_callback) );
+  _asian_jis04.signal_toggled().connect (             sigc::mem_fun(*this, &FontVariants::asian_callback) );
+  _asian_simplified.signal_toggled().connect (        sigc::mem_fun(*this, &FontVariants::asian_callback) );
+  _asian_traditional.signal_toggled().connect (       sigc::mem_fun(*this, &FontVariants::asian_callback) );
+  _asian_default_width.signal_toggled().connect (     sigc::mem_fun(*this, &FontVariants::asian_callback) );
+  _asian_full_width.signal_toggled().connect (        sigc::mem_fun(*this, &FontVariants::asian_callback) );
+  _asian_proportional_width.signal_toggled().connect (sigc::mem_fun(*this, &FontVariants::asian_callback) );
+  _asian_ruby.signal_toggled().connect(               sigc::mem_fun(*this, &FontVariants::asian_callback) );
 
   // Add to frame
   _asian_grid.attach (_asian_default_variant,         0, 0, 1, 1);
@@ -469,11 +469,11 @@ FontVariants::FontVariants () :
   _asian_grid.set_margin_start(15);
   _asian_grid.set_margin_end(15);
 
-  _asian_frame.add( _asian_grid );
+  _asian_frame.set_child( _asian_grid );
   UI::pack_start(*this, _asian_frame, UI::PackOptions::shrink);
 
   // Group Buttons
-  Gtk::RadioButton::Group asian_variant_group = _asian_default_variant.get_group();
+  auto &asian_variant_group = _asian_default_variant;
   _asian_jis78.set_group(asian_variant_group);
   _asian_jis83.set_group(asian_variant_group);
   _asian_jis90.set_group(asian_variant_group);
@@ -481,7 +481,7 @@ FontVariants::FontVariants () :
   _asian_simplified.set_group(asian_variant_group);
   _asian_traditional.set_group(asian_variant_group);
 
-  Gtk::RadioButton::Group asian_width_group = _asian_default_width.get_group();
+  auto &asian_width_group = _asian_default_width;
   _asian_full_width.set_group (asian_width_group);
   _asian_proportional_width.set_group (asian_width_group);
 
@@ -507,7 +507,7 @@ FontVariants::FontVariants () :
   _feature_vbox.set_margin_start(15);
   _feature_vbox.set_margin_end(15);
 
-  _feature_frame.add( _feature_vbox );
+  _feature_frame.set_child( _feature_vbox );
   UI::pack_start(*this, _feature_frame, UI::PackOptions::shrink);
 
   // Add signals

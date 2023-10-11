@@ -18,7 +18,8 @@
 #include <gtkmm/entry.h>
 #include <gtkmm/expander.h>
 #include <gtkmm/grid.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/label.h>
+#include <gtkmm/checkbutton.h>
 
 class SPDesktop;
 class SPObject;
@@ -53,41 +54,41 @@ private:
     // Position: Exclusive options
     Gtk::Expander       _position_frame;
     Gtk::Grid           _position_grid;
-    Gtk::RadioButton    _position_normal;
-    Gtk::RadioButton    _position_sub;
-    Gtk::RadioButton    _position_super;
+    Gtk::CheckButton    _position_normal;
+    Gtk::CheckButton    _position_sub;
+    Gtk::CheckButton    _position_super;
     
     // Caps: Exclusive options (maybe a dropdown menu to save space?)
     Gtk::Expander       _caps_frame;
     Gtk::Grid           _caps_grid;
-    Gtk::RadioButton    _caps_normal;
-    Gtk::RadioButton    _caps_small;
-    Gtk::RadioButton    _caps_all_small;
-    Gtk::RadioButton    _caps_petite;
-    Gtk::RadioButton    _caps_all_petite;
-    Gtk::RadioButton    _caps_unicase;
-    Gtk::RadioButton    _caps_titling;
+    Gtk::CheckButton    _caps_normal;
+    Gtk::CheckButton    _caps_small;
+    Gtk::CheckButton    _caps_all_small;
+    Gtk::CheckButton    _caps_petite;
+    Gtk::CheckButton    _caps_all_petite;
+    Gtk::CheckButton    _caps_unicase;
+    Gtk::CheckButton    _caps_titling;
 
     // Numeric: Complicated!
     Gtk::Expander       _numeric_frame;
     Gtk::Grid           _numeric_grid;
 
-    Gtk::RadioButton    _numeric_default_style;
-    Gtk::RadioButton    _numeric_lining;
+    Gtk::CheckButton    _numeric_default_style;
+    Gtk::CheckButton    _numeric_lining;
     Gtk::Label          _numeric_lining_label;
-    Gtk::RadioButton    _numeric_old_style;
+    Gtk::CheckButton    _numeric_old_style;
     Gtk::Label          _numeric_old_style_label;
 
-    Gtk::RadioButton    _numeric_default_width;
-    Gtk::RadioButton    _numeric_proportional;
+    Gtk::CheckButton    _numeric_default_width;
+    Gtk::CheckButton    _numeric_proportional;
     Gtk::Label          _numeric_proportional_label;
-    Gtk::RadioButton    _numeric_tabular;
+    Gtk::CheckButton    _numeric_tabular;
     Gtk::Label          _numeric_tabular_label;
 
-    Gtk::RadioButton    _numeric_default_fractions;
-    Gtk::RadioButton    _numeric_diagonal;
+    Gtk::CheckButton    _numeric_default_fractions;
+    Gtk::CheckButton    _numeric_diagonal;
     Gtk::Label          _numeric_diagonal_label;
-    Gtk::RadioButton    _numeric_stacked;
+    Gtk::CheckButton    _numeric_stacked;
     Gtk::Label          _numeric_stacked_label;
 
     Gtk::CheckButton    _numeric_ordinal;
@@ -100,17 +101,17 @@ private:
     Gtk::Expander       _asian_frame;
     Gtk::Grid           _asian_grid;
 
-    Gtk::RadioButton    _asian_default_variant;
-    Gtk::RadioButton    _asian_jis78;
-    Gtk::RadioButton    _asian_jis83;
-    Gtk::RadioButton    _asian_jis90;
-    Gtk::RadioButton    _asian_jis04;
-    Gtk::RadioButton    _asian_simplified;
-    Gtk::RadioButton    _asian_traditional;
+    Gtk::CheckButton    _asian_default_variant;
+    Gtk::CheckButton    _asian_jis78;
+    Gtk::CheckButton    _asian_jis83;
+    Gtk::CheckButton    _asian_jis90;
+    Gtk::CheckButton    _asian_jis04;
+    Gtk::CheckButton    _asian_simplified;
+    Gtk::CheckButton    _asian_traditional;
 
-    Gtk::RadioButton    _asian_default_width;
-    Gtk::RadioButton    _asian_full_width;
-    Gtk::RadioButton    _asian_proportional_width;
+    Gtk::CheckButton    _asian_default_width;
+    Gtk::CheckButton    _asian_full_width;
+    Gtk::CheckButton    _asian_proportional_width;
 
     Gtk::CheckButton    _asian_ruby;
 

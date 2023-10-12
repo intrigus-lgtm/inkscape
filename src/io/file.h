@@ -12,6 +12,7 @@
 #define INK_FILE_IO_H
 
 #include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
 #include <string>
 
 namespace Gio {
@@ -38,7 +39,7 @@ private:
     int _tempfd = 0;
 };
 
-std::string find_original_file(std::string const &filepath, std::string const &name);
+std::string find_original_file(Glib::StdStringView filepath, Glib::StdStringView name);
 
 } // namespace Inkscape::IO
 

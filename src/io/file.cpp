@@ -157,7 +157,7 @@ TempFilename::~TempFilename()
  *
  * Returns the empty string if the new file is not found.
  */
-std::string find_original_file(std::string const &filepath, std::string const &name)
+std::string find_original_file(Glib::StdStringView const filepath, Glib::StdStringView const name)
 {
     auto path = Glib::path_get_dirname(filepath);
     auto filename = Glib::build_filename(path, name);

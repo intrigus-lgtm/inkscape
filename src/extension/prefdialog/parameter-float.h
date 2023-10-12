@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef INK_EXTENSION_PARAMFLOAT_H_SEEN
-#define INK_EXTENSION_PARAMFLOAT_H_SEEN
-
 /*
  * Copyright (C) 2005-2007 Authors:
  *   Ted Gould <ted@gould.cx>
@@ -12,14 +9,18 @@
 
 #include "parameter.h"
 
+#ifndef INK_EXTENSION_PARAMFLOAT_H_SEEN
+#define INK_EXTENSION_PARAMFLOAT_H_SEEN
+
 namespace Gtk {
 class Widget;
-}
+} // namespace Gtk
 
 namespace Inkscape {
+
 namespace XML {
 class Node;
-}
+} // namespace XML
 
 namespace Extension {
 
@@ -60,8 +61,8 @@ private:
     AppearanceMode _mode = DEFAULT;
 };
 
-}  /* namespace Extension */
-}  /* namespace Inkscape */
+} // namespace Extension
+} // namespace Inkscape
 
 #endif /* INK_EXTENSION_PARAMFLOAT_H_SEEN */
 

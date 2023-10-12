@@ -13,6 +13,7 @@
 
 #include <gtkmm/adjustment.h>
 #include <gtkmm/box.h>
+#include <gtkmm/label.h>
 
 #include "extension/extension.h"
 #include "preferences.h"
@@ -21,8 +22,7 @@
 #include "ui/widget/spin-scale.h"
 #include "xml/node.h"
 
-namespace Inkscape {
-namespace Extension {
+namespace Inkscape::Extension {
 
 ParamFloat::ParamFloat(Inkscape::XML::Node *xml, Inkscape::Extension::Extension *ext)
     : InxParameter(xml, ext)
@@ -185,5 +185,15 @@ Gtk::Widget *ParamFloat::get_widget(sigc::signal<void ()> *changeSignal)
     return hbox;
 }
 
-}  /* namespace Extension */
-}  /* namespace Inkscape */
+} // namespace Inkscape::Extension
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4 :

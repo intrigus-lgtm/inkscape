@@ -14,6 +14,7 @@
 
 #include <glibmm/fileutils.h>
 #include <glibmm/miscutils.h>
+#include <gdkmm/pixbuf.h>
 #include <gtkmm/image.h>
 
 #include "xml/node.h"
@@ -21,9 +22,7 @@
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 
-namespace Inkscape {
-namespace Extension {
-
+namespace Inkscape::Extension {
 
 WidgetImage::WidgetImage(Inkscape::XML::Node *xml, Inkscape::Extension::Extension *ext)
     : InxWidget(xml, ext)
@@ -76,13 +75,13 @@ Gtk::Widget *WidgetImage::get_widget(sigc::signal<void ()> * /*changeSignal*/)
 
     Gtk::Image *image = nullptr;
     if (!_image_path.empty()) {
-        image = Gtk::make_managed<Gtk::Image>(_image_path);
-
         // resize if requested
         if (_width && _height) {
-            Glib::RefPtr<Gdk::Pixbuf> pixbuf = image->get_pixbuf();
+            auto pixbuf = Gdk::Pixbuf::create_from_file(_image_path);
             pixbuf = pixbuf->scale_simple(_width, _height, Gdk::InterpType::BILINEAR);
-            image->set(pixbuf);
+            image = Gtk::make_managed<Gtk::Image>(pixbuf);
+        } else {
+            image = Gtk::make_managed<Gtk::Image>(_image_path);
         }
     } else if (_width || _height) {
         image = sp_get_icon_image(_icon_name, std::max(_width, _height));
@@ -94,5 +93,15 @@ Gtk::Widget *WidgetImage::get_widget(sigc::signal<void ()> * /*changeSignal*/)
     return image;
 }
 
-}  /* namespace Extension */
-}  /* namespace Inkscape */
+} // namespace Inkscape::Extension
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

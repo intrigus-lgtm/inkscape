@@ -18,13 +18,14 @@
 #include <string>
 
 namespace Gtk {
-	class Widget;
-}
+class Widget;
+} // namespace Gtk
 
 namespace Inkscape {
+
 namespace Xml {
-	class Node;
-}
+class Node;
+} // namespace Xml
 
 namespace Extension {
 
@@ -34,6 +35,7 @@ public:
     WidgetImage(Inkscape::XML::Node *xml, Inkscape::Extension::Extension *ext);
 
     Gtk::Widget *get_widget(sigc::signal<void ()> *changeSignal) override;
+
 private:
     /** \brief  Path to image file (relative paths are relative to the .inx file location). */
     std::string _image_path;
@@ -45,8 +47,8 @@ private:
     unsigned int _height = 0;
 };
 
-}  /* namespace Extension */
-}  /* namespace Inkscape */
+} // namespace Extension
+} // namespace Inkscape
 
 #endif /* SEEN_INK_EXTENSION_WIDGET_IMAGE_H */
 

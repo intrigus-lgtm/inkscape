@@ -2,7 +2,7 @@
 /** \file
  *extension parameter for options with multiple predefined value choices
  *
- * Currently implemented as either Gtk::RadioButton or Gtk::ComboBoxText
+ * Currently implemented as either Gtk::CheckButton or Gtk::ComboBoxText
  */
 
 /*
@@ -19,8 +19,9 @@
 
 #include <unordered_set>
 #include <gtkmm/box.h>
+#include <gtkmm/checkbutton.h>
 #include <gtkmm/comboboxtext.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/label.h>
 
 #include "extension/extension.h"
 #include "preferences.h"
@@ -110,7 +111,6 @@ ParamOptionGroup::~ParamOptionGroup ()
     }
 }
 
-
 /**
  * A function to set the \c _value.
  *
@@ -171,20 +171,19 @@ Glib::ustring ParamOptionGroup::value_from_label(const Glib::ustring label)
     return value;
 }
 
-
-
-/** A special RadioButton class to use in ParamOptionGroup. */
-class RadioWidget : public Gtk::RadioButton {
+/** A special CheckButton class to use in ParamOptionGroup. */
+class RadioWidget : public Gtk::CheckButton {
 private:
     ParamOptionGroup *_pref;
     sigc::signal<void ()> *_changeSignal;
 public:
-    RadioWidget(Gtk::RadioButtonGroup& group, const Glib::ustring& label,
+    RadioWidget(Gtk::CheckButton * const group, Glib::ustring const &label,
                 ParamOptionGroup *pref, sigc::signal<void ()> *changeSignal)
-        : Gtk::RadioButton(group, label)
+        : Gtk::CheckButton{label}
         , _pref(pref)
         , _changeSignal(changeSignal)
     {
+        if (group) set_group(*group);
         add_changesignal();
     };
 
@@ -212,7 +211,6 @@ void RadioWidget::changed()
         _changeSignal->emit();
     }
 }
-
 
 /** A special ComboBoxText class to use in ParamOptionGroup. */
 class ComboWidget : public Gtk::ComboBoxText {
@@ -244,8 +242,6 @@ void ComboWidget::changed()
         _changeSignal->emit();
     }
 }
-
-
 
 /**
  * Creates the widget for the optiongroup parameter.
@@ -280,10 +276,11 @@ Gtk::Widget *ParamOptionGroup::get_widget(sigc::signal<void ()> *changeSignal)
         label->set_valign(Gtk::Align::START); // align label and first radio
 
         auto const radios = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 0);
-        Gtk::RadioButtonGroup group;
+        Gtk::CheckButton *group = nullptr;
 
         for (auto choice : choices) {
             auto const radio = Gtk::make_managed<RadioWidget>(group, choice->_text, this, changeSignal);
+            if (!group) group = radio;
             UI::pack_start(*radios, *radio, true, true);
             if (choice->_value == _value) {
                 radio->set_active();

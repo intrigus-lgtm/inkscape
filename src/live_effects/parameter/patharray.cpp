@@ -163,40 +163,40 @@ Gtk::Widget *PathArrayParam::param_newWidget()
     
     
     { // Paste path to link button
-        Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("edit-clone", Gtk::IconSize::NORMAL));
+        auto const pIcon = Gtk::manage(sp_get_icon_image("edit-clone", Gtk::IconSize::NORMAL));
         auto const pButton = Gtk::make_managed<Gtk::Button>();
         pButton->set_has_frame(false);
-        pButton->add(*pIcon);
+        pButton->set_child(*pIcon);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &PathArrayParam::on_link_button_click));
         UI::pack_start(*hbox, *pButton, UI::PackOptions::shrink);
         pButton->set_tooltip_text(_("Link to path in clipboard"));
     }
     
     { // Remove linked path
-        Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("list-remove", Gtk::IconSize::NORMAL));
+        auto const pIcon = Gtk::manage(sp_get_icon_image("list-remove", Gtk::IconSize::NORMAL));
         auto const pButton = Gtk::make_managed<Gtk::Button>();
         pButton->set_has_frame(false);
-        pButton->add(*pIcon);
+        pButton->set_child(*pIcon);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &PathArrayParam::on_remove_button_click));
         UI::pack_start(*hbox, *pButton, UI::PackOptions::shrink);
         pButton->set_tooltip_text(_("Remove Path"));
     }
     
     { // Move Down
-        Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("go-down", Gtk::IconSize::NORMAL));
+        auto const pIcon = Gtk::manage(sp_get_icon_image("go-down", Gtk::IconSize::NORMAL));
         auto const pButton = Gtk::make_managed<Gtk::Button>();
         pButton->set_has_frame(false);
-        pButton->add(*pIcon);
+        pButton->set_child(*pIcon);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &PathArrayParam::on_down_button_click));
         UI::pack_end(*hbox, *pButton, UI::PackOptions::shrink);
         pButton->set_tooltip_text(_("Move Down"));
     }
     
     { // Move Down
-        Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("go-up", Gtk::IconSize::NORMAL));
+        auto const pIcon = Gtk::manage(sp_get_icon_image("go-up", Gtk::IconSize::NORMAL));
         auto const pButton = Gtk::make_managed<Gtk::Button>();
         pButton->set_has_frame(false);
-        pButton->add(*pIcon);
+        pButton->set_child(*pIcon);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &PathArrayParam::on_up_button_click));
         UI::pack_end(*hbox, *pButton, UI::PackOptions::shrink);
         pButton->set_tooltip_text(_("Move Up"));

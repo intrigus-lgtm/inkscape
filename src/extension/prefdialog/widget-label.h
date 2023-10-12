@@ -20,13 +20,14 @@
 #include <glibmm/ustring.h>
 
 namespace Gtk {
-	class Widget;
-}
+class Widget;
+} // namespace Gtk
 
 namespace Inkscape {
+
 namespace Xml {
-	class Node;
-}
+class Node;
+} // namespace Xml
 
 namespace Extension {
 
@@ -48,8 +49,8 @@ private:
     AppearanceMode _mode = DEFAULT;
 };
 
-}  /* namespace Extension */
-}  /* namespace Inkscape */
+} // namespace Extension
+} // namespace Inkscape
 
 #endif /* SEEN_INK_EXTENSION_WIDGET_LABEL_H */
 

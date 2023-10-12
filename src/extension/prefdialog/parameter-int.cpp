@@ -9,8 +9,10 @@
 
 #include "parameter-int.h"
 
+#include <cstring>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/box.h>
+#include <gtkmm/label.h>
 
 #include "extension/extension.h"
 #include "preferences.h"
@@ -19,8 +21,7 @@
 #include "ui/widget/spin-scale.h"
 #include "xml/node.h"
 
-namespace Inkscape {
-namespace Extension {
+namespace Inkscape::Extension {
 
 ParamInt::ParamInt(Inkscape::XML::Node *xml, Inkscape::Extension::Extension *ext)
     : InxParameter(xml, ext)
@@ -38,12 +39,12 @@ ParamInt::ParamInt(Inkscape::XML::Node *xml, Inkscape::Extension::Extension *ext
     // parse and apply limits
     const char *min = xml->attribute("min");
     if (min) {
-        _min = strtol(min, nullptr, 0);
+        _min = std::strtol(min, nullptr, 0);
     }
 
     const char *max = xml->attribute("max");
     if (max) {
-        _max = strtol(max, nullptr, 0);
+        _max = std::strtol(max, nullptr, 0);
     }
 
     if (_value < _min) {
@@ -139,42 +140,37 @@ ParamInt::get_widget(sigc::signal<void ()> *changeSignal)
     Glib::RefPtr<Gtk::Adjustment> fadjust(pia);
 
     if (_mode == FULL) {
-
         Glib::ustring text;
         if (_text != nullptr)
             text = _text;
+
         auto const scale = Gtk::make_managed<UI::Widget::SpinScale>(text, fadjust, 0);
         scale->set_size_request(400, -1);
-        scale->set_visible(true);
         UI::pack_start(*hbox, *scale, true, true);
     } else if (_mode == DEFAULT) {
         auto const label = Gtk::make_managed<Gtk::Label>(_text, Gtk::Align::START);
-        label->set_visible(true);
         UI::pack_start(*hbox, *label, true, true);
 
         auto const spin = Gtk::make_managed<Inkscape::UI::Widget::SpinButton>(fadjust, 1.0, 0);
-        spin->set_visible(true);
         UI::pack_start(*hbox, *spin, false, false);
     }
 
-    hbox->set_visible(true);
     return hbox;
 }
 
 std::string ParamInt::value_to_string() const
 {
     char value_string[32];
-    snprintf(value_string, 32, "%d", _value);
+    std::snprintf(value_string, 32, "%d", _value);
     return value_string;
 }
 
 void ParamInt::string_to_value(const std::string &in)
 {
-    _value = strtol(in.c_str(), nullptr, 0);
+    _value = std::strtol(in.c_str(), nullptr, 0);
 }
 
-}  // namespace Extension
-}  // namespace Inkscape
+} // namespace Inkscape::Extension
 
 /*
   Local Variables:

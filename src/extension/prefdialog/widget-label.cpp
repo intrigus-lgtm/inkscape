@@ -23,8 +23,7 @@
 #include "ui/pack.h"
 #include "xml/node.h"
 
-namespace Inkscape {
-namespace Extension {
+namespace Inkscape::Extension {
 
 WidgetLabel::WidgetLabel(Inkscape::XML::Node *xml, Inkscape::Extension::Extension *ext)
     : InxWidget(xml, ext)
@@ -105,17 +104,24 @@ Gtk::Widget *WidgetLabel::get_widget(sigc::signal<void ()> * /*changeSignal*/)
     //   - Here we set a lower limit of GUI_MAX_LINE_LENGTH characters per line that long texts will always use.
     //     This means texts can not shrink anymore (they can still grow, though) and it's also necessary
     //     to prevent https://bugzilla.gnome.org/show_bug.cgi?id=773572
+    // TODO: GTK4: Is this needed?
     int len = newtext.length();
     label->set_width_chars(len > GUI_MAX_LINE_LENGTH ? GUI_MAX_LINE_LENGTH : len);
 
-    label->set_visible(true);
-
     auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
     UI::pack_start(*hbox, *label, true, true);
-    hbox->set_visible(true);
-
     return hbox;
 }
 
-}  /* namespace Extension */
-}  /* namespace Inkscape */
+} // namespace Inkscape::Extension
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4 :

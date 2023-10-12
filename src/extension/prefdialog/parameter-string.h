@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef INK_EXTENSION_PARAMSTRING_H_SEEN
-#define INK_EXTENSION_PARAMSTRING_H_SEEN
-
 /*
  * Copyright (C) 2005-2007 Authors:
  *   Ted Gould <ted@gould.cx>
@@ -10,13 +7,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#ifndef INK_EXTENSION_PARAMSTRING_H_SEEN
+#define INK_EXTENSION_PARAMSTRING_H_SEEN
+
 #include "parameter.h"
 
 #include <glibmm/ustring.h>
 
-
-namespace Inkscape {
-namespace Extension {
+namespace Inkscape::Extension {
 
 class ParamString : public InxParameter {
 public:
@@ -28,7 +26,7 @@ public:
 
     /** \brief  Returns \c _value, with a \i const to protect it. */
     const Glib::ustring& get() const { return _value; }
-    const Glib::ustring& set(const Glib::ustring in);
+    const Glib::ustring& set(Glib::ustring in);
 
     Gtk::Widget *get_widget(sigc::signal<void ()> *changeSignal) override;
 
@@ -49,9 +47,7 @@ private:
     int _max_length = 0;
 };
 
-
-}  // namespace Extension
-}  // namespace Inkscape
+} // namespace Inkscape::Extension
 
 #endif /* INK_EXTENSION_PARAMSTRING_H_SEEN */
 

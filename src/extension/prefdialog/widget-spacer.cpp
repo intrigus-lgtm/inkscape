@@ -14,12 +14,11 @@
 
 #include <gtkmm/box.h>
 
+#include "ui/util.h"
 #include "xml/node.h"
 #include "extension/extension.h"
 
-namespace Inkscape {
-namespace Extension {
-
+namespace Inkscape::Extension {
 
 WidgetSpacer::WidgetSpacer(Inkscape::XML::Node *xml, Inkscape::Extension::Extension *ext)
     : InxWidget(xml, ext)
@@ -46,16 +45,24 @@ Gtk::Widget *WidgetSpacer::get_widget(sigc::signal<void ()> *changeSignal)
     }
 
     auto const spacer = Gtk::make_managed<Gtk::Box>();
-    spacer->property_margin().set_value(_size/2);
+    spacer->set_margin(_size / 2);
 
     if (_expand) {
-        spacer->set_hexpand();
-        spacer->set_vexpand();
+        spacer->set_expand(true);
     }
 
-    spacer->set_visible(true);
     return spacer;
 }
 
-}  /* namespace Extension */
-}  /* namespace Inkscape */
+} // namespace Inkscape::Extension
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4 :

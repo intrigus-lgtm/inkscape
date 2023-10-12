@@ -9,9 +9,11 @@
 
 #include "parameter-string.h"
 
+#include <utility>
 #include <glibmm/regex.h>
 #include <gtkmm/box.h>
 #include <gtkmm/entry.h>
+#include <gtkmm/label.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/textview.h>
 
@@ -20,8 +22,7 @@
 #include "ui/pack.h"
 #include "xml/node.h"
 
-namespace Inkscape {
-namespace Extension {
+namespace Inkscape::Extension {
 
 ParamString::ParamString(Inkscape::XML::Node *xml, Inkscape::Extension::Extension *ext)
     : InxParameter(xml, ext)
@@ -68,23 +69,16 @@ ParamString::ParamString(Inkscape::XML::Node *xml, Inkscape::Extension::Extensio
 
 /**
  * A function to set the \c _value.
- *
  * This function sets the internal value, but it also sets the value
  * in the preferences structure.  To put it in the right place \c pref_name() is used.
- *
- * To copy the data into _value the old memory must be free'd first.
- * It is important to note that \c g_free handles \c NULL just fine.  Then
- * the passed in value is duplicated using \c g_strdup().
- *
  * @param  in   The value to set to.
+ * @returns The same value, moved to our _value member.
  */
-const Glib::ustring& ParamString::set(const Glib::ustring in)
+const Glib::ustring& ParamString::set(Glib::ustring in)
 {
-    _value = in;
-
+    _value = std::move(in);
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     prefs->setString(pref_name(), _value);
-
     return _value;
 }
 
@@ -199,7 +193,6 @@ Gtk::Widget *ParamString::get_widget(sigc::signal<void ()> *changeSignal)
     auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, GUI_PARAM_WIDGETS_SPACING);
 
     auto const label = Gtk::make_managed<Gtk::Label>(_text, Gtk::Align::START);
-    label->set_visible(true);
     UI::pack_start(*box, *label, false, false);
 
     if (_mode == MULTILINE) {
@@ -210,22 +203,15 @@ Gtk::Widget *ParamString::get_widget(sigc::signal<void ()> *changeSignal)
         textarea->set_has_frame(true);
 
         auto const entry = Gtk::make_managed<ParamMultilineStringEntry>(this, changeSignal);
-        entry->set_visible(true);
-
-        textarea->add(*entry);
-        textarea->set_visible(true);
+        textarea->set_child(*entry);
 
         UI::pack_start(*box, *textarea, true, true);
     } else {
         Gtk::Widget *entry = Gtk::make_managed<ParamStringEntry>(this, changeSignal);
-        entry->set_visible(true);
-
         UI::pack_start(*box, *entry, true, true);
     }
 
-    box->set_visible(true);
     return box;
 }
 
-}  /* namespace Extension */
-}  /* namespace Inkscape */
+} // namespace Inkscape::Extension

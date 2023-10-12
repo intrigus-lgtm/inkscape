@@ -15,8 +15,10 @@
 #ifndef INKSCAPE_UI_WIDGET_FONT_COLLECTION_SELECTOR_H
 #define INKSCAPE_UI_WIDGET_FONT_COLLECTION_SELECTOR_H
 
+#include <optional>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
+#include <gdkmm/enums.h>
 #include <gtkmm/frame.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/scrolledwindow.h>
@@ -24,9 +26,16 @@
 #include <gtkmm/treeview.h>
 #include <sigc++/signal.h>
 
+namespace Gdk {
+class Drag;
+class Drop;
+} // namespace Gdk
+
 namespace Gtk {
 class CellRenderer;
 class CellRendererText;
+class DragSource;
+class DropTarget;
 class TreeStore;
 } // namespace Gtk
 
@@ -88,13 +97,18 @@ private:
     bool on_key_pressed(GtkEventControllerKey const * controller,
                         unsigned keyval, unsigned keycode, GdkModifierType state);
 
-    bool on_drag_motion(const Glib::RefPtr<Gdk::DragContext> &, int, int, guint) override;
-    void on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>, int, int, const Gtk::SelectionData&, guint, guint);
-    bool on_drag_drop(const Glib::RefPtr<Gdk::DragContext> &, int, int, guint) override;
-    // bool on_drag_failed(const Glib::RefPtr<Gdk::DragContext> &, const Gtk::DragResult);
-    void on_drag_leave(const Glib::RefPtr<Gdk::DragContext> &, guint) override;
-    // void on_drag_start(const Glib::RefPtr<Gdk::DragContext> &); 
-    void on_drag_end(const Glib::RefPtr<Gdk::DragContext> &) override;
+    // DragSource
+    void on_drag_end(Gtk::DragSource const &source,
+                     Glib::RefPtr<Gdk::Drag> const &drag, bool delete_data);
+    // DropTarget
+    std::optional<double> _drop_motion_x, _drop_motion_y;
+    Gdk::DragAction on_drop_motion(Gtk::DropTarget const &target,
+                                   double x, double y);
+    bool on_drop_accept(Gtk::DropTarget const &target,
+                        Glib::RefPtr<Gdk::Drop> const &drop);
+    bool on_drop_drop  (Gtk::DropTarget const &target,
+                        Glib::ValueBase const &value, double x, double y);
+
     void on_selection_changed();
 
     class FontCollectionClass : public Gtk::TreeModelColumnRecord

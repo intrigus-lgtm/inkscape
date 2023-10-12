@@ -18,7 +18,6 @@
 #include <glibmm/markup.h>
 #include <gtkmm/cellrenderertext.h>
 #include <gtkmm/messagedialog.h>
-#include <gtkmm/targetentry.h>
 #include <gtkmm/treestore.h>
 #include <sigc++/functors/mem_fun.h>
 
@@ -45,15 +44,6 @@ FontCollectionSelector::FontCollectionSelector()
 
 FontCollectionSelector::~FontCollectionSelector() = default;
 
-[[nodiscard]] static auto const &get_target_entries()
-{
-    static std::vector<Gtk::TargetEntry> const target_entries{
-        Gtk::TargetEntry{"STRING"    , {}, 0},
-        Gtk::TargetEntry{"text/plain", {}, 0},
-    };
-    return target_entries;
-}
-
 // Setup the treeview of the widget.
 void FontCollectionSelector::setup_tree_view(Gtk::TreeView *tv)
 {
@@ -72,7 +62,6 @@ void FontCollectionSelector::setup_tree_view(Gtk::TreeView *tv)
 
     treeview->set_headers_visible (false);
     treeview->enable_model_drag_dest (Gdk::DragAction::MOVE);
-    treeview->drag_dest_set(get_target_entries(), Gtk::DEST_DEFAULT_ALL, Gdk::DragAction::COPY);
 
     // Append the columns to the treeview.
     treeview->append_column(text_column);
@@ -80,11 +69,11 @@ void FontCollectionSelector::setup_tree_view(Gtk::TreeView *tv)
 
     scroll.set_policy (Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     scroll.set_overlay_scrolling(false);
-    scroll.add (*treeview);
+    scroll.set_child(*treeview);
 
     frame.set_hexpand (true);
     frame.set_vexpand (true);
-    frame.add (scroll);
+    frame.set_child(scroll);
 
     // Grid
     set_name("FontCollection");
@@ -109,13 +98,19 @@ void FontCollectionSelector::setup_signals()
     treeview->get_column(ICON_COLUMN)->set_cell_data_func(*del_icon_renderer, sigc::mem_fun(*this, &FontCollectionSelector::icon_cell_data_func));
 
     // Signals for drag and drop.
-    treeview->signal_drag_motion().connect(sigc::mem_fun(*this, &FontCollectionSelector::on_drag_motion), false);
-    treeview->signal_drag_data_received().connect(sigc::mem_fun(*this, &FontCollectionSelector::on_drag_data_received), false);
-    treeview->signal_drag_drop().connect(sigc::mem_fun(*this, &FontCollectionSelector::on_drag_drop), false);
-    // treeview->signal_drag_failed().connect(sigc::mem_fun(*this, &FontCollectionSelector::on_drag_failed), false);
-    treeview->signal_drag_leave().connect(sigc::mem_fun(*this, &FontCollectionSelector::on_drag_leave), false);
-    treeview->signal_drag_end().connect(sigc::mem_fun(*this, &FontCollectionSelector::on_drag_end), false);
+    Controller::add_drag_source(*treeview, {
+        .end = sigc::mem_fun(*this, &FontCollectionSelector::on_drag_end)
+    });
+    Controller::add_drop_target(*treeview, {
+        .actions = Gdk::DragAction::COPY,
+        .types   = {G_TYPE_STRING},
+        .motion  = sigc::mem_fun(*this, &FontCollectionSelector::on_drop_motion),
+        .accept  = sigc::mem_fun(*this, &FontCollectionSelector::on_drop_accept),
+        .drop    = sigc::mem_fun(*this, &FontCollectionSelector::on_drop_drop  )
+    });
+
     treeview->get_selection()->signal_changed().connect([this]{ on_selection_changed(); });
+
     Inkscape::RecentlyUsedFonts::get()->connectUpdate(sigc::mem_fun(*this, &FontCollectionSelector::populate_system_collections));
 }
 
@@ -491,44 +486,49 @@ bool FontCollectionSelector::on_key_pressed(GtkEventControllerKey const * const 
     return false;
 }
 
-bool FontCollectionSelector::on_drag_motion(const Glib::RefPtr<Gdk::DragContext> &context,
-                                            int x,
-                                            int y,
-                                            guint time)
+void FontCollectionSelector::on_drag_end(Gtk::DragSource const &/*source*/,
+                                         Glib::RefPtr<Gdk::Drag> const &/*drag*/,
+                                         bool /*delete_data*/)
+{
+    treeview->unset_state_flags(Gtk::StateFlags::DROP_ACTIVE);
+}
+
+Gdk::DragAction FontCollectionSelector::on_drop_motion(Gtk::DropTarget const &/*target*/,
+                                                       double const x, double const y)
 {
     Gtk::TreeModel::Path path;
-    Gtk::TreeViewDropPosition pos;
-
+    Gtk::TreeView::DropPosition pos;
     treeview->get_dest_row_at_pos(x, y, path, pos);
-    treeview->drag_unhighlight();
+    treeview->unset_state_flags(Gtk::StateFlags::DROP_ACTIVE);
+
+    _drop_motion_x = x;
+    _drop_motion_y = y;
 
     if (path) {
-        context->drag_status(Gdk::DragAction::COPY, time);
-        return false;
+        return Gdk::DragAction::COPY;
     }
 
     // remove drop highlight
-    context->drag_refuse(time);
-    return true;
+    return {};
 }
 
-void FontCollectionSelector::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext> context,
-                                                   int const wx, int const wy,
-                                                   const Gtk::SelectionData &selection_data,
-                                                   guint info, guint time)
+bool FontCollectionSelector::on_drop_accept(Gtk::DropTarget const &target,
+                                            Glib::RefPtr<Gdk::Drop> const &drop)
 {
+
     // std::cout << "FontCollectionSelector::on_drag_data_received()" << std::endl;
     // 1. Get the row at which the data is dropped.
     Gtk::TreePath path;
     int bx{}, by{};
-    treeview->convert_widget_to_bin_window_coords(wx, wy, bx, by);
+    treeview->convert_widget_to_bin_window_coords(_drop_motion_x.value(), _drop_motion_y.value(),
+                                                  bx, by);
     if (!treeview->get_path_at_pos(bx, by, path)) {
-        return;
+        return false;
     }
     Gtk::TreeModel::iterator iter = store->get_iter(path);
     // Case when the font is dragged in the empty space.
     if(!iter) {
-        return;
+        return false;
     }
 
     Glib::ustring collection_name = (*iter)[FontCollection.name];
@@ -546,7 +546,7 @@ void FontCollectionSelector::on_drag_data_received(const Glib::RefPtr<Gdk::DragC
     bool const is_system = collections->find_collection(collection_name, true);
     if (is_system) {
         // The font is dropped in a system collection.
-        return;
+        return false;
     }
 
     // 2. Get the data that is sent by the source.
@@ -564,18 +564,16 @@ void FontCollectionSelector::on_drag_data_received(const Glib::RefPtr<Gdk::DragC
         treeview->expand_to_path(path);
     }
 
-    // Call gtk_drag_finish(context, success, del = false, time)
-    gtk_drag_finish(context->gobj(), TRUE, FALSE, time);
+    return true;
 }
 
-bool FontCollectionSelector::on_drag_drop(const Glib::RefPtr<Gdk::DragContext> &context,
-                                          int x,
-                                          int y,
-                                          guint time)
+bool FontCollectionSelector::on_drop_drop(Gtk::DropTarget const &/*target*/,
+                                          Glib::ValueBase const &/*value*/,
+                                          double const x, double const y)
 {
     // std::cout << "FontCollectionSelector::on_drag_drop()" << std::endl;
     Gtk::TreeModel::Path path;
-    Gtk::TreeViewDropPosition pos;
+    Gtk::TreeView::DropPosition pos;
     treeview->get_dest_row_at_pos(x, y, path, pos);
 
     if (!path) {
@@ -583,36 +581,8 @@ bool FontCollectionSelector::on_drag_drop(const Glib::RefPtr<Gdk::DragContext> &
         return false;
     }
 
-    on_drag_end(context);
+    treeview->unset_state_flags(Gtk::StateFlags::DROP_ACTIVE);
     return true;
-}
-
-/*
-bool FontCollectionSelector::on_drag_failed(const Glib::RefPtr<Gdk::DragContext> &context,
-                                            const Gtk::DragResult result)
-{
-    std::cout << "Drag Failed\n";
-    return true;
-}
-*/
-
-void FontCollectionSelector::on_drag_leave(const Glib::RefPtr<Gdk::DragContext> &context,
-                                           guint time)
-{
-    // std::cout << "Drag Leave\n";
-}
-
-/*
-void FontCollectionSelector::on_drag_start(const Glib::RefPtr<Gdk::DragContext> &context)
-{
-    // std::cout << "FontCollectionSelector::on_drag_start()" << std::endl;
-}
-*/
-
-void FontCollectionSelector::on_drag_end(const Glib::RefPtr<Gdk::DragContext> &context)
-{
-    // std::cout << "FontCollection::on_drag_end()" << std::endl;
-    treeview->drag_unhighlight();
 }
 
 void FontCollectionSelector::on_selection_changed()

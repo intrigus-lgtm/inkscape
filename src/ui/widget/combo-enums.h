@@ -138,7 +138,7 @@ public:
     }
 
     void remove_row(E id) {
-        auto const &children = _model->children();
+        auto &&children = _model->children();
         auto const e = children.end();
         for (auto i = children.begin(); i != e; ++i) {
             if (auto const data = i->get_value(_columns.data); data->id == id) {

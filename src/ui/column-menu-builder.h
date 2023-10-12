@@ -30,7 +30,7 @@ public:
         : _menu(menu)
         , _row(first_row)
         , _columns(columns)
-        , _icon_size(static_cast<int>(icon_size))
+        , _icon_size{icon_size}
     {
         assert(_row >= 0);
         assert(_columns >= 1);

@@ -16,7 +16,10 @@
 #include <vector>
 #include <glibmm/i18n.h>
 #include <glibmm/markup.h>
-#include <gtkmm/targetentry.h>
+#include <glibmm/value.h>
+#include <gdkmm/contentprovider.h>
+#include <gtkmm/dragsource.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include "libnrtype/font-lister.h"
 #include "libnrtype/font-instance.h"
@@ -25,6 +28,7 @@
 #include "inkscape.h"
 #include "desktop.h"
 #include "object/sp-text.h"
+#include "ui/controller.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -77,11 +81,11 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
     family_treeview.append_column (family_treecolumn);
 
     family_scroll.set_policy (Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
-    family_scroll.add (family_treeview);
+    family_scroll.set_child(family_treeview);
 
     family_frame.set_hexpand (true);
     family_frame.set_vexpand (true);
-    family_frame.add (family_scroll);
+    family_frame.set_child(family_scroll);
 
     // Style
     style_treecolumn.pack_start (style_cell, false);
@@ -98,11 +102,11 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
     style_treeview.get_column(0)->set_resizable (true);
 
     style_scroll.set_policy (Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
-    style_scroll.add (style_treeview);
+    style_scroll.set_child(style_treeview);
 
     style_frame.set_hexpand (true);
     style_frame.set_vexpand (true);
-    style_frame.add (style_scroll);
+    style_frame.set_child(style_scroll);
 
     // Size
     size_combobox.set_name ("FontSelectorSize");
@@ -116,7 +120,7 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
     // Font Variations
     font_variations.set_vexpand (true);
     font_variations_scroll.set_policy (Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
-    font_variations_scroll.add (font_variations);
+    font_variations_scroll.set_child(font_variations);
 
     // Grid
     set_name ("FontSelectorGrid");
@@ -136,9 +140,10 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
     }
 
     // For drag and drop.
-    family_treeview.drag_source_set(get_target_entries(), Gdk::ModifierType::BUTTON1_MASK, Gdk::DragAction::COPY | Gdk::DragAction::DEFAULT);
-    family_treeview.signal_drag_data_get().connect(sigc::mem_fun(*this, &FontSelector::on_drag_data_get));
-    family_treeview.signal_drag_begin().connect(sigc::mem_fun(*this, &FontSelector::on_drag_start), false);
+    Controller::add_drag_source(family_treeview, {
+        .prepare = sigc::mem_fun(*this, &FontSelector::on_drag_prepare),
+        .begin   = sigc::mem_fun(*this, &FontSelector::on_drag_begin  )
+    });
 
     // Add signals
     family_treeview.get_selection()->signal_changed().connect(sigc::mem_fun(*this, &FontSelector::on_family_changed));
@@ -176,27 +181,20 @@ void FontSelector::hide_others()
     font_variations_scroll.set_vexpand(false);
 }
 
-// TODO:
-void FontSelector::on_drag_start(const Glib::RefPtr<Gdk::DragContext> &context)
+// TODO: Dropping doesnʼt seem to be implemented anywhere
+void FontSelector::on_drag_begin(Gtk::DragSource &source,
+                                 Glib::RefPtr<Gdk::Drag> const &drag)
 {
     // Get the current collection.
     Glib::RefPtr<Gtk::TreeSelection> selection = family_treeview.get_selection();
     Gtk::TreeModel::iterator iter = selection->get_selected();
     Gtk::TreePath path(iter);
-    auto surface = family_treeview.create_row_drag_icon(path);
-
-    context->set_icon(surface);
-    /*
-    Inkscape::FontLister* font_lister = Inkscape::FontLister::get_instance();
-    Glib::ustring family_name = font_lister->get_treeview_drag_selection();
-    // std::cout << "FontSelector::on_drag_start()" << std::endl;
-    auto const drag_label = Gtk::make_managed<Gtk::Label>(family_name);
-
-    gtk_drag_set_icon_widget(context, drag_label, 0, 0);
-    */
+    auto paintable = family_treeview.create_row_drag_icon(path);
+    source.set_icon(paintable, 0, 0);
 }
 
-void FontSelector::on_drag_data_get(Glib::RefPtr<Gdk::DragContext> const &context, Gtk::SelectionData &selection_data, guint info, guint time)
+Glib::RefPtr<Gdk::ContentProvider> FontSelector::on_drag_prepare(Gtk::DragSource const &/*source*/,
+                                                                 double /*x*/, double /*y*/)
 {
     // std::cout << "FontSelector::on_drag_data_get()" << std::endl;
     Inkscape::FontLister* font_lister = Inkscape::FontLister::get_instance();
@@ -206,7 +204,10 @@ void FontSelector::on_drag_data_get(Glib::RefPtr<Gdk::DragContext> const &contex
     Glib::ustring family_name = font_lister->get_dragging_family();
     // std::cout << "Family: " << family_name << std::endl;
 
-    selection_data.set_text(family_name);
+    Glib::Value<Glib::ustring> value;
+    value.init(G_TYPE_STRING);
+    value.set(family_name);
+    return Gdk::ContentProvider::create(value);
 }
 
 void
@@ -257,7 +258,7 @@ void FontSelector::update_font()
 
     // Set font family
     try {
-        path = font_lister->get_row_for_font(family);
+        path = font_lister->get_row_for_font(family).get_iter();
     } catch (FontLister::Exception) {
         std::cerr << "FontSelector::update_font: Couldn't find row for font-family: "
                   << family.raw() << std::endl;

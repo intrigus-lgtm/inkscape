@@ -31,6 +31,7 @@
 #ifndef INKSCAPE_UI_WIDGET_FONT_SELECTOR_H
 #define INKSCAPE_UI_WIDGET_FONT_SELECTOR_H
 
+#include <glibmm/refptr.h>
 #include <gtkmm/cellrenderertext.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/frame.h>
@@ -44,6 +45,14 @@
 
 #include "ui/widget/font-variations.h"
 #include "ui/widget/scrollprotected.h"
+
+namespace Gdk {
+class Drag;
+} // namespace Gdk
+
+namespace Gtk {
+class DragSource;
+} // namespace Gtk
 
 namespace Inkscape::UI::Widget {
 
@@ -127,8 +136,10 @@ private:
     static gboolean set_cell_markup(gpointer);
     void on_realize_list();
     // For drag and drop.
-    void on_drag_start(const Glib::RefPtr<Gdk::DragContext> &context);
-    void on_drag_data_get(Glib::RefPtr<Gdk::DragContext> const &context, Gtk::SelectionData &selection_data, guint info, guint time) override;
+    Glib::RefPtr<Gdk::ContentProvider> on_drag_prepare(Gtk::DragSource const &source,
+                                                       double x, double y);
+    void on_drag_begin(Gtk::DragSource &source,
+                       Glib::RefPtr<Gdk::Drag> const &drag);
 
 public:
     /**

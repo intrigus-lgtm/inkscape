@@ -21,6 +21,7 @@
 #include <vector>
 #include <sigc++/slot.h>
 #include <glibmm/refptr.h>
+#include <gdkmm/drag.h> // Gdk::DragCancelReason
 #include <gdkmm/enums.h>
 #include <gtk/gtk.h>
 #include <gtkmm/eventcontroller.h>
@@ -31,6 +32,8 @@
 #include "util/callback-converter.h"
 
 namespace Gtk {
+class DragSource;
+class DropTarget;
 class GestureDrag;
 class GestureClick;
 class GestureSingle;
@@ -57,24 +60,28 @@ namespace Inkscape::UI::Controller {
 /// Whether to connect a slot to a signal before or after the default handler.
 enum class When {before, after};
 
+// GestureClick
+
 /// Type of slot connected to GestureClick::pressed & ::released signals.
 /// The args are the gesture, n_press count, x coord & y coord (in widget space)
-using ClickSlot = sigc::slot<Gtk::EventSequenceState(Gtk::GestureClick &, int, double, double)>;
+using ClickSlot = sigc::slot<Gtk::EventSequenceState (Gtk::GestureClick &, int, double, double)>;
 
 /// helper to stop accidents on int vs gtkmm3's weak=typed enums, & looks nicer!
 enum class Button {any = 0, left = 1, middle = 2, right = 3};
 
 /// Create a click gesture for & manage()d by widget; by default claim sequence.
 Gtk::GestureClick &add_click(Gtk::Widget &widget,
-                                  ClickSlot on_pressed,
-                                  ClickSlot on_released = {},
-                                  Button button = Button::any,
-                                  Gtk::PropagationPhase phase = Gtk::PropagationPhase::BUBBLE,
-                                  When when = When::after);
+                             ClickSlot on_pressed,
+                             ClickSlot on_released = {},
+                             Button button = Button::any,
+                             Gtk::PropagationPhase phase = Gtk::PropagationPhase::BUBBLE,
+                             When when = When::after);
+
+// GestureDrag
 
 /// Type of slot connected to GestureDrag::drag-(begin|update|end) signals.
 /// The arguments are the gesture, x coordinate & y coordinate (in widget space)
-using DragSlot = sigc::slot<Gtk::EventSequenceState(Gtk::GestureDrag &, double, double)>;
+using DragSlot = sigc::slot<Gtk::EventSequenceState (Gtk::GestureDrag &, double, double)>;
 
 /// Create a drag gesture for & manage()d by widget.
 Gtk::GestureDrag &add_drag(Gtk::Widget &widget,
@@ -83,6 +90,83 @@ Gtk::GestureDrag &add_drag(Gtk::Widget &widget,
                            DragSlot on_drag_end   ,
                            Gtk::PropagationPhase phase = Gtk::PropagationPhase::BUBBLE,
                            When when = When::after);
+
+// DragSource
+
+/// Type of slot connected to the DragSource::prepare signal.
+/// The arguments are the controller and the X and Y coordinates of the drag starting point.
+using DragSourcePrepareSlot = sigc::slot<Glib::RefPtr<Gdk::ContentProvider> (Gtk::DragSource &, double, double)>;
+
+/// Type of slot connected to the DragSource::drag-begin signal.
+/// The arguments are the controller and the Gdk::Drag object.
+using DragSourceDragBeginSlot = sigc::slot<void (Gtk::DragSource &, Glib::RefPtr<Gdk::Drag> const &)>;
+
+/// Type of slot connected to the DragSource::drag-cancel signal.
+/// The arguments are the controller, the Gdk::Drag object, and the reason/information on why the drag failed.
+/// Return whether the failed drag operation has been handled.
+using DragSourceDragCancelSlot = sigc::slot<bool (Gtk::DragSource &,
+                                                  Glib::RefPtr<Gdk::Drag> const &,
+                                                  Gdk::DragCancelReason)>;
+
+/// Type of slot connected to the DragSource::drag-end signal.
+/// The arguments are the controller, the Gdk::Drag object, and whether DragAction::MOVE ∴ data should be deleted.
+using DragSourceDragEndSlot = sigc::slot<void (Gtk::DragSource &, Glib::RefPtr<Gdk::Drag> const &, bool)>;
+
+/// Arguments for add_drag_source(), so calling w/ various combos is nicer via desigʼd initialisers
+struct AddDragSourceArgs final {
+    Button          button  = Button::left;
+    Gdk::DragAction actions = Gdk::DragAction::COPY;
+    Glib::RefPtr<Gdk::ContentProvider> content;
+    DragSourcePrepareSlot    prepare;
+    DragSourceDragBeginSlot  begin  ;
+    DragSourceDragCancelSlot cancel ;
+    DragSourceDragEndSlot    end    ;
+};
+
+/// Create a drag source for & manage()d by widget.
+Gtk::DragSource &add_drag_source(Gtk::Widget &widget,
+                                 AddDragSourceArgs &&args = {},
+                                 Gtk::PropagationPhase phase = Gtk::PropagationPhase::BUBBLE,
+                                 When when = When::after);
+
+// DropTarget
+
+/// Type of slot connected to the DropTarget::enter and DropTarget::motion signals.
+/// The arguments are the controller and current pointer x/y coordinates.
+/// Return the preferred action for this drag operation or 0 if dropping isnʼt supported at x,y pos
+using DropTargetMotionSlot = sigc::slot<Gdk::DragAction (Gtk::DropTarget &, double, double)>;
+
+/// Type of slot connected to the DropTarget::accept signal.
+/// The arguments are the controller and the Gdk::Drop object.
+/// Return true if @a drop is accepted.
+using DropTargetAcceptSlot = sigc::slot<bool (Gtk::DropTarget &, Glib::RefPtr<Gdk::Drop> const &)>;
+
+/// Type of slot connected to the DropTarget::drop signal.
+/// The arguments are the controller, the value being dropped, and current pointer x/y coordinates.
+/// Return whether the drop was accepted at the given pointer position.
+using DropTargetDropSlot = sigc::slot<bool (Gtk::DropTarget &, Glib::ValueBase const &, double, double)>;
+
+/// Type of slot connected to the DropTarget::leave signal.
+/// The arguments are the controller and current pointer x/y coordinates.
+/// Return the preferred action for this drag operation or 0 if dropping isnʼt supported at x,y pos
+using DropTargetLeaveSlot = sigc::slot<void (Gtk::DropTarget &)>;
+
+/// Arguments for add_drop_target(), so calling w/ various combos is nicer via desigʼd initialisers
+struct AddDropTargetArgs final {
+    Gdk::DragAction  actions = {};
+    std::vector<GType> types;
+    DropTargetMotionSlot enter ;
+    DropTargetMotionSlot motion;
+    DropTargetAcceptSlot accept;
+    DropTargetDropSlot   drop  ;
+    DropTargetLeaveSlot  leave ;
+};
+
+/// Create a drop target for & manage()d by widget, supporting the given type(s) and drag actions.
+Gtk::DropTarget &add_drop_target(Gtk::Widget &widget,
+                                 AddDropTargetArgs &&args,
+                                 Gtk::PropagationPhase phase = Gtk::PropagationPhase::BUBBLE,
+                                 When when = When::after);
 
 /// internal stuff
 namespace Detail {

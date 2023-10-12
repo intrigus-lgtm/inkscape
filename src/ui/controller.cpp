@@ -14,6 +14,8 @@
 
 #include <sigc++/adaptors/bind.h>
 #include <gdk/gdk.h>
+#include <gtkmm/dragsource.h>
+#include <gtkmm/droptarget.h>
 #include <gtkmm/gesturedrag.h>
 #include <gtkmm/gestureclick.h>
 
@@ -24,11 +26,12 @@ namespace Inkscape::UI::Controller {
 namespace {
 
 /// Helper to create EventController or subclass, for & manage()d by the widget.
-template <typename Controller>
-[[nodiscard]] Controller &create(Gtk::Widget &widget, Gtk::PropagationPhase const phase)
+template <typename Controller, typename ...Args>
+[[nodiscard]] Controller &create(Gtk::Widget &widget, Gtk::PropagationPhase const phase,
+                                 Args &&...args)
 {
     static_assert(std::is_base_of_v<Gtk::EventController, Controller>);
-    return Detail::add(widget, Controller::create(), phase);
+    return Detail::add(widget, Controller::create(std::forward<Args>(args)...), phase);
 }
 
 /// Helper to invoke getter on object, & connect a slot to the resulting signal.
@@ -38,6 +41,15 @@ void connect(Object &object, Getter const getter, Slot slot, When const when)
     auto signal = std::invoke(getter, object);
     signal.connect(sigc::bind<0>(std::move(slot), std::ref(object)),
                    when == When::after);
+}
+
+/// Helper to invoke getter on object, & connect a slot to the resulting signal,
+/// unless the @a slot is convertible to bool and that yields false, i.e. empty.
+template <typename Object, typename Getter, typename SlotResult, typename ...SlotArgs>
+void connect(Object &object, Getter const getter, sigc::slot<SlotResult (SlotArgs...)> &&slot,
+             When const when)
+{
+    if (slot) connect(object, getter, std::move(slot), when);
 }
 
 // We add the requirement that slots return an EventSequenceState, which if itʼs
@@ -62,6 +74,11 @@ template <typename Slot>
     };
 }
 
+void set_button(Gtk::GestureSingle &single, Button const button)
+{
+    single.set_button(static_cast<int>(button));
+}
+
 } // unnamed namespace
 
 Gtk::GestureClick &add_click(Gtk::Widget &widget,
@@ -72,9 +89,9 @@ Gtk::GestureClick &add_click(Gtk::Widget &widget,
                                   When const when)
 {
     auto &click = create<Gtk::GestureClick>(widget, phase);
+    set_button(click, button);
     connect(click, &Gtk::GestureClick::signal_pressed , use_state(std::move(on_pressed )), when);
     connect(click, &Gtk::GestureClick::signal_released, use_state(std::move(on_released)), when);
-    click.set_button(static_cast<int>(button));
     return click;
 }
 
@@ -104,6 +121,40 @@ void add_focus_on_window(Gtk::Widget &widget, WindowFocusSlot slot)
         connections[&widget].emplace_back(std::move(connection));
     });
     widget.signal_unmap().connect([&widget]{ connections.erase(&widget); });
+}
+
+Gtk::DragSource &add_drag_source(Gtk::Widget &widget,
+                                 AddDragSourceArgs &&args,
+                                 Gtk::PropagationPhase const phase,
+                                 When const when)
+{
+    auto &source = create<Gtk::DragSource>(widget, phase);
+    set_button(source, args.button);
+    source.set_content(args.content);
+    source.set_actions(args.actions);
+    // For some signals, only 1 signal handler is called & must be connected before, docʼd in gtkmm
+    connect(source, &Gtk::DragSource::signal_prepare    , std::move(args.prepare), When::before);
+    connect(source, &Gtk::DragSource::signal_drag_begin , std::move(args.begin  ), when        );
+    connect(source, &Gtk::DragSource::signal_drag_cancel, std::move(args.cancel ), when        );
+    connect(source, &Gtk::DragSource::signal_drag_end   , std::move(args.end    ), when        );
+    return source;
+}
+
+Gtk::DropTarget &add_drop_target(Gtk::Widget &widget,
+                                 AddDropTargetArgs &&args,
+                                 Gtk::PropagationPhase const phase,
+                                 When const when)
+{
+    auto const type = args.types.size() == 1 ? args.types.front() : G_TYPE_INVALID;
+    auto &target = create<Gtk::DropTarget>(widget, phase, type, args.actions);
+    if (args.types.size() > 1) target.set_gtypes(args.types);
+    // For some signals, only 1 signal handler is called & must be connected before, docʼd in gtkmm
+    connect(target, &Gtk::DropTarget::signal_enter , std::move(args.enter ), When::before);
+    connect(target, &Gtk::DropTarget::signal_motion, std::move(args.motion), When::before);
+    connect(target, &Gtk::DropTarget::signal_accept, std::move(args.accept), When::before);
+    connect(target, &Gtk::DropTarget::signal_drop  , std::move(args.drop  ), When::before);
+    connect(target, &Gtk::DropTarget::signal_leave , std::move(args.leave ), when        );
+    return target;
 }
 
 } // namespace Inkscape::UI::Controller

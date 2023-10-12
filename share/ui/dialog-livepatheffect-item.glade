@@ -71,7 +71,7 @@
                             <property name="margin-right">5</property>
                             <property name="margin-end">5</property>
                             <property name="pixel-size">25</property>
-                            <property name="icon-size">3</property>
+                            <property name="icon-size">large</property>
                           </object>
                         </child>
                         <child>
@@ -100,7 +100,7 @@
                 <property name="height-request">30</property>
                 <property name="valign">start</property>
                 <child>
-                  <object class="GtkEventBox" id="LPEOpenExpander">
+                  <object class="GtkBox" id="LPEOpenExpander">
                     <property name="hexpand">True</property>
                   </object>
                 </child>
@@ -116,6 +116,7 @@
                 <property name="name">LPEActionButtons</property>
                 <property name="halign">end</property>
                 <property name="valign">start</property>
+                <property name="can-pick">False</property>
                 <child>
                   <object class="GtkBox">
                     <child>
@@ -189,9 +190,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="pass-through">True</property>
-              </packing>
             </child>
           </object>
         </child>

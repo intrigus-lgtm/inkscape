@@ -25,6 +25,10 @@
 #include "ui/dialog/dialog-base.h"
 #include "ui/widget/completion-popup.h"
 
+namespace Glib {
+class ValueBase;
+} // namespace Glib
+
 namespace Gtk {
 class Box;
 class Builder;
@@ -33,7 +37,6 @@ class Expander;
 class Label;
 class ListBox;
 class ListStore;
-class SelectionData;
 class Widget;
 } // namespace Gtk
 
@@ -96,7 +99,7 @@ private:
     bool can_apply(LivePathEffect::EffectType, Glib::ustring const &item_type, bool has_clip, bool has_mask);
     void removeEffect(Gtk::Expander * expander);
     [[nodiscard]] bool on_drop(Gtk::Widget &widget,
-                               Gtk::SelectionData const &selection_data, int pos_target);
+                               Glib::ValueBase const &value, int pos_target);
     void effect_list_reload(SPLPEItem *lpeitem);
     void selection_info();
     void map_handler();

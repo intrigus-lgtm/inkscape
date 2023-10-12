@@ -26,9 +26,10 @@
 #include <gtkmm/enums.h>
 #include <gtkmm/icontheme.h>
 #include <gtkmm/popover.h>
-#include <gtkmm/radiobutton.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/searchentry.h>
+#include <gtkmm/togglebutton.h>
+#include <gtkmm/treeview.h>
 
 #include "objects.h"
 #include "actions/actions-tools.h"
@@ -65,6 +66,7 @@
 #include "ui/tools/node-tool.h"
 #include "ui/util.h"
 #include "ui/widget/canvas.h"
+#include "ui/widget/css-changed-class-init.h"
 #include "ui/widget/filter-effect-chooser.h"
 #include "ui/widget/imagetoggler.h"
 #include "ui/widget/objects-dialog-cells.h"
@@ -88,6 +90,33 @@ namespace Inkscape::UI::Dialog {
 
 using Inkscape::XML::Node;
 using namespace Inkscape::UI::Widget;
+
+// This was the 1 widget where we used signal_style_updated(), so just hack together a replacement!
+class ObjectsPanel::TreeViewWithCssChanged final
+    : public UI::Widget::CssChangedClassInit
+    , public Gtk::TreeView
+{
+public:
+    TreeViewWithCssChanged()
+        : Glib::ObjectBase{"TreeViewWithCssChanged"}
+        , CssChangedClassInit{}
+        , Gtk::TreeView{}
+    {
+    }
+
+    auto connect_css_changed(sigc::slot<void (GtkCssStyleChange *)> slot)
+    {
+        return _signal.connect(std::move(slot));
+    }
+
+private:
+    sigc::signal<void (GtkCssStyleChange *)> _signal;
+
+    void css_changed(GtkCssStyleChange * const change) final
+    {
+        _signal.emit(change);
+    }
+};
 
 class ObjectWatcher : public Inkscape::XML::NodeObserver
 {
@@ -129,7 +158,7 @@ public:
     }
     void setRow(const Gtk::TreeModel::Row &row)
     {
-        setRow(panel->_store->get_path(row));
+        setRow(panel->_store->get_path(row.get_iter()));
     }
 
     // Get the path out of this watcher
@@ -447,7 +476,7 @@ bool ObjectWatcher::addChild(SPItem *child, bool dummy)
         return false;
     }
 
-    auto const children = getChildren();
+    auto children = getChildren();
     if (!is_filtered && dummy && row_ref) {
         if (children.empty()) {
             auto const iter = panel->_store->append(children);
@@ -553,11 +582,9 @@ Gtk::TreeModel::iterator ObjectWatcher::getChildIter(Node *node) const
         return childrows.end();
     }
 
-    // Note: TreeRow inherits from TreeIter, so this `row` variable is
-    // also an iterator and a valid return value.
     for (auto &row : childrows) {
         if (panel->getRepr(row) == node) {
-            return row;
+            return row.get_iter();
         }
     }
     // In layer mode, we will come here for all non-layers
@@ -622,7 +649,6 @@ void ObjectWatcher::notifyAttributeChanged( Node &node, GQuark name, Util::ptr_s
     updateRowInfo();
 }
 
-
 /**
  * Get the object from the node.
  *
@@ -676,6 +702,7 @@ ObjectsPanel::ObjectsPanel()
     , _opacity_slider(get_widget<Gtk::Scale>(_builder, "opacity-slider"))
     , _setting_layers(get_derived_widget<PrefCheckButton, Glib::ustring, bool>(_builder, "setting-layers", "/dialogs/objects/layers_only", false))
     , _setting_track(get_derived_widget<PrefCheckButton, Glib::ustring, bool>(_builder, "setting-track", "/dialogs/objects/expand_to_layer", true))
+    , _tree{*Gtk::make_managed<TreeViewWithCssChanged>()}
 {
     _store = Gtk::TreeStore::create(*_model);
     _color_picker.set_visible(false);
@@ -750,7 +777,6 @@ ObjectsPanel::ObjectsPanel()
         _blend_mode_column = col;
     }
 
-    _tree.set_has_tooltip();
     _tree.signal_query_tooltip().connect([=](int x, int y, bool kbd, const Glib::RefPtr<Gtk::Tooltip>& tooltip){
         Gtk::TreeModel::iterator iter;
         if (!_tree.get_tooltip_context_iter(x, y, kbd, iter) || !iter) {
@@ -768,16 +794,16 @@ ObjectsPanel::ObjectsPanel()
         tooltip->set_markup(label);
         _tree.set_tooltip_cell(tooltip, nullptr, _blend_mode_column, _item_state_toggler);
         return true;
-    });
+    }, false); // before
 
-    _object_menu.set_relative_to(*this);
+    _object_menu.set_parent(*this);
     _object_menu.signal_closed().connect([this]{
         _item_state_toggler->set_force_visible(false);
         _tree.queue_draw();
     });
 
     auto& modes = get_widget<Gtk::Grid>(_builder, "modes");
-    _opacity_slider.signal_format_value().connect([](double val){
+    _opacity_slider.set_format_value_func([](double const val){
         return Util::format_number(val, 1) + "%";
     });
     const int min = 0, max = 100;
@@ -798,7 +824,7 @@ ObjectsPanel::ObjectsPanel()
     });
 
     // object blend mode and opacity popup
-    Gtk::RadioButtonGroup group;
+    Gtk::CheckButton *group = nullptr;
     int top = 0;
     int left = 0;
     int width = 2;
@@ -819,7 +845,9 @@ ObjectsPanel::ObjectsPanel()
             if (left == 1 && top == 9)
                 top++;
 
-            auto const check = Gtk::make_managed<Gtk::RadioButton>(group, label);
+            auto const check = Gtk::make_managed<Gtk::CheckButton>(label);
+            if (!group) group = check;
+            else check->set_group(*group);
             check->set_halign(Gtk::Align::START);
             check->signal_toggled().connect([=, this]{
                 if (!check->get_active()) return;
@@ -920,7 +948,7 @@ ObjectsPanel::ObjectsPanel()
             }
         }
         return false;
-    });
+    }, false); // before
     _tree.signal_row_expanded().connect([=](const Gtk::TreeModel::iterator &iter, const Gtk::TreeModel::Path &) {
         if (auto item = getItem(*iter)) {
             item->setExpanded(true);
@@ -932,10 +960,16 @@ ObjectsPanel::ObjectsPanel()
         }
     });
 
-    _tree.signal_drag_motion().connect(sigc::mem_fun(*this, &ObjectsPanel::on_drag_motion), false);
-    _tree.signal_drag_drop().connect(sigc::mem_fun(*this, &ObjectsPanel::on_drag_drop), false);
-    _tree.signal_drag_begin().connect(sigc::mem_fun(*this, &ObjectsPanel::on_drag_start), false);
-    _tree.signal_drag_end().connect(sigc::mem_fun(*this, &ObjectsPanel::on_drag_end), false);
+    Controller::add_drag_source(_tree, {
+        .actions = Gdk::DragAction::MOVE,
+        .begin   = sigc::mem_fun(*this, &ObjectsPanel::on_drag_begin),
+        .end     = sigc::mem_fun(*this, &ObjectsPanel::on_drag_end  )
+    });
+    Controller::add_drop_target(_tree, {
+        .actions = Gdk::DragAction::MOVE,
+        .motion  = sigc::mem_fun(*this, &ObjectsPanel::on_drag_motion),
+        .drop    = sigc::mem_fun(*this, &ObjectsPanel::on_drag_drop  )
+    });
 
     //Set up the label editing signals
     _text_renderer->signal_edited().connect(sigc::mem_fun(*this, &ObjectsPanel::_handleEdited));
@@ -943,16 +977,16 @@ ObjectsPanel::ObjectsPanel()
     //Set up the scroller window and pack the page
     // turn off overlay scrollbars - they block access to the 'lock' icon
     _scroller.set_overlay_scrolling(false);
-    _scroller.add(_tree);
+    _scroller.set_child(_tree);
     _scroller.set_policy( Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC );
     _scroller.set_has_frame(true);
     Gtk::Requisition sreq;
     Gtk::Requisition sreq_natural;
     _scroller.get_preferred_size(sreq_natural, sreq);
     int minHeight = 70;
-    if (sreq.height < minHeight) {
+    if (sreq.get_height() < minHeight) {
         // Set a min height to see the layers when used with Ubuntu liboverlay-scrollbar
-        _scroller.set_size_request(sreq.width, minHeight);
+        _scroller.set_size_request(sreq.get_width(), minHeight);
     }
 
     UI::pack_start(_page, header, false, true);
@@ -972,7 +1006,7 @@ ObjectsPanel::ObjectsPanel()
     auto& add_layer_btn = get_widget<Gtk::Button>(_builder, "insert-layer");
     add_layer_btn.signal_clicked().connect(enter_layer_label_editing_mode);
 
-    _tree_style = _tree.signal_style_updated().connect([=](){
+    _tree_style = _tree.connect_css_changed([=, this] (GtkCssStyleChange *change) {
         set_selection_color();
 
         if (!root_watcher) return;
@@ -991,6 +1025,13 @@ ObjectsPanel::ObjectsPanel()
 }
 
 ObjectsPanel::~ObjectsPanel() = default;
+
+void ObjectsPanel::size_allocate_vfunc(int const width, int const height, int const baseline)
+{
+    parent_type::size_allocate_vfunc(width, height, baseline);
+
+    _object_menu.present();
+}
 
 void ObjectsPanel::desktopReplaced()
 {
@@ -1185,9 +1226,8 @@ void ObjectsPanel::_activateAction(const std::string& layerAction, const std::st
 Gtk::Button* ObjectsPanel::_addBarButton(char const* iconName, char const* tooltip, char const *action_name)
 {
     auto const btn = Gtk::make_managed<Gtk::Button>();
-    auto child = Glib::wrap(sp_get_icon_image(iconName, GTK_ICON_SIZE_SMALL_TOOLBAR));
-    child->set_visible(true);
-    btn->add(*child);
+    auto const child = sp_get_icon_image(iconName, Gtk::IconSize::NORMAL);
+    btn->set_child(*child);
     btn->set_has_frame(false);
     btn->set_tooltip_text(tooltip);
     btn->set_action_name(action_name);
@@ -1198,13 +1238,13 @@ Gtk::Button* ObjectsPanel::_addBarButton(char const* iconName, char const* toolt
  * Sets visibility of items in the tree
  * @param iter Current item in the tree
  */
-bool ObjectsPanel::toggleVisible(unsigned int state, Gtk::TreeModel::Row row)
+bool ObjectsPanel::toggleVisible(Gdk::ModifierType const state, Gtk::TreeModel::Row row)
 {
     auto desktop = getDesktop();
     auto selection = getSelection();
 
     if (SPItem* item = getItem(row)) { 
-        if (state & GDK_SHIFT_MASK) {
+        if (Controller::has_flag(state, Gdk::ModifierType::SHIFT_MASK)) {
             // Toggle Visible for layers (hide all other layers)
             if (desktop->layerManager().isLayer(item)) {
                 desktop->layerManager().toggleLayerSolo(item);
@@ -1213,7 +1253,9 @@ bool ObjectsPanel::toggleVisible(unsigned int state, Gtk::TreeModel::Row row)
             return true;
         }
         bool visible = !row[_model->_colInvisible];
-        if (state & GDK_CONTROL_MASK || !selection->includes(item)) {
+        if (Controller::has_flag(state, Gdk::ModifierType::CONTROL_MASK) ||
+            !selection->includes(item))
+        {
             item->setHidden(visible);
         } else {
             for (auto sitem : selection->items()) {
@@ -1265,13 +1307,13 @@ bool ObjectsPanel::blendModePopup(int const x, int const y, Gtk::TreeModel::Row 
  * @param iter Current item in the tree
  * @param locked Whether the item should be locked
  */
-bool ObjectsPanel::toggleLocked(unsigned int state, Gtk::TreeModel::Row row)
+bool ObjectsPanel::toggleLocked(Gdk::ModifierType const state, Gtk::TreeModel::Row row)
 {
     auto desktop = getDesktop();
     auto selection = getSelection();
 
     if (SPItem* item = getItem(row)) { 
-        if (state & GDK_SHIFT_MASK) {
+        if (Controller::has_flag(state, Gdk::ModifierType::SHIFT_MASK)) {
             // Toggle lock for layers (lock all other layers)
             if (desktop->layerManager().isLayer(item)) {
                 desktop->layerManager().toggleLockOtherLayers(item);
@@ -1280,7 +1322,9 @@ bool ObjectsPanel::toggleLocked(unsigned int state, Gtk::TreeModel::Row row)
             return true;
         }
         bool locked = !row[_model->_colLocked];
-        if (state & GDK_CONTROL_MASK || !selection->includes(item)) {
+        if (Controller::has_flag(state, Gdk::ModifierType::CONTROL_MASK) ||
+            !selection->includes(item))
+        {
             item->setLocked(locked);
         } else {
             for (auto sitem : selection->items()) {
@@ -1335,7 +1379,7 @@ bool ObjectsPanel::on_tree_key_pressed(GtkEventControllerKey const * const contr
             }
             break;
         case GDK_KEY_space:
-            selectCursorItem(state);
+            selectCursorItem(Gdk::ModifierType(state));
             return true;
         // Depending on the action to cover this causes it's special
         // text and node handling to block deletion of objects. DIY
@@ -1490,7 +1534,7 @@ void ObjectsPanel::on_motion_motion(GtkEventControllerMotion const * const contr
     }
 
     auto const state = gtk_event_controller_get_current_event_state(GTK_EVENT_CONTROLLER(controller));
-    _handleTransparentHover(Controller::has_flag(state, Gdk::ALT_MASK));
+    _handleTransparentHover(Controller::has_flag(state, GDK_ALT_MASK));
 }
 
 void ObjectsPanel::_handleTransparentHover(bool enabled)
@@ -1597,7 +1641,9 @@ Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureClick const &gesture,
         if (!layer)
             return false;
         // modifier keys force selection mode
-        if (Controller::has_flag(state, Gdk::SHIFT_MASK | Gdk::CONTROL_MASK)) {
+        if (Controller::has_flag(state, Gdk::ModifierType::SHIFT_MASK |
+                                        Gdk::ModifierType::CONTROL_MASK))
+        {
             return false;
         }
         return _layer != layer || selection->includes(layer);
@@ -1667,7 +1713,7 @@ bool ObjectsPanel::select_row( Glib::RefPtr<Gtk::TreeModel> const & /*model*/, G
 /**
  * Get the XML node which is associated with a row. Can be NULL for dummy children.
  */
-Node *ObjectsPanel::getRepr(Gtk::TreeModel::Row const &row) const
+Node *ObjectsPanel::getRepr(Gtk::TreeModel::ConstRow const &row) const
 {
     return row[_model->_colNode];
 }
@@ -1676,7 +1722,7 @@ Node *ObjectsPanel::getRepr(Gtk::TreeModel::Row const &row) const
  * Get the item which is associated with a row. If getRepr(row) is not NULL,
  * then this call is expected to also not be NULL.
  */
-SPItem *ObjectsPanel::getItem(Gtk::TreeModel::Row const &row) const
+SPItem *ObjectsPanel::getItem(Gtk::TreeModel::ConstRow const &row) const
 {
     auto const this_const = const_cast<ObjectsPanel *>(this);
     return cast<SPItem>(this_const->getObject(getRepr(row)));
@@ -1685,7 +1731,7 @@ SPItem *ObjectsPanel::getItem(Gtk::TreeModel::Row const &row) const
 /**
  * Return true if this row has dummy children.
  */
-bool ObjectsPanel::hasDummyChildren(Gtk::TreeModel::Row const &row) const
+bool ObjectsPanel::hasDummyChildren(Gtk::TreeModel::ConstRow const &row) const
 {
     for (auto &c : row.children()) {
         if (isDummy(c)) {
@@ -1701,26 +1747,27 @@ bool ObjectsPanel::hasDummyChildren(Gtk::TreeModel::Row const &row) const
  * @post If the function returns true, the row has no children
  * @return False if there are children and they are not dummies
  */
-bool ObjectsPanel::removeDummyChildren(Gtk::TreeModel::Row const &row)
+bool ObjectsPanel::removeDummyChildren(Gtk::TreeModel::Row row)
 {
     auto &children = row.children();
     if (!children.empty()) {
-        Gtk::TreeStore::iterator child = children[0];
+        auto const iter = row.get_iter();
+        Gtk::TreeStore::iterator child = children.begin();
         if (!isDummy(*child)) {
             assert(!hasDummyChildren(row));
             return false;
         }
 
         do {
-            assert(child->parent() == row);
+            assert(child->parent() == iter);
             assert(isDummy(*child));
             child = _store->erase(child);
-        } while (child && child->parent() == row);
+        } while (child && child->parent() == iter);
     }
     return true;
 }
 
-bool ObjectsPanel::cleanDummyChildren(Gtk::TreeModel::Row const &row)
+bool ObjectsPanel::cleanDummyChildren(Gtk::TreeModel::Row row)
 {
     if (removeDummyChildren(row)) {
         assert(row);
@@ -1737,10 +1784,11 @@ bool ObjectsPanel::cleanDummyChildren(Gtk::TreeModel::Row const &row)
  *
  * Refuses drops into non-group items.
  */
-bool ObjectsPanel::on_drag_motion(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time)
+Gdk::DragAction ObjectsPanel::on_drag_motion(Gtk::DropTarget const &/*controller*/,
+                                             double const x, double const y)
 {
     Gtk::TreeModel::Path path;
-    Gtk::TreeViewDropPosition pos;
+    Gtk::TreeView::DropPosition pos;
 
     auto selection = getSelection();
     auto document = getDocument();
@@ -1759,15 +1807,14 @@ bool ObjectsPanel::on_drag_motion(const Glib::RefPtr<Gdk::DragContext> &context,
         }
 
     }
+
     // need to cater scenarios where we got no selection/empty bottom space
-    context->drag_status(Gdk::DragAction::MOVE, time);
-    return false;
+    return Gdk::DragAction::MOVE;
 
 finally:
     // remove drop highlight
     _tree.unset_drag_dest_row();
-    context->drag_refuse(time);
-    return true;
+    return Gdk::DragAction{}; // not supported
 }
 
 /**
@@ -1775,14 +1822,15 @@ finally:
  *
  * Do the actual work of drag-and-drop.
  */
-bool ObjectsPanel::on_drag_drop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time)
+bool ObjectsPanel::on_drag_drop(Gtk::DropTarget const &/*controller*/,
+                                Glib::ValueBase const &/*value*/,
+                                double const x, double const y)
 {
     Gtk::TreeModel::Path path;
-    Gtk::TreeViewDropPosition pos;
+    Gtk::TreeView::DropPosition pos;
     _tree.get_dest_row_at_pos(x, y, path, pos);
 
     if (!path) {
-        
         if (_tree.is_blank_at_pos(x, y)){
             // We are in background/bottom empty space. Hence, need to 
             // drop the layer at end.
@@ -1812,11 +1860,12 @@ bool ObjectsPanel::on_drag_drop(const Glib::RefPtr<Gdk::DragContext> &context, i
         DocumentUndo::done(document, _("Move items"), INKSCAPE_ICON("selection-move-to-layer"));
     }
 
-    on_drag_end(context);
+    drag_end_impl();
     return true;
 }
 
-void ObjectsPanel::on_drag_start(const Glib::RefPtr<Gdk::DragContext> &context)
+void ObjectsPanel::on_drag_begin(Gtk::DragSource const &/*controller*/,
+                                 Glib::RefPtr<Gdk::Drag> const &/*drag*/)
 {
     _scroll_lock = true;
 
@@ -1849,7 +1898,7 @@ void ObjectsPanel::on_drag_start(const Glib::RefPtr<Gdk::DragContext> &context)
     }
 }
 
-void ObjectsPanel::on_drag_end(const Glib::RefPtr<Gdk::DragContext> &context)
+void ObjectsPanel::drag_end_impl()
 {
     auto selection = _tree.get_selection();
     selection->unselect_all();
@@ -1857,10 +1906,16 @@ void ObjectsPanel::on_drag_end(const Glib::RefPtr<Gdk::DragContext> &context)
     current_item = nullptr;
 }
 
+void ObjectsPanel::on_drag_end(Gtk::DragSource const &/*controller*/,
+                               Glib::RefPtr<Gdk::Drag> const &/*drag*/, bool /*delete_data*/)
+{
+    drag_end_impl();
+}
+
 /**
  * Select the object currently under the list-cursor (keyboard or mouse)
  */
-bool ObjectsPanel::selectCursorItem(unsigned int state)
+bool ObjectsPanel::selectCursorItem(Gdk::ModifierType const state)
 {
     auto &layers = getDesktop()->layerManager();
     auto selection = getSelection();
@@ -1885,10 +1940,10 @@ bool ObjectsPanel::selectCursorItem(unsigned int state)
         auto item = getItem(row);
         auto group = cast<SPGroup>(item);
         _scroll_lock = true; // Clicking to select shouldn't scroll the treeview.
-        if (state & GDK_SHIFT_MASK && !selection->isEmpty()) {
+        if (Controller::has_flag(state, Gdk::ModifierType::SHIFT_MASK) && !selection->isEmpty()) {
             // Select everything between this row and the last selected item
             selection->setBetween(item);
-        } else if (state & GDK_CONTROL_MASK) {
+        } else if (Controller::has_flag(state, Gdk::ModifierType::CONTROL_MASK)) {
             selection->toggle(item);
         } else if (group && selection->includes(item) && !group->isLayer()) {
             // Clicking off a group (second click) will enter the group

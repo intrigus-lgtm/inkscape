@@ -45,18 +45,18 @@ static bool on_key_pressed(GtkEventControllerKey const * /*controller*/,
     return false;
 }
 
-static Gtk::EventSequenceState on_click_pressed(Gtk::GestureMultiPress const &click,
+static Gtk::EventSequenceState on_click_pressed(Gtk::GestureClick const &click,
                                                 int const n_press, double const x, double const y,
                                                 PopupMenuSlot const * const slot)
 {
-    g_return_val_if_fail(slot != nullptr, Gtk::EVENT_SEQUENCE_NONE);
+    g_return_val_if_fail(slot != nullptr, Gtk::EventSequenceState::NONE);
 
     if (gdk_event_triggers_context_menu(Controller::get_last_event(click))) {
         auto const click = PopupMenuClick{n_press, x, y};
-        if ((*slot)(click)) return Gtk::EVENT_SEQUENCE_CLAIMED;
+        if ((*slot)(click)) return Gtk::EventSequenceState::CLAIMED;
     }
 
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
 sigc::connection on_popup_menu(Gtk::Widget &widget, PopupMenuSlot slot)
@@ -65,7 +65,7 @@ sigc::connection on_popup_menu(Gtk::Widget &widget, PopupMenuSlot slot)
     auto const key = gtk_event_controller_key_new(widget.Gtk::Widget::gobj());
     g_signal_connect(key, "key-pressed", G_CALLBACK(on_key_pressed), &managed_slot);
     Controller::add_click(widget, sigc::bind(&on_click_pressed, &managed_slot), {},
-                          Controller::Button::any, Gtk::PHASE_TARGET); // ←beat Entry popup handler
+                          Controller::Button::any, Gtk::PropagationPhase::TARGET); // ←beat Entry popup handler
     return sigc::connection{managed_slot};
 }
 

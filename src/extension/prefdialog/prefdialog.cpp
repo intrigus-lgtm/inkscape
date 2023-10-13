@@ -47,7 +47,7 @@ PrefDialog::PrefDialog (Glib::ustring name, Gtk::Widget * controls, Effect * eff
 {
     this->set_default_size(0,0);  // we want the window to be as small as possible instead of clobbering up space
 
-    auto hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
     if (controls == nullptr) {
         if (_effect == nullptr) {
             std::cerr << "AH!!!  No controls and no effect!!!" << std::endl;
@@ -62,9 +62,9 @@ PrefDialog::PrefDialog (Glib::ustring name, Gtk::Widget * controls, Effect * eff
 
     UI::pack_start(*this->get_content_area(), *hbox, true, true);
 
-    _button_cancel = add_button(_effect == nullptr ? _("_Cancel") : _("_Close"), Gtk::RESPONSE_CANCEL);
-    _button_ok     = add_button(_effect == nullptr ? _("_OK")     : _("_Apply"), Gtk::RESPONSE_OK);
-    set_default_response(Gtk::RESPONSE_OK);
+    _button_cancel = add_button(_effect == nullptr ? _("_Cancel") : _("_Close"), Gtk::ResponseType::CANCEL);
+    _button_ok     = add_button(_effect == nullptr ? _("_OK")     : _("_Apply"), Gtk::ResponseType::OK);
+    set_default_response(Gtk::ResponseType::OK);
     _button_ok->grab_focus();
 
     if (_effect != nullptr && !_effect->no_live_preview) {
@@ -82,7 +82,7 @@ PrefDialog::PrefDialog (Glib::ustring name, Gtk::Widget * controls, Effect * eff
         sep->set_visible(true);
         UI::pack_start(*this->get_content_area(), *sep, false, false, InxWidget::GUI_BOX_SPACING);
 
-        hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+        hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
         hbox->property_margin().set_value(InxWidget::GUI_BOX_MARGIN);
         _button_preview = _param_preview->get_widget(&_signal_preview);
         _button_preview->set_visible(true);
@@ -181,7 +181,7 @@ PrefDialog::param_timer_expire () {
 
 void
 PrefDialog::on_response (int signal) {
-    if (signal == Gtk::RESPONSE_OK) {
+    if (signal == Gtk::ResponseType::OK) {
         if (_exEnv == nullptr) {
             if (_effect != nullptr) {
                 _effect->effect(SP_ACTIVE_DESKTOP);
@@ -206,7 +206,7 @@ PrefDialog::on_response (int signal) {
         _checkbox_preview->set_active(false);
     }
 
-    if ((signal == Gtk::RESPONSE_CANCEL || signal == Gtk::RESPONSE_DELETE_EVENT) && _effect != nullptr) {
+    if ((signal == Gtk::ResponseType::CANCEL || signal == Gtk::ResponseType::DELETE_EVENT) && _effect != nullptr) {
         delete this;
     }
 }

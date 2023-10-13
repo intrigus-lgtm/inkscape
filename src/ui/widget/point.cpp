@@ -41,7 +41,7 @@ Point::Point(Glib::ustring const &label, Glib::ustring const &tooltip,
                unsigned digits,
                Glib::ustring const &icon,
                bool mnemonic)
-    : Labelled(label, tooltip, new Gtk::Box(Gtk::ORIENTATION_VERTICAL), icon, mnemonic),
+    : Labelled(label, tooltip, new Gtk::Box(Gtk::Orientation::VERTICAL), icon, mnemonic),
       xwidget("X:", {}, adjust, digits),
       ywidget("Y:", {}, adjust, digits)
 {

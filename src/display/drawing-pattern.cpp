@@ -25,7 +25,7 @@ namespace Inkscape {
 
 DrawingPattern::Surface::Surface(Geom::IntRect const &rect, int device_scale)
     : rect(rect)
-    , surface(Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, rect.width() * device_scale, rect.height() * device_scale))
+    , surface(Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, rect.width() * device_scale, rect.height() * device_scale))
 {
     cairo_surface_set_device_scale(surface->cobj(), device_scale, device_scale);
 }

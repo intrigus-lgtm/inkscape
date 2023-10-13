@@ -229,7 +229,7 @@ PdfImportDialog::~PdfImportDialog() {
 
 bool PdfImportDialog::showDialog() {
     gint b = UI::dialog_run(*this);
-    if ( b == Gtk::RESPONSE_OK ) {
+    if ( b == Gtk::ResponseType::OK ) {
         return TRUE;
     } else {
         return FALSE;
@@ -432,10 +432,10 @@ bool PdfImportDialog::_onDraw(const Cairo::RefPtr<Cairo::Context>& cr) {
     Glib::RefPtr<Gdk::Pixbuf> thumb;
 
     if (_render_thumb) {
-        thumb = Gdk::Pixbuf::create(Gdk::COLORSPACE_RGB, true,
+        thumb = Gdk::Pixbuf::create(Gdk::Colorspace::RGB, true,
                                     8, _thumb_width, _thumb_height);
     } else if (_thumb_data) {
-        thumb = Gdk::Pixbuf::create_from_data(_thumb_data, Gdk::COLORSPACE_RGB,
+        thumb = Gdk::Pixbuf::create_from_data(_thumb_data, Gdk::Colorspace::RGB,
             false, 8, _thumb_width, _thumb_height, _thumb_rowstride);
     }
     if (!thumb) {

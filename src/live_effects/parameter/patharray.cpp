@@ -89,7 +89,7 @@ void PathArrayParam::initui()
         _tree->set_model(_store);
 
         _tree->set_reorderable(true);
-        _tree->enable_model_drag_dest (Gdk::ACTION_MOVE);  
+        _tree->enable_model_drag_dest (Gdk::DragAction::MOVE);  
         
         auto const toggle_reverse = Gtk::make_managed<Gtk::CellRendererToggle>();
         int reverseColNum = _tree->append_column(_("Reverse"), *toggle_reverse) - 1;
@@ -118,7 +118,7 @@ void PathArrayParam::initui()
         //quick little hack -- newer versions of gtk gave the item zero space allotment
         _scroller->set_size_request(-1, 120);
         _scroller->add(*_tree);
-        _scroller->set_policy( Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC );
+        _scroller->set_policy( Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC );
     }
     param_readSVGValue(param_getSVGValue().c_str());
 }
@@ -150,8 +150,8 @@ void PathArrayParam::param_set_default() {}
 Gtk::Widget *PathArrayParam::param_newWidget()
 {
     
-    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
-    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
+    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
 
     _tree.reset();
     _model.reset();

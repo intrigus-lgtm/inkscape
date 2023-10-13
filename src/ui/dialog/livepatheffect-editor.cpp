@@ -156,10 +156,10 @@ LivePathEffectEditor::LivePathEffectEditor()
 {
     _LPEContainer.signal_map().connect(sigc::mem_fun(*this, &LivePathEffectEditor::map_handler) );
 
-    Controller::add_click(_LPEContainer, [this](Gtk::GestureMultiPress const &, int, double, double)
+    Controller::add_click(_LPEContainer, [this](Gtk::GestureClick const &, int, double, double)
     {
         dnd = false; // hack to fix DnD freezing expander
-        return Gtk::EVENT_SEQUENCE_NONE;
+        return Gtk::EventSequenceState::NONE;
     });
 
     setMenu();
@@ -522,12 +522,12 @@ LivePathEffectEditor::selection_info()
                 Glib::ustring labeltext = selected->label() ? selected->label() : selected->getId();
                 auto const boxc = Gtk::make_managed<Gtk::Box>();
                 auto const lbl = Gtk::make_managed<Gtk::Label>(labeltext);
-                lbl->set_ellipsize(Pango::ELLIPSIZE_END);
+                lbl->set_ellipsize(Pango::EllipsizeMode::END);
                 auto const type = get_shape_image(selected->typeName(), selected->highlight_color());
                 UI::pack_start(*boxc, *type, false, false);
                 UI::pack_start(*boxc, *lbl, false, false);
                 _LPECurrentItem.add(*boxc);
-                UI::get_children(_LPECurrentItem).at(0)->set_halign(Gtk::ALIGN_CENTER);
+                UI::get_children(_LPECurrentItem).at(0)->set_halign(Gtk::Align::CENTER);
                 _LPESelectionInfo.set_visible(false);
             }
             std::vector<std::pair <Glib::ustring, Glib::ustring> > newrootsatellites;
@@ -642,7 +642,7 @@ LivePathEffectEditor::showParams(LPEExpander const &expanderdata, bool const cha
             effectwidget = lpe->newWidget();
 
             if (UI::get_children(*effectwidget).empty()) {
-                auto const label = Gtk::make_managed<Gtk::Label>("", Gtk::ALIGN_START, Gtk::ALIGN_CENTER);
+                auto const label = Gtk::make_managed<Gtk::Label>("", Gtk::Align::START, Gtk::Align::CENTER);
                 label->set_markup(_("<small>Without parameters</small>"));
                 label->set_margin_top(5);
                 label->set_margin_bottom(5);
@@ -742,7 +742,7 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
         _lpes_popup.drag_dest_unset();
         _lpes_popup.get_entry().drag_dest_unset();
         _LPEAddContainer.drag_dest_unset();
-        _LPEContainer.drag_dest_set(entries, Gtk::DEST_DEFAULT_ALL, Gdk::ACTION_MOVE);
+        _LPEContainer.drag_dest_set(entries, Gtk::DEST_DEFAULT_ALL, Gdk::DragAction::MOVE);
 
         _LPEContainer.signal_drag_data_received().connect([this](const Glib::RefPtr<Gdk::DragContext>& context, int x, int y, const Gtk::SelectionData& selection_data, guint info, guint time)
         {
@@ -807,7 +807,7 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
         
         LPEDrag->set_name(Glib::ustring::compose("drag_%1", counter));
         if (total > 1) {
-            LPEDrag->drag_source_set(entries, Gdk::BUTTON1_MASK, Gdk::ACTION_MOVE);
+            LPEDrag->drag_source_set(entries, Gdk::ModifierType::BUTTON1_MASK, Gdk::DragAction::MOVE);
         }
 
         LPEExpanderBox->property_has_tooltip() = true;
@@ -877,7 +877,7 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
                 dnd = false;
             });
 
-            row->drag_dest_set(entries, Gtk::DEST_DEFAULT_ALL, Gdk::ACTION_MOVE);
+            row->drag_dest_set(entries, Gtk::DEST_DEFAULT_ALL, Gdk::DragAction::MOVE);
 
             row->signal_drag_motion().connect([=](const Glib::RefPtr<Gdk::DragContext>& context, int x, int y, guint time)
             {
@@ -894,20 +894,20 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
         LPEExpander->property_expanded().signal_changed().connect(sigc::bind(
                 sigc::mem_fun(*this, &LivePathEffectEditor::expanded_notify), LPEExpander));
 
-        Controller::add_click(*LPEOpenExpander, [=, this](Gtk::GestureMultiPress const &, int, double, double)
+        Controller::add_click(*LPEOpenExpander, [=, this](Gtk::GestureClick const &, int, double, double)
         {
            LPEExpander->set_expanded(!LPEExpander->get_expanded());
-           return Gtk::EVENT_SEQUENCE_CLAIMED;
+           return Gtk::EventSequenceState::CLAIMED;
         }, {}, Controller::Button::left);
 
         LPEHide->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LivePathEffectEditor::toggleVisible), lpe, LPEHide));
         LPEErase->signal_clicked().connect([=, this](){ removeEffect(LPEExpander);});
 
-        Controller::add_click(*LPEDrag, [this](Gtk::GestureMultiPress const &, int, double const x, double const y)
+        Controller::add_click(*LPEDrag, [this](Gtk::GestureClick const &, int, double const x, double const y)
         {
             dndx = x;
             dndy = y;
-            return Gtk::EVENT_SEQUENCE_NONE;
+            return Gtk::EventSequenceState::NONE;
         });
 
         if (total > 1) {

@@ -128,8 +128,8 @@ ExecutionEnv::createWorkingDialog () {
     _visibleDialog = new Gtk::MessageDialog(*window,
                                dlgmessage,
                                false, // use markup
-                               Gtk::MESSAGE_INFO,
-                               Gtk::BUTTONS_CANCEL,
+                               Gtk::MessageType::INFO,
+                               Gtk::ButtonsType::CANCEL,
                                true); // modal
     _visibleDialog->signal_response().connect(sigc::mem_fun(*this, &ExecutionEnv::workingCanceled));
     g_free(dlgmessage);

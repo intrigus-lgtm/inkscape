@@ -96,7 +96,7 @@ public:
     void handleError( Glib::ustring const& primary, Glib::ustring const& secondary ) const override
     {
         if (_useGui) {
-            Gtk::MessageDialog err(primary, false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK, true);
+            Gtk::MessageDialog err(primary, false, Gtk::MessageType::WARNING, Gtk::ButtonsType::OK, true);
             err.set_secondary_text(secondary);
             Inkscape::UI::dialog_run(err);
         } else {
@@ -305,7 +305,7 @@ void Application::mapalt(guint maskvalue)
     if ( maskvalue < 2 || maskvalue > 5 ) {  // MOD5 is the highest defined in gdktypes.h
         _mapalt = 0;
     } else {
-        _mapalt = (GDK_MOD1_MASK << (maskvalue-1));
+        _mapalt = (GDK_ALT_MASK << (maskvalue-1));
     }
 }
 

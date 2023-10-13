@@ -133,9 +133,9 @@ bool confirm_image_size(TracingEngine const *engine, Geom::IntPoint const &dimen
         char const *msg = _("Image looks too big. Process may take a while and it is"
                             " wise to save your document before continuing."
                             "\n\nContinue the procedure (without saving)?");
-        Gtk::MessageDialog dialog(msg, false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK_CANCEL, true);
+        Gtk::MessageDialog dialog(msg, false, Gtk::MessageType::WARNING, Gtk::ButtonsType::OK_CANCEL, true);
 
-        if (Inkscape::UI::dialog_run(dialog) != Gtk::RESPONSE_OK) {
+        if (Inkscape::UI::dialog_run(dialog) != Gtk::ResponseType::OK) {
             return false;
         }
     }
@@ -148,7 +148,7 @@ bool confirm_image_size(TracingEngine const *engine, Geom::IntPoint const &dimen
  */
 Cairo::RefPtr<Cairo::ImageSurface> rasterizeItems(std::vector<SPItem*> &items, Geom::Affine const &affine, Geom::IntPoint dimensions)
 {
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, dimensions.x(), dimensions.y());
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, dimensions.x(), dimensions.y());
     auto dc = Inkscape::DrawingContext(surface->cobj(), {});
     auto const inv = affine.inverse();
 

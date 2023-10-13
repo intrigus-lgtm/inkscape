@@ -43,7 +43,7 @@ using Inkscape::IO::Resource::get_filename;
 using Inkscape::IO::Resource::UIS;
 
 AlignAndDistribute::AlignAndDistribute(Inkscape::UI::Dialog::DialogBase* dlg)
-    : Gtk::Box(Gtk::ORIENTATION_VERTICAL)
+    : Gtk::Box(Gtk::Orientation::VERTICAL)
     , builder(create_builder("align-and-distribute.ui"))
     , align_and_distribute_box   (get_widget<Gtk::Box>         (builder, "align-and-distribute-box"))
     , align_and_distribute_object(get_widget<Gtk::Box>         (builder, "align-and-distribute-object"))

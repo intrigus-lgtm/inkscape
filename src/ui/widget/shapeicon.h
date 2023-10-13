@@ -43,7 +43,7 @@ public:
         _property_color(*this, "color", 0),
         _property_clipmask(*this, "clipmask", 0)
     {
-        property_mode() = Gtk::CELL_RENDERER_MODE_ACTIVATABLE;
+        property_mode() = Gtk::CellRendererMode::ACTIVATABLE;
         property_stock_size().set_value(Gtk::ICON_SIZE_MENU);
 
         set_icon_name();

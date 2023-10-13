@@ -147,7 +147,7 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
             saveDragOrigin(button_w);
 
             // remember clicked box3d, *not* disregarding groups (since a 3D box is a group), honoring Alt
-            item_to_select = sp_event_context_find_item(_desktop, button_w, event.modifiers & GDK_MOD1_MASK, event.modifiers & GDK_CONTROL_MASK);
+            item_to_select = sp_event_context_find_item(_desktop, button_w, event.modifiers & GDK_ALT_MASK, event.modifiers & GDK_CONTROL_MASK);
 
             dragging = true;
 

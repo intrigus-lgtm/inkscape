@@ -84,7 +84,7 @@ using Inkscape::UI::Widget::UnitTracker;
 /* SPDesktopWidget */
 
 SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *document)
-    : Gtk::Box(Gtk::ORIENTATION_VERTICAL)
+    : Gtk::Box(Gtk::Orientation::VERTICAL)
     , _window{inkscape_window}
 {
     set_name("SPDesktopWidget");
@@ -104,7 +104,7 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     _hbox = Gtk::make_managed<Gtk::Box>();
     _hbox->set_name("DesktopHbox");
 
-    _tbbox = Gtk::make_managed<Gtk::Paned>(Gtk::ORIENTATION_HORIZONTAL);
+    _tbbox = Gtk::make_managed<Gtk::Paned>(Gtk::Orientation::HORIZONTAL);
     _tbbox->set_name("ToolboxCanvasPaned");
     Inkscape::UI::pack_start(*_hbox, *_tbbox, true, true);
 
@@ -511,7 +511,7 @@ void SPDesktopWidget::showInfoDialog(Glib::ustring const &message)
 {
     if (!_window) return;
 
-    Gtk::MessageDialog dialog{*_window, message, false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK};
+    Gtk::MessageDialog dialog{*_window, message, false, Gtk::MessageType::INFO, Gtk::ButtonsType::OK};
     dialog.property_destroy_with_parent() = true;
     dialog.set_name("InfoDialog");
     dialog.set_title(_("Note:")); // probably want to take this as a parameter.
@@ -520,9 +520,9 @@ void SPDesktopWidget::showInfoDialog(Glib::ustring const &message)
 
 bool SPDesktopWidget::warnDialog (Glib::ustring const &text)
 {
-    Gtk::MessageDialog dialog{*_window, text, false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK_CANCEL};
+    Gtk::MessageDialog dialog{*_window, text, false, Gtk::MessageType::WARNING, Gtk::ButtonsType::OK_CANCEL};
     auto const response = Inkscape::UI::dialog_run(dialog);
-    return response == Gtk::RESPONSE_OK;
+    return response == Gtk::ResponseType::OK;
 }
 
 void
@@ -752,7 +752,7 @@ void SPDesktopWidget::repack_snaptoolbar()
 
     // Always reset the various constraints, even if not repacked.
     if (is_perm) {
-        snap.set_valign(Gtk::ALIGN_START);
+        snap.set_valign(Gtk::Align::START);
         return;
     }
 
@@ -760,11 +760,11 @@ void SPDesktopWidget::repack_snaptoolbar()
     if (Inkscape::UI::get_children(*_top_toolbars).size() == 3 && command_toolbar->get_visible()) {
         _top_toolbars->child_property_width(aux) = 2;
         _top_toolbars->child_property_height(snap) =  1;
-        snap.set_valign(Gtk::ALIGN_START);
+        snap.set_valign(Gtk::Align::START);
     } else {
         _top_toolbars->child_property_width(aux) = 1;
         _top_toolbars->child_property_height(snap) =  2;
-        snap.set_valign(Gtk::ALIGN_CENTER);
+        snap.set_valign(Gtk::Align::CENTER);
     }
 }
 

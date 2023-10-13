@@ -72,8 +72,8 @@ CommandPalette::CommandPalette()
     test_sort();
 
     // TODO: Customise on user language RTL, LTR or better user preference
-    _CPBase.set_halign(Gtk::ALIGN_CENTER);
-    _CPBase.set_valign(Gtk::ALIGN_START);
+    _CPBase.set_halign(Gtk::Align::CENTER);
+    _CPBase.set_valign(Gtk::Align::START);
 
     // Close the CommandPalette when the toplevel Window receives an Escape key press.
     // & also when the focused widget of said window is no longer a descendent of the Palette.
@@ -83,7 +83,7 @@ CommandPalette::CommandPalette()
      * Itʼd probably make sense to move this to the main window when thereʼs time */
     // TODO: GTK4: can maybe move this back to self once Windows donʼt intercept/forward/etc key events
     Controller::add_key_on_window<&CommandPalette::on_window_key_pressed>(_CPBase, *this,
-                                                                          Gtk::PHASE_CAPTURE);
+                                                                          Gtk::PropagationPhase::CAPTURE);
     Controller::add_focus_on_window(_CPBase, sigc::mem_fun(*this, &CommandPalette::on_window_focus));
 
     _CPFilter.signal_activate().connect(sigc::mem_fun(*this, &CommandPalette::on_activate_cpfilter));
@@ -92,7 +92,7 @@ CommandPalette::CommandPalette()
     set_mode(CPMode::SEARCH);
 
     _CPSuggestions.set_activate_on_single_click();
-    _CPSuggestions.set_selection_mode(Gtk::SELECTION_SINGLE);
+    _CPSuggestions.set_selection_mode(Gtk::SelectionMode::SINGLE);
 
     // Setup operations [actions, extensions]
     {
@@ -413,12 +413,12 @@ bool CommandPalette::on_focus_cpfilter(Gtk::DirectionType const direction)
 {
     if (_mode != CPMode::SEARCH) return false;
 
-    if (direction == Gtk::DIR_UP) {
+    if (direction == Gtk::DirectionType::UP) {
         set_mode(CPMode::HISTORY);
         return true;
     }
 
-    if (direction == Gtk::DIR_DOWN) {
+    if (direction == Gtk::DirectionType::DOWN) {
         // Unselect so we go to 1st row
         _CPSuggestions.unselect_all();
     }

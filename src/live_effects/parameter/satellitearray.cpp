@@ -82,7 +82,7 @@ void SatelliteArrayParam::initui()
         _tree->set_model(_store);
 
         _tree->set_reorderable(true);
-        _tree->enable_model_drag_dest(Gdk::ACTION_MOVE);
+        _tree->enable_model_drag_dest(Gdk::DragAction::MOVE);
 
         auto const toggle_active = Gtk::make_managed<Gtk::CellRendererToggle>();
         int activeColNum = _tree->append_column(_("Active"), *toggle_active) - 1;
@@ -103,7 +103,7 @@ void SatelliteArrayParam::initui()
         // quick little hack -- newer versions of gtk gave the item zero space allotment
         _scroller->set_size_request(-1, 120);
         _scroller->add(*_tree);
-        _scroller->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+        _scroller->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     }
     param_readSVGValue(param_getSVGValue().c_str());
 }
@@ -331,8 +331,8 @@ Gtk::Widget *SatelliteArrayParam::param_newWidget()
         return nullptr;
     }
 
-    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
-    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
+    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
 
     _tree.reset();
     _scroller.reset();

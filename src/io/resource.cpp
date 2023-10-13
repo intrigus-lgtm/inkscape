@@ -233,18 +233,18 @@ std::string get_filename(Type type, char const *filename, bool localized, bool s
 std::string get_filename(std::string const& path, std::string const& filename)
 {
     // Test if it's a filename and get the parent directory instead
-    if (Glib::file_test(path, Glib::FILE_TEST_IS_REGULAR)) {
+    if (Glib::file_test(path, Glib::FileTest::IS_REGULAR)) {
         auto dirname = Glib::path_get_dirname(path);
-        g_assert(!Glib::file_test(dirname, Glib::FILE_TEST_IS_REGULAR)); // recursion sanity check
+        g_assert(!Glib::file_test(dirname, Glib::FileTest::IS_REGULAR)); // recursion sanity check
         return get_filename(dirname, filename);
     }
     if (g_path_is_absolute(filename.c_str())) {
-        if (Glib::file_test(filename, Glib::FILE_TEST_EXISTS)) {
+        if (Glib::file_test(filename, Glib::FileTest::EXISTS)) {
             return filename;
         }
     } else {
         auto ret = Glib::build_filename(path, filename);
-        if (Glib::file_test(ret, Glib::FILE_TEST_EXISTS)) {
+        if (Glib::file_test(ret, Glib::FileTest::EXISTS)) {
             return ret;
         }
     }
@@ -326,7 +326,7 @@ std::vector<std::string> get_foldernames(std::string const &path, std::vector<co
 void get_filenames_from_path(std::vector<std::string> &files, std::string const &path,
                              std::vector<const char *> const &extensions, std::vector<const char *> const &exclusions)
 {
-    if(!Glib::file_test(path, Glib::FILE_TEST_IS_DIR)) {
+    if(!Glib::file_test(path, Glib::FileTest::IS_DIR)) {
         return;
     }
 
@@ -349,9 +349,9 @@ void get_filenames_from_path(std::vector<std::string> &files, std::string const 
         // Reject any filename which isn't a regular file
         auto filename = Glib::build_filename(path, file);
 
-        if(Glib::file_test(filename, Glib::FILE_TEST_IS_DIR)) {
+        if(Glib::file_test(filename, Glib::FileTest::IS_DIR)) {
             get_filenames_from_path(files, filename, extensions, exclusions);
-        } else if(Glib::file_test(filename, Glib::FILE_TEST_IS_REGULAR) && !reject) {
+        } else if(Glib::file_test(filename, Glib::FileTest::IS_REGULAR) && !reject) {
             files.push_back(Glib::filename_to_utf8(filename));
         }
         file = dir.read_name();
@@ -368,7 +368,7 @@ void get_filenames_from_path(std::vector<std::string> &files, std::string const 
 void get_foldernames_from_path(std::vector<std::string> &folders, std::string const &path,
                                std::vector<const char *> const &exclusions)
 {
-    if (!Glib::file_test(path, Glib::FILE_TEST_IS_DIR)) {
+    if (!Glib::file_test(path, Glib::FileTest::IS_DIR)) {
         return;
     }
 
@@ -386,7 +386,7 @@ void get_foldernames_from_path(std::vector<std::string> &folders, std::string co
         // Reject any filename which isn't a regular file
         auto filename = Glib::build_filename(path, file);
 
-        if (Glib::file_test(filename, Glib::FILE_TEST_IS_DIR) && !reject) {
+        if (Glib::file_test(filename, Glib::FileTest::IS_DIR) && !reject) {
             folders.push_back(Glib::filename_to_utf8(filename));
         }
         file = dir.read_name();
@@ -489,7 +489,7 @@ std::string shared_path()
     if (InkscapeApplication::instance()) {
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         std::string shared_dir = prefs->getString("/options/resources/sharedpath");
-        if (!shared_dir.empty() && Glib::file_test(shared_dir, Glib::FILE_TEST_IS_DIR)) {
+        if (!shared_dir.empty() && Glib::file_test(shared_dir, Glib::FileTest::IS_DIR)) {
             return shared_dir;
         }
     }

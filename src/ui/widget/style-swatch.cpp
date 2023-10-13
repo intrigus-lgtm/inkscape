@@ -88,20 +88,20 @@ void tool_obs_callback(StyleSwatch &_style_swatch, Preferences::Entry const &val
 }
 
 StyleSwatch::StyleSwatch(SPCSSAttr *css, gchar const *main_tip, Gtk::Orientation orient)
-    : Gtk::Box(Gtk::ORIENTATION_HORIZONTAL),
+    : Gtk::Box(Gtk::Orientation::HORIZONTAL),
       _desktop(nullptr),
       _css(nullptr),
       _table(Gtk::make_managed<Gtk::Grid>()),
       _sw_unit(nullptr),
-      _stroke(Gtk::ORIENTATION_HORIZONTAL)
+      _stroke(Gtk::Orientation::HORIZONTAL)
 {
     set_name("StyleSwatch");
     _label[SS_FILL].set_markup(_("Fill:"));
     _label[SS_STROKE].set_markup(_("Stroke:"));
 
     for (int i = SS_FILL; i <= SS_STROKE; i++) {
-        _label[i].set_halign(Gtk::ALIGN_START);
-        _label[i].set_valign(Gtk::ALIGN_CENTER);
+        _label[i].set_halign(Gtk::Align::START);
+        _label[i].set_valign(Gtk::Align::CENTER);
         _label[i].set_margin_top(0);
         _label[i].set_margin_bottom(0);
         _label[i].set_margin_start(0);
@@ -110,8 +110,8 @@ StyleSwatch::StyleSwatch(SPCSSAttr *css, gchar const *main_tip, Gtk::Orientation
         _color_preview[i] = std::make_unique<ColorPreview>(0);
     }
 
-    _opacity_value.set_halign(Gtk::ALIGN_START);
-    _opacity_value.set_valign(Gtk::ALIGN_CENTER);
+    _opacity_value.set_halign(Gtk::Align::START);
+    _opacity_value.set_valign(Gtk::Align::CENTER);
     _opacity_value.set_margin_top(0);
     _opacity_value.set_margin_bottom(0);
     _opacity_value.set_margin_start(0);
@@ -130,7 +130,7 @@ StyleSwatch::StyleSwatch(SPCSSAttr *css, gchar const *main_tip, Gtk::Orientation
     
     _opacity_place.add(_opacity_value);
 
-    if (orient == Gtk::ORIENTATION_VERTICAL) {
+    if (orient == Gtk::Orientation::VERTICAL) {
         _table->attach(_label[SS_FILL],   0, 0, 1, 1);
         _table->attach(_label[SS_STROKE], 0, 1, 1, 1);
         _table->attach(_place[SS_FILL],   1, 0, 1, 1);
@@ -177,15 +177,15 @@ void StyleSwatch::setDesktop(SPDesktop *desktop) {
     _desktop = desktop;
 }
 
-Gtk::EventSequenceState StyleSwatch::on_click(Gtk::GestureMultiPress const & /*click*/,
+Gtk::EventSequenceState StyleSwatch::on_click(Gtk::GestureClick const & /*click*/,
                                               int /*n_press*/, double /*x*/, double /*y*/)
 {
     if (_desktop && !_tool_name.empty()) {
         auto win = _desktop->getInkscapeWindow();
         open_tool_preferences(win, _tool_name);
-        return Gtk::EVENT_SEQUENCE_CLAIMED;
+        return Gtk::EventSequenceState::CLAIMED;
     }
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
 StyleSwatch::~StyleSwatch()

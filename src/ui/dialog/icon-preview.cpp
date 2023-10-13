@@ -80,7 +80,7 @@ IconPreviewPanel::IconPreviewPanel()
     , hot(1)
     , selectionButton(nullptr)
     , docModConn()
-    , iconBox(Gtk::ORIENTATION_VERTICAL)
+    , iconBox(Gtk::Orientation::VERTICAL)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
@@ -117,7 +117,7 @@ IconPreviewPanel::IconPreviewPanel()
 
     magLabel.set_label(labels[hot]);
 
-    auto const magBox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    auto const magBox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
 
     auto const magFrame = Gtk::make_managed<UI::Widget::Frame>(_("Magnified:"));
     magFrame->add( magnified );
@@ -125,7 +125,7 @@ IconPreviewPanel::IconPreviewPanel()
     UI::pack_start(*magBox, *magFrame, UI::PackOptions::expand_widget);
     UI::pack_start(*magBox,  magLabel, UI::PackOptions::shrink       );
 
-    auto const verts = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    auto const verts = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
 
     Gtk::Box *horiz = nullptr;
     int previous = 0;
@@ -134,7 +134,7 @@ IconPreviewPanel::IconPreviewPanel()
         int stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, sizes[i]);
         pixMem[i].resize(sizes[i] * stride);
         auto const pb = Gdk::Pixbuf::create_from_data(pixMem[i].data(),
-            Gdk::COLORSPACE_RGB, true, 8, sizes[i], sizes[i], stride);
+            Gdk::Colorspace::RGB, true, 8, sizes[i], sizes[i], stride);
         images[i] = Gtk::make_managed<Gtk::Image>(pb);
 
         auto const &label = labels[i];
@@ -155,8 +155,8 @@ IconPreviewPanel::IconPreviewPanel()
         buttons[i]->set_tooltip_text(label);
         buttons[i]->signal_clicked().connect(
             sigc::bind(sigc::mem_fun(*this, &IconPreviewPanel::on_button_clicked), i));
-        buttons[i]->set_halign(Gtk::ALIGN_CENTER);
-        buttons[i]->set_valign(Gtk::ALIGN_CENTER);
+        buttons[i]->set_halign(Gtk::Align::CENTER);
+        buttons[i]->set_valign(Gtk::Align::CENTER);
 
         if ( !pack || ( (avail == 0) && (previous == 0) ) ) {
             UI::pack_end(*verts, *(buttons[i]), UI::PackOptions::shrink);
@@ -175,8 +175,8 @@ IconPreviewPanel::IconPreviewPanel()
 
             if (sizes[i] <= avail) {
                 if (!horiz) {
-                    horiz = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
-                    horiz->set_halign(Gtk::ALIGN_CENTER);
+                    horiz = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
+                    horiz->set_halign(Gtk::Align::CENTER);
                     avail = previous;
                     UI::pack_end(*verts, *horiz, UI::PackOptions::shrink);
                 }
@@ -590,7 +590,7 @@ void IconPreviewPanel::renderPreview( SPObject* obj )
 
 void IconPreviewPanel::updateMagnify()
 {
-    Glib::RefPtr<Gdk::Pixbuf> buf = images[hot]->get_pixbuf()->scale_simple( 128, 128, Gdk::INTERP_NEAREST );
+    Glib::RefPtr<Gdk::Pixbuf> buf = images[hot]->get_pixbuf()->scale_simple( 128, 128, Gdk::InterpType::NEAREST );
     magLabel.set_label(labels[hot]);
     magnified.set( buf );
 }

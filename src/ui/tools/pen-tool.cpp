@@ -1279,7 +1279,7 @@ void PenTool::_bsplineSpiroOn()
         p_array[0] = *this->red_curve.first_point();
         p_array[3] = this->red_curve.first_segment()->finalPoint();
         p_array[2] = p_array[3] + (1./3)*(p_array[0] - p_array[3]);
-        _bsplineSpiroMotion(GDK_MOD1_MASK);
+        _bsplineSpiroMotion(GDK_ALT_MASK);
     }
 }
 
@@ -1403,12 +1403,12 @@ void PenTool::_bsplineSpiroMotion(guint const state){
     } else {
         tmp_curve = *sa_overwrited;
     }
-    if ((state & GDK_MOD1_MASK ) && previous != Geom::Point(0,0)) { //ALT drag
+    if ((state & GDK_ALT_MASK ) && previous != Geom::Point(0,0)) { //ALT drag
         p_array[0] = p_array[0] + (p_array[3] - previous);
     }
     if(!tmp_curve.is_unset()){
         Geom::CubicBezier const * cubic = dynamic_cast<Geom::CubicBezier const*>(tmp_curve.last_segment());
-        if ((state & GDK_MOD1_MASK ) && !Geom::are_near(*tmp_curve.last_point(), p_array[0], 0.1))
+        if ((state & GDK_ALT_MASK ) && !Geom::are_near(*tmp_curve.last_point(), p_array[0], 0.1))
         {
             SPCurve previous_weight_power;
             previous_weight_power.moveto(tmp_curve.last_segment()->initialPoint());

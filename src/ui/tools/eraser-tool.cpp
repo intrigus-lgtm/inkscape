@@ -481,9 +481,9 @@ bool EraserTool::_handleKeypress(KeyPressEvent const &key)
 {
     bool ret = false;
     bool just_ctrl = (key.modifiers & GDK_CONTROL_MASK)                      // Ctrl key is down
-                     && !(key.modifiers & (GDK_MOD1_MASK | GDK_SHIFT_MASK)); // but not Alt or Shift
+                     && !(key.modifiers & (GDK_ALT_MASK | GDK_SHIFT_MASK)); // but not Alt or Shift
 
-    bool just_alt = (key.modifiers & GDK_MOD1_MASK)                            // Alt is down
+    bool just_alt = (key.modifiers & GDK_ALT_MASK)                            // Alt is down
                     && !(key.modifiers & (GDK_CONTROL_MASK | GDK_SHIFT_MASK)); // but not Ctrl or Shift
 
     switch (get_latin_keyval(key)) {

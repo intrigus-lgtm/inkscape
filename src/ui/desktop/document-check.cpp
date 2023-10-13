@@ -33,8 +33,8 @@ static int run_dialog(Gtk::Window &window, char const * const save_text,
                       char const * const format, char const * const document_name)
 {
     auto const message = g_markup_printf_escaped(format, document_name);
-    auto dialog = Gtk::MessageDialog{window, message, true, Gtk::MESSAGE_WARNING,
-                                     Gtk::BUTTONS_NONE};
+    auto dialog = Gtk::MessageDialog{window, message, true, Gtk::MessageType::WARNING,
+                                     Gtk::ButtonsType::NONE};
     g_free(message);
 
     dialog.property_destroy_with_parent() = true;
@@ -45,10 +45,10 @@ static int run_dialog(Gtk::Window &window, char const * const save_text,
     auto const ma_labels = Inkscape::UI::get_children(*ma);
     ma_labels.at(0)->set_can_focus(false);
 
-    dialog.add_button(_("Close _without saving"), Gtk::RESPONSE_NO);
-    dialog.add_button(_("_Cancel"),               Gtk::RESPONSE_CANCEL);
-    dialog.add_button(_(save_text),               Gtk::RESPONSE_YES);
-    dialog.set_default_response(Gtk::RESPONSE_YES);
+    dialog.add_button(_("Close _without saving"), Gtk::ResponseType::NO);
+    dialog.add_button(_("_Cancel"),               Gtk::ResponseType::CANCEL);
+    dialog.add_button(_(save_text),               Gtk::ResponseType::YES);
+    dialog.set_default_response(Gtk::ResponseType::YES);
 
     return Inkscape::UI::dialog_run(dialog);
 }

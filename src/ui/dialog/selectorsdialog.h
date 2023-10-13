@@ -179,7 +179,7 @@ public:
     void _addSelector();
     void _delSelector();
     static Glib::ustring _getSelectorClasses(Glib::ustring selector);
-    Gtk::EventSequenceState onTreeViewClickReleased(Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState onTreeViewClickReleased(Gtk::GestureClick const &click,
                                                     int n_press, double x, double y);
     void _selectRow(); // Select row in tree when selection changed.
     void _vscroll();

@@ -562,7 +562,7 @@ Inkscape::Pixbuf const *FontInstance::PixBuf(int glyph_id)
         // We have viewBox! We must transform so viewBox corresponds to design units.
 
         // Replace viewbox
-        svg = regex->replace_literal(svg, 0, viewbox, static_cast<Glib::RegexMatchFlags>(0));
+        svg = regex->replace_literal(svg, 0, viewbox, static_cast<Glib::Regex::MatchFlags>(0));
 
         // Insert group with required transform to map glyph to new viewbox.
         double x = std::stod(matchInfo.fetch(1).raw());
@@ -623,7 +623,7 @@ Inkscape::Pixbuf const *FontInstance::PixBuf(int glyph_id)
         // No viewBox! We insert one. (To do: Look at 'width' and 'height' to see if we must scale.)
         Glib::RefPtr<Glib::Regex> regex = Glib::Regex::create("<\\s*svg");
         viewbox.insert(0, "<svg ");
-        svg = regex->replace_literal(svg, 0, viewbox, static_cast<Glib::RegexMatchFlags>(0));
+        svg = regex->replace_literal(svg, 0, viewbox, static_cast<Glib::Regex::MatchFlags>(0));
     }
 
     // Finally create pixbuf!

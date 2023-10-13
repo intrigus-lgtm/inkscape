@@ -148,7 +148,7 @@ GradientSelectorInterface *PaintSelector::getGradientFromData() const
 
 PaintSelector::PaintSelector(FillOrStroke kind)
 {
-    set_orientation(Gtk::ORIENTATION_VERTICAL);
+    set_orientation(Gtk::Orientation::VERTICAL);
 
     _mode = static_cast<PaintSelector::Mode>(-1); // huh?  do you mean 0xff?  --  I think this means "not in the enum"
 
@@ -208,12 +208,12 @@ PaintSelector::PaintSelector(FillOrStroke kind)
 
     /* Frame */
     _label = Gtk::make_managed<Gtk::Label>("");
-    auto const lbbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 0);
+    auto const lbbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 0);
     _label->set_visible(true);
     UI::pack_start(*lbbox, *_label, false, false, 4);
     UI::pack_start(*this, *lbbox, false, false, 4);
 
-    _frame = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    _frame = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     _frame->set_visible(true);
     UI::pack_start(*this, *_frame, true, true);
 
@@ -572,7 +572,7 @@ void PaintSelector::set_mode_color(PaintSelector::Mode /*mode*/)
         /* Create new color selector */
         /* Create vbox */
         if (!_selector_solid_color) {
-            _selector_solid_color = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 4);
+            _selector_solid_color = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
 
             /* Color selector */
             auto const color_selector = Gtk::make_managed<ColorNotebook>(*_selected_color);
@@ -859,9 +859,9 @@ void PaintSelector::set_mode_mesh(PaintSelector::Mode mode)
 
         if (!_selector_mesh) {
             /* Create vbox */
-            _selector_mesh = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 4);
+            _selector_mesh = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
 
-            auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 1);
+            auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 1);
 
             /**
              * Create a combo_box and store with 4 columns,
@@ -888,7 +888,7 @@ void PaintSelector::set_mode_mesh(PaintSelector::Mode mode)
 
             g_object_unref(G_OBJECT(store));
 
-            auto const hb2 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 0);
+            auto const hb2 = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 0);
 
             auto const l = Gtk::make_managed<Gtk::Label>();
             l->set_markup(_("Use the <b>Mesh tool</b> to modify the mesh."));

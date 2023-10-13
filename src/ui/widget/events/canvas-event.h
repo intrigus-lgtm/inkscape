@@ -154,7 +154,7 @@ struct KeyEvent : CanvasEvent
                 return GDK_CONTROL_MASK;
             case GDK_KEY_Alt_L:
             case GDK_KEY_Alt_R:
-                return GDK_MOD1_MASK;
+                return GDK_ALT_MASK;
             case GDK_KEY_Meta_L:
             case GDK_KEY_Meta_R:
                 return GDK_META_MASK;
@@ -342,14 +342,14 @@ inline constexpr auto INK_GDK_PRIMARY_MASK = GDK_CONTROL_MASK;
 // Reference: https://docs.gtk.org/gtk4/migrating-3to4.html#adapt-to-changes-in-keyboard-modifier-handling
 
 /// All modifiers used by Inkscape.
-inline constexpr auto INK_GDK_MODIFIER_MASK_MOD = GDK_SHIFT_MASK | INK_GDK_PRIMARY_MASK | GDK_MOD1_MASK;
+inline constexpr auto INK_GDK_MODIFIER_MASK_MOD = GDK_SHIFT_MASK | INK_GDK_PRIMARY_MASK | GDK_ALT_MASK;
 
 inline bool mod_shift(unsigned modifiers) { return modifiers & GDK_SHIFT_MASK; }
 inline bool mod_ctrl(unsigned modifiers) { return modifiers & INK_GDK_PRIMARY_MASK; }
-inline bool mod_alt(unsigned modifiers) { return modifiers & GDK_MOD1_MASK; }
+inline bool mod_alt(unsigned modifiers) { return modifiers & GDK_ALT_MASK; }
 inline bool mod_shift_only(unsigned modifiers) { return (modifiers & INK_GDK_MODIFIER_MASK_MOD) == GDK_SHIFT_MASK; }
 inline bool mod_ctrl_only(unsigned modifiers) { return (modifiers & INK_GDK_MODIFIER_MASK_MOD) == INK_GDK_PRIMARY_MASK; }
-inline bool mod_alt_only(unsigned modifiers) { return (modifiers & INK_GDK_MODIFIER_MASK_MOD) == GDK_MOD1_MASK; }
+inline bool mod_alt_only(unsigned modifiers) { return (modifiers & INK_GDK_MODIFIER_MASK_MOD) == GDK_ALT_MASK; }
 
 inline bool mod_shift(KeyEvent const &event) { return mod_shift(event.modifiers); }
 inline bool mod_ctrl(KeyEvent const &event) { return mod_ctrl(event.modifiers); }
@@ -364,14 +364,14 @@ inline bool mod_alt_only(KeyEvent const &event) { return mod_alt_only(event.modi
  */
 
 /// All modifiers used by Inkscape.
-inline constexpr auto INK_GDK_MODIFIER_MASK_HELD = GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK;
+inline constexpr auto INK_GDK_MODIFIER_MASK_HELD = GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_ALT_MASK;
 
 inline bool state_held_shift(unsigned state) { return state & GDK_SHIFT_MASK; }
 inline bool state_held_ctrl(unsigned state) { return state & GDK_CONTROL_MASK; }
-inline bool state_held_alt(unsigned state) { return state & GDK_MOD1_MASK; }
+inline bool state_held_alt(unsigned state) { return state & GDK_ALT_MASK; }
 inline bool state_held_only_shift(unsigned state) { return (state & INK_GDK_MODIFIER_MASK_HELD) == GDK_SHIFT_MASK; }
 inline bool state_held_only_ctrl(unsigned state) { return (state & INK_GDK_MODIFIER_MASK_HELD) == GDK_CONTROL_MASK; }
-inline bool state_held_only_alt(unsigned state) { return (state & INK_GDK_MODIFIER_MASK_HELD) == GDK_MOD1_MASK; }
+inline bool state_held_only_alt(unsigned state) { return (state & INK_GDK_MODIFIER_MASK_HELD) == GDK_ALT_MASK; }
 inline bool state_held_any_modifiers(unsigned state) { return state & INK_GDK_MODIFIER_MASK_HELD; }
 inline bool state_held_no_modifiers(unsigned state) { return !state_held_any_modifiers(state); }
 

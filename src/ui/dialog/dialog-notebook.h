@@ -110,7 +110,7 @@ private:
     void on_page_removed(Gtk::Widget *page, int page_num);
     void on_size_allocate_scroll(Gtk::Allocation &allocation);
     void on_size_allocate_notebook(Gtk::Allocation &allocation);
-    Gtk::EventSequenceState on_tab_click_event(Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_tab_click_event(Gtk::GestureClick const &click,
                                                int n_press, double x, double y,
                                                Gtk::Widget *page);
     void on_close_button_click_event(Gtk::Widget *page);

@@ -47,8 +47,8 @@ WidgetLabel::WidgetLabel(Inkscape::XML::Node *xml, Inkscape::Extension::Extensio
         // xgettext copies the source string verbatim in this case, so no changes needed
     } else {
         // remove all whitespace from start/end of string and replace intermediate whitespace with a single space
-        _value = Glib::Regex::create("^\\s+|\\s+$")->replace_literal(_value, 0, "", (Glib::RegexMatchFlags)0);
-        _value = Glib::Regex::create("\\s+")->replace_literal(_value, 0, " ", (Glib::RegexMatchFlags)0);
+        _value = Glib::Regex::create("^\\s+|\\s+$")->replace_literal(_value, 0, "", (Glib::Regex::MatchFlags)0);
+        _value = Glib::Regex::create("\\s+")->replace_literal(_value, 0, " ", (Glib::Regex::MatchFlags)0);
     }
 
     // translate value
@@ -59,7 +59,7 @@ WidgetLabel::WidgetLabel(Inkscape::XML::Node *xml, Inkscape::Extension::Extensio
     }
 
     // finally replace all remaining <br/> with a real newline character
-    _value = Glib::Regex::create("<br/>")->replace_literal(_value, 0, "\n", (Glib::RegexMatchFlags)0);
+    _value = Glib::Regex::create("<br/>")->replace_literal(_value, 0, "\n", (Glib::Regex::MatchFlags)0);
 
     // parse appearance
     if (_appearance) {
@@ -110,7 +110,7 @@ Gtk::Widget *WidgetLabel::get_widget(sigc::signal<void ()> * /*changeSignal*/)
 
     label->set_visible(true);
 
-    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
     UI::pack_start(*hbox, *label, true, true);
     hbox->set_visible(true);
 

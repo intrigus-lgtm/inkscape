@@ -40,7 +40,7 @@ GrayMap gdkPixbufToGrayMap(Glib::RefPtr<Gdk::Pixbuf> const &buf)
 
 Glib::RefPtr<Gdk::Pixbuf> grayMapToGdkPixbuf(GrayMap const &map)
 {
-    auto buf = Gdk::Pixbuf::create(Gdk::COLORSPACE_RGB, false, 8, map.width, map.height);
+    auto buf = Gdk::Pixbuf::create(Gdk::Colorspace::RGB, false, 8, map.width, map.height);
 
     int rowstride = buf->get_rowstride();
     int nchannels = buf->get_n_channels();
@@ -86,7 +86,7 @@ RgbMap gdkPixbufToRgbMap(Glib::RefPtr<Gdk::Pixbuf> const &buf)
 
 Glib::RefPtr<Gdk::Pixbuf> indexedMapToGdkPixbuf(IndexedMap const &map)
 {
-    auto buf = Gdk::Pixbuf::create(Gdk::COLORSPACE_RGB, false, 8, map.width, map.height);
+    auto buf = Gdk::Pixbuf::create(Gdk::Colorspace::RGB, false, 8, map.width, map.height);
 
     auto data     = buf->get_pixels();
     int rowstride = buf->get_rowstride();

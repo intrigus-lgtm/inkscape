@@ -317,7 +317,7 @@ StartScreen::enlist_recent_files()
     auto store = Glib::wrap(GTK_LIST_STORE(gtk_tree_view_get_model(recent_treeview.gobj())));
     store->clear();
     // Now sort the result by visited time
-    store->set_sort_column(cols.col_dt, Gtk::SORT_DESCENDING);
+    store->set_sort_column(cols.col_dt, Gtk::SortType::DESCENDING);
 
     // Open [other]
     Gtk::TreeModel::Row first_row = *(store->append());
@@ -336,7 +336,7 @@ StartScreen::enlist_recent_files()
             // This uri is a GVFS uri, so parse it with that or it will fail.
             auto file = Gio::File::create_for_uri(item->get_uri());
             std::string path = file->get_path();
-            if (!path.empty() && Glib::file_test(path, Glib::FILE_TEST_IS_REGULAR)
+            if (!path.empty() && Glib::file_test(path, Glib::FileTest::IS_REGULAR)
                 && item->get_mime_type() == "image/svg+xml") {
                 Gtk::TreeModel::Row row = *(store->append());
                 row[cols.col_name] = item->get_display_name();
@@ -711,7 +711,7 @@ StartScreen::keyboard_changed()
 
     auto &keys_warning = get_widget<Gtk::InfoBar>(builder, "keys_warning");
     if (set_to != "inkscape.xml" && set_to != "default.xml") {
-        keys_warning.set_message_type(Gtk::MessageType::MESSAGE_WARNING);
+        keys_warning.set_message_type(Gtk::MessageType::WARNING);
         keys_warning.set_visible(true);
     } else {
         keys_warning.set_visible(false);

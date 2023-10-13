@@ -645,7 +645,7 @@ void Script::showPopupError (const Glib::ustring &data,
                              Gtk::MessageType type,
                              const Glib::ustring &message)
 {
-    Gtk::MessageDialog warning(message, false, type, Gtk::BUTTONS_OK, true);
+    Gtk::MessageDialog warning(message, false, type, Gtk::ButtonsType::OK, true);
     warning.set_resizable(true);
     if (parent_window) {
         warning.set_transient_for(*parent_window);
@@ -656,13 +656,13 @@ void Script::showPopupError (const Glib::ustring &data,
 
     auto const textview = Gtk::make_managed<Gtk::TextView>();
     textview->set_editable(false);
-    textview->set_wrap_mode(Gtk::WRAP_WORD);
+    textview->set_wrap_mode(Gtk::WrapMode::WORD);
     textview->set_visible(true);
     textview->get_buffer()->set_text(data);
 
     auto const scrollwindow = Gtk::make_managed<Gtk::ScrolledWindow>();
     scrollwindow->add(*textview);
-    scrollwindow->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    scrollwindow->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     scrollwindow->set_shadow_type(Gtk::SHADOW_IN);
     scrollwindow->set_visible(true);
     scrollwindow->set_size_request(0, 60);
@@ -803,7 +803,7 @@ int Script::execute (const std::list<std::string> &in_command,
     Glib::ustring stderr_data = fileerr.string();
     if (!stderr_data.empty() && !ignore_stderr) {
         if (INKSCAPE.use_gui()) {
-            showPopupError(stderr_data, Gtk::MESSAGE_INFO,
+            showPopupError(stderr_data, Gtk::MessageType::INFO,
                                  _("Inkscape has received additional data from the script executed.  "
                                    "The script did not return an error, but this may indicate the results will not be as expected."));
         } else {

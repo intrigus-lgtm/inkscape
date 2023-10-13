@@ -19,7 +19,7 @@ int dialog_run(Gtk::Dialog &dialog)
     });
 
     auto hide_conn = dialog.signal_hide().connect([&] {
-        result = Gtk::RESPONSE_NONE;
+        result = Gtk::ResponseType::NONE;
     });
 
     dialog.set_modal();

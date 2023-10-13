@@ -129,7 +129,7 @@ bool MarkerTool::root_handler(CanvasEvent const &event)
         [&] (ButtonPressEvent const &event) {
             if (event.num_press == 1 && event.button == 1) {
 
-                item_to_select = sp_event_context_find_item (_desktop, event.pos, event.modifiers & GDK_MOD1_MASK, true);
+                item_to_select = sp_event_context_find_item (_desktop, event.pos, event.modifiers & GDK_ALT_MASK, true);
 
                 grabCanvasEvents();
                 ret = true;

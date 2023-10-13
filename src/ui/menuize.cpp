@@ -55,7 +55,7 @@ static Gtk::Widget &get_widget(GtkEventControllerMotion * const motion)
 
 static void unset_state(Gtk::Widget &widget)
 {
-    widget.unset_state_flags(Gtk::STATE_FLAG_FOCUSED | Gtk::STATE_FLAG_PRELIGHT);
+    widget.unset_state_flags(Gtk::StateFlags::FOCUSED | Gtk::StateFlags::PRELIGHT);
 }
 
 static void on_motion_grab_focus(GtkEventControllerMotion * const motion, double /*x*/, double /*y*/,
@@ -102,9 +102,9 @@ void menuize(Gtk::Widget &widget)
     widget.property_has_focus().signal_changed().connect([&]
     {
         if (widget.has_focus()) {
-            widget.set_state_flags(Gtk::STATE_FLAG_PRELIGHT, false);
+            widget.set_state_flags(Gtk::StateFlags::PRELIGHT, false);
         } else {
-            widget.unset_state_flags(Gtk::STATE_FLAG_PRELIGHT);
+            widget.unset_state_flags(Gtk::StateFlags::PRELIGHT);
         }
     });
 }

@@ -149,9 +149,9 @@ private:
     Geom::IntPoint _rulerToCanvas(bool horiz) const;
     void _createGuideItem(Geom::Point const &pos, bool horiz);
     void _createGuide(Geom::Point origin, Geom::Point normal);
-    Gtk::EventSequenceState _rulerButtonPress  (Gtk::GestureMultiPress const &gesture,
+    Gtk::EventSequenceState _rulerButtonPress  (Gtk::GestureClick const &gesture,
                                                 int n_press, double x, double y);
-    Gtk::EventSequenceState _rulerButtonRelease(Gtk::GestureMultiPress const &gesture,
+    Gtk::EventSequenceState _rulerButtonRelease(Gtk::GestureClick const &gesture,
                                                 int n_press, double x, double y, bool horiz);
     void _rulerMotion(GtkEventControllerMotion const *controller, double x, double y, bool horiz);
     void _blinkLockButton();

@@ -96,7 +96,7 @@ template <typename Slot>
         if (!slot) return;
         Gtk::EventSequenceState const state = slot(
             controller, std::forward<decltype(args)>(args)...);
-        if (state != Gtk::EVENT_SEQUENCE_NONE) {
+        if (state != Gtk::EventSequenceState::NONE) {
             controller.set_state(state);
         }
     };
@@ -104,16 +104,16 @@ template <typename Slot>
 
 } // unnamed namespace
 
-Gtk::GestureMultiPress &add_click(Gtk::Widget &widget,
+Gtk::GestureClick &add_click(Gtk::Widget &widget,
                                   ClickSlot on_pressed,
                                   ClickSlot on_released,
                                   Button const button,
                                   Gtk::PropagationPhase const phase,
                                   When const when)
 {
-    auto &click = create<Gtk::GestureMultiPress>(widget, phase);
-    connect(click, &Gtk::GestureMultiPress::signal_pressed , use_state(std::move(on_pressed )), when);
-    connect(click, &Gtk::GestureMultiPress::signal_released, use_state(std::move(on_released)), when);
+    auto &click = create<Gtk::GestureClick>(widget, phase);
+    connect(click, &Gtk::GestureClick::signal_pressed , use_state(std::move(on_pressed )), when);
+    connect(click, &Gtk::GestureClick::signal_released, use_state(std::move(on_released)), when);
     click.set_button(static_cast<int>(button));
     return click;
 }

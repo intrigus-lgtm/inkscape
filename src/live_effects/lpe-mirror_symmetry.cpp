@@ -156,7 +156,7 @@ LPEMirrorSymmetry::newWidget()
 {
     // use manage here, because after deletion of Effect object, others might
     // still be pointing to this widget.
-    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 2);
+    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
     vbox->property_margin().set_value(5);
 
     std::vector<Parameter *>::iterator it = param_vector.begin();
@@ -179,7 +179,7 @@ LPEMirrorSymmetry::newWidget()
 
         ++it;
     }
-    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 0);
+    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 0);
     auto const center_vert_button = Gtk::make_managed<Gtk::Button>(Glib::ustring(_("Vertical center")));
     center_vert_button->signal_clicked().connect(sigc::mem_fun (*this,&LPEMirrorSymmetry::centerVert));
     center_vert_button->set_size_request(110,20);

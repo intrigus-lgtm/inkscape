@@ -80,7 +80,7 @@ void TemplateList::init(Inkscape::Extension::TemplateShow mode)
                 try {
                     it = stores.emplace_hint(it, cat, generate_category(cat));
                     it->second->clear();
-                    it->second->set_sort_column(cols.priority, Gtk::SORT_ASCENDING);
+                    it->second->set_sort_column(cols.priority, Gtk::SortType::ASCENDING);
                 } catch (UIBuilderError const & /*error*/) {
                     return;
                 }

@@ -508,7 +508,7 @@ MarkerComboBox::init_combo()
     if (markers_doc == nullptr) {
         using namespace Inkscape::IO::Resource;
         auto markers_source = get_path_string(SYSTEM, MARKERS, "markers.svg");
-        if (Glib::file_test(markers_source, Glib::FILE_TEST_IS_REGULAR)) {
+        if (Glib::file_test(markers_source, Glib::FileTest::IS_REGULAR)) {
             markers_doc = SPDocument::createNewDoc(markers_source.c_str(), false);
         }
     }

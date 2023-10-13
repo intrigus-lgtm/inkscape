@@ -248,11 +248,11 @@ GradientWithStops::limits_t GradientWithStops::get_stop_limits(int maybe_index) 
 bool GradientWithStops::on_focus(Gtk::DirectionType const direction)
 {
     // On arrow key, let ::key-pressed move focused stop (horz) / nothing (vert)
-    if (!(direction == Gtk::DIR_TAB_FORWARD || direction == Gtk::DIR_TAB_BACKWARD)) {
+    if (!(direction == Gtk::DirectionType::TAB_FORWARD || direction == Gtk::DirectionType::TAB_BACKWARD)) {
         return true;
     }
 
-    auto const backward = direction == Gtk::DIR_TAB_BACKWARD;
+    auto const backward = direction == Gtk::DirectionType::TAB_BACKWARD;
     auto const n_stops = _stops.size();
 
     if (_drawing_area->has_focus()) {
@@ -320,11 +320,11 @@ bool GradientWithStops::on_key_pressed(GtkEventControllerKey const * /*controlle
     return false;
 }
 
-Gtk::EventSequenceState GradientWithStops::on_click_pressed(Gtk::GestureMultiPress const & /*click*/,
+Gtk::EventSequenceState GradientWithStops::on_click_pressed(Gtk::GestureClick const & /*click*/,
                                                             int const n_press,
                                                             double const x, double const y)
 {
-    if (!_gradient) return Gtk::EVENT_SEQUENCE_NONE;
+    if (!_gradient) return Gtk::EventSequenceState::NONE;
 
     if (n_press == 1) {
         // single button press selects stop and can start dragging it
@@ -339,7 +339,7 @@ Gtk::EventSequenceState GradientWithStops::on_click_pressed(Gtk::GestureMultiPre
 
         if (index < 0) {
             set_focused_stop(-1); // no stop
-            return Gtk::EVENT_SEQUENCE_NONE;
+            return Gtk::EventSequenceState::NONE;
         }
 
         set_focused_stop(index);
@@ -360,7 +360,7 @@ Gtk::EventSequenceState GradientWithStops::on_click_pressed(Gtk::GestureMultiPre
     } else if (n_press == 2) {
         // double-click may insert a new stop
         auto const index = find_stop_at(x, y);
-        if (index >= 0) return Gtk::EVENT_SEQUENCE_NONE;
+        if (index >= 0) return Gtk::EventSequenceState::NONE;
 
         auto layout = get_layout();
         if (layout.width > 0 && x > layout.x && x < layout.x + layout.width) {
@@ -370,16 +370,16 @@ Gtk::EventSequenceState GradientWithStops::on_click_pressed(Gtk::GestureMultiPre
         }
     }
 
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
-Gtk::EventSequenceState GradientWithStops::on_click_released(Gtk::GestureMultiPress const & /*click*/,
+Gtk::EventSequenceState GradientWithStops::on_click_released(Gtk::GestureClick const & /*click*/,
                                                              int /*n_press*/,
                                                              double const x, double const y)
 {
     set_cursor(get_cursor(x, y));
     _dragging = false;
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
 // move stop by a given amount (delta)

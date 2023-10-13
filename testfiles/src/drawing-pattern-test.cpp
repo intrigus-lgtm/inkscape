@@ -54,7 +54,7 @@ TEST(DrawingPatternTest, fragments)
 
         auto draw(Geom::IntRect const &rect)
         {
-            auto cs = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, rect.width(), rect.height());
+            auto cs = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, rect.width(), rect.height());
             auto ds = Inkscape::DrawingSurface(cs->cobj(), rect.min());
             auto dc = Inkscape::DrawingContext(ds);
             drawing.render(dc, rect);

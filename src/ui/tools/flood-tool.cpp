@@ -717,7 +717,7 @@ static void sp_flood_do_flood_fill(SPDesktop *desktop, Geom::Point const &cursor
     auto const width = img_dims.x();
     auto const height = img_dims.y();
 
-    auto const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::FORMAT_ARGB32, width);
+    auto const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::Surface::Format::ARGB32, width);
     // TODO: C++20: *once* Apple+AppImage support it: Use std::make_unique_for_overwrite()
     auto const px = std::make_unique<unsigned char[]>(stride * height);
     uint32_t bgcolor, dtc;
@@ -734,7 +734,7 @@ static void sp_flood_do_flood_fill(SPDesktop *desktop, Geom::Point const &cursor
         auto const final_bbox = Geom::IntRect::from_xywh(0, 0, width, height);
         drawing.update(final_bbox);
 
-        auto surf = Cairo::ImageSurface::create(px.get(), Cairo::FORMAT_ARGB32, width, height, stride);
+        auto surf = Cairo::ImageSurface::create(px.get(), Cairo::Surface::Format::ARGB32, width, height, stride);
         auto dc = DrawingContext(surf->cobj(), Geom::Point());
         // cairo_translate not necessary here - surface origin is at 0,0
 
@@ -760,7 +760,7 @@ static void sp_flood_do_flood_fill(SPDesktop *desktop, Geom::Point const &cursor
 
     if constexpr (false) {
         // Dump data to png
-        auto surf = Cairo::ImageSurface::create(px.get(), Cairo::FORMAT_ARGB32, width, height, stride);
+        auto surf = Cairo::ImageSurface::create(px.get(), Cairo::Surface::Format::ARGB32, width, height, stride);
         surf->write_to_png("cairo2.png");
         std::cout << "  Wrote cairo2.png" << std::endl;
     }
@@ -1081,7 +1081,7 @@ bool FloodTool::root_handler(CanvasEvent const &event)
             if (r->is_started()) {
                 dragging = false;
                 bool is_point_fill = within_tolerance;
-                bool is_touch_fill = event.modifiers & GDK_MOD1_MASK;
+                bool is_touch_fill = event.modifiers & GDK_ALT_MASK;
 
                 // It's possible for the user to sneakily change the tool while the
                 // Gtk main loop has control, so we save the current desktop address:

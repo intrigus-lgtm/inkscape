@@ -1769,7 +1769,7 @@ Gtk::Widget *
 Effect::newWidget()
 {
     // use manage here, because after deletion of Effect object, others might still be pointing to this widget.
-    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
 
     vbox->property_margin().set_value(5);
 

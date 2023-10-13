@@ -97,23 +97,23 @@ Transformation::Transformation()
     // Notebook for individual transformations
     UI::pack_start(*this, _notebook, false, false);
 
-    _page_move.set_halign(Gtk::ALIGN_START);
+    _page_move.set_halign(Gtk::Align::START);
     _notebook.append_page(_page_move, _("_Move"), true);
     layoutPageMove();
 
-    _page_scale.set_halign(Gtk::ALIGN_START);
+    _page_scale.set_halign(Gtk::Align::START);
     _notebook.append_page(_page_scale, _("_Scale"), true);
     layoutPageScale();
 
-    _page_rotate.set_halign(Gtk::ALIGN_START);
+    _page_rotate.set_halign(Gtk::Align::START);
     _notebook.append_page(_page_rotate, _("_Rotate"), true);
     layoutPageRotate();
 
-    _page_skew.set_halign(Gtk::ALIGN_START);
+    _page_skew.set_halign(Gtk::Align::START);
     _notebook.append_page(_page_skew, _("Ske_w"), true);
     layoutPageSkew();
 
-    _page_transform.set_halign(Gtk::ALIGN_START);
+    _page_transform.set_halign(Gtk::Align::START);
     _notebook.append_page(_page_transform, _("Matri_x"), true);
     layoutPageTransform();
 
@@ -141,14 +141,14 @@ Transformation::Transformation()
 
     resetButton->set_image_from_icon_name("reset-settings-symbolic");
     resetButton->set_size_request(30, -1);
-    resetButton->set_halign(Gtk::ALIGN_CENTER);
+    resetButton->set_halign(Gtk::Align::CENTER);
     resetButton->set_use_underline();
     resetButton->set_tooltip_text(_("Reset the values on the current tab to defaults"));
     resetButton->set_sensitive(true);
     resetButton->signal_clicked().connect(sigc::mem_fun(*this, &Transformation::onClear));
 
     applyButton->set_use_underline();
-    applyButton->set_halign(Gtk::ALIGN_CENTER);
+    applyButton->set_halign(Gtk::Align::CENTER);
     applyButton->set_tooltip_text(_("Apply transformation to selection"));
     applyButton->set_sensitive(false);
     applyButton->signal_clicked().connect(sigc::mem_fun(*this, &Transformation::_apply));
@@ -157,7 +157,7 @@ Transformation::Transformation()
     auto const button_box = Gtk::make_managed<Gtk::Box>();
     button_box->set_margin_top(4);
     button_box->set_spacing(8);
-    button_box->set_halign(Gtk::ALIGN_CENTER);
+    button_box->set_halign(Gtk::Align::CENTER);
     UI::pack_start(*button_box, *applyButton);
     UI::pack_start(*button_box, *resetButton);
     UI::pack_start(*this, *button_box, UI::PackOptions::shrink);
@@ -296,8 +296,8 @@ void Transformation::layoutPageRotate()
     _clockwise_rotate.set_group(group);
 
     auto const box = Gtk::make_managed<Gtk::Box>();
-    _counterclockwise_rotate.set_halign(Gtk::ALIGN_START);
-    _clockwise_rotate.set_halign(Gtk::ALIGN_START);
+    _counterclockwise_rotate.set_halign(Gtk::Align::START);
+    _clockwise_rotate.set_halign(Gtk::Align::START);
     UI::pack_start(*box, _counterclockwise_rotate);
     UI::pack_start(*box, _clockwise_rotate);
 
@@ -348,7 +348,7 @@ void Transformation::layoutPageTransform()
 {
     _units_transform.setUnitType(UNIT_TYPE_LINEAR);
     _units_transform.set_tooltip_text(_("E and F units"));
-    _units_transform.set_halign(Gtk::ALIGN_END);
+    _units_transform.set_halign(Gtk::Align::END);
     _units_transform.set_margin_top(3);
     _units_transform.set_margin_bottom(3);
 

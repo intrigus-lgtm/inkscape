@@ -76,7 +76,7 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
     family_treeview.set_headers_visible (false);
     family_treeview.append_column (family_treecolumn);
 
-    family_scroll.set_policy (Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
+    family_scroll.set_policy (Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
     family_scroll.add (family_treeview);
 
     family_frame.set_hexpand (true);
@@ -97,7 +97,7 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
 
     style_treeview.get_column(0)->set_resizable (true);
 
-    style_scroll.set_policy (Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    style_scroll.set_policy (Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     style_scroll.add (style_treeview);
 
     style_frame.set_hexpand (true);
@@ -115,7 +115,7 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
 
     // Font Variations
     font_variations.set_vexpand (true);
-    font_variations_scroll.set_policy (Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
+    font_variations_scroll.set_policy (Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
     font_variations_scroll.add (font_variations);
 
     // Grid
@@ -136,7 +136,7 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
     }
 
     // For drag and drop.
-    family_treeview.drag_source_set(get_target_entries(), Gdk::BUTTON1_MASK, Gdk::ACTION_COPY | Gdk::ACTION_DEFAULT);
+    family_treeview.drag_source_set(get_target_entries(), Gdk::ModifierType::BUTTON1_MASK, Gdk::DragAction::COPY | Gdk::DragAction::DEFAULT);
     family_treeview.signal_drag_data_get().connect(sigc::mem_fun(*this, &FontSelector::on_drag_data_get));
     family_treeview.signal_drag_begin().connect(sigc::mem_fun(*this, &FontSelector::on_drag_start), false);
 

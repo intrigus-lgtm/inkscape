@@ -58,7 +58,7 @@ public:
             // We pack this into a scrollbar... otherwise the minimum height is set to what is required to fit all
             // flow box children into the flow box when the flow box has minimum width. (Crazy if you ask me!)
             scrolled_window = Gtk::make_managed<Gtk::ScrolledWindow>();
-            scrolled_window->set_policy (Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
+            scrolled_window->set_policy (Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
             scrolled_window->add(*flow_box);
         }
 
@@ -80,7 +80,7 @@ public:
             // Restrict label width (some fonts have lots of alternatives).
             label->set_line_wrap( true );
             label->set_line_wrap_mode( Pango::WRAP_WORD_CHAR );
-            label->set_ellipsize( Pango::ELLIPSIZE_END );
+            label->set_ellipsize( Pango::EllipsizeMode::END );
             label->set_lines(3);
             label->set_hexpand();
 
@@ -154,7 +154,7 @@ private:
 };
 
 FontVariants::FontVariants () :
-  Gtk::Box (Gtk::ORIENTATION_VERTICAL),
+  Gtk::Box (Gtk::Orientation::VERTICAL),
   _ligatures_frame          ( Glib::ustring(C_("Font feature", "Ligatures"    )) ),
   _ligatures_common         ( Glib::ustring(C_("Font feature", "Common"       )) ),
   _ligatures_discretionary  ( Glib::ustring(C_("Font feature", "Discretionary")) ),
@@ -209,7 +209,7 @@ FontVariants::FontVariants () :
   _caps_changed( false ),
   _numeric_changed( false ),
   _asian_changed( false ),
-  _feature_vbox(Gtk::ORIENTATION_VERTICAL)
+  _feature_vbox(Gtk::Orientation::VERTICAL)
 
 {
 
@@ -244,7 +244,7 @@ FontVariants::FontVariants () :
       // char limit - not really needed, since number of lines is restricted
       label->set_max_width_chars(999);
       // show ellipsis when text overflows
-      label->set_ellipsize(Pango::ELLIPSIZE_END);
+      label->set_ellipsize(Pango::EllipsizeMode::END);
       // up to 5 lines
       label->set_lines(5);
       // multiline
@@ -490,11 +490,11 @@ FontVariants::FontVariants () :
   // Add tooltips
   _feature_entry.set_tooltip_text( _("Feature settings in CSS form (e.g. \"wxyz\" or \"wxyz\" 3)."));
 
-  _feature_substitutions.set_justify( Gtk::JUSTIFY_LEFT );
+  _feature_substitutions.set_justify( Gtk::Justification::LEFT );
   _feature_substitutions.set_line_wrap( true );
   _feature_substitutions.set_line_wrap_mode( Pango::WRAP_WORD_CHAR );
 
-  _feature_list.set_justify( Gtk::JUSTIFY_LEFT );
+  _feature_list.set_justify( Gtk::Justification::LEFT );
   _feature_list.set_line_wrap( true );
 
   // Add to frame

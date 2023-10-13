@@ -78,7 +78,7 @@ void paned_set_vertical(Gtk::Paned &paned, bool vertical)
     second.set_margin_top(vertical ? space : 0);
     second.set_margin_start(vertical ? 0 : space);
     assert(paned.child_property_resize(second));
-    paned.set_orientation(vertical ? Gtk::ORIENTATION_VERTICAL : Gtk::ORIENTATION_HORIZONTAL);
+    paned.set_orientation(vertical ? Gtk::Orientation::VERTICAL : Gtk::Orientation::HORIZONTAL);
 }
 
 } // namespace

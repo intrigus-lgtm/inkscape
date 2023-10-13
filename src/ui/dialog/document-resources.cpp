@@ -315,7 +315,7 @@ DocumentResources::DocumentResources()
     auto filtered_info = Gtk::TreeModelFilter::create(_info_store);
     auto filtered_items = Gtk::TreeModelFilter::create(_item_store);
     auto model = Gtk::TreeModelSort::create(filtered_items);
-    model->set_sort_column(g_item_columns.label.index(), Gtk::SORT_ASCENDING);
+    model->set_sort_column(g_item_columns.label.index(), Gtk::SortType::ASCENDING);
 
     add(get_widget<Gtk::Box>(_builder, "main"));
 

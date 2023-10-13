@@ -26,10 +26,10 @@ Cairo::RefPtr<Cairo::Pattern> rgba_to_pattern(std::uint32_t const rgba)
 
     auto dark = checkerboard_darken(rgba);
 
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, 2 * w, 2 * h);
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, 2 * w, 2 * h);
 
     auto cr = Cairo::Context::create(surface);
-    cr->set_operator(Cairo::OPERATOR_SOURCE);
+    cr->set_operator(Cairo::Context::Operator::SOURCE);
     cr->set_source_rgb(SP_RGBA32_R_F(rgba), SP_RGBA32_G_F(rgba), SP_RGBA32_B_F(rgba));
     cr->paint();
     cr->set_source_rgb(dark[0], dark[1], dark[2]);
@@ -38,8 +38,8 @@ Cairo::RefPtr<Cairo::Pattern> rgba_to_pattern(std::uint32_t const rgba)
     cr->fill();
 
     auto pattern = Cairo::SurfacePattern::create(surface);
-    pattern->set_extend(Cairo::EXTEND_REPEAT);
-    pattern->set_filter(Cairo::FILTER_NEAREST);
+    pattern->set_extend(Cairo::Pattern::Extend::REPEAT);
+    pattern->set_filter(Cairo::SurfacePattern::Filter::NEAREST);
 
     return pattern;
 }
@@ -52,7 +52,7 @@ void Graphics::paint_background(Fragment const &fragment, PageInfo const &pi,
                                 Cairo::RefPtr<Cairo::Context> const &cr)
 {
     cr->save();
-    cr->set_operator(Cairo::OPERATOR_SOURCE);
+    cr->set_operator(Cairo::Context::Operator::SOURCE);
     cr->rectangle(0, 0, fragment.rect.width(), fragment.rect.height());
     cr->clip();
 
@@ -64,7 +64,7 @@ void Graphics::paint_background(Fragment const &fragment, PageInfo const &pi,
         // Paint the background to the complement of the pages. (Slightly overpaints when pages overlap.)
         cr->save();
         cr->set_source(rgba_to_pattern(desk));
-        cr->set_fill_rule(Cairo::FILL_RULE_EVEN_ODD);
+        cr->set_fill_rule(Cairo::Context::FillRule::EVEN_ODD);
         cr->rectangle(0, 0, fragment.rect.width(), fragment.rect.height());
         cr->translate(-fragment.rect.left(), -fragment.rect.top());
         cr->transform(geom_to_cairo(fragment.affine));

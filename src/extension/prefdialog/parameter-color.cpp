@@ -81,9 +81,9 @@ Gtk::Widget *ParamColor::get_widget(sigc::signal<void ()> *changeSignal)
         _changeSignal = std::make_unique<sigc::signal<void ()>>(*changeSignal);
     }
 
-    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, GUI_PARAM_WIDGETS_SPACING);
+    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, GUI_PARAM_WIDGETS_SPACING);
     if (_mode == COLOR_BUTTON) {
-        auto const label = Gtk::make_managed<Gtk::Label>(_text, Gtk::ALIGN_START);
+        auto const label = Gtk::make_managed<Gtk::Label>(_text, Gtk::Align::START);
         label->set_visible(true);
         UI::pack_start(*hbox, *label, true, true);
 

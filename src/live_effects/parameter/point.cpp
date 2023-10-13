@@ -164,7 +164,7 @@ PointParam::param_newWidget()
     pointwdg->signal_x_value_changed().connect(sigc::mem_fun(*this, &PointParam::on_value_changed));
     pointwdg->signal_y_value_changed().connect(sigc::mem_fun(*this, &PointParam::on_value_changed));
 
-    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
     UI::pack_start(*hbox, *pointwdg, true, true);
     hbox->show_all_children();
     return hbox;
@@ -235,7 +235,7 @@ void
 PointParamKnotHolderEntity::knot_click(unsigned const state)
 {
     if (state & GDK_CONTROL_MASK) {
-        if (state & GDK_MOD1_MASK) {
+        if (state & GDK_ALT_MASK) {
             this->pparam->param_set_default();
             pparam->param_setValue(*pparam,true);
         }

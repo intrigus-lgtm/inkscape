@@ -137,7 +137,7 @@ private:
     bool on_key_pressed(GtkEventControllerKey const *controller,
                         unsigned keyval, unsigned keycode,
                         GdkModifierType state);
-    Gtk::EventSequenceState on_click_pressed(Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_click_pressed(Gtk::GestureClick const &click,
                                              int n_press, double x, double y);
 
     void _doCreate();

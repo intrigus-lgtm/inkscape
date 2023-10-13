@@ -446,7 +446,7 @@ void set_source_rgba32(Cairo::Context &cr, uint32_t rgba)
 std::shared_ptr<Cairo::ImageSurface const> draw_uncached(RenderParams const &p)
 {
     // operate on a physical pixel scale, to make pixel grid aligning easier to understand
-    auto surface = to_shared(Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, p.width, p.width));
+    auto surface = to_shared(Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, p.width, p.width));
 
     const auto scale = p.device_scale;
 
@@ -461,9 +461,9 @@ std::shared_ptr<Cairo::ImageSurface const> draw_uncached(RenderParams const &p)
         cr.translate(offset, offset);
     };
 
-    cr.set_operator(Cairo::OPERATOR_SOURCE);
-    cr.set_line_cap(Cairo::LINE_CAP_SQUARE);
-    cr.set_line_join(Cairo::LINE_JOIN_MITER);
+    cr.set_operator(Cairo::Context::Operator::SOURCE);
+    cr.set_line_cap(Cairo::Context::LineCap::SQUARE);
+    cr.set_line_join(Cairo::Context::LineJoin::MITER);
     // miter limit tweaked to produce sharp draw_darrow(), but blunt draw_triangle_angled() tip
     cr.set_miter_limit(2.9);
 

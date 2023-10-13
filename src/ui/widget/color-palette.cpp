@@ -39,13 +39,13 @@ namespace Inkscape::UI::Widget {
 
 [[nodiscard]] static auto make_menu(Gtk::Widget &parent)
 {
-    auto const separator = Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const separator = Gtk::make_managed<Gtk::Separator>(Gtk::Orientation::HORIZONTAL);
     separator->set_margin_top   (5);
     separator->set_margin_bottom(5);
 
     auto const config = Gtk::make_managed<PopoverMenuItem>(_("Configure..."), true);
 
-    auto menu = std::make_unique<PopoverMenu>(parent, Gtk::POS_TOP);
+    auto menu = std::make_unique<PopoverMenu>(parent, Gtk::PositionType::TOP);
     menu->get_style_context()->add_class("ColorPalette");
     menu->append(*separator);
     menu->append(*config);
@@ -380,7 +380,7 @@ void ColorPalette::_enable_stretch(bool enable) {
     if (_stretch_tiles == enable) return;
 
     _stretch_tiles = enable;
-    _normal_box.set_halign(enable ? Gtk::ALIGN_FILL : Gtk::ALIGN_START);
+    _normal_box.set_halign(enable ? Gtk::Align::FILL : Gtk::Align::START);
     update_stretch();
     refresh();
 }
@@ -441,15 +441,15 @@ void ColorPalette::set_up_scrolling() {
     }
 
     if (_compact) {
-        box.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
+        box.set_orientation(Gtk::Orientation::HORIZONTAL);
         btn_menu.set_margin_bottom(0);
         btn_menu.set_margin_end(0);
         // in compact mode scrollbars are hidden; they take up too much space
-        set_valign(Gtk::ALIGN_START);
+        set_valign(Gtk::Align::START);
         set_vexpand(false);
 
-        _scroll.set_valign(Gtk::ALIGN_END);
-        _normal_box.set_valign(Gtk::ALIGN_END);
+        _scroll.set_valign(Gtk::Align::END);
+        _normal_box.set_valign(Gtk::Align::END);
 
         if (_rows == 1 && _force_scrollbar) {
             // horizontal scrolling with single row
@@ -468,12 +468,12 @@ void ColorPalette::set_up_scrolling() {
 
             // ideally we should be able to use POLICY_AUTOMATIC, but on some themes this leads to a scrollbar
             // that obscures color tiles (it overlaps them); thus resorting to manual scrollbar selection
-            _scroll.set_policy(_force_scrollbar ? Gtk::POLICY_ALWAYS : Gtk::POLICY_EXTERNAL, Gtk::POLICY_NEVER);
+            _scroll.set_policy(_force_scrollbar ? Gtk::PolicyType::ALWAYS : Gtk::PolicyType::EXTERNAL, Gtk::PolicyType::NEVER);
         }
         else {
             // vertical scrolling with multiple rows
             // 'external' allows scrollbar to shrink vertically
-            _scroll.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_EXTERNAL);
+            _scroll.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::EXTERNAL);
             _scroll_left.set_visible(false);
             _scroll_right.set_visible(false);
             _scroll_btn.set_visible(true);
@@ -484,21 +484,21 @@ void ColorPalette::set_up_scrolling() {
         _pinned_box.set_margin_end(_border);
     }
     else {
-        box.set_orientation(Gtk::ORIENTATION_VERTICAL);
+        box.set_orientation(Gtk::Orientation::VERTICAL);
         btn_menu.set_margin_bottom(2);
         btn_menu.set_margin_end(2);
         // in normal mode use regular full-size scrollbars
-        set_valign(Gtk::ALIGN_FILL);
+        set_valign(Gtk::Align::FILL);
         set_vexpand(true);
 
         _scroll_left.set_visible(false);
         _scroll_right.set_visible(false);
         _scroll_btn.set_visible(false);
 
-        _normal_box.set_valign(Gtk::ALIGN_START);
-        _scroll.set_valign(Gtk::ALIGN_FILL);
+        _normal_box.set_valign(Gtk::Align::START);
+        _scroll.set_valign(Gtk::Align::FILL);
         // 'always' allocates space for scrollbar
-        _scroll.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_ALWAYS);
+        _scroll.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::ALWAYS);
     }
 
     resize();
@@ -617,7 +617,7 @@ Gtk::Widget *ColorPalette::_get_widget(Dialog::ColorItem *item) {
         parent->remove(*item);
     }
     if (_show_labels) {
-        item->set_valign(Gtk::ALIGN_CENTER);
+        item->set_valign(Gtk::Align::CENTER);
         auto const box = Gtk::make_managed<Gtk::Box>();
         auto const label = Gtk::make_managed<Gtk::Label>(item->get_description());
         box->add(*item);
@@ -673,7 +673,7 @@ public:
         , _preview{Gtk::make_managed<ColorPalettePreview>(std::move(colors))}
         , id{std::move(id)}
     {
-        auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 1);
+        auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 1);
         box->add(*_radio_button);
         box->add(*_preview     );
         add(*box);

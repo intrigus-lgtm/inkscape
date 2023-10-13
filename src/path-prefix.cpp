@@ -83,7 +83,7 @@ char const *get_inkscape_datadir()
         if (datadir.empty()) {
             datadir = Glib::build_filename(_get_bundle_prefix_dir(), "share");
 
-            if (!Glib::file_test(Glib::build_filename(datadir, "inkscape"), Glib::FILE_TEST_IS_DIR)) {
+            if (!Glib::file_test(Glib::build_filename(datadir, "inkscape"), Glib::FileTest::IS_DIR)) {
                 datadir = INKSCAPE_DATADIR;
             }
         }
@@ -131,7 +131,7 @@ void set_xdg_env()
     //      2. move binary to Inkscape.app/Contents/MacOS and set rpath
     //      3. copy Info.plist
     // to ease up on testing and get correct application behavior (like dock icon).
-    if (!Glib::file_test(bundle_resources_lib_dir + "/gio/modules", Glib::FILE_TEST_EXISTS)) {
+    if (!Glib::file_test(bundle_resources_lib_dir + "/gio/modules", Glib::FileTest::EXISTS)) {
         // doesn't look like a standalone bundle
         return;
     }

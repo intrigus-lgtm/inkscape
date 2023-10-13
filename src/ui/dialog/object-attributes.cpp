@@ -97,12 +97,12 @@ ObjectAttributes::ObjectAttributes()
     _builder(create_builder("object-attributes.glade")),
     _main_panel(get_widget<Gtk::Box>(_builder, "main-panel")),
     _obj_title(get_widget<Gtk::Label>(_builder, "main-obj-name")),
-    _style_swatch(nullptr, _("Item's fill, stroke and opacity"), Gtk::ORIENTATION_HORIZONTAL)
+    _style_swatch(nullptr, _("Item's fill, stroke and opacity"), Gtk::Orientation::HORIZONTAL)
 {
     auto& main = get_widget<Gtk::Box>(_builder, "main-widget");
     _obj_title.set_text("");
     _style_swatch.set_hexpand(false);
-    _style_swatch.set_valign(Gtk::ALIGN_CENTER);
+    _style_swatch.set_valign(Gtk::Align::CENTER);
     UI::pack_end(get_widget<Gtk::Box>(_builder, "main-header"), _style_swatch, false, true);
     add(main);
     create_panels();

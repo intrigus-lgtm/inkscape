@@ -41,11 +41,11 @@ Messages::Messages()
     : DialogBase("/dialogs/messages", "Messages")
     , buttonClear(_("_Clear"), _("Clear log messages"))
     , checkCapture(_("Capture log messages"), _("Capture log messages"))
-    , buttonBox(Gtk::ORIENTATION_HORIZONTAL)
+    , buttonBox(Gtk::Orientation::HORIZONTAL)
 {
     messageText.set_editable(false);
     textScroll.add(messageText);
-    textScroll.set_policy(Gtk::POLICY_ALWAYS, Gtk::POLICY_ALWAYS);
+    textScroll.set_policy(Gtk::PolicyType::ALWAYS, Gtk::PolicyType::ALWAYS);
     UI::pack_start(*this, textScroll);
 
     buttonBox.set_spacing(6);

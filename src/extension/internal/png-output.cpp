@@ -35,7 +35,7 @@ void PngOutput::export_raster(Inkscape::Extension::Output * /*module*/,
     try {
         // This file must be copied because the permissions must be created
         // based on it's target location and not the temp directory.
-        input_fn->copy(output_fn, Gio::FILE_COPY_OVERWRITE | Gio::FILE_COPY_TARGET_DEFAULT_PERMS);
+        input_fn->copy(output_fn, Gio::File::CopyFlags::OVERWRITE | Gio::File::CopyFlags::TARGET_DEFAULT_PERMS);
     }
     catch (const Gio::Error& e) {
         std::cerr << "Moving resource " << png_file

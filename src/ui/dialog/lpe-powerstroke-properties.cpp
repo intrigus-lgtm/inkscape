@@ -49,8 +49,8 @@ PowerstrokePropertiesDialog::PowerstrokePropertiesDialog()
     _powerstroke_position_entry.set_range(-SCALARPARAM_G_MAXDOUBLE, SCALARPARAM_G_MAXDOUBLE);
     _powerstroke_position_entry.set_hexpand();
     _powerstroke_position_label.set_label(_("Position:"));
-    _powerstroke_position_label.set_halign(Gtk::ALIGN_END);
-    _powerstroke_position_label.set_valign(Gtk::ALIGN_CENTER);
+    _powerstroke_position_label.set_halign(Gtk::Align::END);
+    _powerstroke_position_label.set_valign(Gtk::Align::CENTER);
 
     _powerstroke_width_entry.set_activates_default(true);
     _powerstroke_width_entry.set_digits(4);
@@ -58,8 +58,8 @@ PowerstrokePropertiesDialog::PowerstrokePropertiesDialog()
     _powerstroke_width_entry.set_range(-SCALARPARAM_G_MAXDOUBLE, SCALARPARAM_G_MAXDOUBLE);
     _powerstroke_width_entry.set_hexpand();
     _powerstroke_width_label.set_label(_("Width:"));
-    _powerstroke_width_label.set_halign(Gtk::ALIGN_END);
-    _powerstroke_width_label.set_valign(Gtk::ALIGN_CENTER);
+    _powerstroke_width_label.set_halign(Gtk::Align::END);
+    _powerstroke_width_label.set_valign(Gtk::Align::CENTER);
 
     _layout_table.attach(_powerstroke_position_label,0,0,1,1);
     _layout_table.attach(_powerstroke_position_entry,1,0,1,1);
@@ -86,8 +86,8 @@ PowerstrokePropertiesDialog::PowerstrokePropertiesDialog()
         )
     );
 
-    add_action_widget(_close_button, Gtk::RESPONSE_CLOSE);
-    add_action_widget(_apply_button, Gtk::RESPONSE_APPLY);
+    add_action_widget(_close_button, Gtk::ResponseType::CLOSE);
+    add_action_widget(_apply_button, Gtk::ResponseType::APPLY);
 
     _apply_button.grab_default();
 

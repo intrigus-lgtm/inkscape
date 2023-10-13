@@ -678,7 +678,7 @@ bool CalligraphicTool::root_handler(CanvasEvent const &event)
             // Create object
             fit_and_split(true);
             if (accumulate()) {
-                set_to_accumulated(event.modifiers & GDK_SHIFT_MASK, event.modifiers & GDK_MOD1_MASK); // performs document_done
+                set_to_accumulated(event.modifiers & GDK_SHIFT_MASK, event.modifiers & GDK_ALT_MASK); // performs document_done
             } else {
                 g_warning("Failed to create path: invalid data in dc->cal1 or dc->cal2");
             }

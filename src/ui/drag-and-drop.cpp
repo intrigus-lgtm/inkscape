@@ -407,7 +407,7 @@ void ink_drag_setup(SPDesktopWidget *dtw)
 
     canvas->drag_dest_set(completeDropTargets,
                           Gtk::DestDefaults::DEST_DEFAULT_ALL,
-                          Gdk::DragAction::ACTION_COPY | Gdk::DragAction::ACTION_MOVE);
+                          Gdk::DragAction::COPY | Gdk::DragAction::MOVE);
 
     g_signal_connect(G_OBJECT(canvas->gobj()),
                      "drag_data_received",

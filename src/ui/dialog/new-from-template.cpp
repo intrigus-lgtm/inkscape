@@ -36,8 +36,8 @@ NewFromTemplate::NewFromTemplate()
     UI::pack_start(*get_content_area(), *templates);
     templates->init(Inkscape::Extension::TEMPLATE_NEW_FROM);
 
-    _create_template_button.set_halign(Gtk::ALIGN_END);
-    _create_template_button.set_valign(Gtk::ALIGN_END);
+    _create_template_button.set_halign(Gtk::Align::END);
+    _create_template_button.set_valign(Gtk::Align::END);
     _create_template_button.set_margin_end(15);
 
     UI::pack_end(*get_content_area(), _create_template_button, UI::PackOptions::shrink);

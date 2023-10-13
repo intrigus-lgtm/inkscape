@@ -29,7 +29,7 @@ void AlignmentSelector::setupButton(const Glib::ustring& icon, Gtk::Button& butt
 
 AlignmentSelector::AlignmentSelector()
 {
-    set_halign(Gtk::ALIGN_CENTER);
+    set_halign(Gtk::Align::CENTER);
     // clang-format off
     setupButton(INKSCAPE_ICON("boundingbox_top_left"),     _buttons[0]);
     setupButton(INKSCAPE_ICON("boundingbox_top"),          _buttons[1]);

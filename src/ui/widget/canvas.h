@@ -145,9 +145,9 @@ private:
                    double dx, double dy);
 
     // GtkGestureMultiPress
-    Gtk::EventSequenceState on_button_pressed (Gtk::GestureMultiPress const &controller,
+    Gtk::EventSequenceState on_button_pressed (Gtk::GestureClick const &controller,
                                                int n_press, double x, double y);
-    Gtk::EventSequenceState on_button_released(Gtk::GestureMultiPress const &controller,
+    Gtk::EventSequenceState on_button_released(Gtk::GestureClick const &controller,
                                                int n_press, double x, double y);
 
     // EventControllerMotion

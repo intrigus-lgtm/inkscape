@@ -51,7 +51,7 @@ static void remove_first(Glib::ustring &name, Glib::ustring const &pattern)
  * @param dialog_type is the "type" string for the dialog.
  */
 DialogBase::DialogBase(char const * const prefs_path, Glib::ustring dialog_type)
-    : Gtk::Box(Gtk::ORIENTATION_VERTICAL)
+    : Gtk::Box(Gtk::Orientation::VERTICAL)
     , _name("DialogBase")
     , _prefs_path(prefs_path)
     , _dialog_type{std::move(dialog_type)}
@@ -72,7 +72,7 @@ DialogBase::DialogBase(char const * const prefs_path, Glib::ustring dialog_type)
 
     // TODO: GTK4: See if we can add the Controller on self — since all widgets receive all events.
     Controller::add_key_on_window<&DialogBase::on_window_key_pressed>(*this, *this,
-                                                                      Gtk::PHASE_CAPTURE);
+                                                                      Gtk::PropagationPhase::CAPTURE);
 }
 
 DialogBase::~DialogBase() {

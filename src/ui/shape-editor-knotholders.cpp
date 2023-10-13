@@ -1712,7 +1712,7 @@ StarKnotHolderEntity1::knot_set(Geom::Point const &p, Geom::Point const &/*origi
     double arg1 = atan2(d);
     double darg1 = arg1 - star->arg[0];
 
-    if (state & GDK_MOD1_MASK) {
+    if (state & GDK_ALT_MASK) {
         star->randomized = darg1/(star->arg[0] - star->arg[1]);
     } else if (state & GDK_SHIFT_MASK) {
         star->rounded = darg1/(star->arg[0] - star->arg[1]);
@@ -1740,7 +1740,7 @@ StarKnotHolderEntity2::knot_set(Geom::Point const &p, Geom::Point const &/*origi
         double arg1 = atan2(d);
         double darg1 = arg1 - star->arg[1];
 
-        if (state & GDK_MOD1_MASK) {
+        if (state & GDK_ALT_MASK) {
             star->randomized = darg1/(star->arg[0] - star->arg[1]);
         } else if (state & GDK_SHIFT_MASK) {
             star->rounded = fabs(darg1/(star->arg[0] - star->arg[1]));
@@ -1807,7 +1807,7 @@ sp_star_knot_click(SPItem *item, unsigned int state)
     auto star = cast<SPStar>(item);
     g_assert(star != nullptr);
 
-    if (state & GDK_MOD1_MASK) {
+    if (state & GDK_ALT_MASK) {
         star->randomized = 0;
         star->updateRepr();
     } else if (state & GDK_SHIFT_MASK) {
@@ -1906,7 +1906,7 @@ SpiralKnotHolderEntityInner::knot_set(Geom::Point const &p, Geom::Point const &o
 
     gdouble   moved_y = p[Geom::Y] - origin[Geom::Y];
 
-    if (state & GDK_MOD1_MASK) {
+    if (state & GDK_ALT_MASK) {
         // adjust divergence by vertical drag, relative to rad
         if (spiral->rad > 0) {
             double exp_delta = 0.1*moved_y/(spiral->rad); // arbitrary multiplier to slow it down
@@ -1957,7 +1957,7 @@ SpiralKnotHolderEntityOuter::knot_set(Geom::Point const &p, Geom::Point const &/
 
     if (state & GDK_SHIFT_MASK) { // rotate without roll/unroll
         spiral->arg = atan2(dy, dx) - 2.0*M_PI*spiral->revo;
-        if (!(state & GDK_MOD1_MASK)) {
+        if (!(state & GDK_ALT_MASK)) {
             // if alt not pressed, change also rad; otherwise it is locked
             spiral->rad = MAX(hypot(dx, dy), 0.001);
         }
@@ -2006,7 +2006,7 @@ SpiralKnotHolderEntityOuter::knot_set(Geom::Point const &p, Geom::Point const &/
             spiral->revo = 1e-3;
 
         // if alt not pressed and the values are sane, change the rad
-        if (!(state & GDK_MOD1_MASK) && rad_new > 1e-3 && rad_new/spiral->rad < 2) {
+        if (!(state & GDK_ALT_MASK) && rad_new > 1e-3 && rad_new/spiral->rad < 2) {
             // adjust t0 too so that the inner point stays unmoved
             double r0;
             spiral->getPolar(spiral->t0, &r0, nullptr);
@@ -2067,7 +2067,7 @@ SpiralKnotHolderEntityInner::knot_click(unsigned int state)
     auto spiral = cast<SPSpiral>(item);
     g_assert(spiral != nullptr);
 
-    if (state & GDK_MOD1_MASK) {
+    if (state & GDK_ALT_MASK) {
         spiral->exp = 1;
         spiral->updateRepr();
     } else if (state & GDK_SHIFT_MASK) {

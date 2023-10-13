@@ -36,7 +36,7 @@ UndoHistory::UndoHistory()
     set_size_request(-1, -1);
 
     UI::pack_start(*this, _scrolled_window);
-    _scrolled_window.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
+    _scrolled_window.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
 
     _event_list_view.set_enable_search(false);
     _event_list_view.set_headers_visible(false);
@@ -60,13 +60,13 @@ UndoHistory::UndoHistory()
     children_column->add_attribute(children_renderer->property_number(), columns->child_count);
 
     auto const description_renderer = Gtk::make_managed<Gtk::CellRendererText>();
-    description_renderer->property_ellipsize() = Pango::ELLIPSIZE_END;
+    description_renderer->property_ellipsize() = Pango::EllipsizeMode::END;
 
     cols_count = _event_list_view.append_column("Description", *description_renderer);
     auto const description_column = _event_list_view.get_column(cols_count - 1);
     description_column->add_attribute(description_renderer->property_text(), columns->description);
     description_column->set_resizable();
-    description_column->set_sizing(Gtk::TREE_VIEW_COLUMN_AUTOSIZE);
+    description_column->set_sizing(Gtk::TreeViewColumn::Sizing::AUTOSIZE);
     description_column->set_min_width (150);
 
     _event_list_view.set_expander_column( *_event_list_view.get_column(cols_count - 1) );

@@ -71,9 +71,9 @@ public:
 private:
     bool on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr);
     void on_style_updated() final;
-    Gtk::EventSequenceState on_click_pressed (Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
                                               int n_press, double x, double y);
-    Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_click_released(Gtk::GestureClick const &click,
                                               int n_press, double x, double y);
     void on_motion(GtkEventControllerMotion const *motion, double x, double y);
     bool on_key_pressed(GtkEventControllerKey const *controller,

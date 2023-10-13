@@ -52,7 +52,7 @@ namespace UI {
 namespace Widget {
 
 SimpleFilterModifier::SimpleFilterModifier(int flags)
-    : Gtk::Box(Gtk::ORIENTATION_VERTICAL)
+    : Gtk::Box(Gtk::Orientation::VERTICAL)
     , _flags(flags)
     , _lb_blend(_("Blend mode:"))
     , _lb_isolation("Isolate") // Translate for 1.1
@@ -60,14 +60,14 @@ SimpleFilterModifier::SimpleFilterModifier(int flags)
     , _blur(_("Blur (%)"), 0, 0, 100, 1, 0.1, 1)
     , _opacity(_("Opacity (%)"), 0, 0, 100, 1, 0.1, 1)
     , _notify(true)
-    , _hb_blend(Gtk::ORIENTATION_HORIZONTAL, 4)
+    , _hb_blend(Gtk::Orientation::HORIZONTAL, 4)
 {
     set_name("SimpleFilterModifier");
 
     /* "More options" expander --------
     _extras.set_visible();
     _extras.set_label(_("More options"));
-    auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     _extras.add(*box);
     if (flags & (BLEND | BLUR)) {
         add(_extras);
@@ -79,8 +79,8 @@ SimpleFilterModifier::SimpleFilterModifier(int flags)
     if (flags & BLEND) {
         add(_hb_blend);
         _lb_blend.set_use_underline();
-        _hb_blend.set_halign(Gtk::ALIGN_END);
-        _hb_blend.set_valign(Gtk::ALIGN_CENTER);
+        _hb_blend.set_halign(Gtk::Align::END);
+        _hb_blend.set_valign(Gtk::Align::CENTER);
         _hb_blend.set_margin_top(0);
         _hb_blend.set_margin_bottom(1);
         _hb_blend.set_margin_end(2);

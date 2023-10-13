@@ -52,7 +52,7 @@ bool PageSizePreview::on_draw(const Cairo::RefPtr<Cairo::Context>& ctx) {
         // auto device_scale = get_scale_factor();
         Cairo::RefPtr<Cairo::Pattern> pattern(new Cairo::Pattern(ink_cairo_pattern_create_checkerboard(_desk_color)));
         ctx->save();
-        ctx->set_operator(Cairo::OPERATOR_SOURCE);
+        ctx->set_operator(Cairo::Context::Operator::SOURCE);
         ctx->set_source(pattern);
         rounded_rectangle(ctx, x, y, width, height, 2.0);
         ctx->fill();
@@ -89,7 +89,7 @@ bool PageSizePreview::on_draw(const Cairo::RefPtr<Cairo::Context>& ctx) {
     if (_draw_checkerboard) {
         Cairo::RefPtr<Cairo::Pattern> pattern(new Cairo::Pattern(ink_cairo_pattern_create_checkerboard(_page_color)));
         ctx->save();
-        ctx->set_operator(Cairo::OPERATOR_SOURCE);
+        ctx->set_operator(Cairo::Context::Operator::SOURCE);
         ctx->set_source(pattern);
         ctx->rectangle(rect.left(), rect.top(), rect.width(), rect.height());
         ctx->fill();

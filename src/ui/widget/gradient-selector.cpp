@@ -52,7 +52,7 @@ GradientSelector::GradientSelector()
     , _gradientUnits(SP_GRADIENT_UNITS_USERSPACEONUSE)
     , _gradientSpread(SP_GRADIENT_SPREAD_PAD)
 {
-    set_orientation(Gtk::ORIENTATION_VERTICAL);
+    set_orientation(Gtk::Orientation::VERTICAL);
 
     /* Vectors */
     _vectors = Gtk::make_managed<GradientVectorSelector>(nullptr, nullptr);
@@ -100,7 +100,7 @@ GradientSelector::GradientSelector()
 
     _scrolled_window = Gtk::make_managed<Gtk::ScrolledWindow>();
     _scrolled_window->add(*_treeview);
-    _scrolled_window->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    _scrolled_window->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     _scrolled_window->set_shadow_type(Gtk::SHADOW_IN);
     _scrolled_window->set_size_request(0, 180);
     _scrolled_window->set_hexpand();
@@ -110,7 +110,7 @@ GradientSelector::GradientSelector()
 
 
     /* Create box for buttons */
-    auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 0);
+    auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 0);
     UI::pack_start(*this, *hb, false, false);
 
     _add = Gtk::make_managed<Gtk::Button>();

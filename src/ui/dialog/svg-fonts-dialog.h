@@ -101,7 +101,7 @@ public:
         _property_activatable(*this, "activatable", true),
         _property_glyph(*this, "glyph", "") {
 
-        property_mode() = Gtk::CELL_RENDERER_MODE_ACTIVATABLE;
+        property_mode() = Gtk::CellRendererMode::ACTIVATABLE;
     }
 
     Glib::PropertyProxy<Glib::ustring> property_glyph() { return _property_glyph.get_proxy(); }
@@ -378,7 +378,7 @@ private:
     {
     public:
         EntryWidget()
-        : Gtk::Box(Gtk::ORIENTATION_HORIZONTAL) {
+        : Gtk::Box(Gtk::Orientation::HORIZONTAL) {
             this->add(this->_label);
             this->add(this->_entry);
         }

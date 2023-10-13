@@ -826,7 +826,7 @@ void GLGraphics::paint_widget(Fragment const &view, PaintArgs const &a, Cairo::R
 
         // Actually draw the content with Cairo.
         auto cr = Cairo::Context::create(surface);
-        cr->set_operator(Cairo::OPERATOR_SOURCE);
+        cr->set_operator(Cairo::Context::Operator::SOURCE);
         cr->set_source_rgba(0.0, 0.0, 0.0, 0.0);
         cr->paint();
         cr->translate(-rect.left(), -rect.top());

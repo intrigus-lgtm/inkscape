@@ -200,10 +200,10 @@ Glib::ustring prettify_css(Glib::ustring const &css)
 {
     // Ensure that there's a space after every colon, unless there's a slash (as in a URL).
     static auto const colon_without_space = Glib::Regex::create(":([^\\s\\/])");
-    auto reformatted = colon_without_space->replace(css, 0, ": \\1", Glib::RegexMatchFlags::REGEX_MATCH_NOTEMPTY);
+    auto reformatted = colon_without_space->replace(css, 0, ": \\1", Glib::Regex::MatchFlags::NOTEMPTY);
     // Ensure that there's a newline after every semicolon.
     static auto const semicolon_without_newline = Glib::Regex::create(";([^\r\n])");
-    reformatted = semicolon_without_newline->replace(reformatted, 0, ";\n\\1", Glib::RegexMatchFlags::REGEX_MATCH_NEWLINE_ANYCRLF);
+    reformatted = semicolon_without_newline->replace(reformatted, 0, ";\n\\1", Glib::Regex::MatchFlags::NEWLINE_ANYCRLF);
     // If the last character is not a semicolon, append one.
     if (auto len = css.size(); len && css[len - 1] != ';') {
         reformatted += ";";
@@ -215,7 +215,7 @@ Glib::ustring prettify_css(Glib::ustring const &css)
 Glib::ustring minify_css(Glib::ustring const &css)
 {
     static auto const space_after = Glib::Regex::create("(:|;)[\\s]+");
-    auto minified = space_after->replace(css, 0, "\\1", Glib::RegexMatchFlags::REGEX_MATCH_NEWLINE_ANY);
+    auto minified = space_after->replace(css, 0, "\\1", Glib::Regex::MatchFlags::NEWLINE_ANY);
     // Strip final semicolon
     if (auto const len = minified.size(); len && minified[len - 1] == ';') {
         minified = minified.erase(len - 1);
@@ -230,22 +230,22 @@ Glib::ustring prettify_svgd(Glib::ustring const &d)
     Util::trim(result);
     // Ensure that a non-M command is preceded only by a newline.
     static auto const space_b4_command = Glib::Regex::create("(?<=\\S)\\s*(?=[LHVCSQTAZlhvcsqtaz])");
-    result = space_b4_command->replace(result, 1, "\n", Glib::RegexMatchFlags::REGEX_MATCH_NEWLINE_ANY);
+    result = space_b4_command->replace(result, 1, "\n", Glib::Regex::MatchFlags::NEWLINE_ANY);
 
     // Before a non-initial M command, we want to have two newlines to visually separate the subpaths.
     static auto const space_b4_m = Glib::Regex::create("(?<=\\S)\\s*(?=[Mm])");
-    result = space_b4_m->replace(result, 1, "\n\n", Glib::RegexMatchFlags::REGEX_MATCH_NEWLINE_ANY);
+    result = space_b4_m->replace(result, 1, "\n\n", Glib::Regex::MatchFlags::NEWLINE_ANY);
 
     // Ensure that there's a space after each command letter other than Z.
     static auto const nospace = Glib::Regex::create("([MLHVCSQTAmlhvcsqta])(?=\\S)");
-    return nospace->replace(result, 0, "\\1 ", Glib::RegexMatchFlags::REGEX_MATCH_NEWLINE_ANY);
+    return nospace->replace(result, 0, "\\1 ", Glib::Regex::MatchFlags::NEWLINE_ANY);
 }
 
 /** @brief Remove excessive space, including newlines, from a path 'd' attibute. */
 Glib::ustring minify_svgd(Glib::ustring const &d)
 {
     static auto const excessive_space = Glib::Regex::create("[\\s]+");
-    auto result = excessive_space->replace(d, 0, " ", Glib::RegexMatchFlags::REGEX_MATCH_NEWLINE_ANY);
+    auto result = excessive_space->replace(d, 0, " ", Glib::Regex::MatchFlags::NEWLINE_ANY);
     Util::trim(result);
     return result;
 }
@@ -253,7 +253,7 @@ Glib::ustring minify_svgd(Glib::ustring const &d)
 /** Set default options on a TextView widget used for syntax-colored editing. */
 static void init_text_view(Gtk::TextView* textview)
 {
-    textview->set_wrap_mode(Gtk::WrapMode::WRAP_WORD);
+    textview->set_wrap_mode(Gtk::WrapMode::WORD);
     textview->set_editable(true);
     textview->set_visible(true);
 }

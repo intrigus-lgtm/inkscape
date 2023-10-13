@@ -190,7 +190,7 @@ void CanvasItemGridXY::_render(Inkscape::CanvasItemBuffer &buf) const
     buf.cr->save();
     buf.cr->translate(-buf.rect.left(), -buf.rect.top());
     buf.cr->set_line_width(1.0);
-    buf.cr->set_line_cap(Cairo::LINE_CAP_SQUARE);
+    buf.cr->set_line_cap(Cairo::Context::LineCap::SQUARE);
 
     // Add a 2px margin to the buffer rectangle to avoid missing intersections (in case of rounding errors, and due to adding 0.5 below)
     auto const buf_rect_with_margin = expandedBy(buf.rect, 2);
@@ -288,7 +288,7 @@ void CanvasItemGridXY::_render(Inkscape::CanvasItemBuffer &buf) const
                                                 SP_RGBA32_B_F(_empdot), SP_RGBA32_A_F(_empdot));
                     }
 
-                    buf.cr->set_line_cap(Cairo::LINE_CAP_BUTT);
+                    buf.cr->set_line_cap(Cairo::Context::LineCap::BUTT);
                     buf.cr->set_dash(dashes, -offset);
 
                 } else {
@@ -413,7 +413,7 @@ void CanvasItemGridAxonom::_render(Inkscape::CanvasItemBuffer &buf) const
     buf.cr->save();
     buf.cr->translate(-buf.rect.left(), -buf.rect.top());
     buf.cr->set_line_width(1.0);
-    buf.cr->set_line_cap(Cairo::LINE_CAP_SQUARE);
+    buf.cr->set_line_cap(Cairo::Context::LineCap::SQUARE);
 
     // gc = gridcoordinates (the coordinates calculated from the grids origin 'grid->ow'.
     // sc = screencoordinates ( for example "buf.rect.left()" is in screencoordinates )
@@ -555,7 +555,7 @@ void CanvasItemGridTiles::_render(Inkscape::CanvasItemBuffer &buf) const {
     buf.cr->save();
     buf.cr->translate(-buf.rect.left(), -buf.rect.top());
     buf.cr->set_line_width(1.0);
-    buf.cr->set_line_cap(Cairo::LINE_CAP_BUTT);
+    buf.cr->set_line_cap(Cairo::Context::LineCap::BUTT);
 
     // Add a 2px margin to the buffer rectangle to avoid missing rectangles (in case of rounding errors, and due to adding 0.5 below)
     auto const buf_rect_with_margin = expandedBy(buf.rect, 2);

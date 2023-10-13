@@ -33,7 +33,7 @@ namespace UI {
 namespace Widget {
 
 ObjectCompositeSettings::ObjectCompositeSettings(Glib::ustring icon_name, char const *history_prefix, int flags)
-: Gtk::Box(Gtk::ORIENTATION_VERTICAL),
+: Gtk::Box(Gtk::Orientation::VERTICAL),
   _icon_name(std::move(icon_name)),
   _blend_tag(Glib::ustring(history_prefix) + ":blend"),
   _blur_tag(Glib::ustring(history_prefix) + ":blur"),

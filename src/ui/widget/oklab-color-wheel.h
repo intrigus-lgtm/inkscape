@@ -59,9 +59,9 @@ private:
 
     // Event handlers
     bool _onClick(Geom::Point const &unit_pos);
-    Gtk::EventSequenceState on_click_pressed (Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
                                               int n_press, double x, double y) final;
-    Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_click_released(Gtk::GestureClick const &click,
                                               int n_press, double x, double y) final;
     void on_motion(GtkEventControllerMotion const *motion, double x, double y) final;
 

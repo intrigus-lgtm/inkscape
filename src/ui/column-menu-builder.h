@@ -51,7 +51,7 @@ public:
 
             // add separator
             if (_row > 0) {
-                auto const separator = Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL);
+                auto const separator = Gtk::make_managed<Gtk::Separator>(Gtk::Orientation::HORIZONTAL);
                 separator->set_visible(true);
                 _menu.attach(*separator, 0, _columns, _row, _row + 1);
                 _row++;
@@ -62,7 +62,7 @@ public:
             auto const sep = Gtk::make_managed<Widget::PopoverMenuItem>();
             sep->get_style_context()->add_class("menu-category");
             sep->set_sensitive(false);
-            sep->set_halign(Gtk::ALIGN_START);
+            sep->set_halign(Gtk::Align::START);
             sep->show_all();
             _menu.attach(*sep, 0, _columns, _row, _row + 1);
             _section = sep;

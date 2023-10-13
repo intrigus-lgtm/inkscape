@@ -293,7 +293,7 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     std::vector<Gtk::TargetEntry> targets;
     targets.emplace_back("application/x-inkscape-paste");
 
-    icon_view->enable_model_drag_source(targets, Gdk::BUTTON1_MASK, Gdk::ACTION_COPY);
+    icon_view->enable_model_drag_source(targets, Gdk::ModifierType::BUTTON1_MASK, Gdk::DragAction::COPY);
     icon_view->signal_drag_data_get().connect(sigc::mem_fun(*this, &SymbolsDialog::iconDragDataGet));
     icon_view->signal_selection_changed().connect(sigc::mem_fun(*this, &SymbolsDialog::iconChanged));
 
@@ -310,23 +310,23 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     // No results
     overlay_icon = sp_get_icon_image("searching", Gtk::ICON_SIZE_DIALOG);
     overlay_icon->set_pixel_size(40);
-    overlay_icon->set_halign(Gtk::ALIGN_CENTER);
-    overlay_icon->set_valign(Gtk::ALIGN_START);
+    overlay_icon->set_halign(Gtk::Align::CENTER);
+    overlay_icon->set_valign(Gtk::Align::START);
     overlay_icon->set_margin_top(90);
     overlay_icon->set_no_show_all(true);
 
     overlay_title = Gtk::make_managed<Gtk::Label>();
-    overlay_title->set_halign(Gtk::ALIGN_CENTER );
-    overlay_title->set_valign(Gtk::ALIGN_START );
-    overlay_title->set_justify(Gtk::JUSTIFY_CENTER);
+    overlay_title->set_halign(Gtk::Align::CENTER );
+    overlay_title->set_valign(Gtk::Align::START );
+    overlay_title->set_justify(Gtk::Justification::CENTER);
     overlay_title->set_margin_top(135);
     overlay_title->set_no_show_all(true);
 
     overlay_desc = Gtk::make_managed<Gtk::Label>();
-    overlay_desc->set_halign(Gtk::ALIGN_CENTER);
-    overlay_desc->set_valign(Gtk::ALIGN_START);
+    overlay_desc->set_halign(Gtk::Align::CENTER);
+    overlay_desc->set_valign(Gtk::Align::START);
     overlay_desc->set_margin_top(160);
-    overlay_desc->set_justify(Gtk::JUSTIFY_CENTER);
+    overlay_desc->set_justify(Gtk::Justification::CENTER);
     overlay_desc->set_no_show_all(true);
 
     overlay->add_overlay(*overlay_icon);
@@ -532,11 +532,11 @@ void SymbolsDialog::rebuild(Gtk::TreeModel::iterator current) {
             // sizable boost in layout speed at the cost of showing only part of the title...
             if (n > 1000) {
                 t->set_fixed_height_from_font(1);
-                t->property_ellipsize() = Pango::EllipsizeMode::ELLIPSIZE_END;
+                t->property_ellipsize() = Pango::EllipsizeMode::END;
             }
             else {
                 t->set_fixed_height_from_font(-1);
-                t->property_ellipsize() = Pango::EllipsizeMode::ELLIPSIZE_NONE;
+                t->property_ellipsize() = Pango::EllipsizeMode::NONE;
                 // t->property_wrap_mode() = Pango::WrapMode::WRAP_CHAR;
             }
         }
@@ -894,7 +894,7 @@ SPDocument* read_vss(std::string filename, std::string name) {
   Glib::ustring title = Glib::Markup::escape_text(name);
   // prepare a valid id prefix for symbols libvisio doesn't give us a name for
   Glib::RefPtr<Glib::Regex> regex1 = Glib::Regex::create("[^a-zA-Z0-9_-]");
-  Glib::ustring id = regex1->replace(name, 0, "_", Glib::REGEX_MATCH_PARTIAL);
+  Glib::ustring id = regex1->replace(name, 0, "_", Glib::Regex::MatchFlags::PARTIAL);
 
   Glib::ustring tmpSVGOutput;
   tmpSVGOutput += "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n";
@@ -914,7 +914,7 @@ SPDocument* read_vss(std::string filename, std::string name) {
     std::stringstream ss;
     if (titles.size() == output.size() && titles[i] != "") {
       // TODO: Do we need to check for duplicated titles?
-      ss << regex1->replace(titles[i].cstr(), 0, "_", Glib::REGEX_MATCH_PARTIAL);
+      ss << regex1->replace(titles[i].cstr(), 0, "_", Glib::Regex::MatchFlags::PARTIAL);
     } else {
       ss << id << "_" << i;
     }
@@ -1095,7 +1095,7 @@ Cairo::RefPtr<Cairo::Surface> add_background(Cairo::RefPtr<Cairo::Surface> image
 {
     int total_size = size + 2 * margin;
 
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, total_size * device_scale, total_size * device_scale);
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, total_size * device_scale, total_size * device_scale);
     cairo_surface_set_device_scale(surface->cobj(), device_scale, device_scale);
     auto ctx = Cairo::Context::create(surface);
 
@@ -1172,7 +1172,7 @@ Cairo::RefPtr<Cairo::Surface> SymbolsDialog::draw_symbol(SPSymbol* symbol) {
     }
     else {
         unsigned psize = SYMBOL_ICON_SIZES[pack_size] * device_scale;
-        image = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, psize, psize);
+        image = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, psize, psize);
         cairo_surface_set_device_scale(image->cobj(), device_scale, device_scale);
     }
 

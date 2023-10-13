@@ -355,7 +355,7 @@ bool ConnectorTool::item_handler(SPItem *item, CanvasEvent const &event)
             }
 
             // find out clicked item, honoring Alt
-            auto const item = sp_event_context_find_item(_desktop, event.pos, event.modifiers & GDK_MOD1_MASK, false);
+            auto const item = sp_event_context_find_item(_desktop, event.pos, event.modifiers & GDK_ALT_MASK, false);
 
             if (event.modifiers & GDK_SHIFT_MASK) {
                 this->selection->toggle(item);

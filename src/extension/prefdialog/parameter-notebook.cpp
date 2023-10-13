@@ -70,7 +70,7 @@ Gtk::Widget *ParamNotebook::ParamNotebookPage::get_widget(sigc::signal<void ()> 
         return nullptr;
     }
 
-    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     vbox->property_margin().set_value(GUI_BOX_MARGIN);
     vbox->set_spacing(GUI_BOX_SPACING);
 

@@ -43,8 +43,8 @@ FilletChamferPropertiesDialog::FilletChamferPropertiesDialog()
     _fillet_chamfer_position_numeric.set_range(0., SCALARPARAM_G_MAXDOUBLE);
     _fillet_chamfer_position_numeric.set_hexpand();
     _fillet_chamfer_position_label.set_label(_("Radius (pixels):"));
-    _fillet_chamfer_position_label.set_halign(Gtk::ALIGN_END);
-    _fillet_chamfer_position_label.set_valign(Gtk::ALIGN_CENTER);
+    _fillet_chamfer_position_label.set_halign(Gtk::Align::END);
+    _fillet_chamfer_position_label.set_valign(Gtk::Align::CENTER);
 
     _layout_table.attach(_fillet_chamfer_position_label, 0, 0, 1, 1);
     _layout_table.attach(_fillet_chamfer_position_numeric, 1, 0, 1, 1);
@@ -54,8 +54,8 @@ FilletChamferPropertiesDialog::FilletChamferPropertiesDialog()
     _fillet_chamfer_chamfer_subdivisions.set_range(0, SCALARPARAM_G_MAXDOUBLE);
     _fillet_chamfer_chamfer_subdivisions.set_hexpand();
     _fillet_chamfer_chamfer_subdivisions_label.set_label(_("Chamfer subdivisions:"));
-    _fillet_chamfer_chamfer_subdivisions_label.set_halign(Gtk::ALIGN_END);
-    _fillet_chamfer_chamfer_subdivisions_label.set_valign(Gtk::ALIGN_CENTER);
+    _fillet_chamfer_chamfer_subdivisions_label.set_halign(Gtk::Align::END);
+    _fillet_chamfer_chamfer_subdivisions_label.set_valign(Gtk::Align::CENTER);
 
     _layout_table.attach(_fillet_chamfer_chamfer_subdivisions_label, 0, 1, 1, 1);
     _layout_table.attach(_fillet_chamfer_chamfer_subdivisions, 1, 1, 1, 1);
@@ -90,8 +90,8 @@ FilletChamferPropertiesDialog::FilletChamferPropertiesDialog()
                                       sigc::hide(sigc::mem_fun(*this, &FilletChamferPropertiesDialog::_close)),
                                       true));
 
-    add_action_widget(_close_button, Gtk::RESPONSE_CLOSE);
-    add_action_widget(_apply_button, Gtk::RESPONSE_APPLY);
+    add_action_widget(_close_button, Gtk::ResponseType::CLOSE);
+    add_action_widget(_apply_button, Gtk::ResponseType::APPLY);
 
     _apply_button.grab_default();
 

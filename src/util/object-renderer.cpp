@@ -202,7 +202,7 @@ void draw_gradient(const Cairo::RefPtr<Cairo::Context>& cr, SPGradient* gradient
 }
 
 Cairo::RefPtr<Cairo::Surface> draw_gradient(SPGradient* gradient, double width, double height, double device_scale, bool stops) {
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, width * device_scale, height * device_scale);
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, width * device_scale, height * device_scale);
     cairo_surface_set_device_scale(surface->cobj(), device_scale, device_scale);
     auto ctx = Cairo::Context::create(surface);
 
@@ -486,7 +486,7 @@ Cairo::RefPtr<Cairo::Surface> render_image(const Inkscape::Pixbuf* pixbuf, int w
     if (!pixbuf || width <= 0 || height <= 0 || pixbuf->width() <= 0 || pixbuf->height() <= 0) return surface;
 
     auto src = Cairo::RefPtr<Cairo::Surface>(new Cairo::Surface(pixbuf->getSurfaceRaw(), false));
-    surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, width * device_scale, height * device_scale);
+    surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, width * device_scale, height * device_scale);
     cairo_surface_set_device_scale(surface->cobj(), device_scale, device_scale);
 
     auto ctx = Cairo::Context::create(surface);
@@ -502,7 +502,7 @@ Cairo::RefPtr<Cairo::Surface> render_image(const Inkscape::Pixbuf* pixbuf, int w
     ctx->translate(dx / 2, dy / 2);
     ctx->scale(scale, scale);
     ctx->set_source(src, 0, 0);
-    ctx->set_operator(Cairo::OPERATOR_OVER);
+    ctx->set_operator(Cairo::Context::Operator::OVER);
     ctx->paint();
 
     return surface;
@@ -514,7 +514,7 @@ Cairo::RefPtr<Cairo::Surface> add_background_to_image(Cairo::RefPtr<Cairo::Surfa
     auto width =  w / device_scale + 2 * margin;
     auto height = h / device_scale + 2 * margin;
 
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, width * device_scale, height * device_scale);
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, width * device_scale, height * device_scale);
     cairo_surface_set_device_scale(surface->cobj(), device_scale, device_scale);
     auto ctx = Cairo::Context::create(surface);
 
@@ -561,14 +561,14 @@ Cairo::RefPtr<Cairo::Surface> draw_frame(Cairo::RefPtr<Cairo::Surface> image, do
     auto width =  w / device_scale + 2 * thickness;
     auto height = h / device_scale + 2 * thickness;
 
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, width * device_scale, height * device_scale);
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, width * device_scale, height * device_scale);
     cairo_surface_set_device_scale(surface->cobj(), device_scale, device_scale);
     auto ctx = Cairo::Context::create(surface);
 
     if (checkerboard_color) {
         Cairo::RefPtr<Cairo::Pattern> pattern(new Cairo::Pattern(ink_cairo_pattern_create_checkerboard(*checkerboard_color)));
         ctx->save();
-        ctx->set_operator(Cairo::OPERATOR_SOURCE);
+        ctx->set_operator(Cairo::Context::Operator::SOURCE);
         ctx->set_source(pattern);
         ctx->rectangle(thickness, thickness, width - 2*thickness, height - 2*thickness);
         ctx->fill();

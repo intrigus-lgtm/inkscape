@@ -52,15 +52,15 @@ std::list<DialogNotebook *> DialogNotebook::_instances;
 DialogNotebook::DialogNotebook(DialogContainer *container)
     : Gtk::ScrolledWindow()
     , _container(container)
-    , _menu    {*this, Gtk::POS_BOTTOM}
-    , _menutabs{*this, Gtk::POS_BOTTOM}
+    , _menu    {*this, Gtk::PositionType::BOTTOM}
+    , _menutabs{*this, Gtk::PositionType::BOTTOM}
     , _labels_auto(true)
     , _detaching_duplicate(false)
     , _selected_page(nullptr)
     , _label_visible(true)
 {
     set_name("DialogNotebook");
-    set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_NEVER);
+    set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::NEVER);
     set_shadow_type(Gtk::SHADOW_NONE);
     set_vexpand(true);
     set_hexpand(true);
@@ -173,8 +173,8 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
     _notebook.set_action_widget(menubtn, Gtk::PACK_END);
     menubtn->set_visible(true);
     menubtn->set_relief(Gtk::RELIEF_NORMAL);
-    menubtn->set_valign(Gtk::ALIGN_CENTER);
-    menubtn->set_halign(Gtk::ALIGN_CENTER);
+    menubtn->set_valign(Gtk::Align::CENTER);
+    menubtn->set_halign(Gtk::Align::CENTER);
     menubtn->set_can_focus(false);
     menubtn->set_name("DialogMenuButton");
 
@@ -283,7 +283,7 @@ void DialogNotebook::add_page(Gtk::Widget &page, Gtk::Widget &tab, Glib::ustring
         wrapper->set_overlay_scrolling(false);
         wrapper->get_style_context()->add_class("noborder");
 
-        auto const wrapperbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL,0);
+        auto const wrapperbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL,0);
         wrapperbox->set_vexpand(true);
 
         // This used to transfer pack-type and child properties, but now those are set on children.
@@ -297,9 +297,9 @@ void DialogNotebook::add_page(Gtk::Widget &page, Gtk::Widget &tab, Glib::ustring
         box    ->add(*wrapper);
 
         if (provide_scroll(page)) {
-            wrapper->set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_EXTERNAL);
+            wrapper->set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::EXTERNAL);
         } else {
-            wrapper->set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
+            wrapper->set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
         }
     }
 
@@ -589,10 +589,10 @@ void DialogNotebook::on_size_allocate_scroll(Gtk::Allocation &a)
                 if (height > 1) {
                     auto property = scrolledwindow->property_vscrollbar_policy();
                     auto const policy = property.get_value();
-                    if (height >= MIN_HEIGHT && policy != Gtk::POLICY_AUTOMATIC) {
-                        property.set_value(Gtk::POLICY_AUTOMATIC);
-                    } else if (height < MIN_HEIGHT && policy != Gtk::POLICY_EXTERNAL) {
-                        property.set_value(Gtk::POLICY_EXTERNAL);
+                    if (height >= MIN_HEIGHT && policy != Gtk::PolicyType::AUTOMATIC) {
+                        property.set_value(Gtk::PolicyType::AUTOMATIC);
+                    } else if (height < MIN_HEIGHT && policy != Gtk::PolicyType::EXTERNAL) {
+                        property.set_value(Gtk::PolicyType::EXTERNAL);
                     } else {
                         // we don't need to update; break
                         return ForEachResult::_break;
@@ -689,27 +689,27 @@ void DialogNotebook::on_size_allocate_notebook(Gtk::Allocation &a)
 /**
  * Signal handler to close a tab on middle-click or to open menu on right-click.
  */
-Gtk::EventSequenceState DialogNotebook::on_tab_click_event(Gtk::GestureMultiPress const &click,
+Gtk::EventSequenceState DialogNotebook::on_tab_click_event(Gtk::GestureClick const &click,
                                                            int /*n_press*/, double /*x*/, double /*y*/,
                                                            Gtk::Widget *page)
 {
     if (_menutabs.get_visible()) {
         _menutabs.popdown();
-        return Gtk::EVENT_SEQUENCE_NONE;
+        return Gtk::EventSequenceState::NONE;
     }
 
     auto const button = click.get_current_button();
     if (button == 2) { // Close tab
         _selected_page = page;
         close_tab_callback();
-        return Gtk::EVENT_SEQUENCE_CLAIMED;
+        return Gtk::EventSequenceState::CLAIMED;
     } else if (button == 3) { // Show menu
         _selected_page = page;
         reload_tab_menu();
         _menutabs.popup_at(*_notebook.get_tab_label(*page));
-        return Gtk::EVENT_SEQUENCE_CLAIMED;
+        return Gtk::EventSequenceState::CLAIMED;
     }
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
 void DialogNotebook::on_close_button_click_event(Gtk::Widget *page)
@@ -778,8 +778,8 @@ void DialogNotebook::reload_tab_menu()
                 return ForEachResult::_continue;
             }
 
-            auto const boxmenu = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 8);
-            boxmenu->set_halign(Gtk::ALIGN_START);
+            auto const boxmenu = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 8);
+            boxmenu->set_halign(Gtk::Align::START);
 
             auto const menuitem = Gtk::make_managed<UI::Widget::PopoverMenuItem>();
             menuitem->add(*boxmenu);
@@ -954,12 +954,12 @@ void DialogNotebook::add_tab_connections(Gtk::Widget * const page)
             sigc::bind(sigc::mem_fun(*this, &DialogNotebook::on_close_button_click_event), page), true);
     _tab_connections.emplace(page, std::move(close_connection));
 
-    auto click = Gtk::GestureMultiPress::create(*tab);
+    auto click = Gtk::GestureClick::create(*tab);
     click->set_button(0); // all
     click->signal_pressed().connect([this, page, &click = *click.get()](int const n_press, double const x, double const y)
     {
         auto const state = on_tab_click_event(click, n_press, x, y, page);
-        if (state != Gtk::EVENT_SEQUENCE_NONE) click.set_state(state);
+        if (state != Gtk::EventSequenceState::NONE) click.set_state(state);
     });
     _tab_connections.emplace(page, std::move(click));
 }

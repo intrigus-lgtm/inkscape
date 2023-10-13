@@ -33,7 +33,7 @@
 namespace Inkscape::UI::Dialog {
 
 Gtk::Box& create_tab_label(const char* label_text, const char* icon_name) {
-    auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
+    auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
     auto const image = Gtk::make_managed<Gtk::Image>();
     image->set_from_icon_name(icon_name, Gtk::ICON_SIZE_MENU);
     auto const label = Gtk::make_managed<Gtk::Label>(label_text, true);
@@ -47,15 +47,15 @@ ArrangeDialog::ArrangeDialog()
     : DialogBase("/dialogs/gridtiler", "AlignDistribute")
 {
     _align_tab = Gtk::make_managed<AlignAndDistribute>(this);
-    _arrangeBox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
-    _arrangeBox->set_valign(Gtk::ALIGN_START);
+    _arrangeBox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
+    _arrangeBox->set_valign(Gtk::Align::START);
     _notebook = Gtk::make_managed<Gtk::Notebook>();
     _gridArrangeTab = Gtk::make_managed<GridArrangeTab>(this);
     _polarArrangeTab = Gtk::make_managed<PolarArrangeTab>(this);
 
-    set_valign(Gtk::ALIGN_START);
+    set_valign(Gtk::Align::START);
 
-    _notebook->set_valign(Gtk::ALIGN_START);
+    _notebook->set_valign(Gtk::Align::START);
     _notebook->append_page(*_align_tab, create_tab_label(C_("Arrange dialog", "Align"), INKSCAPE_ICON("dialog-align-and-distribute")));
     // TRANSLATORS: "Grid" refers to grid (columns/rows) arrangement
     _notebook->append_page(*_gridArrangeTab, create_tab_label(C_("Arrange dialog", "Grid"), INKSCAPE_ICON("arrange-grid")));
@@ -76,7 +76,7 @@ ArrangeDialog::ArrangeDialog()
     _arrangeButton->set_no_show_all();
 
     auto const button_box = Gtk::make_managed<Gtk::Box>();
-    button_box->set_halign(Gtk::ALIGN_CENTER);
+    button_box->set_halign(Gtk::Align::CENTER);
     button_box->set_spacing(6);
     button_box->property_margin().set_value(4);
     UI::pack_end(*button_box, *_arrangeButton);

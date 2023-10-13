@@ -97,7 +97,7 @@ void SPTSpan::set(SPAttr key, const gchar* value) {
                 if (value) {
                     Glib::ustring style(value);
                     Glib::RefPtr<Glib::Regex> regex = Glib::Regex::create("visibility\\s*:\\s*hidden;*");
-                    Glib::ustring stripped = regex->replace_literal(style, 0, "", static_cast<Glib::RegexMatchFlags >(0));
+                    Glib::ustring stripped = regex->replace_literal(style, 0, "", static_cast<Glib::Regex::MatchFlags >(0));
                     Inkscape::XML::Node *repr = getRepr();
                     repr->setAttributeOrRemoveIfEmpty("style", stripped);
                 }

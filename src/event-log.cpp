@@ -93,7 +93,7 @@ public:
         {
             DialogConnection dlg(event_list_view, callback_connections);
 
-            dlg._event_list_selection->set_mode(Gtk::SELECTION_SINGLE);
+            dlg._event_list_selection->set_mode(Gtk::SelectionMode::SINGLE);
 
             {
                 std::vector<std::unique_ptr<SignalBlocker> > blockers;

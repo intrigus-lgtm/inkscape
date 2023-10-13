@@ -101,7 +101,7 @@ private:
     void sort_items() {
         if (_sort) {
             _model->set_default_sort_func(sigc::mem_fun(*this, &ComboBoxEnum<E>::on_sort_compare));
-            _model->set_sort_column(_columns.label, Gtk::SORT_ASCENDING);
+            _model->set_sort_column(_columns.label, Gtk::SortType::ASCENDING);
         }
     }
 

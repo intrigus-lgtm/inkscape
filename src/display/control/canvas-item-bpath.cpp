@@ -180,7 +180,7 @@ void CanvasItemBpath::_render(Inkscape::CanvasItemBuffer &buf) const
         buf.cr->set_source_rgba(SP_RGBA32_R_F(_fill), SP_RGBA32_G_F(_fill),
                                 SP_RGBA32_B_F(_fill), SP_RGBA32_A_F(_fill));
         buf.cr->set_fill_rule(_fill_rule == SP_WIND_RULE_EVENODD ?
-                               Cairo::FILL_RULE_EVEN_ODD : Cairo::FILL_RULE_WINDING);
+                               Cairo::Context::FillRule::EVEN_ODD : Cairo::Context::FillRule::WINDING);
         buf.cr->fill_preserve();
     }
 

@@ -423,7 +423,7 @@ void MeshToolbar::warning_popup()
                   "\n"
                   "For web: convert to bitmap (Edit->Make bitmap copy).\n"
                   "For print: export to PDF.");
-    auto dialog = std::make_unique<Gtk::MessageDialog>(msg, false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK, true);
+    auto dialog = std::make_unique<Gtk::MessageDialog>(msg, false, Gtk::MessageType::WARNING, Gtk::ButtonsType::OK, true);
     dialog_show_modal_and_selfdestruct(std::move(dialog), get_toplevel());
 }
 

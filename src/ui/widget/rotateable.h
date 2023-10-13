@@ -44,9 +44,9 @@ private:
 
     unsigned get_single_modifier(unsigned old, unsigned state);
 
-    Gtk::EventSequenceState on_click  (Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_click  (Gtk::GestureClick const &click,
                                        int n_press, double x, double y);
-    Gtk::EventSequenceState on_release(Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_release(Gtk::GestureClick const &click,
                                        int n_press, double x, double y);
     void on_motion(GtkEventControllerMotion const *motion, double  x, double  y);
     bool on_scroll(GtkEventControllerScroll const *scroll, double dx, double dy);

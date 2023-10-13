@@ -49,13 +49,13 @@ LayerPropertiesDialog::LayerPropertiesDialog(LayerPropertiesDialogType type)
     // Layer name widgets
     _layer_name_entry.set_activates_default(true);
     _layer_name_label.set_label(_("Layer name:"));
-    _layer_name_label.set_halign(Gtk::ALIGN_START);
-    _layer_name_label.set_valign(Gtk::ALIGN_CENTER);
+    _layer_name_label.set_halign(Gtk::Align::START);
+    _layer_name_label.set_valign(Gtk::Align::CENTER);
 
     _layout_table.attach(_layer_name_label, 0, 0, 1, 1);
     
-    _layer_name_entry.set_halign(Gtk::ALIGN_FILL);
-    _layer_name_entry.set_valign(Gtk::ALIGN_FILL);
+    _layer_name_entry.set_halign(Gtk::Align::FILL);
+    _layer_name_entry.set_valign(Gtk::Align::FILL);
     _layer_name_entry.set_hexpand();
     _layout_table.attach(_layer_name_entry, 1, 0, 1, 1);
 
@@ -75,8 +75,8 @@ LayerPropertiesDialog::LayerPropertiesDialog(LayerPropertiesDialogType type)
         return true;
     });
 
-    add_action_widget(_close_button, Gtk::RESPONSE_CLOSE);
-    add_action_widget(_apply_button, Gtk::RESPONSE_APPLY);
+    add_action_widget(_close_button, Gtk::ResponseType::CLOSE);
+    add_action_widget(_apply_button, Gtk::ResponseType::APPLY);
 
     _apply_button.grab_default();
 
@@ -243,8 +243,8 @@ void LayerPropertiesDialog::_setup_position_controls()
     _position_visible = true;
 
     _layer_position_label.set_label(_("Position:"));
-    _layer_position_label.set_halign(Gtk::ALIGN_START);
-    _layer_position_label.set_valign(Gtk::ALIGN_START);
+    _layer_position_label.set_halign(Gtk::Align::START);
+    _layer_position_label.set_valign(Gtk::Align::START);
     _layout_table.attach(_layer_position_label, 0, 1, 1, 1);
 
     int position = Preferences::get()->getIntLimited("/dialogs/layerProp/addLayerPosition", 0, 0, 2);
@@ -261,7 +261,7 @@ void LayerPropertiesDialog::_setup_position_controls()
     _layer_position_radio[1].set_active(position == LPOS_CHILD);
     _layer_position_radio[2].set_active(position == LPOS_BELOW);
 
-    auto& vbox = *Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 3);
+    auto& vbox = *Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 3);
     UI::pack_start(vbox, _layer_position_radio[0], false, false);
     UI::pack_start(vbox, _layer_position_radio[1], false, false);
     UI::pack_start(vbox, _layer_position_radio[2], false, false);
@@ -308,7 +308,7 @@ void LayerPropertiesDialog::_setup_layers_controls()
                           {}, Controller::Button::left);
 
     _scroller.add(_tree);
-    _scroller.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    _scroller.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     _scroller.set_shadow_type(Gtk::SHADOW_IN);
     _scroller.set_size_request(220, 180);
 
@@ -323,8 +323,8 @@ void LayerPropertiesDialog::_setup_layers_controls()
     _layout_table.remove(_layer_name_entry);
     _layout_table.remove(_layer_name_label);
 
-    _scroller.set_halign(Gtk::ALIGN_FILL);
-    _scroller.set_valign(Gtk::ALIGN_FILL);
+    _scroller.set_halign(Gtk::Align::FILL);
+    _scroller.set_valign(Gtk::Align::FILL);
     _scroller.set_hexpand();
     _scroller.set_vexpand();
     _scroller.set_propagate_natural_width(true);
@@ -399,14 +399,14 @@ bool LayerPropertiesDialog::on_key_pressed(GtkEventControllerKey const * const c
     return false;
 }
 
-Gtk::EventSequenceState LayerPropertiesDialog::on_click_pressed(Gtk::GestureMultiPress const & /*click*/,
+Gtk::EventSequenceState LayerPropertiesDialog::on_click_pressed(Gtk::GestureClick const & /*click*/,
                                                                 int const n_press, double /*x*/, double /*y*/)
 {
     if (n_press == 2) {
         _apply();
-        return Gtk::EVENT_SEQUENCE_CLAIMED;
+        return Gtk::EventSequenceState::CLAIMED;
     }
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
 /** Formats the label for a given layer row

@@ -174,13 +174,13 @@ void ColorItem::common_setup()
     Controller::add_motion<&ColorItem::on_motion_enter,
                            nullptr,
                            &ColorItem::on_motion_leave>
-                          (*this, *this, Gtk::PHASE_TARGET);
+                          (*this, *this, Gtk::PropagationPhase::TARGET);
 
     Controller::add_click(*this,
                           sigc::mem_fun(*this, &ColorItem::on_click_pressed),
                           sigc::mem_fun(*this, &ColorItem::on_click_released));
 
-    drag_source_set(Globals::get().mimetargets, Gdk::BUTTON1_MASK, Gdk::ACTION_MOVE | Gdk::ACTION_COPY);
+    drag_source_set(Globals::get().mimetargets, Gdk::ModifierType::BUTTON1_MASK, Gdk::DragAction::MOVE | Gdk::DragAction::COPY);
 }
 
 void ColorItem::set_pinned_pref(const std::string &path)
@@ -249,7 +249,7 @@ bool ColorItem::on_draw(Cairo::RefPtr<Cairo::Context> const &cr)
         auto scale = get_scale_factor();
         // Ensure cache exists and has correct size.
         if (!cache || cache->get_width() != w * scale || cache->get_height() != h * scale) {
-            cache = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, w * scale, h * scale);
+            cache = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, w * scale, h * scale);
             cairo_surface_set_device_scale(cache->cobj(), scale, scale);
             cache_dirty = true;
         }
@@ -284,7 +284,7 @@ bool ColorItem::on_draw(Cairo::RefPtr<Cairo::Context> const &cr)
         }
 
         if (is_stroke) {
-            cr->set_fill_rule(Cairo::FILL_RULE_EVEN_ODD);
+            cr->set_fill_rule(Cairo::Context::FillRule::EVEN_ODD);
             cr->arc(0.0, 0.0, 0.65, 0.0, 2 * M_PI);
             cr->arc(0.0, 0.0, 0.5, 0.0, 2 * M_PI);
             cr->fill();
@@ -322,20 +322,20 @@ void ColorItem::on_motion_leave(GtkEventControllerMotion const * /*motion*/)
     }
 }
 
-Gtk::EventSequenceState ColorItem::on_click_pressed(Gtk::GestureMultiPress const &click,
+Gtk::EventSequenceState ColorItem::on_click_pressed(Gtk::GestureClick const &click,
                                                     int /*n_press*/, double /*x*/, double /*y*/)
 {
     assert(dialog);
 
     if (click.get_current_button() == 3) {
         on_rightclick();
-        return Gtk::EVENT_SEQUENCE_CLAIMED;
+        return Gtk::EventSequenceState::CLAIMED;
     }
     // Return true necessary to avoid stealing the canvas focus.
-    return Gtk::EVENT_SEQUENCE_CLAIMED;
+    return Gtk::EventSequenceState::CLAIMED;
 }
 
-Gtk::EventSequenceState ColorItem::on_click_released(Gtk::GestureMultiPress const &click,
+Gtk::EventSequenceState ColorItem::on_click_released(Gtk::GestureClick const &click,
                                                      int /*n_press*/, double /*x*/, double /*y*/)
 {
     assert(dialog);
@@ -345,9 +345,9 @@ Gtk::EventSequenceState ColorItem::on_click_released(Gtk::GestureMultiPress cons
         auto const state = Controller::get_current_event_state(click);
         auto const stroke = button == 2 || (state & Gdk::SHIFT_MASK) != 0;
         on_click(stroke);
-        return Gtk::EVENT_SEQUENCE_CLAIMED;
+        return Gtk::EventSequenceState::CLAIMED;
     }
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
 void ColorItem::on_click(bool stroke)
@@ -559,7 +559,7 @@ void ColorItem::on_drag_begin(Glib::RefPtr<Gdk::DragContext> const &context)
     constexpr int w = 32;
     constexpr int h = 24;
 
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, w, h);
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, w, h);
     draw_color(Cairo::Context::create(surface), w, h);
     context->set_icon(Gdk::Pixbuf::create(surface, 0, 0, w, h), 0, 0);
 }
@@ -596,7 +596,7 @@ std::array<double, 3> ColorItem::average_color() const
     } else if (auto const graddata = std::get_if<GradientData>(&data)) {
         auto grad = graddata->gradient;
         auto pat = Cairo::RefPtr<Cairo::Pattern>(new Cairo::Pattern(grad->create_preview_pattern(1), true));
-        auto img = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, 1, 1);
+        auto img = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, 1, 1);
         auto cr = Cairo::Context::create(img);
         cr->set_source_rgb(196.0 / 255.0, 196.0 / 255.0, 196.0 / 255.0);
         cr->paint();

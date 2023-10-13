@@ -475,7 +475,7 @@ bool SelectTool::root_handler(CanvasEvent const &event)
             }
         },
         [&] (MotionEvent const &event) {
-            if (grabbed && event.modifiers & (GDK_SHIFT_MASK | GDK_MOD1_MASK)) {
+            if (grabbed && event.modifiers & (GDK_SHIFT_MASK | GDK_ALT_MASK)) {
                 _desktop->getSnapIndicator()->remove_snaptarget();
             }
 

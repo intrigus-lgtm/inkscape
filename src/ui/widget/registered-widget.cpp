@@ -49,8 +49,8 @@ RegisteredCheckButton::RegisteredCheckButton(Glib::ustring const &label, Glib::u
     l->set_use_underline(true);
     add(*l);
 
-    set_halign(right ? Gtk::ALIGN_END : Gtk::ALIGN_START);
-    set_valign(Gtk::ALIGN_CENTER);
+    set_halign(right ? Gtk::Align::END : Gtk::Align::START);
+    set_valign(Gtk::Align::CENTER);
 }
 
 void
@@ -110,8 +110,8 @@ RegisteredToggleButton::RegisteredToggleButton(
 
     set_tooltip_text(tip);
 
-    set_halign(right ? Gtk::ALIGN_END : Gtk::ALIGN_START);
-    set_valign(Gtk::ALIGN_CENTER);
+    set_halign(right ? Gtk::Align::END : Gtk::Align::START);
+    set_valign(Gtk::Align::CENTER);
 }
 
 void

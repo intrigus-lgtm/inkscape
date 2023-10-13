@@ -1117,7 +1117,7 @@ ink_cairo_surface_copy(Cairo::RefPtr<Cairo::ImageSurface> surface )
     int width  = surface->get_width();
     int height = surface->get_height();
     int stride = surface->get_stride();
-    auto new_surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, width, height); // device scale?
+    auto new_surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, width, height); // device scale?
 
     surface->flush();
     memcpy(new_surface->get_data(), surface->get_data(), stride * height);

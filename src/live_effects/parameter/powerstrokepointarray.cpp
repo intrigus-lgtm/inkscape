@@ -305,7 +305,7 @@ void
 PowerStrokePointArrayParamKnotHolderEntity::knot_click(guint state)
 {
     if (state & GDK_CONTROL_MASK) {
-        if (state & GDK_MOD1_MASK) {
+        if (state & GDK_ALT_MASK) {
             // delete the clicked knot
             std::vector<Geom::Point> & vec = _pparam->_vector;
             if (vec.size() > 1) { //Force don't remove last knot
@@ -347,7 +347,7 @@ PowerStrokePointArrayParamKnotHolderEntity::knot_click(guint state)
                       _pparam->knot_color);
             parent_holder->add(e);
         }
-    } else if ((state & GDK_MOD1_MASK) || (state & GDK_SHIFT_MASK)) {
+    } else if ((state & GDK_ALT_MASK) || (state & GDK_SHIFT_MASK)) {
         Geom::Point offset = Geom::Point(_pparam->_vector.at(_index).x(), _pparam->_vector.at(_index).y() * 2);
         Inkscape::UI::Dialog::PowerstrokePropertiesDialog::showDialog(this->desktop, offset, this);
     } 

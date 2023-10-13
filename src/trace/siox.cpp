@@ -56,7 +56,7 @@ SioxImage::SioxImage(Glib::RefPtr<Gdk::Pixbuf> const &buf)
 
 Glib::RefPtr<Gdk::Pixbuf> SioxImage::getGdkPixbuf() const
 {
-    auto buf = Gdk::Pixbuf::create(Gdk::COLORSPACE_RGB, true, 8, width, height);
+    auto buf = Gdk::Pixbuf::create(Gdk::Colorspace::RGB, true, 8, width, height);
 
     int rowstride = buf->get_rowstride();
     int nchannels = buf->get_n_channels();

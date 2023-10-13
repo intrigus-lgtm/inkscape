@@ -58,7 +58,7 @@ Find::Find()
 
       entry_find(_("F_ind:"), _("Find objects by their content or properties (exact or partial match)")),
       entry_replace(_("R_eplace:"), _("Replace match with this value")),
-      label_group{Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL)},
+      label_group{Gtk::SizeGroup::create(Gtk::SizeGroup::Mode::HORIZONTAL)},
 
       check_scope_all(_("_All")),
       check_scope_layer(_("Current _layer")),
@@ -100,8 +100,8 @@ Find::Find()
       check_offsets(_("Offsets")),
       frame_types(_("Object types")),
 
-      _left_size_group(Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL)),
-      _right_size_group(Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL)),
+      _left_size_group(Gtk::SizeGroup::create(Gtk::SizeGroup::Mode::HORIZONTAL)),
+      _right_size_group(Gtk::SizeGroup::create(Gtk::SizeGroup::Mode::HORIZONTAL)),
 
       status(""),
       button_find(_("_Find")),
@@ -109,20 +109,20 @@ Find::Find()
       _action_replace(false),
       blocked(false),
 
-      hbox_searchin(Gtk::ORIENTATION_HORIZONTAL),
-      vbox_scope(Gtk::ORIENTATION_VERTICAL),
-      vbox_searchin(Gtk::ORIENTATION_VERTICAL),
-      vbox_options1(Gtk::ORIENTATION_VERTICAL),
-      vbox_options2(Gtk::ORIENTATION_VERTICAL),
-      hbox_options(Gtk::ORIENTATION_HORIZONTAL),
-      vbox_expander(Gtk::ORIENTATION_VERTICAL),
-      hbox_properties(Gtk::ORIENTATION_HORIZONTAL),
-      vbox_properties1(Gtk::ORIENTATION_VERTICAL),
-      vbox_properties2(Gtk::ORIENTATION_VERTICAL),
-      vbox_types1(Gtk::ORIENTATION_VERTICAL),
-      vbox_types2(Gtk::ORIENTATION_VERTICAL),
-      hbox_types(Gtk::ORIENTATION_HORIZONTAL),
-      hboxbutton_row(Gtk::ORIENTATION_HORIZONTAL)
+      hbox_searchin(Gtk::Orientation::HORIZONTAL),
+      vbox_scope(Gtk::Orientation::VERTICAL),
+      vbox_searchin(Gtk::Orientation::VERTICAL),
+      vbox_options1(Gtk::Orientation::VERTICAL),
+      vbox_options2(Gtk::Orientation::VERTICAL),
+      hbox_options(Gtk::Orientation::HORIZONTAL),
+      vbox_expander(Gtk::Orientation::VERTICAL),
+      hbox_properties(Gtk::Orientation::HORIZONTAL),
+      vbox_properties1(Gtk::Orientation::VERTICAL),
+      vbox_properties2(Gtk::Orientation::VERTICAL),
+      vbox_types1(Gtk::Orientation::VERTICAL),
+      vbox_types2(Gtk::Orientation::VERTICAL),
+      hbox_types(Gtk::Orientation::HORIZONTAL),
+      hboxbutton_row(Gtk::Orientation::HORIZONTAL)
 {
     auto const label1 = entry_find.getLabel();
     label_group->add_widget(*label1);
@@ -259,7 +259,7 @@ Find::Find()
     UI::pack_start(vbox_properties1, check_title, UI::PackOptions::shrink);
     UI::pack_start(vbox_properties2, check_attributevalue, UI::PackOptions::shrink);
     UI::pack_start(vbox_properties2, check_attributename, UI::PackOptions::shrink);
-    vbox_properties2.set_valign(Gtk::ALIGN_START);
+    vbox_properties2.set_valign(Gtk::Align::START);
     _left_size_group->add_widget(check_ids);
     _left_size_group->add_widget(check_style);
     _left_size_group->add_widget(check_font);
@@ -283,7 +283,7 @@ Find::Find()
     UI::pack_start(vbox_types2, check_ellipses, UI::PackOptions::shrink);
     UI::pack_start(vbox_types2, check_stars, UI::PackOptions::shrink);
     UI::pack_start(vbox_types2, check_spirals, UI::PackOptions::shrink);
-    vbox_types2.set_valign(Gtk::ALIGN_END);
+    vbox_types2.set_valign(Gtk::Align::END);
     _left_size_group->add_widget(check_alltypes);
     _left_size_group->add_widget(check_paths);
     _left_size_group->add_widget(check_texts);

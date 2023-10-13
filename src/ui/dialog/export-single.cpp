@@ -312,7 +312,7 @@ void SingleExport::refreshPage()
     if (!_document)
         return;
 
-    bool multi = pages_list.get_selection_mode() == Gtk::SELECTION_MULTIPLE;
+    bool multi = pages_list.get_selection_mode() == Gtk::SelectionMode::MULTIPLE;
     auto &pm = _document->getPageManager();
     bool has_pages = current_key == SELECTION_PAGE && pm.getPageCount() > 1;
     pages_list_box.set_visible(has_pages);
@@ -325,9 +325,9 @@ void SingleExport::setPagesMode(bool multi)
     // Set set the internal mode to NONE to preserve selections while changing
     pages_list.foreach([=](Gtk::Widget& widget) {
         if (auto item = dynamic_cast<BatchItem *>(&widget))
-            item->on_mode_changed(Gtk::SELECTION_NONE);
+            item->on_mode_changed(Gtk::SelectionMode::NONE);
     });
-    pages_list.set_selection_mode(multi ? Gtk::SELECTION_MULTIPLE : Gtk::SELECTION_SINGLE);
+    pages_list.set_selection_mode(multi ? Gtk::SelectionMode::MULTIPLE : Gtk::SelectionMode::SINGLE);
     // A second call it needed in it's own loop because of how updates happen in the FlowBox
     pages_list.foreach([=](Gtk::Widget& widget) {
         if (auto item = dynamic_cast<BatchItem *>(&widget))
@@ -398,7 +398,7 @@ void SingleExport::onPagesModified(SPPage *page)
 }
 
 void SingleExport::onPagesSelected(SPPage *page) {
-    if (pages_list.get_selection_mode() != Gtk::SELECTION_MULTIPLE) {
+    if (pages_list.get_selection_mode() != Gtk::SelectionMode::MULTIPLE) {
         selectPage(page);
     }
     refreshArea();

@@ -44,7 +44,7 @@ namespace {
 void show(std::vector<SPItem*> const &list, Glib::ustring const &out)
 {
    Gtk::MessageDialog warning(_("Some fonts are not available and have been substituted."),
-                              false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, true);
+                              false, Gtk::MessageType::INFO, Gtk::ButtonsType::OK, true);
    warning.set_resizable(true);
    warning.set_title(_("Font substitution"));
 
@@ -52,13 +52,13 @@ void show(std::vector<SPItem*> const &list, Glib::ustring const &out)
 
    Gtk::TextView textview;
    textview.set_editable(false);
-   textview.set_wrap_mode(Gtk::WRAP_WORD);
+   textview.set_wrap_mode(Gtk::WrapMode::WORD);
    textview.set_visible(true);
    textview.get_buffer()->set_text(_(out.c_str()));
 
    Gtk::ScrolledWindow scrollwindow;
    scrollwindow.add(textview);
-   scrollwindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+   scrollwindow.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
    scrollwindow.set_shadow_type(Gtk::SHADOW_IN);
    scrollwindow.set_size_request(0, 100);
    scrollwindow.set_visible(true);

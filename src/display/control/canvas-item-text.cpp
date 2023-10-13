@@ -161,7 +161,7 @@ void CanvasItemText::_render(Inkscape::CanvasItemBuffer &buf) const
     buf.cr->move_to(int(bx - _text_size.x_bearing - _text_size.width/2.0),
                     int(by - _text_size.y_bearing - _text_extent.height/2.0));
 
-    buf.cr->select_font_face(_fontname, Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_NORMAL);
+    buf.cr->select_font_face(_fontname, Cairo::ToyFontFace::Slant::NORMAL, Cairo::ToyFontFace::Weight::NORMAL);
     buf.cr->set_font_size(_fontsize);
     buf.cr->text_path(_text);
     buf.cr->set_source_rgba(SP_RGBA32_R_F(_fill), SP_RGBA32_G_F(_fill),
@@ -199,9 +199,9 @@ Geom::Rect CanvasItemText::get_text_size() const {
  */
 Geom::Rect CanvasItemText::load_text_extents()
 {
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, 1, 1);
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, 1, 1);
     auto context = Cairo::Context::create(surface);
-    context->select_font_face(_fontname, Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_NORMAL);
+    context->select_font_face(_fontname, Cairo::ToyFontFace::Slant::NORMAL, Cairo::ToyFontFace::Weight::NORMAL);
     context->set_font_size(_fontsize);
     context->get_text_extents(_text, _text_size);
 

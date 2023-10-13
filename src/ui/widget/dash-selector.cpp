@@ -36,7 +36,7 @@ gchar const *const DashSelector::_prefs_path = "/palette/dashes";
 static std::vector<std::vector<double>> s_dashes;
 
 DashSelector::DashSelector()
-    : Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 4),
+    : Gtk::Box(Gtk::Orientation::HORIZONTAL, 4),
       _preview_width(100),
       _preview_height(16),
       _preview_lineheight(2)
@@ -182,7 +182,7 @@ Cairo::RefPtr<Cairo::Surface> DashSelector::sp_dash_to_pixbuf(const std::vector<
 
     auto height = _preview_height * device_scale;
     auto width = _preview_width * device_scale;
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, width, height);
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, width, height);
     auto const s = surface->cobj();
     cairo_t *ct = cairo_create(s);
 
@@ -208,7 +208,7 @@ Cairo::RefPtr<Cairo::Surface> DashSelector::sp_dash_to_pixbuf(const std::vector<
  */
 Cairo::RefPtr<Cairo::Surface> DashSelector::sp_text_to_pixbuf(const char* text) {
     auto device_scale = get_scale_factor();
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, _preview_width  * device_scale,
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, _preview_width  * device_scale,
                                                                      _preview_height * device_scale);
     auto const s = surface->cobj();
     cairo_t *ct = cairo_create(s);

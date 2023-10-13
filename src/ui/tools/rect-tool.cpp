@@ -146,7 +146,7 @@ bool RectTool::root_handler(CanvasEvent const &event)
                 dragging = true;
 
                 // Remember clicked item, disregarding groups, honoring Alt.
-                item_to_select = sp_event_context_find_item (_desktop, button_w, event.modifiers & GDK_MOD1_MASK, true);
+                item_to_select = sp_event_context_find_item (_desktop, button_w, event.modifiers & GDK_ALT_MASK, true);
                 // Postion center
                 auto button_dt = _desktop->w2d(button_w);
                 center = button_dt;

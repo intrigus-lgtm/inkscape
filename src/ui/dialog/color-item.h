@@ -92,9 +92,9 @@ private:
                          double x, double y);
     void on_motion_leave(GtkEventControllerMotion const *motion);
 
-    Gtk::EventSequenceState on_click_pressed (Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
                                               int n_press, double x, double y);
-    Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_click_released(Gtk::GestureClick const &click,
                                               int n_press, double x, double y);
 
     // Perform the on-click action of setting the fill or stroke.

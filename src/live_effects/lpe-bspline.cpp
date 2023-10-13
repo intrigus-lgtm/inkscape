@@ -89,7 +89,7 @@ Gtk::Widget *LPEBSpline::newWidget()
 {
     // use manage here, because after deletion of Effect object, others might
     // still be pointing to this widget.
-    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     vbox->property_margin().set_value(5);
 
     for (auto const param: param_vector) {
@@ -99,7 +99,7 @@ Gtk::Widget *LPEBSpline::newWidget()
         if (!widg) continue;
 
         if (param->param_key == "weight") {
-            auto const buttons = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
+            auto const buttons = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL,0);
 
             auto const default_weight = Gtk::make_managed<Gtk::Button>(_("Default weight"));
             default_weight->signal_clicked()

@@ -107,8 +107,8 @@ static Gtk::Label *spw_label(Gtk::Grid *table, const gchar *label_text, int col,
   }
   label_widget->set_visible(true);
 
-  label_widget->set_halign(Gtk::ALIGN_START);
-  label_widget->set_valign(Gtk::ALIGN_CENTER);
+  label_widget->set_halign(Gtk::Align::START);
+  label_widget->set_valign(Gtk::Align::CENTER);
   label_widget->set_margin_start(4);
   label_widget->set_margin_end(4);
 
@@ -124,12 +124,12 @@ static Gtk::Label *spw_label(Gtk::Grid *table, const gchar *label_text, int col,
 static Gtk::Box *spw_hbox(Gtk::Grid *table, int width, int col, int row)
 {
   /* Create a new hbox with a 4-pixel spacing between children */
-  auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
+  auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
   g_assert(hb != nullptr);
   hb->set_visible(true);
   hb->set_hexpand();
-  hb->set_halign(Gtk::ALIGN_FILL);
-  hb->set_valign(Gtk::ALIGN_CENTER);
+  hb->set_halign(Gtk::Align::FILL);
+  hb->set_valign(Gtk::Align::CENTER);
   table->attach(*hb, col, row, width, 1);
   return hb;
 }
@@ -200,7 +200,7 @@ StrokeStyle::StrokeStyle() :
     table->property_margin().set_value(4);
     table->set_row_spacing(4);
     table->set_hexpand(false);
-    table->set_halign(Gtk::ALIGN_CENTER);
+    table->set_halign(Gtk::Align::CENTER);
     table->set_visible(true);
     add(*table);
 
@@ -255,8 +255,8 @@ StrokeStyle::StrokeStyle() :
 
     dashSelector->set_visible(true);
     dashSelector->set_hexpand();
-    dashSelector->set_halign(Gtk::ALIGN_FILL);
-    dashSelector->set_valign(Gtk::ALIGN_CENTER);
+    dashSelector->set_halign(Gtk::Align::FILL);
+    dashSelector->set_valign(Gtk::Align::CENTER);
     table->attach(*dashSelector, 1, i, 3, 1);
     dashSelector->changed_signal.connect(sigc::mem_fun(*this, &StrokeStyle::setStrokeDash));
 

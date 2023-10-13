@@ -32,7 +32,7 @@ enum Key : KeyMask {
     ALWAYS = 0, // Always happens, no modifier needed
     SHIFT = GDK_SHIFT_MASK,
     CTRL = GDK_CONTROL_MASK,
-    ALT = GDK_MOD1_MASK,
+    ALT = GDK_ALT_MASK,
     SUPER = GDK_SUPER_MASK,
     HYPER = GDK_HYPER_MASK,
     META = GDK_META_MASK,

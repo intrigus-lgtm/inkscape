@@ -26,7 +26,7 @@ namespace UI {
 namespace Widget {
 
 SwatchSelector::SwatchSelector()
-    : Gtk::Box(Gtk::ORIENTATION_VERTICAL)
+    : Gtk::Box(Gtk::Orientation::VERTICAL)
 {
     _gsel = Gtk::make_managed<GradientSelector>();
     _gsel->setMode(GradientSelector::MODE_SWATCH);

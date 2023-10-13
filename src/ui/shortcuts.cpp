@@ -213,7 +213,7 @@ parse_modifier_string(char const * const modifiers_string)
             } else if (mod == "Shift") {
                 modifiers |= Gdk::SHIFT_MASK;
             } else if (mod == "Alt") {
-                modifiers |= Gdk::MOD1_MASK;
+                modifiers |= Gdk::ALT_MASK;
             } else if (mod == "Super") {
                 modifiers |= Gdk::SUPER_MASK; // Not used
             } else if (mod == "Hyper") {
@@ -980,11 +980,11 @@ Shortcuts::dump() {
         Gdk::ModifierType(0),
         Gdk::SHIFT_MASK,
         Gdk::CONTROL_MASK,
-        Gdk::MOD1_MASK,
+        Gdk::ALT_MASK,
         Gdk::SHIFT_MASK   |  Gdk::CONTROL_MASK,
-        Gdk::SHIFT_MASK   |  Gdk::MOD1_MASK,
-        Gdk::CONTROL_MASK |  Gdk::MOD1_MASK,
-        Gdk::SHIFT_MASK   |  Gdk::CONTROL_MASK   | Gdk::MOD1_MASK
+        Gdk::SHIFT_MASK   |  Gdk::ALT_MASK,
+        Gdk::CONTROL_MASK |  Gdk::ALT_MASK,
+        Gdk::SHIFT_MASK   |  Gdk::CONTROL_MASK   | Gdk::ALT_MASK
     };
     for (auto mod : modifiers) {
         for (char key = '!'; key <= '~'; ++key) {

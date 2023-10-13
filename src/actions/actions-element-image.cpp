@@ -117,7 +117,7 @@ void image_edit(InkscapeApplication *app)
                 Glib::ustring message = _("Failed to edit external image.\n<small>Note: Path to editor can be set in Preferences dialog.</small>");
                 Glib::ustring message2 = Glib::ustring::compose(_("System error message: %1"), error->message);
                 if (auto window = app->get_active_window()) {
-                    auto dialog = std::make_unique<Gtk::MessageDialog>(*window, message, true, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK);
+                    auto dialog = std::make_unique<Gtk::MessageDialog>(*window, message, true, Gtk::MessageType::WARNING, Gtk::ButtonsType::OK);
                     dialog->property_destroy_with_parent() = true;
                     dialog->set_name("SetEditorDialog");
                     dialog->set_title(_("External Edit Image:"));

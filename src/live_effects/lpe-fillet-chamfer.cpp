@@ -165,7 +165,7 @@ Gtk::Widget *LPEFilletChamfer::newWidget()
 {
     // use manage here, because after deletion of Effect object, others might
     // still be pointing to this widget.
-    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     vbox->property_margin().set_value(5);
 
     for (auto const param: param_vector) {
@@ -198,7 +198,7 @@ Gtk::Widget *LPEFilletChamfer::newWidget()
     
     // Fillet and chamfer containers
 
-    auto const fillet_container = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 0);
+    auto const fillet_container = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 0);
     Gtk::Button *fillet =  Gtk::make_managed<Gtk::Button>(Glib::ustring(_("Fillet")));
     fillet->signal_clicked().connect(
         sigc::bind(sigc::mem_fun(*this, &LPEFilletChamfer::updateNodeSatelliteType), FILLET));
@@ -209,7 +209,7 @@ Gtk::Widget *LPEFilletChamfer::newWidget()
         sigc::mem_fun(*this, &LPEFilletChamfer::updateNodeSatelliteType), INVERSE_FILLET));
     UI::pack_start(*fillet_container, *inverse_fillet, true, true, 2);
 
-    auto const chamfer_container = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 0);
+    auto const chamfer_container = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 0);
     auto const chamfer = Gtk::make_managed<Gtk::Button>(Glib::ustring(_("Chamfer")));
     chamfer->signal_clicked().connect(
         sigc::bind(sigc::mem_fun(*this, &LPEFilletChamfer::updateNodeSatelliteType), CHAMFER));

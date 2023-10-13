@@ -44,7 +44,7 @@ class DialogMultipaned final
     , public Gtk::Container
 {
 public:
-    DialogMultipaned(Gtk::Orientation orientation = Gtk::ORIENTATION_HORIZONTAL);
+    DialogMultipaned(Gtk::Orientation orientation = Gtk::Orientation::HORIZONTAL);
     ~DialogMultipaned() final;
 
     void prepend(Gtk::Widget &child);

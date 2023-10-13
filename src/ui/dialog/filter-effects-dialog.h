@@ -137,7 +137,7 @@ private:
         void selection_toggled(Gtk::TreeModel::iterator iter, bool toggle);
 
         void update_counts();
-        Gtk::EventSequenceState filter_list_click_released(Gtk::GestureMultiPress const &click,
+        Gtk::EventSequenceState filter_list_click_released(Gtk::GestureClick const &click,
                                                            int n_press, double x, double y);
         void remove_filter();
         void duplicate_filter();
@@ -233,9 +233,9 @@ private:
         bool on_draw_signal(const Cairo::RefPtr<Cairo::Context> &cr);
         void on_drag_end(const Glib::RefPtr<Gdk::DragContext>&) override;
 
-        Gtk::EventSequenceState on_click_pressed (Gtk::GestureMultiPress const &click,
+        Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
                                                   int n_press, double x, double y);
-        Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress const &click,
+        Gtk::EventSequenceState on_click_released(Gtk::GestureClick const &click,
                                                   int n_press, double x, double y);
         void on_motion_motion(GtkEventControllerMotion const *motion,
                               double x, double y);

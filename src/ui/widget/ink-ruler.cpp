@@ -65,7 +65,7 @@ Ruler::Ruler(Gtk::Orientation orientation)
     , _position(0)
 {
     set_name("InkRuler");
-    get_style_context()->add_class(_orientation == Gtk::ORIENTATION_HORIZONTAL ? "horz" : "vert");
+    get_style_context()->add_class(_orientation == Gtk::Orientation::HORIZONTAL ? "horz" : "vert");
 
     _drawing_area->set_visible(true);
     _drawing_area->signal_draw().connect(sigc::mem_fun(*this, &Ruler::on_drawing_area_draw));
@@ -160,7 +160,7 @@ void
 Ruler::add_track_widget(Gtk::Widget& widget)
 {
     Controller::add_motion<nullptr, &Ruler::on_motion, nullptr>(widget, *this,
-        Gtk::PHASE_TARGET, Controller::When::before); // We connected 1st to event, so continue
+        Gtk::PropagationPhase::TARGET, Controller::When::before); // We connected 1st to event, so continue
 }
 
 // Draws marker in response to motion events from canvas.  Position is defined in ruler pixel
@@ -174,7 +174,7 @@ Ruler::on_motion(GtkEventControllerMotion const * motion, double const x, double
     int drawing_x, drawing_y;
     widget->translate_coordinates(*_drawing_area, std::lround(x), std::lround(y), drawing_x, drawing_y);
 
-    double const position = _orientation == Gtk::ORIENTATION_HORIZONTAL ? drawing_x : drawing_y;
+    double const position = _orientation == Gtk::Orientation::HORIZONTAL ? drawing_x : drawing_y;
     if (position == _position) return;
 
     _position = position;
@@ -188,11 +188,11 @@ Ruler::on_motion(GtkEventControllerMotion const * motion, double const x, double
 }
 
 Gtk::EventSequenceState
-Ruler::on_click_pressed(Gtk::GestureMultiPress const & /*click*/,
+Ruler::on_click_pressed(Gtk::GestureClick const & /*click*/,
                         int /*n_press*/, double const x, double const y)
 {
     UI::popup_at(*_popover, *this, x, y);
-    return Gtk::EVENT_SEQUENCE_CLAIMED;
+    return Gtk::EventSequenceState::CLAIMED;
 }
 
 std::pair<int, int>
@@ -218,7 +218,7 @@ Ruler::draw_scale(const::Cairo::RefPtr<::Cairo::Context>& cr_in)
     if (double psize = std::abs(_page_upper - _page_lower)) {
         Gdk::Cairo::set_source_rgba(cr, _page_fill);
         cr->begin_new_path();
-        if (_orientation == Gtk::ORIENTATION_HORIZONTAL) {
+        if (_orientation == Gtk::Orientation::HORIZONTAL) {
             cr->rectangle(_page_lower, 0, psize, aheight);
         } else {
             cr->rectangle(0, _page_lower, awidth, psize);
@@ -231,13 +231,13 @@ Ruler::draw_scale(const::Cairo::RefPtr<::Cairo::Context>& cr_in)
     cr->set_line_width(1.0);
 
     // aparallel is the longer, oriented dimension of the ruler; aperpendicular shorter.
-    auto const [aparallel, aperpendicular] = _orientation == Gtk::ORIENTATION_HORIZONTAL
+    auto const [aparallel, aperpendicular] = _orientation == Gtk::Orientation::HORIZONTAL
                                              ? std::pair{awidth , aheight}
                                              : std::pair{aheight, awidth };
 
     // Draw bottom/right line of ruler
     Gdk::Cairo::set_source_rgba(cr, _foreground);
-    if (_orientation == Gtk::ORIENTATION_HORIZONTAL) {
+    if (_orientation == Gtk::Orientation::HORIZONTAL) {
         cr->move_to(0     , aheight - 0.5);
         cr->line_to(awidth, aheight - 0.5);
     } else {
@@ -255,7 +255,7 @@ Ruler::draw_scale(const::Cairo::RefPtr<::Cairo::Context>& cr_in)
         cr->fill();
     };
     int gradient_size = 4;
-    if (_orientation == Gtk::ORIENTATION_HORIZONTAL) {
+    if (_orientation == Gtk::Orientation::HORIZONTAL) {
         paint_shadow(0, gradient_size, awidth, gradient_size);
     } else {
         paint_shadow(gradient_size, 0, gradient_size, aheight);
@@ -332,7 +332,7 @@ Ruler::draw_scale(const::Cairo::RefPtr<::Cairo::Context>& cr_in)
             // Align text to pixel
             int x = 3;
             int y = position + 2.5;
-            if (_orientation == Gtk::ORIENTATION_HORIZONTAL) {
+            if (_orientation == Gtk::Orientation::HORIZONTAL) {
                 x = position + 2.5;
                 y = 3;
             }
@@ -347,7 +347,7 @@ Ruler::draw_scale(const::Cairo::RefPtr<::Cairo::Context>& cr_in)
 
         // Draw ticks
         Gdk::Cairo::set_source_rgba(cr, _foreground);
-        if (_orientation == Gtk::ORIENTATION_HORIZONTAL) {
+        if (_orientation == Gtk::Orientation::HORIZONTAL) {
             cr->move_to(position, aheight - size);
             cr->line_to(position, aheight       );
         } else {
@@ -367,7 +367,7 @@ Ruler::draw_scale(const::Cairo::RefPtr<::Cairo::Context>& cr_in)
         double sx0 = floor(aperpendicular * 0.7);
         double sx1 = sx0;
 
-        if (_orientation == Gtk::ORIENTATION_HORIZONTAL) {
+        if (_orientation == Gtk::Orientation::HORIZONTAL) {
             std::swap(sy0, sx0);
             std::swap(sy1, sx1);
         }
@@ -376,7 +376,7 @@ Ruler::draw_scale(const::Cairo::RefPtr<::Cairo::Context>& cr_in)
 
         if (fabs(delta) > 2 * radius) {
             Gdk::Cairo::set_source_rgba(cr, _select_stroke);
-            if (_orientation == Gtk::ORIENTATION_HORIZONTAL) {
+            if (_orientation == Gtk::Orientation::HORIZONTAL) {
                 cr->move_to(sx0 + dxy, sy0);
                 cr->line_to(sx1 - dxy, sy1);
             }
@@ -412,7 +412,7 @@ Ruler::draw_scale(const::Cairo::RefPtr<::Cairo::Context>& cr_in)
  */
 Cairo::RefPtr<Cairo::Surface> Ruler::draw_label(Cairo::RefPtr<Cairo::Surface> const &surface_in, int label_value)
 {
-    bool rotate = _orientation != Gtk::ORIENTATION_HORIZONTAL;
+    bool rotate = _orientation != Gtk::Orientation::HORIZONTAL;
 
     Glib::RefPtr<Pango::Layout> layout = create_pango_layout(std::to_string(label_value));
 
@@ -445,7 +445,7 @@ Ruler::draw_marker(const Cairo::RefPtr<::Cairo::Context>& cr)
 {
     auto const [awidth, aheight] = get_drawing_size();
     Gdk::Cairo::set_source_rgba(cr, _foreground);
-    if (_orientation == Gtk::ORIENTATION_HORIZONTAL) {
+    if (_orientation == Gtk::Orientation::HORIZONTAL) {
         cr->move_to(_position             , aheight             );
         cr->line_to(_position - half_width, aheight - half_width);
         cr->line_to(_position + half_width, aheight - half_width);
@@ -473,7 +473,7 @@ Ruler::marker_rect()
     rect.height = 0;
 
     // Find size of rectangle to enclose triangle.
-    if (_orientation == Gtk::ORIENTATION_HORIZONTAL) {
+    if (_orientation == Gtk::Orientation::HORIZONTAL) {
         rect.x = std::floor(_position - half_width);
         rect.y = std::floor(  aheight - half_width);
         rect.width  = std::ceil(half_width * 2.0 + 1);

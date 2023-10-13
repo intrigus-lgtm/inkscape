@@ -66,8 +66,8 @@ inline std::pair<Modifiers::Type, Modifier> make_modifier(char const *id,
 std::map<int, int> const &key_map()
 {
     static const std::map<int, int> static_key_map = {
-        {GDK_KEY_Alt_L, GDK_MOD1_MASK},
-        {GDK_KEY_Alt_R, GDK_MOD1_MASK},
+        {GDK_KEY_Alt_L, GDK_ALT_MASK},
+        {GDK_KEY_Alt_R, GDK_ALT_MASK},
         {GDK_KEY_Control_L, GDK_CONTROL_MASK},
         {GDK_KEY_Control_R, GDK_CONTROL_MASK},
         {GDK_KEY_Shift_L, GDK_SHIFT_MASK},

@@ -15,7 +15,7 @@
 namespace Inkscape::UI::Widget {
 
 Frame::Frame(Glib::ustring const &label_text /*= {}*/, bool label_bold /*= true*/ )
-    : _label(label_text, Gtk::ALIGN_END, Gtk::ALIGN_CENTER, true)
+    : _label(label_text, Gtk::Align::END, Gtk::Align::CENTER, true)
 {
     get_style_context()->add_class("flat");
 

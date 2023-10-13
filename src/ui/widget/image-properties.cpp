@@ -107,7 +107,7 @@ void set_aspect_ratio(SPImage* image, bool preserve_aspect_ratio) {
 }
 
 ImageProperties::ImageProperties() :
-    Gtk::Box(Gtk::ORIENTATION_HORIZONTAL),
+    Gtk::Box(Gtk::Orientation::HORIZONTAL),
     _builder(create_builder("image-properties.glade")),
     _preview(get_widget<Gtk::DrawingArea>(_builder, "preview")),
     _aspect(get_widget<Gtk::RadioButton>(_builder, "preserve")),

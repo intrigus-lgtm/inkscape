@@ -420,7 +420,7 @@ bool PencilTool::_handleButtonRelease(ButtonReleaseEvent const &event) {
                 discard_delayed_snap_event();
                 break;
             case SP_PENCIL_CONTEXT_FREEHAND:
-                if (event.modifiers & GDK_MOD1_MASK && !tablet_enabled) {
+                if (event.modifiers & GDK_ALT_MASK && !tablet_enabled) {
                     /* sketch mode: interpolate the sketched path and improve the current output path with the new interpolation. don't finish sketch */
                     _sketchInterpolate();
 

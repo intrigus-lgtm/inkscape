@@ -110,8 +110,8 @@ void SPAttributeTable::set_object(SPObject * const object,
     _attributes = attributes;
     for (std::size_t i = 0; i < attributes.size(); ++i) {
         auto const ll = Gtk::make_managed<Gtk::Label>(_(labels[i].c_str()));
-        ll->set_halign(Gtk::ALIGN_START);
-        ll->set_valign(Gtk::ALIGN_CENTER);
+        ll->set_halign(Gtk::Align::START);
+        ll->set_valign(Gtk::Align::CENTER);
         ll->set_vexpand(false);
         ll->set_margin_end(XPAD);
         ll->set_margin_top(YPAD);

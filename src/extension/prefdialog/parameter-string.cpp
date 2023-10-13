@@ -156,7 +156,7 @@ public:
         , _changeSignal(changeSignal)
     {
         // replace literal '\n' with actual newlines for multiline strings
-        Glib::ustring value = Glib::Regex::create("\\\\n")->replace_literal(_pref->get(), 0, "\n", (Glib::RegexMatchFlags)0);
+        Glib::ustring value = Glib::Regex::create("\\\\n")->replace_literal(_pref->get(), 0, "\n", (Glib::Regex::MatchFlags)0);
 
         this->get_buffer()->set_text(value);
         this->get_buffer()->signal_changed().connect(sigc::mem_fun(*this, &ParamMultilineStringEntry::changed_text));
@@ -175,7 +175,7 @@ void ParamMultilineStringEntry::changed_text()
     Glib::ustring data = this->get_buffer()->get_text();
 
     // always store newlines as literal '\n'
-    data = Glib::Regex::create("\n")->replace_literal(data, 0, "\\n", (Glib::RegexMatchFlags)0);
+    data = Glib::Regex::create("\n")->replace_literal(data, 0, "\\n", (Glib::Regex::MatchFlags)0);
 
     _pref->set(data.c_str());
     if (_changeSignal != nullptr) {
@@ -196,14 +196,14 @@ Gtk::Widget *ParamString::get_widget(sigc::signal<void ()> *changeSignal)
         return nullptr;
     }
 
-    auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, GUI_PARAM_WIDGETS_SPACING);
+    auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, GUI_PARAM_WIDGETS_SPACING);
 
-    auto const label = Gtk::make_managed<Gtk::Label>(_text, Gtk::ALIGN_START);
+    auto const label = Gtk::make_managed<Gtk::Label>(_text, Gtk::Align::START);
     label->set_visible(true);
     UI::pack_start(*box, *label, false, false);
 
     if (_mode == MULTILINE) {
-        box->set_orientation(Gtk::ORIENTATION_VERTICAL);
+        box->set_orientation(Gtk::Orientation::VERTICAL);
 
         auto const textarea = Gtk::make_managed<Gtk::ScrolledWindow>();
         textarea->set_vexpand();

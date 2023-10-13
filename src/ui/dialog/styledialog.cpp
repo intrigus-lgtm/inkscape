@@ -240,18 +240,18 @@ StyleDialog::StyleDialog()
     g_debug("StyleDialog::StyleDialog");
 
     UI::pack_start(_mainBox, _scrolledWindow, UI::PackOptions::expand_widget);
-    _scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    _scrolledWindow.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
 
     _styleBox.set_name("StyleBox");
-    _styleBox.set_orientation(Gtk::ORIENTATION_VERTICAL);
-    _styleBox.set_valign(Gtk::ALIGN_START);
+    _styleBox.set_orientation(Gtk::Orientation::VERTICAL);
+    _styleBox.set_valign(Gtk::Align::START);
 
     _scrolledWindow.add(_styleBox);
     _scrolledWindow.set_overlay_scrolling(false);
     _vadj = _scrolledWindow.get_vadjustment();
     _vadj->signal_value_changed().connect(sigc::mem_fun(*this, &StyleDialog::_vscroll));
 
-    _mainBox.set_orientation(Gtk::ORIENTATION_VERTICAL);
+    _mainBox.set_orientation(Gtk::Orientation::VERTICAL);
 
     UI::pack_start(*this, _mainBox, UI::PackOptions::expand_widget);
 }
@@ -1437,7 +1437,7 @@ bool StyleDialog::_onTreeViewFocus(Gtk::DirectionType const direction)
 {
     g_debug("StyleDialog::_onTreeViewFocus");
 
-    if (_editingEntry != nullptr && direction == Gtk::DIR_TAB_FORWARD) {
+    if (_editingEntry != nullptr && direction == Gtk::DirectionType::TAB_FORWARD) {
         g_debug("StyleDialog::_onTreeViewFocus: _editingEntry != nullptr && Tab");
 
         // If !change, entry stays visible after Tab, but remove_widget() crashes so… Donʼt Do That
@@ -1461,7 +1461,7 @@ std::vector<SPObject *> StyleDialog::_getObjVec(Glib::ustring selector)
     return getDocument()->getObjectsBySelector(selector);
 }
 
-void StyleDialog::_closeDialog(Gtk::Dialog *textDialogPtr) { textDialogPtr->response(Gtk::RESPONSE_OK); }
+void StyleDialog::_closeDialog(Gtk::Dialog *textDialogPtr) { textDialogPtr->response(Gtk::ResponseType::OK); }
 
 
 void StyleDialog::removeObservers()

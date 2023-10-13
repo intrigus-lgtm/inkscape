@@ -27,7 +27,7 @@ void Toolbar::get_preferred_width_vfunc(int &min_w, int &nat_w) const
 {
     _toolbar->get_preferred_width(min_w, nat_w);
 
-    if (_toolbar->get_orientation() == Gtk::ORIENTATION_HORIZONTAL && !_expanded_menu_btns.empty()) {
+    if (_toolbar->get_orientation() == Gtk::Orientation::HORIZONTAL && !_expanded_menu_btns.empty()) {
         // HACK: Return too-small value to allow shrinking.
         min_w = 0;
     }
@@ -37,7 +37,7 @@ void Toolbar::get_preferred_height_vfunc(int &min_h, int &nat_h) const
 {
     _toolbar->get_preferred_height(min_h, nat_h);
 
-    if (_toolbar->get_orientation() == Gtk::ORIENTATION_VERTICAL && !_expanded_menu_btns.empty()) {
+    if (_toolbar->get_orientation() == Gtk::Orientation::VERTICAL && !_expanded_menu_btns.empty()) {
         // HACK: Return too-small value to allow shrinking.
         min_h = 0;
     }
@@ -54,7 +54,7 @@ static int min_dimension(Gtk::Widget const *widget, Gtk::Orientation const orien
     int min = 0;
     int nat = 0;
 
-    if (orientation == Gtk::ORIENTATION_HORIZONTAL) {
+    if (orientation == Gtk::Orientation::HORIZONTAL) {
         widget->get_preferred_width(min, nat);
     } else {
         widget->get_preferred_height(min, nat);
@@ -70,7 +70,7 @@ void Toolbar::_resize_handler(Gtk::Allocation &allocation)
     }
 
     auto const orientation = _toolbar->get_orientation();
-    auto const allocated_size = orientation == Gtk::ORIENTATION_VERTICAL ? allocation.get_height() : allocation.get_width();
+    auto const allocated_size = orientation == Gtk::Orientation::VERTICAL ? allocation.get_height() : allocation.get_width();
     int min_size = min_dimension(_toolbar, orientation);
 
     if (allocated_size < min_size) {

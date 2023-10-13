@@ -168,13 +168,13 @@ protected:
                                   guint event_time,
                                   gpointer user_data );
 
-    Gtk::EventSequenceState on_fill_click   (Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_fill_click   (Gtk::GestureClick const &click,
                                              int n_press, double x, double y);
-    Gtk::EventSequenceState on_stroke_click (Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_stroke_click (Gtk::GestureClick const &click,
                                              int n_press, double x, double y);
-    Gtk::EventSequenceState on_opacity_click(Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_opacity_click(Gtk::GestureClick const &click,
                                              int n_press, double x, double y);
-    Gtk::EventSequenceState on_sw_click     (Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_sw_click     (Gtk::GestureClick const &click,
                                              int n_press, double x, double y);
 
     bool _opacity_blocked = false;

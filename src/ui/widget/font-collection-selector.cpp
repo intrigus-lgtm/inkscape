@@ -73,14 +73,14 @@ void FontCollectionSelector::setup_tree_view(Gtk::TreeView *tv)
     text_column.set_cell_data_func(*cell_text, sigc::mem_fun(*this, &FontCollectionSelector::text_cell_data_func));
 
     treeview->set_headers_visible (false);
-    treeview->enable_model_drag_dest (Gdk::ACTION_MOVE);
-    treeview->drag_dest_set(get_target_entries(), Gtk::DEST_DEFAULT_ALL, Gdk::ACTION_COPY);
+    treeview->enable_model_drag_dest (Gdk::DragAction::MOVE);
+    treeview->drag_dest_set(get_target_entries(), Gtk::DEST_DEFAULT_ALL, Gdk::DragAction::COPY);
 
     // Append the columns to the treeview.
     treeview->append_column(text_column);
     treeview->append_column(del_icon_column);
 
-    scroll.set_policy (Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    scroll.set_policy (Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     scroll.set_overlay_scrolling(false);
     scroll.add (*treeview);
 
@@ -353,7 +353,7 @@ void FontCollectionSelector::on_delete_icon_clicked(Glib::ustring const &path)
 
         // Warn the user and then proceed.
         deletion_warning_message_dialog((*iter)[FontCollection.name], [this, iter] (int response) {
-            if (response == Gtk::RESPONSE_YES) {
+            if (response == Gtk::ResponseType::YES) {
                 auto collections = Inkscape::FontCollections::get();
                 collections->remove_collection((*iter)[FontCollection.name]);
                 store->erase(iter);
@@ -431,7 +431,7 @@ void FontCollectionSelector::on_delete_button_pressed()
 
         // Warn the user and then proceed.
         deletion_warning_message_dialog((*iter)[FontCollection.name], [this, iter] (int response) {
-            if (response == Gtk::RESPONSE_YES) {
+            if (response == Gtk::ResponseType::YES) {
                 auto collections = Inkscape::FontCollections::get();
                 collections->remove_collection((*iter)[FontCollection.name]);
                 store->erase(iter);
@@ -475,7 +475,7 @@ void FontCollectionSelector::on_edit_button_pressed()
 void FontCollectionSelector::deletion_warning_message_dialog(Glib::ustring const &collection_name, sigc::slot<void(int)> onresponse)
 {
     auto message = Glib::ustring::compose(_("Are you sure want to delete the \"%1\" font collection?\n"), collection_name);
-    auto dialog = std::make_unique<Gtk::MessageDialog>(message, false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_YES_NO, true);
+    auto dialog = std::make_unique<Gtk::MessageDialog>(message, false, Gtk::MessageType::WARNING, Gtk::ButtonsType::YES_NO, true);
     dialog->signal_response().connect(onresponse);
     dialog_show_modal_and_selfdestruct(std::move(dialog), get_toplevel());
 }
@@ -505,7 +505,7 @@ bool FontCollectionSelector::on_drag_motion(const Glib::RefPtr<Gdk::DragContext>
     treeview->drag_unhighlight();
 
     if (path) {
-        context->drag_status(Gdk::ACTION_COPY, time);
+        context->drag_status(Gdk::DragAction::COPY, time);
         return false;
     }
 

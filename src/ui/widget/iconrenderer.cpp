@@ -21,7 +21,7 @@ IconRenderer::IconRenderer() :
     Gtk::CellRendererPixbuf(),
     _property_icon(*this, "icon", 0)
 {
-    property_mode() = Gtk::CELL_RENDERER_MODE_ACTIVATABLE;
+    property_mode() = Gtk::CellRendererMode::ACTIVATABLE;
     property_stock_size().set_value(Gtk::ICON_SIZE_BUTTON);
 
     set_icon_name();

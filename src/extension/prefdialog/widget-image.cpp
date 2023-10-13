@@ -48,7 +48,7 @@ WidgetImage::WidgetImage(Inkscape::XML::Node *xml, Inkscape::Extension::Extensio
     }
 
     // check if image exists
-    if (Glib::file_test(image_path, Glib::FILE_TEST_IS_REGULAR)) {
+    if (Glib::file_test(image_path, Glib::FileTest::IS_REGULAR)) {
         _image_path = image_path;
     } else {
         _icon_name = INKSCAPE_ICON(image_path);
@@ -81,7 +81,7 @@ Gtk::Widget *WidgetImage::get_widget(sigc::signal<void ()> * /*changeSignal*/)
         // resize if requested
         if (_width && _height) {
             Glib::RefPtr<Gdk::Pixbuf> pixbuf = image->get_pixbuf();
-            pixbuf = pixbuf->scale_simple(_width, _height, Gdk::INTERP_BILINEAR);
+            pixbuf = pixbuf->scale_simple(_width, _height, Gdk::InterpType::BILINEAR);
             image->set(pixbuf);
         }
     } else if (_width || _height) {

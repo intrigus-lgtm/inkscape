@@ -43,7 +43,7 @@ PolarArrangeTab::PolarArrangeTab(ArrangeDialog *parent_)
     set_spacing(4);
 
     anchorPointLabel.set_markup(C_("Polar arrange tab", "<b>Anchor point:</b>"));
-    anchorPointLabel.set_halign(Gtk::ALIGN_START);
+    anchorPointLabel.set_halign(Gtk::Align::START);
     UI::pack_start(*this, anchorPointLabel, false, false);
 
     anchorBoundingBoxRadio.set_label(C_("Polar arrange tab", "Objects' bounding boxes:"));
@@ -53,7 +53,7 @@ PolarArrangeTab::PolarArrangeTab(ArrangeDialog *parent_)
     UI::pack_start(*this, anchorBoundingBoxRadio, false, false);
 
     anchorSelector.set_margin_start(16);
-    anchorSelector.set_halign(Gtk::ALIGN_START);
+    anchorSelector.set_halign(Gtk::Align::START);
     UI::pack_start(*this, anchorSelector, false, false);
 
     anchorObjectPivotRadio.set_label(C_("Polar arrange tab", "Objects' rotational centers"));
@@ -64,7 +64,7 @@ PolarArrangeTab::PolarArrangeTab(ArrangeDialog *parent_)
 
     arrangeOnLabel.set_markup(C_("Polar arrange tab", "<b>Arrange on:</b>"));
     arrangeOnLabel.set_margin_top(8);
-    arrangeOnLabel.set_halign(Gtk::ALIGN_START);
+    arrangeOnLabel.set_halign(Gtk::Align::START);
     UI::pack_start(*this, arrangeOnLabel, false, false);
 
     arrangeOnFirstCircleRadio.set_label(C_("Polar arrange tab", "First selected circle/ellipse/arc"));

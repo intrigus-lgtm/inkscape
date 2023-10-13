@@ -143,7 +143,7 @@ LPESketch::~LPESketch() = default;
 
 Gtk::Widget *LPESketch::newWidget()
 {
-    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
 
     for (auto const param: param_vector) {
         if (!param->widget_is_visible) continue;
@@ -152,7 +152,7 @@ Gtk::Widget *LPESketch::newWidget()
             param->param_key == "tremble_size" ||
             param->param_key == "nbtangents")
         {
-            UI::pack_start(*vbox, *Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL),
+            UI::pack_start(*vbox, *Gtk::make_managed<Gtk::Separator>(Gtk::Orientation::HORIZONTAL),
                            UI::PackOptions::expand_widget);
         }
 

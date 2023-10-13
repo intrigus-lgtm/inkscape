@@ -75,7 +75,7 @@ SwatchesPanel::SwatchesPanel(bool compact, char const *prefsPath)
     _selector(get_widget<Gtk::MenuButton>(_builder, "selector")),
     _selector_label(get_widget<Gtk::Label>(_builder, "selector-label")),
     _selector_menu{compact ? nullptr
-                   : std::make_unique<UI::Widget::PopoverMenu>(_selector, Gtk::POS_BOTTOM)},
+                   : std::make_unique<UI::Widget::PopoverMenu>(_selector, Gtk::PositionType::BOTTOM)},
     _new_btn(get_widget<Gtk::Button>(_builder, "new")),
     _edit_btn(get_widget<Gtk::Button>(_builder, "edit")),
     _delete_btn(get_widget<Gtk::Button>(_builder, "delete"))
@@ -643,9 +643,9 @@ bool SwatchesPanel::on_selector_key_pressed(GtkEventControllerKey const * contro
 
     auto const label = Gtk::make_managed<Gtk::Label>(palette.name, true);
     label->set_xalign(0.0);
-    UI::ellipsize(*label, max_chars, Pango::ELLIPSIZE_MIDDLE);
+    UI::ellipsize(*label, max_chars, Pango::EllipsizeMode::MIDDLE);
 
-    auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 1);
+    auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 1);
     box->add(*label);
     box->add(*Gtk::make_managed<UI::Widget::ColorPalettePreview>(palette.colors));
 
@@ -668,7 +668,7 @@ void SwatchesPanel::update_selector_menu()
     // TODO: GTK4: probably nicer to use GtkGridView.
     Inkscape::UI::ColumnMenuBuilder builder{*_selector_menu, 2};
     // Items are put in a SizeGroup to keep the two columnsʼ widths homogeneous
-    auto const size_group = Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL);
+    auto const size_group = Gtk::SizeGroup::create(Gtk::SizeGroup::Mode::HORIZONTAL);
     auto const add_item = [&](UI::Widget::palette_t const &palette){
         auto const [item, label] = make_selector_item(palette);
         item->signal_activate().connect([id = palette.id, this]{ set_palette(id); });

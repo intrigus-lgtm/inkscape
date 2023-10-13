@@ -216,7 +216,7 @@ public:
                     std::vector<SPAttr> const &attrs,
                     std::vector<double> const &default_values,
                     std::vector<char *> const &tip_text)
-    : Gtk::Box(Gtk::ORIENTATION_HORIZONTAL)
+    : Gtk::Box(Gtk::Orientation::HORIZONTAL)
     {
         g_assert(attrs.size()==default_values.size());
         g_assert(attrs.size()==tip_text.size());
@@ -246,7 +246,7 @@ public:
     DualSpinButton(char* def, double lower, double upper, double step_inc,
                    double climb_rate, int digits, const SPAttr a, char* tt1, char* tt2)
         : AttrWidget(a, def), //TO-DO: receive default num-opt-num as parameter in the constructor
-          Gtk::Box(Gtk::ORIENTATION_HORIZONTAL),
+          Gtk::Box(Gtk::Orientation::HORIZONTAL),
           _s1(climb_rate, digits), _s2(climb_rate, digits)
     {
         if (tt1) {
@@ -523,7 +523,7 @@ public:
           _matrix(SPAttr::VALUES, _("This matrix determines a linear transform on color space. Each line affects one of the color components. Each column determines how much of each color component from the input is passed to the output. The last column does not depend on input colors, so can be used to adjust a constant component value.")),
           _saturation("", 1, 0, 1, 0.1, 0.01, 2, SPAttr::VALUES),
           _angle("", 0, 0, 360, 0.1, 0.01, 1, SPAttr::VALUES),
-          _label(C_("Label", "None"), Gtk::ALIGN_START),
+          _label(C_("Label", "None"), Gtk::Align::START),
           _use_stored(false),
           _saturation_store(1.0),
           _angle_store(0)
@@ -646,7 +646,7 @@ public:
     FileOrElementChooser(FilterEffectsDialog& d, const SPAttr a)
         : AttrWidget(a)
         , _dialog(d)
-        , Gtk::Box(Gtk::ORIENTATION_HORIZONTAL)
+        , Gtk::Box(Gtk::Orientation::HORIZONTAL)
     {
         set_spacing(3);
         UI::pack_start(*this, _entry, true, true);
@@ -754,10 +754,10 @@ public:
     {
         _groups.resize(_max_types);
         _attrwidgets.resize(_max_types);
-        _size_group = Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL);
+        _size_group = Gtk::SizeGroup::create(Gtk::SizeGroup::Mode::HORIZONTAL);
 
         for(int i = 0; i < _max_types; ++i) {
-            _groups[i] = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 3);
+            _groups[i] = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 3);
             b.set_spacing(4);
             UI::pack_start(b, *_groups[i], UI::PackOptions::shrink);
         }
@@ -981,7 +981,7 @@ private:
     {
         g_assert(w->is_managed_());
 
-        auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+        auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
         hb->set_spacing(6);
 
         if (label != "") {
@@ -1014,7 +1014,7 @@ public:
           _type(ComponentTransferTypeConverter, SPAttr::TYPE, false),
           _channel(channel),
           _funcNode(nullptr),
-          _box(Gtk::ORIENTATION_VERTICAL)
+          _box(Gtk::Orientation::VERTICAL)
     {
         get_style_context()->add_class("flat");
 
@@ -1160,13 +1160,13 @@ class FilterEffectsDialog::LightSourceControl
 public:
     LightSourceControl(FilterEffectsDialog& d)
         : AttrWidget(SPAttr::INVALID),
-          Gtk::Box(Gtk::ORIENTATION_VERTICAL),
+          Gtk::Box(Gtk::Orientation::VERTICAL),
           _dialog(d),
           _settings(d, *this, sigc::mem_fun(_dialog, &FilterEffectsDialog::set_child_attr_direct), LIGHT_ENDSOURCE),
           _light_label(_("Light Source:")),
           _light_source(LightSourceConverter),
           _locked(false),
-          _light_box(Gtk::ORIENTATION_HORIZONTAL)
+          _light_box(Gtk::Orientation::HORIZONTAL)
     {
         _light_label.set_xalign(0.0);
         _settings._size_group->add_widget(_light_label);
@@ -1308,7 +1308,7 @@ static std::unique_ptr<UI::Widget::PopoverMenu> create_popup_menu(Gtk::Widget &p
                                                                   sigc::slot<void ()> dup,
                                                                   sigc::slot<void ()> rem)
 {
-    auto menu = std::make_unique<UI::Widget::PopoverMenu>(parent, Gtk::POS_RIGHT);
+    auto menu = std::make_unique<UI::Widget::PopoverMenu>(parent, Gtk::PositionType::RIGHT);
 
     auto mi = Gtk::make_managed<UI::Widget::PopoverMenuItem>(_("_Duplicate"), true);
     mi->signal_activate().connect(std::move(dup));
@@ -1323,7 +1323,7 @@ static std::unique_ptr<UI::Widget::PopoverMenu> create_popup_menu(Gtk::Widget &p
 
 /*** FilterModifier ***/
 FilterEffectsDialog::FilterModifier::FilterModifier(FilterEffectsDialog& d, Glib::RefPtr<Gtk::Builder> builder)
-    :    Gtk::Box(Gtk::ORIENTATION_VERTICAL),
+    :    Gtk::Box(Gtk::Orientation::VERTICAL),
          _builder(std::move(builder)),
          _list(get_widget<Gtk::TreeView>(_builder, "filter-list")),
          _dialog(d),
@@ -1347,16 +1347,16 @@ FilterEffectsDialog::FilterModifier::FilterModifier(FilterEffectsDialog& d, Glib
         signal_edited().connect(sigc::mem_fun(*this, &FilterEffectsDialog::FilterModifier::on_name_edited));
 
     _list.append_column(_("Used"), _columns.count);
-    _list.get_column(2)->set_sizing(Gtk::TREE_VIEW_COLUMN_AUTOSIZE);
+    _list.get_column(2)->set_sizing(Gtk::TreeViewColumn::Sizing::AUTOSIZE);
     _list.get_column(2)->set_expand(false);
     _list.get_column(2)->set_reorderable(true);
 
     _list.get_column(1)->set_resizable(true);
-    _list.get_column(1)->set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
+    _list.get_column(1)->set_sizing(Gtk::TreeViewColumn::Sizing::FIXED);
     _list.get_column(1)->set_expand(true);
 
     _list.set_reorderable(false);
-    _list.enable_model_drag_dest(Gdk::ACTION_MOVE);
+    _list.enable_model_drag_dest(Gdk::DragAction::MOVE);
 
 #if 0 // on_filter_move() was commented-out in GTK3, so itʼs removed for GTK4. FIXME if you can...!
     _list.signal_drag_drop().connect( sigc::mem_fun(*this, &FilterModifier::on_filter_move), false );
@@ -1420,7 +1420,7 @@ void FilterEffectsDialog::FilterModifier::update_selection(Selection *sel)
 
 std::unique_ptr<UI::Widget::PopoverMenu> FilterEffectsDialog::FilterModifier::create_menu()
 {
-    auto menu = std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::POS_BOTTOM);
+    auto menu = std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::PositionType::BOTTOM);
     auto append = [&](Glib::ustring const &text, auto const mem_fun)
     {
         auto &item = *Gtk::make_managed<UI::Widget::PopoverMenuItem>(text, true);
@@ -1602,7 +1602,7 @@ void FilterEffectsDialog::FilterModifier::select_filter(const SPFilter* filter)
 }
 
 Gtk::EventSequenceState
-FilterEffectsDialog::FilterModifier::filter_list_click_released(Gtk::GestureMultiPress const & /*click*/,
+FilterEffectsDialog::FilterModifier::filter_list_click_released(Gtk::GestureClick const & /*click*/,
                                                                 int /*n_press*/,
                                                                 double const x, double const y)
 {
@@ -1612,7 +1612,7 @@ FilterEffectsDialog::FilterModifier::filter_list_click_released(Gtk::GestureMult
     items.at(1)->set_sensitive(sensitive);
     items.at(3)->set_sensitive(sensitive);
     _menu->popup_at(_list, x, y);
-    return Gtk::EVENT_SEQUENCE_CLAIMED;
+    return Gtk::EventSequenceState::CLAIMED;
 }
 
 void FilterEffectsDialog::FilterModifier::add_filter()
@@ -1780,12 +1780,12 @@ FilterEffectsDialog::PrimitiveList::PrimitiveList(FilterEffectsDialog& d)
         sigc::mem_fun(*this, &PrimitiveList::on_click_pressed ),
         sigc::mem_fun(*this, &PrimitiveList::on_click_released),
         Controller::Button::any,
-        Gtk::PHASE_TARGET);
+        Gtk::PropagationPhase::TARGET);
 
     Controller::add_motion<nullptr,
                            &PrimitiveList::on_motion_motion,
                            nullptr>
-                          (*this, *this, Gtk::PHASE_TARGET);
+                          (*this, *this, Gtk::PropagationPhase::TARGET);
 
     _model = Gtk::ListStore::create(_columns);
 
@@ -2293,7 +2293,7 @@ static std::pair<int, int> widget_to_bin_window(Gtk::TreeView const &tree_view, 
 }
 
 Gtk::EventSequenceState
-FilterEffectsDialog::PrimitiveList::on_click_pressed(Gtk::GestureMultiPress const & /*click*/,
+FilterEffectsDialog::PrimitiveList::on_click_pressed(Gtk::GestureClick const & /*click*/,
                                                      int /*n_press*/,
                                                      double const wx, double const wy)
 {
@@ -2326,10 +2326,10 @@ FilterEffectsDialog::PrimitiveList::on_click_pressed(Gtk::GestureMultiPress cons
         _autoscroll_x = 0;
         _autoscroll_y = 0;
         get_selection()->select(path);
-        return Gtk::EVENT_SEQUENCE_CLAIMED;
+        return Gtk::EventSequenceState::CLAIMED;
     }
 
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
 void FilterEffectsDialog::PrimitiveList::on_motion_motion(GtkEventControllerMotion const * /*motion*/,
@@ -2379,7 +2379,7 @@ void FilterEffectsDialog::PrimitiveList::on_motion_motion(GtkEventControllerMoti
 }
 
 Gtk::EventSequenceState
-FilterEffectsDialog::PrimitiveList::on_click_released(Gtk::GestureMultiPress const &click,
+FilterEffectsDialog::PrimitiveList::on_click_released(Gtk::GestureClick const &click,
                                                       int /*n_press*/,
                                                       double const wx, double const wy)
 {
@@ -2491,10 +2491,10 @@ FilterEffectsDialog::PrimitiveList::on_click_released(Gtk::GestureMultiPress con
         bool const sensitive = prim != nullptr;
         _primitive_menu->set_sensitive(sensitive);
         _primitive_menu->popup_at(*this, wx + 4, wy);
-        return Gtk::EVENT_SEQUENCE_CLAIMED;
+        return Gtk::EventSequenceState::CLAIMED;
     }
 
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
 // Checks all of prim's inputs, removes any that use result
@@ -2741,15 +2741,15 @@ FilterEffectsDialog::FilterEffectsDialog()
     _cur_filter_btn(get_widget<Gtk::CheckButton>(_builder, "label"))
     , _add_primitive_type(FPConverter)
     , _add_primitive(_("Add Effect:"))
-    , _empty_settings("", Gtk::ALIGN_CENTER)
-    , _no_filter_selected(_("No filter selected"), Gtk::ALIGN_START)
+    , _empty_settings("", Gtk::Align::CENTER)
+    , _no_filter_selected(_("No filter selected"), Gtk::Align::START)
     , _settings_initialized(false)
     , _locked(false)
     , _attr_lock(false)
     , _filter_modifier(*this, _builder)
     , _primitive_list(*this)
-    , _settings_effect(Gtk::ORIENTATION_VERTICAL)
-    , _settings_filter(Gtk::ORIENTATION_VERTICAL)
+    , _settings_effect(Gtk::Orientation::VERTICAL)
+    , _settings_filter(Gtk::Orientation::VERTICAL)
 {
     _settings = std::make_unique<Settings>(*this, _settings_effect,
                                            [this](auto const a){ set_attr_direct(a); },

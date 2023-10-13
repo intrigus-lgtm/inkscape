@@ -63,7 +63,7 @@ ComboBoxEntryToolItem::ComboBoxEntryToolItem(Glib::ustring name,
 
     _combobox.set_entry_text_column(0);
     _combobox.set_name(name + "_combobox"); // Name it so we can muck with it using an RC file
-    _combobox.set_halign(Gtk::ALIGN_START);
+    _combobox.set_halign(Gtk::Align::START);
     _combobox.set_hexpand(false);
     _combobox.set_vexpand(false);
     add(_combobox);

@@ -145,7 +145,7 @@ private:
 class ZoomCorrRulerSlider : public Gtk::Box
 {
 public:
-    ZoomCorrRulerSlider() : Gtk::Box(Gtk::ORIENTATION_VERTICAL) {}
+    ZoomCorrRulerSlider() : Gtk::Box(Gtk::Orientation::VERTICAL) {}
 
     void init(int ruler_width, int ruler_height, double lower, double upper,
               double step_increment, double page_increment, double default_value);
@@ -166,7 +166,7 @@ private:
 class PrefSlider : public Gtk::Box
 {
 public:
-    PrefSlider(bool spin = true) : Gtk::Box(Gtk::ORIENTATION_HORIZONTAL) { _spin = spin; }
+    PrefSlider(bool spin = true) : Gtk::Box(Gtk::Orientation::HORIZONTAL) { _spin = spin; }
 
     void init(Glib::ustring const &prefs_path,
     		  double lower, double upper, double step_increment, double page_increment, double default_value, int digits);
@@ -238,7 +238,7 @@ private:
 class PrefEntryButtonHBox : public Gtk::Box
 {
 public:
-    PrefEntryButtonHBox() : Gtk::Box(Gtk::ORIENTATION_HORIZONTAL) {}
+    PrefEntryButtonHBox() : Gtk::Box(Gtk::Orientation::HORIZONTAL) {}
 
     void init(Glib::ustring const &prefs_path,
             bool mask, Glib::ustring const &default_string);
@@ -256,7 +256,7 @@ private:
 class PrefEntryFileButtonHBox : public Gtk::Box
 {
 public:
-    PrefEntryFileButtonHBox() : Gtk::Box(Gtk::ORIENTATION_HORIZONTAL) {}
+    PrefEntryFileButtonHBox() : Gtk::Box(Gtk::Orientation::HORIZONTAL) {}
 
     void init(Glib::ustring const &prefs_path,
               bool mask);
@@ -272,7 +272,7 @@ private:
 
 class PrefOpenFolder : public Gtk::Box {
   public:
-    PrefOpenFolder() : Gtk::Box(Gtk::ORIENTATION_HORIZONTAL) {}
+    PrefOpenFolder() : Gtk::Box(Gtk::Orientation::HORIZONTAL) {}
 
     void init(Glib::ustring const &entry_string, Glib::ustring const &tooltip);
 

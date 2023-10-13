@@ -37,7 +37,7 @@ ScalarUnit::ScalarUnit(Glib::ustring const &label, Glib::ustring const &tooltip,
         auto const widget = getWidget();
         g_assert(widget);
         remove(*widget);
-        auto const widget_holder = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 6);
+        auto const widget_holder = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 6);
         UI::pack_start(*widget_holder, *getWidget(), UI::PackOptions::shrink);
         UI::pack_start(*widget_holder, *_unit_menu, UI::PackOptions::shrink);
         UI::pack_start(*this, *widget_holder, UI::PackOptions::shrink);

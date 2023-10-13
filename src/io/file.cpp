@@ -161,7 +161,7 @@ std::string find_original_file(std::string const &filepath, std::string const &n
 {
     auto path = Glib::path_get_dirname(filepath);
     auto filename = Glib::build_filename(path, name);
-    if (Glib::file_test(filename, Glib::FILE_TEST_IS_REGULAR)) {
+    if (Glib::file_test(filename, Glib::FileTest::IS_REGULAR)) {
         return filename;
     }
     return ""; 

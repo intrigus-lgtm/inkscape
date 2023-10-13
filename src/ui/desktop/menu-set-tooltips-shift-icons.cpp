@@ -117,7 +117,7 @@ set_tooltips_and_shift_icons(Gtk::Widget &menu, bool const shift_icons)
         }
 
         width += box->get_spacing();
-        auto const margin_side = widget->get_direction() == Gtk::TEXT_DIR_RTL ? "right" : "left";
+        auto const margin_side = widget->get_direction() == Gtk::TextDirection::RTL ? "right" : "left";
         auto const css_str = Glib::ustring::compose(".shifticonmenu menuitem box { margin-%1: -%2px; }"
                                                     ".shifticonmenu modelbutton box > label:only-child { margin-%1: %2px; }",
                                                     margin_side, width);

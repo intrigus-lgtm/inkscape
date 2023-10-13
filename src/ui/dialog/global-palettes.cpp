@@ -369,10 +369,10 @@ void load_gimp_palette(PaletteFileData& palette, std::string const &path)
     if (!std::fgets(buf, sizeof(buf), f.get())) throw std::runtime_error(_("File is empty"));
     if (std::strncmp("GIMP Palette", buf, 12) != 0) throw std::runtime_error(_("First line is wrong"));
 
-    static auto const regex_rgb   = Glib::Regex::create("\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)\\s*(?:\\s(.*\\S)\\s*)?$", Glib::REGEX_OPTIMIZE | Glib::REGEX_ANCHORED);
-    static auto const regex_name  = Glib::Regex::create("\\s*Name:\\s*(.*\\S)", Glib::REGEX_OPTIMIZE | Glib::REGEX_ANCHORED);
-    static auto const regex_cols  = Glib::Regex::create("\\s*Columns:\\s*(.*\\S)", Glib::REGEX_OPTIMIZE | Glib::REGEX_ANCHORED);
-    static auto const regex_blank = Glib::Regex::create("\\s*(?:$|#)", Glib::REGEX_OPTIMIZE | Glib::REGEX_ANCHORED);
+    static auto const regex_rgb   = Glib::Regex::create("\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)\\s*(?:\\s(.*\\S)\\s*)?$", Glib::Regex::CompileFlags::OPTIMIZE | Glib::Regex::CompileFlags::ANCHORED);
+    static auto const regex_name  = Glib::Regex::create("\\s*Name:\\s*(.*\\S)", Glib::Regex::CompileFlags::OPTIMIZE | Glib::Regex::CompileFlags::ANCHORED);
+    static auto const regex_cols  = Glib::Regex::create("\\s*Columns:\\s*(.*\\S)", Glib::Regex::CompileFlags::OPTIMIZE | Glib::Regex::CompileFlags::ANCHORED);
+    static auto const regex_blank = Glib::Regex::create("\\s*(?:$|#)", Glib::Regex::CompileFlags::OPTIMIZE | Glib::Regex::CompileFlags::ANCHORED);
 
     while (std::fgets(buf, sizeof(buf), f.get())) {
         auto line = Glib::ustring(buf); // Unnecessary copy required until using a glibmm with support for string views. TODO: Fix when possible.

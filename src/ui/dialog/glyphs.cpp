@@ -408,7 +408,7 @@ GlyphsPanel::GlyphsPanel()
     : DialogBase("/dialogs/glyphs", "Glyphs")
     , store(Gtk::ListStore::create(*getColumns()))
 {
-    set_orientation(Gtk::ORIENTATION_VERTICAL);
+    set_orientation(Gtk::Orientation::VERTICAL);
     auto const table = Gtk::make_managed<Gtk::Grid>();
     table->set_row_spacing(4);
     table->set_column_spacing(4);
@@ -442,8 +442,8 @@ GlyphsPanel::GlyphsPanel()
         instanceConns.emplace_back(
             scriptCombo->signal_changed().connect(sigc::mem_fun(*this, &GlyphsPanel::rebuild)));
 
-        scriptCombo->set_halign(Gtk::ALIGN_START);
-        scriptCombo->set_valign(Gtk::ALIGN_START);
+        scriptCombo->set_halign(Gtk::Align::START);
+        scriptCombo->set_valign(Gtk::Align::START);
         scriptCombo->set_hexpand();
         table->attach(*scriptCombo, 1, row, 1, 1);
     }
@@ -466,8 +466,8 @@ GlyphsPanel::GlyphsPanel()
         instanceConns.emplace_back(
             rangeCombo->signal_changed().connect(sigc::mem_fun(*this, &GlyphsPanel::rebuild)));
 
-        rangeCombo->set_halign(Gtk::ALIGN_START);
-        rangeCombo->set_valign(Gtk::ALIGN_START);
+        rangeCombo->set_halign(Gtk::Align::START);
+        rangeCombo->set_valign(Gtk::Align::START);
         rangeCombo->set_hexpand();
         table->attach(*rangeCombo, 1, row, 1, 1);
     }
@@ -493,7 +493,7 @@ GlyphsPanel::GlyphsPanel()
         iconView->signal_selection_changed().connect(sigc::mem_fun(*this, &GlyphsPanel::glyphSelectionChanged)));
 
     auto const scroller = Gtk::make_managed<Gtk::ScrolledWindow>();
-    scroller->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_ALWAYS);
+    scroller->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::ALWAYS);
     scroller->add(*iconView);
     scroller->set_hexpand();
     scroller->set_vexpand();
@@ -503,7 +503,7 @@ GlyphsPanel::GlyphsPanel()
 
 // -------------------------------
 
-    auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
 
     entry = Gtk::make_managed<Gtk::Entry>();
     instanceConns.emplace_back(

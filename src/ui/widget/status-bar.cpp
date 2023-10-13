@@ -37,7 +37,7 @@
 namespace Inkscape::UI::Widget {
 
 StatusBar::StatusBar()
-    : Gtk::Box(Gtk::ORIENTATION_HORIZONTAL)
+    : Gtk::Box(Gtk::Orientation::HORIZONTAL)
 {
     auto builder = Inkscape::UI::create_builder("statusbar.ui");
 

@@ -103,7 +103,7 @@ ToolBoxData const aux_toolboxes[] = {
 
 // We only create an empty box, it is filled later after the desktop is created.
 Toolbars::Toolbars()
-    : Gtk::Box(Gtk::ORIENTATION_VERTICAL)
+    : Gtk::Box(Gtk::Orientation::VERTICAL)
 {
     set_name("Tool-Toolbars");
 }

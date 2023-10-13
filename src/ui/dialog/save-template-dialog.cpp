@@ -35,11 +35,11 @@ SaveTemplate::SaveTemplate(Gtk::Window &parent)
 {
     name.signal_changed().connect(sigc::mem_fun(*this, &SaveTemplate::on_name_changed));
 
-    dialog.add_button(_("Cancel"), Gtk::RESPONSE_CANCEL);
-    dialog.add_button(_("Save"), Gtk::RESPONSE_OK);
+    dialog.add_button(_("Cancel"), Gtk::ResponseType::CANCEL);
+    dialog.add_button(_("Save"), Gtk::ResponseType::OK);
 
-    dialog.set_response_sensitive(Gtk::RESPONSE_OK, false);
-    dialog.set_default_response(Gtk::RESPONSE_CANCEL);
+    dialog.set_response_sensitive(Gtk::ResponseType::OK, false);
+    dialog.set_default_response(Gtk::ResponseType::CANCEL);
 
     dialog.set_transient_for(parent);
     dialog.show_all();
@@ -48,7 +48,7 @@ SaveTemplate::SaveTemplate(Gtk::Window &parent)
 void SaveTemplate::on_name_changed() {
 
     bool has_text = name.get_text_length() != 0;
-    dialog.set_response_sensitive(Gtk::RESPONSE_OK, has_text);
+    dialog.set_response_sensitive(Gtk::ResponseType::OK, has_text);
 }
 
 void SaveTemplate::save_template(Gtk::Window &parent) {
@@ -63,7 +63,7 @@ void SaveTemplate::save_document_as_template(Gtk::Window &parent) {
     int response = dialog_run(dialog.dialog);
 
     switch (response) {
-    case Gtk::RESPONSE_OK:
+    case Gtk::ResponseType::OK:
         dialog.save_template(parent);
         break;
     default:

@@ -25,7 +25,7 @@ ImageToggler::ImageToggler(char const *on, char const *off) :
     _property_gossamer(*this, "gossamer", false),
     _property_active_icon(*this, "active_icon", "")
 {
-    property_mode() = Gtk::CELL_RENDERER_MODE_ACTIVATABLE;
+    property_mode() = Gtk::CellRendererMode::ACTIVATABLE;
     property_stock_size().set_value(Gtk::ICON_SIZE_MENU);
     set_padding(6, 3);
 

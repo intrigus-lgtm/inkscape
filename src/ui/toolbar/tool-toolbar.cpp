@@ -129,7 +129,7 @@ std::unique_ptr<UI::Widget::PopoverMenu> ToolToolbar::makeContextMenu(InkscapeWi
         _context_menu_tool_name.clear();
     });
 
-    auto menu = std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::POS_BOTTOM);
+    auto menu = std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::PositionType::BOTTOM);
     menu->append(item);
     return menu;
 }
@@ -164,20 +164,20 @@ void ToolToolbar::attachHandlers(Glib::RefPtr<Gtk::Builder> builder, InkscapeWin
 
         auto tool_name = Glib::ustring((gchar const *)action_target.get_data());
         auto on_click_pressed = [=, tool_name = std::move(tool_name)]
-                                (Gtk::GestureMultiPress const &click,
+                                (Gtk::GestureClick const &click,
                                  int const n_press, double /*x*/, double /*y*/)
         {
             // Open tool preferences upon double click
             auto const button = click.get_current_button();
             if (button == 1 && n_press == 2) {
                 tool_preferences(tool_name, window);
-                return Gtk::EVENT_SEQUENCE_CLAIMED;
+                return Gtk::EventSequenceState::CLAIMED;
             }
             if (button == 3) {
                 showContextMenu(window, *radio, tool_name);
-                return Gtk::EVENT_SEQUENCE_CLAIMED;
+                return Gtk::EventSequenceState::CLAIMED;
             }
-            return Gtk::EVENT_SEQUENCE_NONE;
+            return Gtk::EventSequenceState::NONE;
         };
         Controller::add_click(*radio, std::move(on_click_pressed), {},
                               Controller::Button::any);

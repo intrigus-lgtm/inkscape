@@ -349,9 +349,9 @@ void LaTeXTextRenderer::sp_text_render(SPText *textobj)
             Glib::ustring uspanstr = sp_te_get_string_multiline (textobj, li, ln);
 
             // escape ampersands
-            uspanstr = Glib::Regex::create("&")->replace_literal(uspanstr, 0, "\\&", (Glib::RegexMatchFlags)0);
+            uspanstr = Glib::Regex::create("&")->replace_literal(uspanstr, 0, "\\&", (Glib::Regex::MatchFlags)0);
             // escape percent
-            uspanstr = Glib::Regex::create("%")->replace_literal(uspanstr, 0, "\\%", (Glib::RegexMatchFlags)0);
+            uspanstr = Glib::Regex::create("%")->replace_literal(uspanstr, 0, "\\%", (Glib::Regex::MatchFlags)0);
 
             const gchar *spanstr = uspanstr.c_str();
             if (!spanstr) {

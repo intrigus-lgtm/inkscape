@@ -91,7 +91,7 @@ DialogContainer::DialogContainer(InkscapeWindow* inkscape_window)
 
     get_style_context()->add_class("DialogContainer");
 
-    columns = std::make_unique<DialogMultipaned>(Gtk::ORIENTATION_HORIZONTAL);
+    columns = std::make_unique<DialogMultipaned>(Gtk::Orientation::HORIZONTAL);
     setup_drag_and_drop(columns.get());
     add(*columns.get());
 
@@ -100,7 +100,7 @@ DialogContainer::DialogContainer(InkscapeWindow* inkscape_window)
 
 DialogMultipaned *DialogContainer::create_column()
 {
-    auto const column = Gtk::make_managed<DialogMultipaned>(Gtk::ORIENTATION_VERTICAL);
+    auto const column = Gtk::make_managed<DialogMultipaned>(Gtk::Orientation::VERTICAL);
     setup_drag_and_drop(column);
     connections.emplace_back(column->signal_now_empty().connect(
         sigc::bind(sigc::mem_fun(*this, &DialogContainer::column_empty), column)));
@@ -174,12 +174,12 @@ Gtk::Widget *DialogContainer::create_notebook_tab(Glib::ustring const &label_str
     auto const image = Gtk::make_managed<Gtk::Image>();
     auto const close = Gtk::make_managed<Gtk::Button>();
     image->set_from_icon_name(image_str, Gtk::ICON_SIZE_MENU);
-    auto const tab = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
+    auto const tab = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
     close->set_image_from_icon_name("window-close");
     close->set_tooltip_text(_("Close Tab"));
     close->get_style_context()->add_class("close-button");
     Glib::ustring label_str_fix = label_str;
-    label_str_fix = Glib::Regex::create("\\W")->replace_literal(label_str_fix, 0, "-", (Glib::RegexMatchFlags)0);
+    label_str_fix = Glib::Regex::create("\\W")->replace_literal(label_str_fix, 0, "-", (Glib::Regex::MatchFlags)0);
     tab->get_style_context()->add_class(label_str_fix);
     tab->add(*image);
     tab->add(*label);
@@ -1066,7 +1066,7 @@ void DialogContainer::take_drop(PrependOrAppend const prepend_or_append,
         return;
     }
 
-    if (multipane->get_orientation() == Gtk::ORIENTATION_HORIZONTAL) {
+    if (multipane->get_orientation() == Gtk::Orientation::HORIZONTAL) {
         DialogMultipaned *column = create_column();
         (column->*prepend_or_append)(*new_notebook);
         (columns.get()->*prepend_or_append)(*column);

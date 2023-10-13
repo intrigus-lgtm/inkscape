@@ -915,7 +915,7 @@ void spdc_create_single_dot(ToolBase *tool, Geom::Point const &pt, char const *p
     double rad = 0.5 * prefs->getDouble(tool_path + "/dot-size", 3.0);
     if (!strcmp(path, "/tools/calligraphic"))
         rad = 0.0333 * prefs->getDouble(tool_path + "/width", 3.0) / desktop->current_zoom() / desktop->getDocument()->getDocumentScale()[Geom::X];
-    if (event_state & GDK_MOD1_MASK) {
+    if (event_state & GDK_ALT_MASK) {
         // TODO: We vary the dot size between 0.5*rad and 1.5*rad, where rad is the dot size
         // as specified in prefs. Very simple, but it might be sufficient in practice. If not,
         // we need to devise something more sophisticated.

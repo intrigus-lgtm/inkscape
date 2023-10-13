@@ -339,7 +339,7 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
     g_assert(widget);
     set_relative_to(*widget);
     bind_model(gmenu);
-    set_position(Gtk::POS_BOTTOM);
+    set_position(Gtk::PositionType::BOTTOM);
     show_all_images(*this);
     Inkscape::UI::menuize_popover(*this);
 

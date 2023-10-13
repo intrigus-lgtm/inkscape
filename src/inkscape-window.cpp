@@ -78,7 +78,7 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
     // =============== Build interface ===============
 
     // Main box
-    _mainbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    _mainbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     _mainbox->set_name("DesktopMainBox");
     _mainbox->set_visible(true);
     add(*_mainbox);

@@ -43,11 +43,11 @@ InkScale::InkScale(Glib::RefPtr<Gtk::Adjustment> adjustment, Gtk::SpinButton* sp
 
     Controller::add_click(*this, sigc::mem_fun(*this, &InkScale::on_click_pressed ),
                                  sigc::mem_fun(*this, &InkScale::on_click_released),
-                          Controller::Button::any, Gtk::PHASE_TARGET);
+                          Controller::Button::any, Gtk::PropagationPhase::TARGET);
     Controller::add_motion<&InkScale::on_motion_enter ,
                            &InkScale::on_motion_motion,
                            &InkScale::on_motion_leave >
-                          (*this, *this, Gtk::PHASE_TARGET);
+                          (*this, *this, Gtk::PropagationPhase::TARGET);
 }
 
 void
@@ -70,7 +70,7 @@ InkScale::on_draw(const::Cairo::RefPtr<::Cairo::Context>& cr) {
 
     // Create Pango layout.
     auto layout_label = create_pango_layout(_label);
-    layout_label->set_ellipsize( Pango::ELLIPSIZE_END );
+    layout_label->set_ellipsize( Pango::EllipsizeMode::END );
     layout_label->set_width(PANGO_SCALE * alloc.get_width());
 
     // Get y location of SpinButton text (to match vertical position of SpinButton text).
@@ -118,11 +118,11 @@ static bool get_constrained(Gdk::ModifierType const state)
     return Controller::has_flag(state, Gdk::CONTROL_MASK);
 }
 
-Gtk::EventSequenceState InkScale::on_click_pressed(Gtk::GestureMultiPress const &click,
+Gtk::EventSequenceState InkScale::on_click_pressed(Gtk::GestureClick const &click,
                                                    int /*n_press*/, double const x, double /*y*/)
 {
     auto const state = Controller::get_current_event_state(click);
-    if (!Controller::has_flag(state, Gdk::MOD1_MASK)) {
+    if (!Controller::has_flag(state, Gdk::ALT_MASK)) {
         auto const constrained = get_constrained(state);
         set_adjustment_value(x, constrained);
     }
@@ -131,14 +131,14 @@ Gtk::EventSequenceState InkScale::on_click_pressed(Gtk::GestureMultiPress const 
     _dragging = true;
     _drag_start  = x;
     _drag_offset = get_width() * get_fraction(); 
-    return Gtk::EVENT_SEQUENCE_CLAIMED;
+    return Gtk::EventSequenceState::CLAIMED;
 }
 
-Gtk::EventSequenceState InkScale::on_click_released(Gtk::GestureMultiPress const & /*click*/,
+Gtk::EventSequenceState InkScale::on_click_released(Gtk::GestureClick const & /*click*/,
                                                     int /*n_press*/, double /*x*/, double /*y*/)
 {
     _dragging = false;
-    return Gtk::EVENT_SEQUENCE_CLAIMED;
+    return Gtk::EventSequenceState::CLAIMED;
 }
 
 // TODO: GTK4: Just use Widget.set_cursor().
@@ -158,7 +158,7 @@ InkScale::on_motion_motion(GtkEventControllerMotion const * const motion, double
     }
 
     auto const state = Controller::get_device_state(GTK_EVENT_CONTROLLER(motion));
-    if (!Controller::has_flag(state, Gdk::MOD1_MASK)) {
+    if (!Controller::has_flag(state, Gdk::ALT_MASK)) {
         // Absolute change
         auto const constrained = get_constrained(state);
         set_adjustment_value(x, constrained);
@@ -229,7 +229,7 @@ InkSpinScale::InkSpinScale(double value, double lower,
                                            page_size)}
 {
     // TODO: Why does the ctor from doubles do this stuff but the other doesnʼt?
-    _spinbutton->set_valign(Gtk::ALIGN_CENTER);
+    _spinbutton->set_valign(Gtk::Align::CENTER);
     _spinbutton->signal_key_release_event().connect(sigc::mem_fun(*this,&InkSpinScale::on_key_release_event),false);
 }
 

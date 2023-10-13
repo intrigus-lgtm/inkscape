@@ -35,7 +35,7 @@ OriginalSatelliteParam::OriginalSatelliteParam(const Glib::ustring &label, const
 
 Gtk::Widget *OriginalSatelliteParam::param_newWidget()
 {
-    auto const _widget = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const _widget = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
 
     { // Label
         auto const pLabel = Gtk::make_managed<Gtk::Label>(param_label);

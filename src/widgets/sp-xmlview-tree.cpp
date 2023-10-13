@@ -369,7 +369,7 @@ public:
                       const Gdk::Rectangle& background_area,
                       const Gdk::Rectangle& cell_area,
                       Gtk::CellRendererState flags) override {
-        if (flags & Gtk::CELL_RENDERER_SELECTED) {
+        if (flags & Gtk::CellRendererState::SELECTED) {
             // use plain text instead of marked up text to render selected nodes, so they are legible
             property_text() = _property_plain_text.get_value();
         }

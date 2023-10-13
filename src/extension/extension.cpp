@@ -396,7 +396,7 @@ static bool _find_filename_recursive(std::string directory, std::string const &f
         std::string fullpath = Glib::build_filename(directory, name);
         // g_message("%s", fullpath.c_str());
 
-        if (Glib::file_test(fullpath, Glib::FILE_TEST_IS_DIR)) {
+        if (Glib::file_test(fullpath, Glib::FileTest::IS_DIR)) {
             if (_find_filename_recursive(fullpath, filename)) {
                 return true;
             }
@@ -451,7 +451,7 @@ void Extension::lookup_translation_catalog() {
     search_name += _translationdomain;
     search_name += ".mo";
     for (auto &&locale_dir : locale_dirs) {
-        if (!Glib::file_test(locale_dir, Glib::FILE_TEST_IS_DIR)) {
+        if (!Glib::file_test(locale_dir, Glib::FileTest::IS_DIR)) {
             continue;
         }
 
@@ -936,7 +936,7 @@ Extension::error_file_write(Glib::ustring const &text)
 class AutoGUI : public Gtk::Box {
 public:
     /** \brief  Create an AutoGUI object */
-    AutoGUI () : Gtk::Box(Gtk::ORIENTATION_VERTICAL) {};
+    AutoGUI () : Gtk::Box(Gtk::Orientation::VERTICAL) {};
 
     /**
      * Adds a widget with a tool tip into the autogui.
@@ -1003,7 +1003,7 @@ Extension::autogui (SPDocument *doc, Inkscape::XML::Node *node, sigc::signal<voi
 Gtk::Box *
 Extension::get_info_widget()
 {
-    auto const retval = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    auto const retval = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     retval->property_margin().set_value(4);
 
     auto const info = Gtk::make_managed<Gtk::Frame>("General Extension Information");
@@ -1025,8 +1025,8 @@ Extension::get_info_widget()
 void Extension::add_val(Glib::ustring const &labelstr, Glib::ustring const &valuestr,
                         Gtk::Grid * table, int * row)
 {
-    auto const label = Gtk::make_managed<Gtk::Label>(labelstr, Gtk::ALIGN_START);
-    auto const value = Gtk::make_managed<Gtk::Label>(valuestr, Gtk::ALIGN_START);
+    auto const label = Gtk::make_managed<Gtk::Label>(labelstr, Gtk::Align::START);
+    auto const value = Gtk::make_managed<Gtk::Label>(valuestr, Gtk::Align::START);
 
     (*row)++;
     table->attach(*label, 0, (*row) - 1, 1, 1);
@@ -1039,7 +1039,7 @@ void Extension::add_val(Glib::ustring const &labelstr, Glib::ustring const &valu
 Gtk::Box *
 Extension::get_params_widget()
 {
-    auto const retval = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    auto const retval = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     Gtk::Widget * content = Gtk::make_managed<Gtk::Label>("Params");
     UI::pack_start(*retval, *content, true, true, 4);
     content->set_visible(true);
@@ -1078,7 +1078,7 @@ bool Extension::prefs()
     if (auto controls = autogui(nullptr, nullptr)) {
         auto dialog = PrefDialog(get_name(), controls);
         int response = Inkscape::UI::dialog_run(dialog);
-        return response == Gtk::RESPONSE_OK;
+        return response == Gtk::ResponseType::OK;
     }
 
     // No controls, no prefs

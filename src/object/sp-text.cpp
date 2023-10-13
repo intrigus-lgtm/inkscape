@@ -975,7 +975,7 @@ remove_newlines_recursive(SPObject* object, bool is_svg2)
     auto string = cast<SPString>(object);
     if (string) {
         static Glib::RefPtr<Glib::Regex> r = Glib::Regex::create("\n+");
-        string->string = r->replace(string->string, 0, " ", (Glib::RegexMatchFlags)0);
+        string->string = r->replace(string->string, 0, " ", (Glib::Regex::MatchFlags)0);
         string->getRepr()->setContent(string->string.c_str());
     }
 

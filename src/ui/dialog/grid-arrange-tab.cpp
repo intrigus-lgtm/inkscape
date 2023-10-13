@@ -475,12 +475,12 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
     updating = false;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
-    auto _col1 = Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL);
-    auto _col2 = Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL);
-    auto _col3 = Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL);
+    auto _col1 = Gtk::SizeGroup::create(Gtk::SizeGroup::Mode::HORIZONTAL);
+    auto _col2 = Gtk::SizeGroup::create(Gtk::SizeGroup::Mode::HORIZONTAL);
+    auto _col3 = Gtk::SizeGroup::create(Gtk::SizeGroup::Mode::HORIZONTAL);
 
     Gtk::Box *contents = this;
-    set_valign(Gtk::ALIGN_START);
+    set_valign(Gtk::Align::START);
 
 #define MARGIN 2
 
@@ -488,7 +488,7 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
 
     NoOfRowsLabel.set_text_with_mnemonic(_("_Rows:"));
     NoOfRowsLabel.set_mnemonic_widget(NoOfRowsSpinner);
-    NoOfRowsBox.set_orientation(Gtk::ORIENTATION_VERTICAL);
+    NoOfRowsBox.set_orientation(Gtk::Orientation::VERTICAL);
     UI::pack_start(NoOfRowsBox, NoOfRowsLabel, false, false, MARGIN);
 
     NoOfRowsSpinner.set_digits(0);
@@ -517,7 +517,7 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
 
     /*#### Label for X ####*/
     XByYLabel.set_markup("<span size='larger'> &#215; </span>");
-    XByYLabel.set_valign(Gtk::ALIGN_CENTER);
+    XByYLabel.set_valign(Gtk::Align::CENTER);
     UI::pack_start(SpinsHBox, XByYLabel, false, false, MARGIN);
     _col2->add_widget(XByYLabel);
 
@@ -525,7 +525,7 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
 
     NoOfColsLabel.set_text_with_mnemonic(_("_Columns:"));
     NoOfColsLabel.set_mnemonic_widget(NoOfColsSpinner);
-    NoOfColsBox.set_orientation(Gtk::ORIENTATION_VERTICAL);
+    NoOfColsBox.set_orientation(Gtk::Orientation::VERTICAL);
     UI::pack_start(NoOfColsBox, NoOfColsLabel, false, false, MARGIN);
 
     NoOfColsSpinner.set_digits(0);
@@ -551,7 +551,7 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
 
     UI::pack_start(SpinsHBox, NoOfColsBox, false, false, MARGIN);
 
-    TileBox.set_orientation(Gtk::ORIENTATION_VERTICAL);
+    TileBox.set_orientation(Gtk::Orientation::VERTICAL);
     UI::pack_start(TileBox, SpinsHBox, false, false, MARGIN);
 
     VertAlign = prefs->getInt("/dialogs/gridtiler/VertAlign", 1);
@@ -560,10 +560,10 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
     // Anchor selection widget
     AlignLabel.set_markup(_("<b>Alignment:</b>"));
     AlignLabel.set_margin_top(8);
-    AlignLabel.set_halign(Gtk::ALIGN_START);
-    AlignLabel.set_valign(Gtk::ALIGN_CENTER);
+    AlignLabel.set_halign(Gtk::Align::START);
+    AlignLabel.set_valign(Gtk::Align::CENTER);
     AlignmentSelector.set_margin_start(16);
-    AlignmentSelector.set_halign(Gtk::ALIGN_START);
+    AlignmentSelector.set_halign(Gtk::Align::START);
     AlignmentSelector.setAlignment(HorizAlign, VertAlign);
     AlignmentSelector.connectSelectionChanged(sigc::mem_fun(*this, &GridArrangeTab::Align_changed));
     UI::pack_start(TileBox, AlignLabel, false, false, MARGIN);

@@ -835,7 +835,7 @@ static void gr_knot_moved_handler(SPKnot *knot, Geom::Point const &ppointer, gui
             Inkscape::SnappedPoint sp;
             if (dr_snap.isFinite()) {
                 m.setup(desktop);
-                if (state & GDK_MOD1_MASK) {
+                if (state & GDK_ALT_MASK) {
                     // with Alt, snap to the original angle and its perpendiculars
                     sp = m.constrainedAngularSnap(scp, dragger->point_original, dr_snap, 2);
                 } else {
@@ -1006,7 +1006,7 @@ static void gr_knot_moved_midpoint_handler(SPKnot */*knot*/, Geom::Point const &
     for (auto drg : moving) {
         SPKnot *drgknot = drg->knot;
         Geom::Point this_move = displacement;
-        if (state & GDK_MOD1_MASK) {
+        if (state & GDK_ALT_MASK) {
             // FIXME: unify all these profiles (here, in nodepath, in tweak) in one place
             double alpha = 1.0;
             if (Geom::L2(drg->point - dragger->point) + Geom::L2(drg->point - begin) - 1e-3 > Geom::L2(dragger->point - begin)) { // drg is on the end side from dragger
@@ -1089,7 +1089,7 @@ static void gr_knot_clicked_handler(SPKnot */*knot*/, guint state, gpointer data
     GrDraggable *draggable = dragger->draggables[0];
     if (!draggable) return;
 
-    if ( (state & GDK_CONTROL_MASK) && (state & GDK_MOD1_MASK ) ) {
+    if ( (state & GDK_CONTROL_MASK) && (state & GDK_ALT_MASK ) ) {
     // delete this knot from vector
         SPGradient *gradient = getGradient(draggable->item, draggable->fill_or_stroke);
         gradient = gradient->getVector();

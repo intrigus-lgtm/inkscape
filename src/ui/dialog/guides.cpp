@@ -168,7 +168,7 @@ void GuidelinePropertiesDialog::_onDuplicate()
 void GuidelinePropertiesDialog::_response(gint response)
 {
     switch (response) {
-	case Gtk::RESPONSE_OK:
+	case Gtk::ResponseType::OK:
             _onOK();
             break;
 	case -12:
@@ -177,9 +177,9 @@ void GuidelinePropertiesDialog::_response(gint response)
 	case -13:
             _onDuplicate();
             break;
-	case Gtk::RESPONSE_CANCEL:
+	case Gtk::ResponseType::CANCEL:
             break;
-	case Gtk::RESPONSE_DELETE_EVENT:
+	case Gtk::ResponseType::DELETE_EVENT:
             break;
 	default:
             g_assert_not_reached();
@@ -188,10 +188,10 @@ void GuidelinePropertiesDialog::_response(gint response)
 
 void GuidelinePropertiesDialog::_setup() {
     set_title(_("Guideline"));
-    add_button(_("_OK"), Gtk::RESPONSE_OK);
+    add_button(_("_OK"), Gtk::ResponseType::OK);
     add_button(_("_Duplicate"), -13);
     add_button(_("_Delete"), -12);
-    add_button(_("_Cancel"), Gtk::RESPONSE_CANCEL);
+    add_button(_("_Cancel"), Gtk::ResponseType::CANCEL);
 
     auto mainVBox = get_content_area();
     _layout_table.set_row_spacing(4);
@@ -201,28 +201,28 @@ void GuidelinePropertiesDialog::_setup() {
     UI::pack_start(*mainVBox, _layout_table, false, false);
 
     _label_name.set_label("foo0");
-    _label_name.set_halign(Gtk::ALIGN_START);
-    _label_name.set_valign(Gtk::ALIGN_CENTER);
+    _label_name.set_halign(Gtk::Align::START);
+    _label_name.set_valign(Gtk::Align::CENTER);
 
     _label_descr.set_label("foo1");
-    _label_descr.set_halign(Gtk::ALIGN_START);
-    _label_descr.set_valign(Gtk::ALIGN_CENTER);
+    _label_descr.set_halign(Gtk::Align::START);
+    _label_descr.set_valign(Gtk::Align::CENTER);
     
-    _label_name.set_halign(Gtk::ALIGN_FILL);
-    _label_name.set_valign(Gtk::ALIGN_FILL);
+    _label_name.set_halign(Gtk::Align::FILL);
+    _label_name.set_valign(Gtk::Align::FILL);
     _layout_table.attach(_label_name, 0, 0, 3, 1);
 
-    _label_descr.set_halign(Gtk::ALIGN_FILL);
-    _label_descr.set_valign(Gtk::ALIGN_FILL);
+    _label_descr.set_halign(Gtk::Align::FILL);
+    _label_descr.set_valign(Gtk::Align::FILL);
     _layout_table.attach(_label_descr, 0, 1, 3, 1);
 
-    _label_entry.set_halign(Gtk::ALIGN_FILL);
-    _label_entry.set_valign(Gtk::ALIGN_FILL);
+    _label_entry.set_halign(Gtk::Align::FILL);
+    _label_entry.set_valign(Gtk::Align::FILL);
     _label_entry.set_hexpand();
     _layout_table.attach(_label_entry, 1, 2, 2, 1);
 
-    _color.set_halign(Gtk::ALIGN_FILL);
-    _color.set_valign(Gtk::ALIGN_FILL);
+    _color.set_halign(Gtk::Align::FILL);
+    _color.set_valign(Gtk::Align::FILL);
     _color.set_hexpand();
     _color.set_margin_end(6);
     _layout_table.attach(_color, 1, 3, 2, 1);
@@ -249,18 +249,18 @@ void GuidelinePropertiesDialog::_setup() {
     _spin_button_y.setIncrements(1.0, 10.0);
     _spin_button_y.setRange(-1e6, 1e6);
 
-    _spin_button_x.set_halign(Gtk::ALIGN_FILL);
-    _spin_button_x.set_valign(Gtk::ALIGN_FILL);
+    _spin_button_x.set_halign(Gtk::Align::FILL);
+    _spin_button_x.set_valign(Gtk::Align::FILL);
     _spin_button_x.set_hexpand();
     _layout_table.attach(_spin_button_x, 1, 4, 1, 1);
     
-    _spin_button_y.set_halign(Gtk::ALIGN_FILL);
-    _spin_button_y.set_valign(Gtk::ALIGN_FILL);
+    _spin_button_y.set_halign(Gtk::Align::FILL);
+    _spin_button_y.set_valign(Gtk::Align::FILL);
     _spin_button_y.set_hexpand();
     _layout_table.attach(_spin_button_y, 1, 5, 1, 1);
 
-    _unit_menu.set_halign(Gtk::ALIGN_FILL);
-    _unit_menu.set_valign(Gtk::ALIGN_FILL);
+    _unit_menu.set_halign(Gtk::Align::FILL);
+    _unit_menu.set_valign(Gtk::Align::FILL);
     _unit_menu.set_margin_end(6);
     _layout_table.attach(_unit_menu, 2, 4, 1, 1);
 
@@ -271,21 +271,21 @@ void GuidelinePropertiesDialog::_setup() {
     _spin_angle.setIncrements(1.0, 10.0);
     _spin_angle.setRange(-3600., 3600.);
 
-    _spin_angle.set_halign(Gtk::ALIGN_FILL);
-    _spin_angle.set_valign(Gtk::ALIGN_FILL);
+    _spin_angle.set_halign(Gtk::Align::FILL);
+    _spin_angle.set_valign(Gtk::Align::FILL);
     _spin_angle.set_hexpand();
     _layout_table.attach(_spin_angle, 1, 6, 2, 1);
 
     // mode radio button
-    _relative_toggle.set_halign(Gtk::ALIGN_FILL);
-    _relative_toggle.set_valign(Gtk::ALIGN_FILL);
+    _relative_toggle.set_halign(Gtk::Align::FILL);
+    _relative_toggle.set_valign(Gtk::Align::FILL);
     _relative_toggle.set_hexpand();
     _relative_toggle.set_margin_start(6);
     _layout_table.attach(_relative_toggle, 1, 7, 2, 1);
 
     // locked radio button
-    _locked_toggle.set_halign(Gtk::ALIGN_FILL);
-    _locked_toggle.set_valign(Gtk::ALIGN_FILL);
+    _locked_toggle.set_halign(Gtk::Align::FILL);
+    _locked_toggle.set_valign(Gtk::Align::FILL);
     _locked_toggle.set_hexpand();
     _locked_toggle.set_margin_start(6);
     _layout_table.attach(_locked_toggle, 1, 8, 2, 1);
@@ -309,7 +309,7 @@ void GuidelinePropertiesDialog::_setup() {
     if(sba) sba->signal_activate().connect(sigc::mem_fun(*this, &GuidelinePropertiesDialog::on_sb_activate));
 
     // dialog
-    set_default_response(Gtk::RESPONSE_OK);
+    set_default_response(Gtk::ResponseType::OK);
     signal_response().connect(sigc::mem_fun(*this, &GuidelinePropertiesDialog::_response));
 
     // initialize dialog

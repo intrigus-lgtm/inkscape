@@ -103,7 +103,7 @@ CloneTiler::CloneTiler()
     {
         auto prefs = Inkscape::Preferences::get();
 
-        auto const mainbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 4);
+        auto const mainbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
         mainbox->property_margin().set_value(6);
 
         UI::pack_start(*this, *mainbox, true, true);
@@ -169,7 +169,7 @@ CloneTiler::CloneTiler()
             combo->signal_changed().connect(sigc::bind(sigc::mem_fun(*this, &CloneTiler::symgroup_changed), combo));
         }
 
-        table_row_labels = Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL);
+        table_row_labels = Gtk::SizeGroup::create(Gtk::SizeGroup::Mode::HORIZONTAL);
 
         // Shift
         {
@@ -668,7 +668,7 @@ CloneTiler::CloneTiler()
             auto vb = new_tab(nb, _("Co_lor"));
 
             {
-                auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 0);
+                auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 0);
 
                 auto const l = Gtk::make_managed<Gtk::Label>(_("Initial color: "));
                 UI::pack_start(*hb, *l, false, false);
@@ -795,7 +795,7 @@ CloneTiler::CloneTiler()
         {
             auto vb = new_tab(nb, _("_Trace"));
         {
-            auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, VB_MARGIN);
+            auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, VB_MARGIN);
             hb->property_margin().set_value(4);
             UI::pack_start(*vb, *hb, false, false);
 
@@ -809,7 +809,7 @@ CloneTiler::CloneTiler()
         }
 
         {
-            auto const vvb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 0);
+            auto const vvb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 0);
             UI::pack_start(*vb, *vvb, false, false);
             _dotrace = vvb;
 
@@ -980,7 +980,7 @@ CloneTiler::CloneTiler()
         }
 
         {
-            auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, VB_MARGIN);
+            auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, VB_MARGIN);
             UI::pack_start(*mainbox, *hb, false, false);
 
             auto const l = Gtk::make_managed<Gtk::Label>("");
@@ -1117,7 +1117,7 @@ CloneTiler::CloneTiler()
 
         // Use saved pos
         {
-            auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, VB_MARGIN);
+            auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, VB_MARGIN);
             UI::pack_start(*mainbox, *hb, false, false);
 
             _cb_keep_bbox = Gtk::make_managed<UI::Widget::CheckButtonInternal>(_("Use saved size and position of the tile"));
@@ -1132,7 +1132,7 @@ CloneTiler::CloneTiler()
 
         // Statusbar
         {
-            auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, VB_MARGIN);
+            auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, VB_MARGIN);
             UI::pack_end(*mainbox, *hb, false, false);
 
             auto const l = Gtk::make_managed<Gtk::Label>("");
@@ -1142,7 +1142,7 @@ CloneTiler::CloneTiler()
 
         // Buttons
         {
-            auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, VB_MARGIN);
+            auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, VB_MARGIN);
             UI::pack_start(*mainbox, *hb, false, false);
 
             {
@@ -1156,7 +1156,7 @@ CloneTiler::CloneTiler()
             }
 
             { // buttons which are enabled only when there are tiled clones
-                auto const sb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
+                auto const sb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
                 UI::pack_end(*hb, *sb, false, false);
 
                 _buttons_on_tiles = sb;
@@ -2505,7 +2505,7 @@ void CloneTiler::apply()
 Gtk::Box * CloneTiler::new_tab(Gtk::Notebook *nb, const gchar *label)
 {
     auto const l = Gtk::make_managed<Gtk::Label>(label, true);
-    auto const vb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, VB_MARGIN);
+    auto const vb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, VB_MARGIN);
     vb->property_margin().set_value(VB_MARGIN);
     nb->append_page(*vb, *l);
     return vb;
@@ -2521,7 +2521,7 @@ void CloneTiler::checkbox_toggled(Gtk::ToggleButton   *tb,
 Gtk::Widget * CloneTiler::checkbox(const char          *tip,
                                    const Glib::ustring &attr)
 {
-    auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, VB_MARGIN);
+    auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, VB_MARGIN);
     auto const b  = Gtk::make_managed<UI::Widget::CheckButtonInternal>();
     b->set_tooltip_text(tip);
 
@@ -2551,7 +2551,7 @@ Gtk::Widget * CloneTiler::spinbox(const char          *tip,
                                   const gchar         *suffix,
                                   bool                 exponent/* = false*/)
 {
-    auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 0);
+    auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 0);
 
     {
         // Parameters for adjustment
@@ -2660,8 +2660,8 @@ void CloneTiler::reset()
 
 void CloneTiler::table_attach(Gtk::Grid *table, Gtk::Widget *widget, float align, int row, int col)
 {
-    widget->set_halign(Gtk::ALIGN_FILL);
-    widget->set_valign(Gtk::ALIGN_CENTER);
+    widget->set_halign(Gtk::Align::FILL);
+    widget->set_valign(Gtk::Align::CENTER);
     table->attach(*widget, col, row, 1, 1);
 }
 
@@ -2674,7 +2674,7 @@ Gtk::Grid * CloneTiler::table_x_y_rand(int values)
     table->property_margin().set_value(VB_MARGIN);
 
     {
-	auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 0);
+	auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 0);
 
         auto i = Glib::wrap(sp_get_icon_image("object-rows", GTK_ICON_SIZE_MENU));
         UI::pack_start(*hb, *i, false, false, 2);
@@ -2687,7 +2687,7 @@ Gtk::Grid * CloneTiler::table_x_y_rand(int values)
     }
 
     {
-	auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 0);
+	auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 0);
 
         auto i = Glib::wrap(sp_get_icon_image("object-columns", GTK_ICON_SIZE_MENU));
         UI::pack_start(*hb, *i, false, false, 2);

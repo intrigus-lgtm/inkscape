@@ -112,33 +112,33 @@ void BatchItem::update_label()
 void BatchItem::init(std::shared_ptr<PreviewDrawing> drawing) {
     _grid.set_row_spacing(5);
     _grid.set_column_spacing(5);
-    _grid.set_valign(Gtk::Align::ALIGN_CENTER);
+    _grid.set_valign(Gtk::Align::CENTER);
 
     _selector.set_active(true);
     _selector.set_can_focus(false);
     _selector.set_margin_start(2);
     _selector.set_margin_bottom(2);
-    _selector.set_valign(Gtk::ALIGN_END);
+    _selector.set_valign(Gtk::Align::END);
 
     _option.set_active(false);
     _option.set_can_focus(false);
     _option.set_margin_start(2);
     _option.set_margin_bottom(2);
-    _option.set_valign(Gtk::ALIGN_END);
+    _option.set_valign(Gtk::Align::END);
 
     _preview.set_name("export_preview_batch");
     _preview.setItem(_item);
     _preview.setDrawing(std::move(drawing));
     _preview.setSize(64);
-    _preview.set_halign(Gtk::ALIGN_CENTER);
-    _preview.set_valign(Gtk::ALIGN_CENTER);
+    _preview.set_halign(Gtk::Align::CENTER);
+    _preview.set_valign(Gtk::Align::CENTER);
 
     _label.set_width_chars(10);
-    _label.set_ellipsize(Pango::ELLIPSIZE_END);
-    _label.set_halign(Gtk::Align::ALIGN_CENTER);
+    _label.set_ellipsize(Pango::EllipsizeMode::END);
+    _label.set_halign(Gtk::Align::CENTER);
 
-    set_valign(Gtk::Align::ALIGN_START);
-    set_halign(Gtk::Align::ALIGN_START);
+    set_valign(Gtk::Align::START);
+    set_halign(Gtk::Align::START);
     add(_grid);
     set_visible(true);
     this->set_can_focus(false);
@@ -188,8 +188,8 @@ void BatchItem::update_selected()
  */
 void BatchItem::on_mode_changed(Gtk::SelectionMode mode)
 {
-    _selector.set_visible(mode == Gtk::SELECTION_MULTIPLE);
-    _option.set_visible(mode == Gtk::SELECTION_SINGLE);
+    _selector.set_visible(mode == Gtk::SelectionMode::MULTIPLE);
+    _option.set_visible(mode == Gtk::SelectionMode::SINGLE);
 }
 
 /**
@@ -235,13 +235,13 @@ void BatchItem::refresh(bool hide, guint32 bg_color)
         _grid.remove(_preview);
 
         if (hide) {
-            _selector.set_valign(Gtk::Align::ALIGN_BASELINE);
+            _selector.set_valign(Gtk::Align::BASELINE);
             _label.set_xalign(0.0);
             _grid.attach(_selector, 0, 1, 1, 1);
             _grid.attach(_option, 0, 1, 1, 1);
             _grid.attach(_label, 1, 1, 1, 1);
         } else {
-            _selector.set_valign(Gtk::Align::ALIGN_END);
+            _selector.set_valign(Gtk::Align::END);
             _label.set_xalign(0.5);
             _grid.attach(_selector, 0, 1, 1, 1);
             _grid.attach(_option, 0, 1, 1, 1);
@@ -489,7 +489,7 @@ void BatchExport::refreshPreview()
     // For Batch Export we are now hiding all object except current object
     bool hide = hide_all.get_active();
     bool preview = show_preview.get_active();
-    preview_container.set_orientation(preview ? Gtk::ORIENTATION_HORIZONTAL : Gtk::ORIENTATION_VERTICAL);
+    preview_container.set_orientation(preview ? Gtk::Orientation::HORIZONTAL : Gtk::Orientation::VERTICAL);
 
     if (preview) {
         std::vector<SPItem const *> selected;
@@ -643,15 +643,15 @@ void BatchExport::onExport()
     if (!Inkscape::IO::file_test(path.c_str(), (GFileTest)(G_FILE_TEST_IS_DIR))) {
         Gtk::Window *window = _desktop->getToplevel();
         if (!Inkscape::IO::file_test(path.c_str(), (GFileTest)(G_FILE_TEST_EXISTS))) {
-            Gtk::MessageDialog(*window, _("Can not save to a directory that is actually a file."), true, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK).run();
+            Gtk::MessageDialog(*window, _("Can not save to a directory that is actually a file."), true, Gtk::MessageType::ERROR, Gtk::ButtonsType::OK).run();
             return;
         }
         Glib::ustring message = g_markup_printf_escaped(
             _("<span weight=\"bold\" size=\"larger\">Directory \"%s\" doesn't exist. Create it now?</span>"),
                path.c_str());
 
-        auto dialog = Gtk::MessageDialog(*window, message, true, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_YES_NO);
-        if (dialog.run() != Gtk::RESPONSE_YES) {
+        auto dialog = Gtk::MessageDialog(*window, message, true, Gtk::MessageType::WARNING, Gtk::ButtonsType::YES_NO);
+        if (dialog.run() != Gtk::ResponseType::YES) {
             return;
         }
         g_mkdir_with_parents(path.c_str(), S_IRWXU);

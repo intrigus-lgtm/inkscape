@@ -152,7 +152,7 @@ static bool do_remove_popup_menu(PopupMenuOptionalClick const click,
 
     auto const mi = Gtk::make_managed<UI::Widget::PopoverMenuItem>(_("_Remove"), true);
     mi->signal_activate().connect(slot);
-    auto const menu = std::make_shared<UI::Widget::PopoverMenu>(tree_view, Gtk::POS_BOTTOM);
+    auto const menu = std::make_shared<UI::Widget::PopoverMenu>(tree_view, Gtk::PositionType::BOTTOM);
     menu->append(*mi);
     UI::on_hide_reset(menu);
 
@@ -196,11 +196,11 @@ DocumentProperties::DocumentProperties()
     , _create_guides_btn(_("Create guides around the current page"))
     , _delete_guides_btn(_("Delete all guides"))
     //---------------------------------------------------------------
-    , _grids_label_crea("", Gtk::ALIGN_START)
+    , _grids_label_crea("", Gtk::Align::START)
     , _grids_button_remove(C_("Grid", "_Remove"), _("Remove selected grid."))
-    , _grids_label_def("", Gtk::ALIGN_START)
-    , _grids_vbox(Gtk::ORIENTATION_VERTICAL)
-    , _grids_hbox_crea(Gtk::ORIENTATION_HORIZONTAL)
+    , _grids_label_def("", Gtk::Align::START)
+    , _grids_vbox(Gtk::Orientation::VERTICAL)
+    , _grids_hbox_crea(Gtk::Orientation::HORIZONTAL)
     // Attach nodeobservers to this document
     , _namedview_connection(this)
     , _root_connection(this)
@@ -254,8 +254,8 @@ void attach_all(Gtk::Grid &table, Gtk::Widget *const arr[], unsigned const n)
         if (arr[i] && arr[i+1]) {
             arr[i]->set_hexpand();
             arr[i+1]->set_hexpand();
-            arr[i]->set_valign(Gtk::ALIGN_CENTER);
-            arr[i+1]->set_valign(Gtk::ALIGN_CENTER);
+            arr[i]->set_valign(Gtk::Align::CENTER);
+            arr[i+1]->set_valign(Gtk::Align::CENTER);
             table.attach(*arr[i],   0, r, 1, 1);
             table.attach(*arr[i+1], 1, r, 1, 1);
         } else {
@@ -266,20 +266,20 @@ void attach_all(Gtk::Grid &table, Gtk::Widget *const arr[], unsigned const n)
                 if (yoptions & Gtk::EXPAND)
                     arr[i+1]->set_vexpand();
                 else
-                    arr[i+1]->set_valign(Gtk::ALIGN_CENTER);
+                    arr[i+1]->set_valign(Gtk::Align::CENTER);
 
                 table.attach(*arr[i+1], 0, r, 2, 1);
             } else if (arr[i]) {
                 auto &label = dynamic_cast<Gtk::Label &>(*arr[i]);
                 label.set_hexpand();
-                label.set_halign(Gtk::ALIGN_START);
-                label.set_valign(Gtk::ALIGN_CENTER);
+                label.set_halign(Gtk::Align::START);
+                label.set_valign(Gtk::Align::CENTER);
                 table.attach(label, 0, r, 2, 1);
             } else {
                 auto const space = Gtk::make_managed<Gtk::Box>();
                 space->set_size_request (SPACE_SIZE_X, SPACE_SIZE_Y);
-                space->set_halign(Gtk::ALIGN_CENTER);
-                space->set_valign(Gtk::ALIGN_CENTER);
+                space->set_halign(Gtk::Align::CENTER);
+                space->set_valign(Gtk::Align::CENTER);
                 table.attach(*space, 0, r, 1, 1);
             }
         }
@@ -594,7 +594,7 @@ void DocumentProperties::build_guides()
     _rcp_gui.set_hexpand();
     _rcp_hgui.set_hexpand();
     _rcb_sgui.set_hexpand();
-    auto const inner = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 4);
+    auto const inner = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
     inner->add(_rcb_sgui);
     inner->add(_rcb_lgui);
     inner->add(_rcp_gui);
@@ -817,9 +817,9 @@ bool DocumentProperties::_AvailableProfilesList_separator(Glib::RefPtr<Gtk::Tree
 void DocumentProperties::build_cms()
 {
     _page_cms->set_visible(true);
-    Gtk::Label *label_link= Gtk::make_managed<Gtk::Label>("", Gtk::ALIGN_START);
+    Gtk::Label *label_link= Gtk::make_managed<Gtk::Label>("", Gtk::Align::START);
     label_link->set_markup (_("<b>Linked Color Profiles:</b>"));
-    auto const label_avail = Gtk::make_managed<Gtk::Label>("", Gtk::ALIGN_START);
+    auto const label_avail = Gtk::make_managed<Gtk::Label>("", Gtk::Align::START);
     label_avail->set_markup (_("<b>Available Color Profiles:</b>"));
 
     _unlink_btn.set_tooltip_text(_("Unlink Profile"));
@@ -828,40 +828,40 @@ void DocumentProperties::build_cms()
     int row = 0;
 
     label_link->set_hexpand();
-    label_link->set_halign(Gtk::ALIGN_START);
-    label_link->set_valign(Gtk::ALIGN_CENTER);
+    label_link->set_halign(Gtk::Align::START);
+    label_link->set_valign(Gtk::Align::CENTER);
     _page_cms->table().attach(*label_link, 0, row, 3, 1);
 
     row++;
 
     _LinkedProfilesListScroller.set_hexpand();
-    _LinkedProfilesListScroller.set_valign(Gtk::ALIGN_CENTER);
+    _LinkedProfilesListScroller.set_valign(Gtk::Align::CENTER);
     _page_cms->table().attach(_LinkedProfilesListScroller, 0, row, 3, 1);
 
     row++;
 
-    auto const spacer = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const spacer = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
     spacer->set_size_request(SPACE_SIZE_X, SPACE_SIZE_Y);
 
     spacer->set_hexpand();
-    spacer->set_valign(Gtk::ALIGN_CENTER);
+    spacer->set_valign(Gtk::Align::CENTER);
     _page_cms->table().attach(*spacer, 0, row, 3, 1);
 
     row++;
 
     label_avail->set_hexpand();
-    label_avail->set_halign(Gtk::ALIGN_START);
-    label_avail->set_valign(Gtk::ALIGN_CENTER);
+    label_avail->set_halign(Gtk::Align::START);
+    label_avail->set_valign(Gtk::Align::CENTER);
     _page_cms->table().attach(*label_avail, 0, row, 3, 1);
 
     row++;
 
     _AvailableProfilesList.set_hexpand();
-    _AvailableProfilesList.set_valign(Gtk::ALIGN_CENTER);
+    _AvailableProfilesList.set_valign(Gtk::Align::CENTER);
     _page_cms->table().attach(_AvailableProfilesList, 0, row, 1, 1);
 
-    _unlink_btn.set_halign(Gtk::ALIGN_CENTER);
-    _unlink_btn.set_valign(Gtk::ALIGN_CENTER);
+    _unlink_btn.set_halign(Gtk::Align::CENTER);
+    _unlink_btn.set_valign(Gtk::Align::CENTER);
     _page_cms->table().attach(_unlink_btn, 2, row, 1, 1);
 
     // Set up the Available Profiles combo box
@@ -883,7 +883,7 @@ void DocumentProperties::build_cms()
 
     _LinkedProfilesListScroller.add(_LinkedProfilesList);
     _LinkedProfilesListScroller.set_shadow_type(Gtk::SHADOW_IN);
-    _LinkedProfilesListScroller.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_ALWAYS);
+    _LinkedProfilesListScroller.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::ALWAYS);
     _LinkedProfilesListScroller.set_size_request(-1, 90);
 
     _unlink_btn.signal_clicked().connect(sigc::mem_fun(*this, &DocumentProperties::removeSelectedProfile));
@@ -913,7 +913,7 @@ void DocumentProperties::build_scripting()
 
     //# External scripts tab
     _page_external_scripts->set_visible(true);
-    Gtk::Label *label_external= Gtk::make_managed<Gtk::Label>("", Gtk::ALIGN_START);
+    Gtk::Label *label_external= Gtk::make_managed<Gtk::Label>("", Gtk::Align::START);
     label_external->set_markup (_("<b>External script files:</b>"));
 
     _external_add_btn.set_tooltip_text(_("Add the current file name or browse for a file"));
@@ -925,40 +925,40 @@ void DocumentProperties::build_scripting()
     int row = 0;
 
     label_external->set_hexpand();
-    label_external->set_halign(Gtk::ALIGN_START);
-    label_external->set_valign(Gtk::ALIGN_CENTER);
+    label_external->set_halign(Gtk::Align::START);
+    label_external->set_valign(Gtk::Align::CENTER);
     _page_external_scripts->table().attach(*label_external, 0, row, 3, 1);
 
     row++;
 
     _ExternalScriptsListScroller.set_hexpand();
-    _ExternalScriptsListScroller.set_valign(Gtk::ALIGN_CENTER);
+    _ExternalScriptsListScroller.set_valign(Gtk::Align::CENTER);
     _page_external_scripts->table().attach(_ExternalScriptsListScroller, 0, row, 3, 1);
 
     row++;
 
-    auto const spacer_external = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const spacer_external = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
     spacer_external->set_size_request(SPACE_SIZE_X, SPACE_SIZE_Y);
 
     spacer_external->set_hexpand();
-    spacer_external->set_valign(Gtk::ALIGN_CENTER);
+    spacer_external->set_valign(Gtk::Align::CENTER);
     _page_external_scripts->table().attach(*spacer_external, 0, row, 3, 1);
 
     row++;
 
     _script_entry.set_hexpand();
-    _script_entry.set_valign(Gtk::ALIGN_CENTER);
+    _script_entry.set_valign(Gtk::Align::CENTER);
     _page_external_scripts->table().attach(_script_entry, 0, row, 1, 1);
 
-    _external_add_btn.set_halign(Gtk::ALIGN_CENTER);
-    _external_add_btn.set_valign(Gtk::ALIGN_CENTER);
+    _external_add_btn.set_halign(Gtk::Align::CENTER);
+    _external_add_btn.set_valign(Gtk::Align::CENTER);
     _external_add_btn.set_margin_start(2);
     _external_add_btn.set_margin_end(2);
 
     _page_external_scripts->table().attach(_external_add_btn, 1, row, 1, 1);
 
-    _external_remove_btn.set_halign(Gtk::ALIGN_CENTER);
-    _external_remove_btn.set_valign(Gtk::ALIGN_CENTER);
+    _external_remove_btn.set_halign(Gtk::Align::CENTER);
+    _external_remove_btn.set_valign(Gtk::Align::CENTER);
     _page_external_scripts->table().attach(_external_remove_btn, 2, row, 1, 1);
 
     //# Set up the External Scripts box
@@ -970,7 +970,7 @@ void DocumentProperties::build_scripting()
 
     //# Embedded scripts tab
     _page_embedded_scripts->set_visible(true);
-    Gtk::Label *label_embedded= Gtk::make_managed<Gtk::Label>("", Gtk::ALIGN_START);
+    Gtk::Label *label_embedded= Gtk::make_managed<Gtk::Label>("", Gtk::Align::START);
     label_embedded->set_markup (_("<b>Embedded script files:</b>"));
 
     _embed_new_btn.set_tooltip_text(_("New"));
@@ -981,33 +981,33 @@ void DocumentProperties::build_scripting()
 
     _embed_button_box.add(_embed_new_btn);
     _embed_button_box.add(_embed_remove_btn);
-    _embed_button_box.set_halign(Gtk::ALIGN_END);
+    _embed_button_box.set_halign(Gtk::Align::END);
 
     row = 0;
 
     label_embedded->set_hexpand();
-    label_embedded->set_halign(Gtk::ALIGN_START);
-    label_embedded->set_valign(Gtk::ALIGN_CENTER);
+    label_embedded->set_halign(Gtk::Align::START);
+    label_embedded->set_valign(Gtk::Align::CENTER);
     _page_embedded_scripts->table().attach(*label_embedded, 0, row, 3, 1);
 
     row++;
 
     _EmbeddedScriptsListScroller.set_hexpand();
-    _EmbeddedScriptsListScroller.set_valign(Gtk::ALIGN_CENTER);
+    _EmbeddedScriptsListScroller.set_valign(Gtk::Align::CENTER);
     _page_embedded_scripts->table().attach(_EmbeddedScriptsListScroller, 0, row, 3, 1);
 
     row++;
 
     _embed_button_box.set_hexpand();
-    _embed_button_box.set_valign(Gtk::ALIGN_CENTER);
+    _embed_button_box.set_valign(Gtk::Align::CENTER);
     _page_embedded_scripts->table().attach(_embed_button_box, 0, row, 1, 1);
 
     row++;
 
-    auto const spacer_embedded = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const spacer_embedded = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
     spacer_embedded->set_size_request(SPACE_SIZE_X, SPACE_SIZE_Y);
     spacer_embedded->set_hexpand();
-    spacer_embedded->set_valign(Gtk::ALIGN_CENTER);
+    spacer_embedded->set_valign(Gtk::Align::CENTER);
     _page_embedded_scripts->table().attach(*spacer_embedded, 0, row, 3, 1);
 
     row++;
@@ -1020,23 +1020,23 @@ void DocumentProperties::build_scripting()
 // TODO restore?    _EmbeddedScriptsList.set_fixed_height_mode(true);
 
     //# Set up the Embedded Scripts content box
-    Gtk::Label *label_embedded_content= Gtk::make_managed<Gtk::Label>("", Gtk::ALIGN_START);
+    Gtk::Label *label_embedded_content= Gtk::make_managed<Gtk::Label>("", Gtk::Align::START);
     label_embedded_content->set_markup (_("<b>Content:</b>"));
 
     label_embedded_content->set_hexpand();
-    label_embedded_content->set_halign(Gtk::ALIGN_START);
-    label_embedded_content->set_valign(Gtk::ALIGN_CENTER);
+    label_embedded_content->set_halign(Gtk::Align::START);
+    label_embedded_content->set_valign(Gtk::Align::CENTER);
     _page_embedded_scripts->table().attach(*label_embedded_content, 0, row, 3, 1);
 
     row++;
 
     _EmbeddedContentScroller.set_hexpand();
-    _EmbeddedContentScroller.set_valign(Gtk::ALIGN_CENTER);
+    _EmbeddedContentScroller.set_valign(Gtk::Align::CENTER);
     _page_embedded_scripts->table().attach(_EmbeddedContentScroller, 0, row, 3, 1);
 
     _EmbeddedContentScroller.add(_EmbeddedContent);
     _EmbeddedContentScroller.set_shadow_type(Gtk::SHADOW_IN);
-    _EmbeddedContentScroller.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    _EmbeddedContentScroller.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     _EmbeddedContentScroller.set_size_request(-1, 140);
 
     _EmbeddedScriptsList.signal_cursor_changed().connect(sigc::mem_fun(*this, &DocumentProperties::changeEmbeddedScript));
@@ -1050,14 +1050,14 @@ void DocumentProperties::build_scripting()
 
     _ExternalScriptsListScroller.add(_ExternalScriptsList);
     _ExternalScriptsListScroller.set_shadow_type(Gtk::SHADOW_IN);
-    _ExternalScriptsListScroller.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_ALWAYS);
+    _ExternalScriptsListScroller.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::ALWAYS);
     _ExternalScriptsListScroller.set_size_request(-1, 90);
 
     _external_add_btn.signal_clicked().connect(sigc::mem_fun(*this, &DocumentProperties::addExternalScript));
 
     _EmbeddedScriptsListScroller.add(_EmbeddedScriptsList);
     _EmbeddedScriptsListScroller.set_shadow_type(Gtk::SHADOW_IN);
-    _EmbeddedScriptsListScroller.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_ALWAYS);
+    _EmbeddedScriptsListScroller.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::ALWAYS);
     _EmbeddedScriptsListScroller.set_size_request(-1, 90);
 
     _embed_new_btn.signal_clicked().connect(sigc::mem_fun(*this, &DocumentProperties::addEmbeddedScript));
@@ -1088,8 +1088,8 @@ void DocumentProperties::build_metadata()
 
     auto const label = Gtk::make_managed<Gtk::Label>();
     label->set_markup (_("<b>Dublin Core Entities</b>"));
-    label->set_halign(Gtk::ALIGN_START);
-    label->set_valign(Gtk::ALIGN_CENTER);
+    label->set_halign(Gtk::Align::START);
+    label->set_valign(Gtk::Align::CENTER);
     _page_metadata1->table().attach (*label, 0,0,2,1);
 
      /* add generic metadata entry areas */
@@ -1098,12 +1098,12 @@ void DocumentProperties::build_metadata()
         if (entity->editable == RDF_EDIT_GENERIC) {
             auto w = std::unique_ptr<EntityEntry>{EntityEntry::create(entity, _wr)};
 
-            w->_label.set_halign(Gtk::ALIGN_START);
-            w->_label.set_valign(Gtk::ALIGN_CENTER);
+            w->_label.set_halign(Gtk::Align::START);
+            w->_label.set_valign(Gtk::Align::CENTER);
             _page_metadata1->table().attach(w->_label, 0, row, 1, 1);
 
             w->_packable->set_hexpand();
-            w->_packable->set_valign(Gtk::ALIGN_CENTER);
+            w->_packable->set_valign(Gtk::Align::CENTER);
             _page_metadata1->table().attach(*w->_packable, 1, row, 1, 1);
 
             _rdflist.push_back(std::move(w));
@@ -1115,7 +1115,7 @@ void DocumentProperties::build_metadata()
     auto const button_load = Gtk::make_managed<Gtk::Button>(_("Use _default"),true);
     button_load->set_tooltip_text(_("Use the previously saved default metadata here"));
 
-    auto const box_buttons = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
+    auto const box_buttons = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
     UI::pack_end(*box_buttons, *button_save, true, true, 6);
     UI::pack_end(*box_buttons, *button_load, true, true, 6);
     UI::pack_end(*_page_metadata1, *box_buttons, false, false);
@@ -1128,8 +1128,8 @@ void DocumentProperties::build_metadata()
     row = 0;
     auto const llabel = Gtk::make_managed<Gtk::Label>();
     llabel->set_markup (_("<b>License</b>"));
-    llabel->set_halign(Gtk::ALIGN_START);
-    llabel->set_valign(Gtk::ALIGN_CENTER);
+    llabel->set_halign(Gtk::Align::START);
+    llabel->set_valign(Gtk::Align::CENTER);
     _page_metadata2->table().attach(*llabel, 0, row, 2, 1);
 
     /* add license selector pull-down and URI */
@@ -1137,7 +1137,7 @@ void DocumentProperties::build_metadata()
     _licensor.init (_wr);
 
     _licensor.set_hexpand();
-    _licensor.set_valign(Gtk::ALIGN_CENTER);
+    _licensor.set_valign(Gtk::Align::CENTER);
     _page_metadata2->table().attach(_licensor, 0, row, 2, 1);
 }
 
@@ -1596,13 +1596,13 @@ void DocumentProperties::update_widgets()
 
 void DocumentProperties::on_response (int id)
 {
-    if (id == Gtk::RESPONSE_DELETE_EVENT || id == Gtk::RESPONSE_CLOSE)
+    if (id == Gtk::ResponseType::DELETE_EVENT || id == Gtk::ResponseType::CLOSE)
     {
         _rcp_gui.closeWindow();
         _rcp_hgui.closeWindow();
     }
 
-    if (id == Gtk::RESPONSE_CLOSE)
+    if (id == Gtk::ResponseType::CLOSE)
         set_visible(false);
 }
 
@@ -1734,7 +1734,7 @@ void DocumentProperties::display_unit_change(const Inkscape::Util::Unit* doc_uni
 namespace Widget {
 
 GridWidget::GridWidget(SPGrid *grid)
-    : Gtk::Box(Gtk::ORIENTATION_VERTICAL)
+    : Gtk::Box(Gtk::Orientation::VERTICAL)
     , _grid(grid)
     , repr(grid->getRepr())
 {
@@ -1743,8 +1743,8 @@ GridWidget::GridWidget(SPGrid *grid)
 
     // Tab label is constructed here and passed back to parent widget for display to
     // reduce the number of watchers that have to keep tabs on the properties
-    _tab = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
-    _tab->set_halign(Gtk::ALIGN_START);
+    _tab = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
+    _tab->set_halign(Gtk::Align::START);
     _tab->set_hexpand(false);
     _tab_img = Gtk::make_managed<Gtk::Image>();
     _tab_lbl = Gtk::make_managed<Gtk::Label>("-", true);
@@ -1752,7 +1752,7 @@ GridWidget::GridWidget(SPGrid *grid)
     UI::pack_start(*_tab, *_tab_lbl);
     _tab->show_all();
 
-    _name_label = Gtk::make_managed<Gtk::Label>("", Gtk::ALIGN_CENTER);
+    _name_label = Gtk::make_managed<Gtk::Label>("", Gtk::Align::CENTER);
     _name_label->set_margin_bottom(4);
     _name_label->get_style_context()->add_class("heading");
     UI::pack_start(*this, *_name_label, false, false);
@@ -1782,7 +1782,7 @@ GridWidget::GridWidget(SPGrid *grid)
         grid->setOrigin(dimensions);
     });
 
-    auto const left = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 4);
+    auto const left = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
     UI::pack_start(*left, *_grid_rcb_enabled, false, false);
     UI::pack_start(*left, *_grid_rcb_visible, false, false);
     UI::pack_start(*left, *_grid_rcb_snap_visible_only, false, false);
@@ -1803,7 +1803,7 @@ GridWidget::GridWidget(SPGrid *grid)
     _angle_popup = Gtk::make_managed<Gtk::MenuButton>();
     auto angle_popover = Gtk::make_managed<Gtk::Popover>();
     _angle_popup->set_popover(*angle_popover);
-    _angle_popup->set_valign(Gtk::ALIGN_CENTER);
+    _angle_popup->set_valign(Gtk::Align::CENTER);
     // set grid angles from given width to height ratio
     auto angle = Gtk::make_managed<Gtk::Label>(_("Set angle from aspect ratio:"));
     angle->set_xalign(0);
@@ -1819,7 +1819,7 @@ GridWidget::GridWidget(SPGrid *grid)
     subgrid->attach(*angle, 0, 0);
     subgrid->attach(*_aspect_ratio, 0, 1);
     auto apply = Gtk::make_managed<Gtk::Button>(_("Set"));
-    apply->set_halign(Gtk::ALIGN_CENTER);
+    apply->set_halign(Gtk::Align::CENTER);
     apply->set_size_request(100);
     subgrid->attach(*apply, 0, 2);
     // TRANSLATORS: Axonometric grid looks like a pattern of parallelograms. Their width to height proportions
@@ -1950,7 +1950,7 @@ GridWidget::GridWidget(SPGrid *grid)
 
     column->set_hexpand(false);
 
-    auto const inner = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
+    auto const inner = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
     UI::pack_start(*inner, *left, true, true);
     UI::pack_start(*inner, *column, false, false);
     inner->show_all();

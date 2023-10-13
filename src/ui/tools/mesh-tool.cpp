@@ -542,7 +542,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                     // remember clicked item, disregarding groups, honoring Alt; do nothing with Crtl to
                     // enable Ctrl+doubleclick of exactly the selected item(s)
                     if (!(event.modifiers & GDK_CONTROL_MASK)) {
-                        item_to_select = sp_event_context_find_item (_desktop, button_w, event.modifiers & GDK_MOD1_MASK, TRUE);
+                        item_to_select = sp_event_context_find_item (_desktop, button_w, event.modifiers & GDK_ALT_MASK, TRUE);
                     }
 
                     if (!selection->isEmpty()) {
@@ -626,7 +626,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                 // Check if over line
                 auto over_curve = this->over_curve(event.pos);
 
-                if ( (event.modifiers & GDK_CONTROL_MASK) && (event.modifiers & GDK_MOD1_MASK ) ) {
+                if ( (event.modifiers & GDK_CONTROL_MASK) && (event.modifiers & GDK_ALT_MASK ) ) {
                     if (!over_curve.empty()) {
                         split_near_point(over_curve[0]->item, mousepoint_doc);
                         ret = true;

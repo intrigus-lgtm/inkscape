@@ -518,7 +518,7 @@ void FilletChamferKnotHolderEntity::knot_click(guint state)
         return;
     }
     if (state & GDK_CONTROL_MASK) {
-        if (state & GDK_MOD1_MASK) {
+        if (state & GDK_ALT_MASK) {
             _pparam->_vector[satelite_index][subsatelite_index].amount = 0.0;
             sp_lpe_item_update_patheffect(cast<SPLPEItem>(item), false, false);
         } else {

@@ -42,7 +42,7 @@ public:
         , Gtk::Grid{}
     {
         get_style_context()->add_class("menu");
-        set_orientation(Gtk::ORIENTATION_VERTICAL);
+        set_orientation(Gtk::Orientation::VERTICAL);
     }
 };
 
@@ -97,7 +97,7 @@ void PopoverMenu::append(Gtk::Widget &item)
 {
     check_child_invariants();
 
-    _grid.attach_next_to(item, Gtk::POS_BOTTOM);
+    _grid.attach_next_to(item, Gtk::PositionType::BOTTOM);
     _items.push_back(&item);
 }
 
@@ -105,7 +105,7 @@ void PopoverMenu::prepend(Gtk::Widget &item)
 {
     check_child_invariants();
 
-    _grid.attach_next_to(item, Gtk::POS_TOP);
+    _grid.attach_next_to(item, Gtk::PositionType::TOP);
     _items.push_back(&item);
 }
 
@@ -141,7 +141,7 @@ void PopoverMenu::append_section_label(Glib::ustring const &markup)
 
 void PopoverMenu::append_separator()
 {
-    append(*Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL));
+    append(*Gtk::make_managed<Gtk::Separator>(Gtk::Orientation::HORIZONTAL));
 }
 
 void PopoverMenu::popup_at(Gtk::Widget &widget,
@@ -181,7 +181,7 @@ void PopoverMenu::unset_items_focus_hover(Gtk::Widget * const except_active)
 {
     for (auto const item : _items) {
         if (item != except_active) {
-            item->unset_state_flags(Gtk::STATE_FLAG_FOCUSED | Gtk::STATE_FLAG_PRELIGHT);
+            item->unset_state_flags(Gtk::StateFlags::FOCUSED | Gtk::StateFlags::PRELIGHT);
         }
     }
 }

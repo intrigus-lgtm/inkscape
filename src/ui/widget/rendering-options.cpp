@@ -24,7 +24,7 @@ void RenderingOptions::_toggled()
 }
 
 RenderingOptions::RenderingOptions () :
-      Gtk::Box (Gtk::ORIENTATION_VERTICAL),
+      Gtk::Box (Gtk::Orientation::VERTICAL),
       _frame_backends ( Glib::ustring(_("Backend")) ),
       _radio_vector ( Glib::ustring(_("Vector")) ),
       _radio_bitmap ( Glib::ustring(_("Bitmap")) ),
@@ -71,13 +71,13 @@ RenderingOptions::RenderingOptions () :
     _dpi.update();
 
     // fill frames
-    auto const box_vector = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    auto const box_vector = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     box_vector->set_border_width (2);
     box_vector->add (_radio_vector);
     box_vector->add (_radio_bitmap);
     _frame_backends.add (*box_vector);
 
-    auto const box_bitmap = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const box_bitmap = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
     box_bitmap->set_border_width (2);
     box_bitmap->add (_dpi);
     _frame_bitmap.add (*box_bitmap);

@@ -628,10 +628,10 @@ void ThemeContext::adjustGlobalFontScale(double factor) {
     auto desc = getMonospacedFont();
     os << "font-family: " << desc.get_family() << ";";
     switch (desc.get_style()) {
-        case Pango::STYLE_ITALIC:
+        case Pango::Style::ITALIC:
             os << "font-style: italic;";
             break;
-        case Pango::STYLE_OBLIQUE:
+        case Pango::Style::OBLIQUE:
             os << "font-style: oblique;";
             break;
     }

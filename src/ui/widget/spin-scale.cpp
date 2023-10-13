@@ -133,10 +133,10 @@ DualSpinScale::DualSpinScale(Glib::ustring label1, Glib::ustring label2,
     _link.set_focus_on_click(false);
     _link.set_can_focus(false);
     _link.get_style_context()->add_class("link-edit-button");
-    _link.set_valign(Gtk::ALIGN_CENTER);
+    _link.set_valign(Gtk::Align::CENTER);
     _link.signal_clicked().connect(sigc::mem_fun(*this, &DualSpinScale::link_toggled));
 
-    auto const vb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    auto const vb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     vb->add(_s1);
     _s1.set_margin_bottom(3);
     vb->add(_s2);

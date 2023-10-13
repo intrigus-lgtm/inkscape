@@ -62,9 +62,9 @@ FontVariations::FontVariations () :
     Gtk::Grid ()
 {
     // std::cout << "FontVariations::FontVariations" << std::endl;
-    set_orientation( Gtk::ORIENTATION_VERTICAL );
+    set_orientation( Gtk::Orientation::VERTICAL );
     set_name ("FontVariations");
-    size_group = Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL);
+    size_group = Gtk::SizeGroup::create(Gtk::SizeGroup::Mode::HORIZONTAL);
     show_all_children();
 }
 

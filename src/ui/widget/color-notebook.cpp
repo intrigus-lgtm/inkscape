@@ -103,7 +103,7 @@ void ColorNotebook::_initUI(bool no_alpha)
     _switcher->set_stack(*_book);
     // cannot leave it homogeneous - in some themes switcher gets very wide
     _switcher->set_homogeneous(false);
-    _switcher->set_halign(Gtk::ALIGN_CENTER);
+    _switcher->set_halign(Gtk::Align::CENTER);
     _switcher->set_visible(true);
     attach(*_switcher, 0, row++, 2);
 
@@ -132,7 +132,7 @@ void ColorNotebook::_initUI(bool no_alpha)
     _buttonbox->set_margin_top(YPAD);
     _buttonbox->set_margin_bottom(YPAD);
     _buttonbox->set_hexpand();
-    _buttonbox->set_valign(Gtk::ALIGN_START);
+    _buttonbox->set_valign(Gtk::Align::START);
     attach(*_buttonbox, 0, row, 2);
 
     row++;

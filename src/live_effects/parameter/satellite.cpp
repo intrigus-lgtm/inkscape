@@ -261,7 +261,7 @@ void SatelliteParam::on_link_button_click()
 
 Gtk::Widget *SatelliteParam::param_newWidget()
 {
-    auto const _widget = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const _widget = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
     Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("edit-clone", Gtk::ICON_SIZE_BUTTON));
     auto const pButton = Gtk::make_managed<Gtk::Button>();
     auto const pLabel = Gtk::make_managed<Gtk::Label>(param_label);

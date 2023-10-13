@@ -153,7 +153,7 @@ private:
     bool toggleLocked(unsigned int state, Gtk::TreeModel::Row row);
 
     enum class EventType {pressed, released};
-    Gtk::EventSequenceState on_click(Gtk::GestureMultiPress const &gesture,
+    Gtk::EventSequenceState on_click(Gtk::GestureClick const &gesture,
                                      int n_press, double x, double y,
                                      EventType);
     bool on_tree_key_pressed   (GtkEventControllerKey const *controller,

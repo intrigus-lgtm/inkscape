@@ -40,7 +40,7 @@ PopoverMenuItem::PopoverMenuItem(Glib::ustring const &text,
     Gtk::Image *image = nullptr;
 
     if (!text.empty()) {
-        label = Gtk::make_managed<Gtk::Label>(text, Gtk::ALIGN_START, Gtk::ALIGN_CENTER, mnemonic);
+        label = Gtk::make_managed<Gtk::Label>(text, Gtk::Align::START, Gtk::Align::CENTER, mnemonic);
     }
 
     if (!icon_name.empty()) {
@@ -48,7 +48,7 @@ PopoverMenuItem::PopoverMenuItem(Glib::ustring const &text,
     }
 
     if (label && image) {
-        auto &hbox = *Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 8);
+        auto &hbox = *Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 8);
         hbox.add(*image);
         hbox.add(*label);
         add(hbox);

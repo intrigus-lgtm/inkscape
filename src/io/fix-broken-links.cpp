@@ -199,13 +199,13 @@ static std::vector<Glib::ustring> findBrokenLinks( SPDocument *doc )
                 std::string filename;
                 if (extractFilepath(href, filename)) {
                     if (Glib::path_is_absolute(filename)) {
-                        if (!Glib::file_test(filename, Glib::FILE_TEST_EXISTS)) {
+                        if (!Glib::file_test(filename, Glib::FileTest::EXISTS)) {
                             result.emplace_back(href);
                             uniques.insert(href);
                         }
                     } else {
                         std::string combined = Glib::build_filename(doc->getDocumentBase(), filename);
-                        if ( !Glib::file_test(combined, Glib::FILE_TEST_EXISTS) ) {
+                        if ( !Glib::file_test(combined, Glib::FileTest::EXISTS) ) {
                             result.emplace_back(href);
                             uniques.insert(href);
                         }
@@ -264,7 +264,7 @@ static std::map<Glib::ustring, Glib::ustring> locateLinks(Glib::ustring const & 
                 filename = Glib::build_filename(docbase_native, filename);
             }
 
-            bool exists = Glib::file_test(filename, Glib::FILE_TEST_EXISTS);
+            bool exists = Glib::file_test(filename, Glib::FileTest::EXISTS);
 
             // search in parent folders
             if (!exists) {
@@ -375,7 +375,7 @@ static bool searchUpwards( std::string const &base, std::string const &subpath, 
             combined.insert( combined.end(), baseParts.begin(), baseParts.end() );
             combined.insert( combined.end(), current.begin(), current.end() );
             std::string filepath = Glib::build_filename( combined );
-            exists = Glib::file_test(filepath, Glib::FILE_TEST_EXISTS);
+            exists = Glib::file_test(filepath, Glib::FileTest::EXISTS);
             // TODO debug g_message("            ...[%s] %s", filepath.c_str(), (exists ? "XXX" : ""));
             if ( exists ) {
                 dest = filepath;

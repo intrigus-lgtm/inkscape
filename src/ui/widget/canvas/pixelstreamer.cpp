@@ -165,7 +165,7 @@ public:
         b.refs++;
 
         // Create the image surface.
-        auto surface = Cairo::ImageSurface::create(b.data + m.off, Cairo::FORMAT_ARGB32, dimensions.x(), dimensions.y(), stride);
+        auto surface = Cairo::ImageSurface::create(b.data + m.off, Cairo::Surface::Format::ARGB32, dimensions.x(), dimensions.y(), stride);
 
         // Attach the mapping handle as user data.
         cairo_surface_set_user_data(surface->cobj(), &key, (void*)(uintptr_t)mapping, nullptr);
@@ -337,7 +337,7 @@ public:
         m.height = dimensions.y();
         m.stride = stride;
 
-        auto surface = Cairo::ImageSurface::create(m.buf.data, Cairo::FORMAT_ARGB32, m.width, m.height, m.stride);
+        auto surface = Cairo::ImageSurface::create(m.buf.data, Cairo::Surface::Format::ARGB32, m.width, m.height, m.stride);
         cairo_surface_set_user_data(surface->cobj(), &key, (void*)(uintptr_t)mapping, nullptr);
         return surface;
     }
@@ -437,7 +437,7 @@ public:
         m.size = m.stride * m.height;
         m.data.resize(m.size);
 
-        auto surface = Cairo::ImageSurface::create(&m.data[0], Cairo::FORMAT_ARGB32, m.width, m.height, m.stride);
+        auto surface = Cairo::ImageSurface::create(&m.data[0], Cairo::Surface::Format::ARGB32, m.width, m.height, m.stride);
         cairo_surface_set_user_data(surface->cobj(), &key, (void*)(uintptr_t)mapping, nullptr);
         return surface;
     }

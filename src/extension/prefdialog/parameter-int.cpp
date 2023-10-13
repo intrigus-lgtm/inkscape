@@ -133,7 +133,7 @@ ParamInt::get_widget(sigc::signal<void ()> *changeSignal)
         return nullptr;
     }
 
-    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, GUI_PARAM_WIDGETS_SPACING);
+    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, GUI_PARAM_WIDGETS_SPACING);
 
     auto pia = new ParamIntAdjustment(this, changeSignal);
     Glib::RefPtr<Gtk::Adjustment> fadjust(pia);
@@ -148,7 +148,7 @@ ParamInt::get_widget(sigc::signal<void ()> *changeSignal)
         scale->set_visible(true);
         UI::pack_start(*hbox, *scale, true, true);
     } else if (_mode == DEFAULT) {
-        auto const label = Gtk::make_managed<Gtk::Label>(_text, Gtk::ALIGN_START);
+        auto const label = Gtk::make_managed<Gtk::Label>(_text, Gtk::Align::START);
         label->set_visible(true);
         UI::pack_start(*hbox, *label, true, true);
 

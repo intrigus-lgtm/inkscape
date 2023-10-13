@@ -419,13 +419,13 @@ TraceDialogImpl::TraceDialogImpl()
         double constexpr hysteresis = 0.01;
         if (ratio < 1 - hysteresis) {
             // narrow/tall
-            choice_tab.set_valign(Gtk::ALIGN_START);
-            orient_box.set_orientation(Gtk::ORIENTATION_VERTICAL);
+            choice_tab.set_valign(Gtk::Align::START);
+            orient_box.set_orientation(Gtk::Orientation::VERTICAL);
         }
         else if (ratio > 1 + hysteresis) {
             // wide/short
-            orient_box.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
-            choice_tab.set_valign(Gtk::ALIGN_FILL);
+            orient_box.set_orientation(Gtk::Orientation::HORIZONTAL);
+            choice_tab.set_valign(Gtk::Align::FILL);
         }
     });
 

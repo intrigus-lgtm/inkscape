@@ -74,14 +74,14 @@ std::string PaintDef::get_color_id() const
         auto name = Glib::ustring(std::move(description));
         // Convert description to ascii, strip out symbols, remove duplicate dashes and prefixes
         static auto const reg1 = Glib::Regex::create("[^[:alnum:]]");
-        name = reg1->replace(name, 0, "-", static_cast<Glib::RegexMatchFlags>(0));
+        name = reg1->replace(name, 0, "-", static_cast<Glib::Regex::MatchFlags>(0));
         static auto const reg2 = Glib::Regex::create("-{2,}");
-        name = reg2->replace(name, 0, "-", static_cast<Glib::RegexMatchFlags>(0));
+        name = reg2->replace(name, 0, "-", static_cast<Glib::Regex::MatchFlags>(0));
         static auto const reg3 = Glib::Regex::create("(^-|-$)");
-        name = reg3->replace(name, 0, "", static_cast<Glib::RegexMatchFlags>(0));
+        name = reg3->replace(name, 0, "", static_cast<Glib::Regex::MatchFlags>(0));
         // Move important numbers from the start where they are invalid xml, to the end.
         static auto const reg4 = Glib::Regex::create("^(\\d+)(-?)([^\\d]*)");
-        name = reg4->replace(name, 0, "\\3\\2\\1", static_cast<Glib::RegexMatchFlags>(0));
+        name = reg4->replace(name, 0, "\\3\\2\\1", static_cast<Glib::Regex::MatchFlags>(0));
         return name.lowercase();
     }
     auto [r, g, b] = rgb;

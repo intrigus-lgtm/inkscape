@@ -604,7 +604,7 @@ InkFileExportCmd::do_export_png(SPDocument *doc, std::string const &export_filen
 
         // Check if directory exists
         std::string directory = Glib::path_get_dirname(filename_out);
-        if (!Glib::file_test(directory, Glib::FILE_TEST_IS_DIR)) {
+        if (!Glib::file_test(directory, Glib::FileTest::IS_DIR)) {
             std::cerr << "File path " << filename_out << " includes directory that doesn't exist. Skipping." << std::endl;
             continue;
         }

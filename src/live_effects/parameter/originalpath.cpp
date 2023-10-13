@@ -39,7 +39,7 @@ OriginalPathParam::OriginalPathParam( const Glib::ustring& label, const Glib::us
 Gtk::Widget *
 OriginalPathParam::param_newWidget()
 {
-    auto const _widget = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const _widget = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
 
     { // Label
         auto const pLabel = Gtk::make_managed<Gtk::Label>(param_label);

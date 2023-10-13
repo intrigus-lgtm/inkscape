@@ -18,7 +18,7 @@
 #include <string>
 #include <vector>
 
-#include <gdk/gdk.h>  // GDK_MOD1_MASK
+#include <gdk/gdk.h>  // GDK_ALT_MASK
 #include <glib-object.h>
 #include <glib.h>
 #include <sigc++/signal.h>
@@ -180,7 +180,7 @@ public:
     std::string _pages;
 
     unsigned refCount = 1;
-    guint _mapalt = GDK_MOD1_MASK;
+    guint _mapalt = GDK_ALT_MASK;
     guint _trackalt = false;
     static bool _crashIsHappening;
     bool _use_gui = false;

@@ -78,7 +78,7 @@ void LicenseItem::on_toggled()
 }
 
 Licensor::Licensor()
-: Gtk::Box{Gtk::ORIENTATION_VERTICAL, 4}
+: Gtk::Box{Gtk::Orientation::VERTICAL, 4}
 {
 }
 
@@ -105,7 +105,7 @@ void Licensor::init (Registry& wr)
 
     wr.setUpdating (false);
 
-    auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
     UI::pack_start(*this, *box, true, true, 0);
     UI::pack_start(*box, _eentry->_label, false, false, 5);
     UI::pack_start(*box, *_eentry->_packable, true, true, 0);

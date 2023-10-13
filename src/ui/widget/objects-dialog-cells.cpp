@@ -26,7 +26,7 @@ ColorTagRenderer::ColorTagRenderer() :
     _property_color(*this, "tagcolor", 0),
     _property_hover(*this, "taghover", false)
 {
-    property_mode() = Gtk::CELL_RENDERER_MODE_ACTIVATABLE;
+    property_mode() = Gtk::CellRendererMode::ACTIVATABLE;
 
     int dummy_width;
     // height size is not critical

@@ -78,17 +78,17 @@ enum class When {before, after};
 
 /// Type of slot connected to GestureMultiPress::pressed & ::released signals.
 /// The args are the gesture, n_press count, x coord & y coord (in widget space)
-using ClickSlot = sigc::slot<Gtk::EventSequenceState(Gtk::GestureMultiPress &, int, double, double)>;
+using ClickSlot = sigc::slot<Gtk::EventSequenceState(Gtk::GestureClick &, int, double, double)>;
 
 /// helper to stop accidents on int vs gtkmm3's weak=typed enums, & looks nicer!
 enum class Button {any = 0, left = 1, middle = 2, right = 3};
 
 /// Create a click gesture for & manage()d by widget; by default claim sequence.
-Gtk::GestureMultiPress &add_click(Gtk::Widget &widget,
+Gtk::GestureClick &add_click(Gtk::Widget &widget,
                                   ClickSlot on_pressed,
                                   ClickSlot on_released = {},
                                   Button button = Button::any,
-                                  Gtk::PropagationPhase phase = Gtk::PHASE_BUBBLE,
+                                  Gtk::PropagationPhase phase = Gtk::PropagationPhase::BUBBLE,
                                   When when = When::after);
 
 /// Type of slot connected to GestureDrag::drag-(begin|update|end) signals.
@@ -100,7 +100,7 @@ Gtk::GestureDrag &add_drag(Gtk::Widget &widget,
                            DragSlot on_drag_begin ,
                            DragSlot on_drag_update,
                            DragSlot on_drag_end   ,
-                           Gtk::PropagationPhase phase = Gtk::PHASE_BUBBLE,
+                           Gtk::PropagationPhase phase = Gtk::PropagationPhase::BUBBLE,
                            When when = When::after);
 
 /// internal stuff
@@ -228,7 +228,7 @@ template <auto on_pressed, auto on_released = nullptr, auto on_modifiers = nullp
           auto on_focus_in = nullptr, auto on_focus_out = nullptr,
           bool managed = true, typename Listener>
 decltype(auto) add_key(Gtk::Widget &widget, Listener &listener,
-                       Gtk::PropagationPhase const phase = Gtk::PHASE_BUBBLE,
+                       Gtk::PropagationPhase const phase = Gtk::PropagationPhase::BUBBLE,
                        When const when = When::after)
 {
     // NB make_g_callback<> must type-erase methods, so we must check arg compat
@@ -261,7 +261,7 @@ template <auto on_enter, auto on_motion, auto on_leave,
           typename Listener>
 Gtk::EventController &add_motion(Gtk::Widget &widget  ,
                                  Listener    &listener,
-                                 Gtk::PropagationPhase const phase = Gtk::PHASE_BUBBLE,
+                                 Gtk::PropagationPhase const phase = Gtk::PropagationPhase::BUBBLE,
                                  When const when = When::after)
 {
     // NB make_g_callback<> must type-erase methods, so we must check arg compat
@@ -289,7 +289,7 @@ template <auto on_scroll_begin, auto on_scroll, auto on_scroll_end, auto on_dece
 Gtk::EventController &add_scroll(Gtk::Widget &widget  ,
                                  Listener    &listener,
                                  GtkEventControllerScrollFlags const flags = GTK_EVENT_CONTROLLER_SCROLL_BOTH_AXES,
-                                 Gtk::PropagationPhase const phase = Gtk::PHASE_BUBBLE,
+                                 Gtk::PropagationPhase const phase = Gtk::PropagationPhase::BUBBLE,
                                  When const when = When::after)
 {
     // NB make_g_callback<> must type-erase methods, so we must check arg compat
@@ -312,7 +312,7 @@ template <auto on_begin, auto on_scale_changed, auto on_end,
           typename Listener>
 decltype(auto) add_zoom(Gtk::Widget &widget  ,
                         Listener    &listener,
-                        Gtk::PropagationPhase const phase = Gtk::PHASE_BUBBLE,
+                        Gtk::PropagationPhase const phase = Gtk::PropagationPhase::BUBBLE,
                         When const when = When::after)
 {
     // NB make_g_callback<> must type-erase methods, so we must check arg compat
@@ -346,7 +346,7 @@ template <auto on_pressed, auto on_released = nullptr, auto on_modifiers = nullp
           auto on_focus_in = nullptr, auto on_focus_out = nullptr,
           typename Listener>
 void add_key_on_window(Gtk::Widget &widget, Listener &listener,
-                       Gtk::PropagationPhase const phase = Gtk::PHASE_BUBBLE,
+                       Gtk::PropagationPhase const phase = Gtk::PropagationPhase::BUBBLE,
                        When const when = When::after)
 {
     widget.signal_map().connect([=, &widget, &listener]

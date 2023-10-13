@@ -58,7 +58,7 @@ std::vector<std::shared_ptr<SPDocument>> sp_get_paint_documents(const std::funct
         files.insert(files.end(), user.begin(), user.end());
         files.insert(files.end(), share.begin(), share.end());
         for (auto&& file : files) {
-            if (Glib::file_test(file, Glib::FILE_TEST_IS_REGULAR)) {
+            if (Glib::file_test(file, Glib::FileTest::IS_REGULAR)) {
                 std::shared_ptr<SPDocument> doc(SPDocument::createNewDoc(file.c_str(), false));
                 if (doc) {
                     doc->ensureUpToDate(); // update, so patterns referencing clippaths render properly
@@ -86,7 +86,7 @@ static SPDocument *load_paint_doc(char const *basename,
 
     for (Domain const domain : {SYSTEM, CREATE}) {
         auto const filename = get_path_string(domain, type, basename);
-        if (Glib::file_test(filename, Glib::FILE_TEST_IS_REGULAR)) {
+        if (Glib::file_test(filename, Glib::FileTest::IS_REGULAR)) {
             auto doc = SPDocument::createNewDoc(filename.c_str(), false);
             if (doc) {
                 doc->ensureUpToDate();

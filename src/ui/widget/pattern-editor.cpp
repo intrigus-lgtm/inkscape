@@ -337,7 +337,7 @@ void PatternEditor::bind_store(Gtk::FlowBox& list, PatternStore& pat) {
     });
 
     list.bind_list_store(pat.store.get_store(), [=, &pat](const Glib::RefPtr<PatternItem>& item){
-        auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+        auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
         auto const image = Gtk::make_managed<Gtk::Image>(item->pix);
         UI::pack_start(*box, *image);
         auto name = Glib::ustring(item->label.c_str());
@@ -345,7 +345,7 @@ void PatternEditor::bind_store(Gtk::FlowBox& list, PatternStore& pat) {
             auto const label = Gtk::make_managed<Gtk::Label>(name);
             label->get_style_context()->add_class("small-font");
             // limit label size to tile size
-            label->set_ellipsize(Pango::EllipsizeMode::ELLIPSIZE_END);
+            label->set_ellipsize(Pango::EllipsizeMode::END);
             label->set_max_width_chars(0);
             label->set_size_request(_tile_size);
             UI::pack_end(*box, *label);

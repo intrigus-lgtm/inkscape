@@ -65,7 +65,7 @@ Glib::RefPtr<Gdk::Pixbuf> to_rgb8_packed(Glib::RefPtr<Gdk::Pixbuf> const &pixbuf
         }
     }
 
-    return Gdk::Pixbuf::create_from_data(out, Gdk::COLORSPACE_RGB, false, 8, width, height, width * 3, [out] (auto) { delete [] out; });
+    return Gdk::Pixbuf::create_from_data(out, Gdk::Colorspace::RGB, false, 8, width, height, width * 3, [out] (auto) { delete [] out; });
 }
 
 } // namespace

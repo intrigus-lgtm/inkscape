@@ -170,7 +170,7 @@ std::shared_ptr<UI::Widget::PopoverMenu> SpinButton::get_popover_menu()
     values.emplace(std::fmin(adj_value + page, upper), "");
     values.emplace(std::fmax(adj_value - page, lower), "");
 
-    static auto popover_menu = std::make_shared<UI::Widget::PopoverMenu>(*this, Gtk::POS_BOTTOM);
+    static auto popover_menu = std::make_shared<UI::Widget::PopoverMenu>(*this, Gtk::PositionType::BOTTOM);
     popover_menu->delete_all();
     Gtk::RadioButton::Group group;
 

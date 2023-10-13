@@ -333,7 +333,7 @@ int gui_request_dpi_fix_method(SPDocument *doc)
                                      "in the file is most important. (Experimental.)"));
     Gtk::CheckButton backup_button(_("Create a backup file in same directory."));
     Gtk::Expander moreinfo(_("More details..."));
-    Gtk::Label moreinfo_text("", Gtk::ALIGN_START);
+    Gtk::Label moreinfo_text("", Gtk::Align::START);
     moreinfo_text.set_markup(
         // TRANSLATORS: Please don't translate link unless the page exists in your language. Add your language
         // code to the link this way: https://inkscape.org/[lang]/learn/faq#dpi_change
@@ -363,8 +363,8 @@ int gui_request_dpi_fix_method(SPDocument *doc)
     choice2_1.set_visible(true);
     choice2_2.set_visible(true);
 
-    b.set_halign(Gtk::ALIGN_START);
-    b.set_valign(Gtk::ALIGN_START);
+    b.set_halign(Gtk::Align::START);
+    b.set_valign(Gtk::Align::START);
     b.set_hexpand(false);
     b.set_vexpand(false);
     b.set_margin_start(30);

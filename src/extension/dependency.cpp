@@ -148,7 +148,7 @@ bool Dependency::check ()
         }
         case TYPE_EXECUTABLE:
         case TYPE_FILE: {
-            Glib::FileTest filetest = Glib::FILE_TEST_EXISTS;
+            Glib::FileTest filetest = Glib::FileTest::EXISTS;
 
             std::string location(_string);
 
@@ -172,7 +172,7 @@ bool Dependency::check ()
             // glib would search for "executable types" instead, which are only {".exe", ".cmd", ".bat", ".com"},
             // and would therefore miss files without extension and other script files (like .py files)
             if (_type == TYPE_EXECUTABLE) {
-                filetest = Glib::FILE_TEST_IS_EXECUTABLE;
+                filetest = Glib::FileTest::IS_EXECUTABLE;
             }
 #endif
 

@@ -229,11 +229,11 @@ SelectorsDialog::SelectorsDialog()
     _treeView.set_model(_store);
 
     // ALWAYS be a single selection widget
-    _treeView.get_selection()->set_mode(Gtk::SELECTION_SINGLE);
+    _treeView.get_selection()->set_mode(Gtk::SelectionMode::SINGLE);
 
     _treeView.set_headers_visible(false);
     _treeView.enable_model_drag_source();
-    _treeView.enable_model_drag_dest( Gdk::ACTION_MOVE );
+    _treeView.enable_model_drag_dest( Gdk::DragAction::MOVE );
     int addCol = _treeView.append_column("", *addRenderer) - 1;
     Gtk::TreeViewColumn *col = _treeView.get_column(addCol);
     if ( col ) {
@@ -277,13 +277,13 @@ void SelectorsDialog::_showWidgets()
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     bool dir = prefs->getBool("/dialogs/selectors/vertical", true);
 
-    _paned.set_orientation(dir ? Gtk::ORIENTATION_VERTICAL : Gtk::ORIENTATION_HORIZONTAL);
+    _paned.set_orientation(dir ? Gtk::Orientation::VERTICAL : Gtk::Orientation::HORIZONTAL);
 
-    _selectors_box.set_orientation(Gtk::ORIENTATION_VERTICAL);
+    _selectors_box.set_orientation(Gtk::Orientation::VERTICAL);
     _selectors_box.set_name("SelectorsDialog");
 
     _scrolled_window_selectors.add(_treeView);
-    _scrolled_window_selectors.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    _scrolled_window_selectors.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     _scrolled_window_selectors.set_overlay_scrolling(false);
 
     _vadj = _scrolled_window_selectors.get_vadjustment();
@@ -322,10 +322,10 @@ void SelectorsDialog::_showWidgets()
     _paned.pack2(_selectors_box, true, true);
     _paned.set_wide_handle(true);
 
-    auto const contents = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    auto const contents = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     UI::pack_start(*contents, _paned, UI::PackOptions::expand_widget);
     UI::pack_start(*contents, _button_box, false, false);
-    contents->set_valign(Gtk::ALIGN_FILL);
+    contents->set_valign(Gtk::Align::FILL);
     UI::pack_start(*this, *contents, UI::PackOptions::expand_widget);
 
     show_all();
@@ -344,7 +344,7 @@ void SelectorsDialog::_toggleDirection(Gtk::RadioButton *vertical)
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     bool dir = vertical->get_active();
     prefs->setBool("/dialogs/selectors/vertical", dir);
-    _paned.set_orientation(dir ? Gtk::ORIENTATION_VERTICAL : Gtk::ORIENTATION_HORIZONTAL);
+    _paned.set_orientation(dir ? Gtk::Orientation::VERTICAL : Gtk::Orientation::HORIZONTAL);
     _paned.check_resize();
     int widthpos = _paned.property_max_position() - _paned.property_min_position();
     prefs->setInt("/dialogs/selectors/panedpos", widthpos / 2);
@@ -1021,8 +1021,8 @@ void SelectorsDialog::_addSelector()
     textDialogPtr->property_modal() = true;
     textDialogPtr->property_title() = _("CSS selector");
     textDialogPtr->property_window_position() = Gtk::WIN_POS_CENTER_ON_PARENT;
-    textDialogPtr->add_button(_("Cancel"), Gtk::RESPONSE_CANCEL);
-    textDialogPtr->add_button(_("Add"),    Gtk::RESPONSE_OK);
+    textDialogPtr->add_button(_("Cancel"), Gtk::ResponseType::CANCEL);
+    textDialogPtr->add_button(_("Add"),    Gtk::ResponseType::OK);
 
     auto const textEditPtr = Gtk::make_managed<Gtk::Entry>();
     textEditPtr->signal_activate().connect(
@@ -1060,7 +1060,7 @@ void SelectorsDialog::_addSelector()
     Glib::ustring originalValue;
     while (invalid) {
         result = dialog_run(*textDialogPtr);
-        if (result != Gtk::RESPONSE_OK) { // Cancel, close dialog, etc.
+        if (result != Gtk::ResponseType::OK) { // Cancel, close dialog, etc.
             return;
         }
         /**
@@ -1141,7 +1141,7 @@ void SelectorsDialog::_addSelector()
     _vadj->set_value(std::min(_scrollpos, _vadj->get_upper()));
 }
 
-void SelectorsDialog::_closeDialog(Gtk::Dialog *textDialogPtr) { textDialogPtr->response(Gtk::RESPONSE_OK); }
+void SelectorsDialog::_closeDialog(Gtk::Dialog *textDialogPtr) { textDialogPtr->response(Gtk::ResponseType::OK); }
 
 /**
  * This function deletes selector when '-' at the bottom is clicked.
@@ -1181,7 +1181,7 @@ void SelectorsDialog::_delSelector()
  * on a selector selects the matching objects on the desktop. A double click will
  * in addition open the CSS dialog.
  */
-Gtk::EventSequenceState SelectorsDialog::onTreeViewClickReleased(Gtk::GestureMultiPress const &click,
+Gtk::EventSequenceState SelectorsDialog::onTreeViewClickReleased(Gtk::GestureClick const &click,
                                                                  int /*n_press*/,
                                                                  double const x, double const y)
 {
@@ -1214,7 +1214,7 @@ Gtk::EventSequenceState SelectorsDialog::onTreeViewClickReleased(Gtk::GestureMul
     _updating = false;
     _selectRow();
 
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
 // -------------------------------------------------------------------

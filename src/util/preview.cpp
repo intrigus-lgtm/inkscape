@@ -47,7 +47,7 @@ render_preview(SPDocument *doc, std::shared_ptr<Inkscape::Drawing> drawing, uint
 
     /* Actual renderable area */
     Geom::IntRect ua = *Geom::intersect(ibox, area);
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, ua.width(), ua.height());
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, ua.width(), ua.height());
 
     {
         auto cr = Cairo::Context::create(surface);

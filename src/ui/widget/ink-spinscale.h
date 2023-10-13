@@ -44,9 +44,9 @@ public:
 private:
     bool on_draw(const::Cairo::RefPtr<::Cairo::Context>& cr) final;
 
-    Gtk::EventSequenceState on_click_pressed (Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
                                               int n_press, double x, double y);
-    Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_click_released(Gtk::GestureClick const &click,
                                               int n_press, double x, double y);
     void on_motion_enter (GtkEventControllerMotion const *motion, double x, double y);
     void on_motion_motion(GtkEventControllerMotion const *motion, double x, double y);

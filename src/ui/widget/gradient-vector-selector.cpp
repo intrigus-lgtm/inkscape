@@ -53,7 +53,7 @@ GradientVectorSelector::GradientVectorSelector(SPDocument *doc, SPGradient *gr)
 {
     _columns = new GradientSelector::ModelColumns();
     _store = Gtk::ListStore::create(*_columns);
-    set_orientation(Gtk::ORIENTATION_VERTICAL);
+    set_orientation(Gtk::Orientation::VERTICAL);
 
     if (doc) {
         set_gradient(doc, gr);

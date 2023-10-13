@@ -219,7 +219,7 @@ PathParam::set_buttons(bool edit_button, bool copy_button, bool paste_button, bo
 Gtk::Widget *
 PathParam::param_newWidget()
 {
-    auto const _widget = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const _widget = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
 
     auto const pLabel = Gtk::make_managed<Gtk::Label>(param_label);
     UI::pack_start(*_widget, *pLabel, true, true);

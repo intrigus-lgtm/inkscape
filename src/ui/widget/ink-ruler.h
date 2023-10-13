@@ -65,7 +65,7 @@ private:
     void on_prefs_changed();
 
     void on_motion(GtkEventControllerMotion const *motion, double x, double y);
-    Gtk::EventSequenceState on_click_pressed(Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_click_pressed(Gtk::GestureClick const &click,
                                              int n_press, double x, double y);
 
     void set_context_menu();

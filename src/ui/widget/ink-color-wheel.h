@@ -117,9 +117,9 @@ private:
     virtual bool on_drawing_area_draw (Cairo::RefPtr<Cairo::Context> const &cr) = 0;
     virtual bool on_drawing_area_focus(Gtk::DirectionType /*direction*/) { return false; }
     /// All event controllers are connected to the DrawingArea.
-    virtual Gtk::EventSequenceState on_click_pressed (Gtk::GestureMultiPress const &click,
+    virtual Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
                                                       int n_press, double x, double y) = 0;
-    virtual Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress const &click,
+    virtual Gtk::EventSequenceState on_click_released(Gtk::GestureClick const &click,
                                                       int n_press, double x, double y) = 0;
     virtual void on_motion(GtkEventControllerMotion const *motion, double x, double y) = 0;
     virtual bool on_key_pressed(GtkEventControllerKey const *key_event,
@@ -166,9 +166,9 @@ private:
     DragMode _mode = DragMode::NONE;
     bool _focus_on_ring = true;
 
-    Gtk::EventSequenceState on_click_pressed (Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
                                               int n_press, double x, double y) final;
-    Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_click_released(Gtk::GestureClick const &click,
                                               int n_press, double x, double y) final;
     void on_motion(GtkEventControllerMotion const *motion, double x, double y) final;
     bool on_key_pressed(GtkEventControllerKey const *key_event,
@@ -219,9 +219,9 @@ private:
     void _updatePolygon();
     bool _vertex() const;
 
-    Gtk::EventSequenceState on_click_pressed (Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
                                               int n_press, double x, double y) final;
-    Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_click_released(Gtk::GestureClick const &click,
                                               int n_press, double x, double y) final;
     void on_motion(GtkEventControllerMotion const *motion, double x, double y) final;
     bool on_key_pressed(GtkEventControllerKey const *key_event,

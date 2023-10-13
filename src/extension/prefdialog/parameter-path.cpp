@@ -158,8 +158,8 @@ Gtk::Widget *ParamPath::get_widget(sigc::signal<void ()> *changeSignal)
         return nullptr;
     }
 
-    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, GUI_PARAM_WIDGETS_SPACING);
-    auto const label = Gtk::make_managed<Gtk::Label>(_text, Gtk::ALIGN_START);
+    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, GUI_PARAM_WIDGETS_SPACING);
+    auto const label = Gtk::make_managed<Gtk::Label>(_text, Gtk::Align::START);
     label->set_visible(true);
     UI::pack_start(*hbox, *label, false, false);
 
@@ -184,11 +184,11 @@ Gtk::Widget *ParamPath::get_widget(sigc::signal<void ()> *changeSignal)
 void ParamPath::on_button_clicked()
 {
     // set-up action and dialog title according to 'mode'
-    Gtk::FileChooserAction action;
+    Gtk::FileChooser::Action action;
     std::string dialog_title;
     if (_mode == FILE) {
         // pick the "save" variants here - otherwise the dialog will only accept existing files
-        action = Gtk::FILE_CHOOSER_ACTION_OPEN;
+        action = Gtk::FileChooser::Action::OPEN;
         if (_select_multiple) {
             dialog_title = _("Select existing files");
         } else {
@@ -196,17 +196,17 @@ void ParamPath::on_button_clicked()
         }
     } else if (_mode == FOLDER) {
         // pick the "create" variant here - otherwise the dialog will only accept existing folders
-        action = Gtk::FILE_CHOOSER_ACTION_SELECT_FOLDER;
+        action = Gtk::FileChooser::Action::SELECT_FOLDER;
         if (_select_multiple) {
             dialog_title = _("Select existing folders");
         } else {
             dialog_title = _("Select existing folder");
         }
     } else if (_mode == FILE_NEW) {
-        action = Gtk::FILE_CHOOSER_ACTION_SAVE;
+        action = Gtk::FileChooser::Action::SAVE;
         dialog_title = _("Choose file name");
     } else if (_mode == FOLDER_NEW) {
-        action = Gtk::FILE_CHOOSER_ACTION_CREATE_FOLDER;
+        action = Gtk::FileChooser::Action::CREATE_FOLDER;
         dialog_title = _("Choose folder name");
     } else {
         g_assert_not_reached();
@@ -243,14 +243,14 @@ void ParamPath::on_button_clicked()
         }
 
         std::string dirname = Glib::path_get_dirname(first_filename);
-        if (Glib::file_test(dirname, Glib::FILE_TEST_IS_DIR)) {
+        if (Glib::file_test(dirname, Glib::FileTest::IS_DIR)) {
             file_chooser->set_current_folder(dirname);
         }
 
         if(_mode == FILE_NEW || _mode == FOLDER_NEW) {
             file_chooser->set_current_name(Glib::path_get_basename(first_filename));
         } else {
-            if (Glib::file_test(first_filename, Glib::FILE_TEST_EXISTS)) {
+            if (Glib::file_test(first_filename, Glib::FileTest::EXISTS)) {
                 // TODO: This does not seem to work (at least on Windows)
                 // file_chooser->set_filename(first_filename);
             }
@@ -259,7 +259,7 @@ void ParamPath::on_button_clicked()
 
     // show dialog and parse result
     int res = file_chooser->run();
-    if (res == Gtk::ResponseType::RESPONSE_ACCEPT) {
+    if (res == Gtk::ResponseType::ACCEPT) {
         std::vector<std::string> filenames = file_chooser->get_filenames();
         std::string filenames_joined = boost::algorithm::join(filenames, "|");
         _entry->set_text(filenames_joined); // let the ParamPathEntry handle the rest (including setting the preference)

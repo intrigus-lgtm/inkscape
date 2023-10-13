@@ -43,7 +43,7 @@ namespace Inkscape::UI::Dialog {
 #########################################################################*/
 
 FileDialogBaseGtk::FileDialogBaseGtk(Gtk::Window &parentWindow, Glib::ustring const &title,
-                                     Gtk::FileChooserAction const dialogType,
+                                     Gtk::FileChooser::Action const dialogType,
                                      FileDialogType const type,
                                      char const * const preferenceBase)
     : Gtk::FileChooserDialog{parentWindow, title, dialogType}
@@ -97,7 +97,7 @@ Glib::ustring FileDialogBaseGtk::extToPattern(const Glib::ustring &extension) co
  */
 FileOpenDialogImplGtk::FileOpenDialogImplGtk(Gtk::Window &parentWindow, const std::string &dir,
                                              FileDialogType fileTypes, const Glib::ustring &title)
-    : FileDialogBaseGtk(parentWindow, title, Gtk::FILE_CHOOSER_ACTION_OPEN, fileTypes, "/dialogs/open")
+    : FileDialogBaseGtk(parentWindow, title, Gtk::FileChooser::Action::OPEN, fileTypes, "/dialogs/open")
 {
     if (_dialogType == EXE_TYPES) {
         /* One file at a time */
@@ -135,14 +135,14 @@ FileOpenDialogImplGtk::FileOpenDialogImplGtk(Gtk::Window &parentWindow, const st
     // Add the file types menu.
     createFilterMenu();
 
-    add_button(_("_Cancel"), Gtk::RESPONSE_CANCEL);
-    add_button(_("_Open"),   Gtk::RESPONSE_OK);
-    set_default_response(Gtk::RESPONSE_OK);
+    add_button(_("_Cancel"), Gtk::ResponseType::CANCEL);
+    add_button(_("_Open"),   Gtk::ResponseType::OK);
+    set_default_response(Gtk::ResponseType::OK);
 
     // Allow easy access to our examples folder.
     using namespace Inkscape::IO::Resource;
     auto examplesdir = get_path_string(SYSTEM, EXAMPLES);
-    if (Glib::file_test(examplesdir, Glib::FILE_TEST_IS_DIR) && Glib::path_is_absolute(examplesdir)) {
+    if (Glib::file_test(examplesdir, Glib::FileTest::IS_DIR) && Glib::path_is_absolute(examplesdir)) {
         add_shortcut_folder(examplesdir);
         // add_shortcut_folder(Gio::File::create_for_path(examplesdir)); // Gtk4
     }
@@ -208,7 +208,7 @@ bool FileOpenDialogImplGtk::show()
     sp_transientize(GTK_WIDGET(gobj())); // Make transient
     int response = dialog_run(*this); // Dialog
 
-    if (response == Gtk::RESPONSE_OK) {
+    if (response == Gtk::ResponseType::OK) {
         setExtension(filterExtensionMap[get_filter()]);
         return true;
     }
@@ -228,7 +228,7 @@ FileSaveDialogImplGtk::FileSaveDialogImplGtk(Gtk::Window &parentWindow, const st
                                              FileDialogType fileTypes, const Glib::ustring &title,
                                              const Glib::ustring & /*default_key*/, const gchar *docTitle,
                                              const Inkscape::Extension::FileSaveMethod save_method)
-    : FileDialogBaseGtk(parentWindow, title, Gtk::FILE_CHOOSER_ACTION_SAVE, fileTypes,
+    : FileDialogBaseGtk(parentWindow, title, Gtk::FileChooser::Action::SAVE, fileTypes,
                         (save_method == Inkscape::Extension::FILE_SAVE_METHOD_SAVE_COPY) ? "/dialogs/save_copy"
                                                                                          : "/dialogs/save_as")
     , save_method(save_method)
@@ -281,9 +281,9 @@ FileSaveDialogImplGtk::FileSaveDialogImplGtk(Gtk::Window &parentWindow, const st
 
     // ===== Buttons =====
 
-    add_button(_("_Cancel"), Gtk::RESPONSE_CANCEL);
-    add_button(_("_Save"),   Gtk::RESPONSE_OK);
-    set_default_response(Gtk::RESPONSE_OK);
+    add_button(_("_Cancel"), Gtk::ResponseType::CANCEL);
+    add_button(_("_Save"),   Gtk::ResponseType::OK);
+    set_default_response(Gtk::ResponseType::OK);
 
     // ===== Initial Value =====
 
@@ -333,7 +333,7 @@ bool FileSaveDialogImplGtk::show()
 
     int response = dialog_run(*this); // Dialog
 
-    if (response == Gtk::RESPONSE_OK) {
+    if (response == Gtk::ResponseType::OK) {
 
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 

@@ -118,7 +118,7 @@ TransformedPointParam::param_newWidget()
     pointwdg->clearProgrammatically();
     pointwdg->set_undo_parameters(_("Change vector parameter"), INKSCAPE_ICON("dialog-path-effects"));
     
-    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
     UI::pack_start(*hbox, *pointwdg, true, true);
     hbox->show_all_children();
     return hbox;

@@ -44,7 +44,7 @@ class ColorPreview;
 class StyleSwatch : public Gtk::Box
 {
 public:
-    StyleSwatch (SPCSSAttr *attr, gchar const *main_tip, Gtk::Orientation orient = Gtk::ORIENTATION_VERTICAL);
+    StyleSwatch (SPCSSAttr *attr, gchar const *main_tip, Gtk::Orientation orient = Gtk::Orientation::VERTICAL);
     ~StyleSwatch() override;
 
     void setStyle(SPStyle *style);
@@ -56,7 +56,7 @@ public:
     void setDesktop(SPDesktop *desktop);
 
 private:
-    Gtk::EventSequenceState on_click(Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState on_click(Gtk::GestureClick const &click,
                                      int n_press, double x, double y);
 
     using PrefObs = Preferences::PreferencesObserver;

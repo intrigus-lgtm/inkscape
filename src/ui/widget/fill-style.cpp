@@ -56,7 +56,7 @@ namespace UI {
 namespace Widget {
 
 FillNStroke::FillNStroke(FillOrStroke k)
-    : Gtk::Box(Gtk::ORIENTATION_VERTICAL)
+    : Gtk::Box(Gtk::Orientation::VERTICAL)
     , kind(k)
     , subselChangedConn()
     , eventContextConn()

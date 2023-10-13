@@ -47,8 +47,8 @@ static void set_expand(Gtk::Widget &widget, Gtk::Orientation const orientation,
                        bool const expand)
 {
     switch (orientation) {
-        case Gtk::ORIENTATION_HORIZONTAL: widget.set_hexpand(expand); break;
-        case Gtk::ORIENTATION_VERTICAL  : widget.set_vexpand(expand); break;
+        case Gtk::Orientation::HORIZONTAL: widget.set_hexpand(expand); break;
+        case Gtk::Orientation::VERTICAL  : widget.set_vexpand(expand); break;
         default: std::abort();
     }
 }
@@ -57,8 +57,8 @@ static void set_align(Gtk::Widget &widget, Gtk::Orientation const orientation,
                       Gtk::Align const align)
 {
     switch (orientation) {
-        case Gtk::ORIENTATION_HORIZONTAL: widget.set_halign(align); break;
-        case Gtk::ORIENTATION_VERTICAL  : widget.set_valign(align); break;
+        case Gtk::Orientation::HORIZONTAL: widget.set_halign(align); break;
+        case Gtk::Orientation::VERTICAL  : widget.set_valign(align); break;
         default: std::abort();
     }
 }
@@ -66,8 +66,8 @@ static void set_align(Gtk::Widget &widget, Gtk::Orientation const orientation,
 [[nodiscard]] static auto to_align(PackType const pack_type)
 {
     switch (pack_type) {
-        case PackType::start: return Gtk::ALIGN_START;
-        case PackType::end  : return Gtk::ALIGN_END  ;
+        case PackType::start: return Gtk::Align::START;
+        case PackType::end  : return Gtk::Align::END  ;
         default: std::abort();
     }
 }
@@ -75,7 +75,7 @@ static void set_align(Gtk::Widget &widget, Gtk::Orientation const orientation,
 static void set_fill(Gtk::Widget &widget, Gtk::Orientation const orientation,
                      bool const fill, PackType const pack_type)
 {
-    auto const align = fill ? Gtk::ALIGN_FILL : to_align(pack_type);
+    auto const align = fill ? Gtk::Align::FILL : to_align(pack_type);
     set_align(widget, orientation, align);
 }
 
@@ -83,11 +83,11 @@ static void set_padding(Gtk::Widget &widget, Gtk::Orientation const orientation,
                         int const margin_start, int const margin_end)
 {
     switch (orientation) {
-        case Gtk::ORIENTATION_HORIZONTAL:
+        case Gtk::Orientation::HORIZONTAL:
             widget.set_margin_start(widget.get_margin_start() + margin_start);
             widget.set_margin_end  (widget.get_margin_end  () + margin_end  );
             break;
-        case Gtk::ORIENTATION_VERTICAL:
+        case Gtk::Orientation::VERTICAL:
             widget.set_margin_top   (widget.get_margin_top   () + margin_start);
             widget.set_margin_bottom(widget.get_margin_bottom() + margin_end  );
             break;

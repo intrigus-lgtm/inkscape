@@ -123,7 +123,7 @@
 using Inkscape::IO::Resource::UIS;
 
 // This is a bit confusing as there are two ways to handle command line arguments and files
-// depending on if the Gio::APPLICATION_HANDLES_OPEN and/or Gio::APPLICATION_HANDLES_COMMAND_LINE
+// depending on if the Gio::Application::Flags::HANDLES_OPEN and/or Gio::Application::Flags::HANDLES_COMMAND_LINE
 // flags are set. If the open flag is set and the command line not, the all the remainng arguments
 // after calling on_handle_local_options() are assumed to be filenames.
 
@@ -592,9 +592,9 @@ InkscapeApplication::_start_main_option_section(const Glib::ustring& section_nam
     auto *gapp = gio_app();
 
     if (section_name.empty()) {
-        gapp->add_main_option_entry(Gio::Application::OPTION_TYPE_BOOL, Glib::ustring("\b\b  "));
+        gapp->add_main_option_entry(Gio::Application::OptionType::BOOL, Glib::ustring("\b\b  "));
     } else {
-        gapp->add_main_option_entry(Gio::Application::OPTION_TYPE_BOOL, Glib::ustring("\b\b  \n") + section_name + ":");
+        gapp->add_main_option_entry(Gio::Application::OptionType::BOOL, Glib::ustring("\b\b  \n") + section_name + ":");
     }
 }
 
@@ -609,8 +609,8 @@ InkscapeApplication::InkscapeApplication()
     using T = Gio::Application;
 
     auto app_id = Glib::ustring("org.inkscape.Inkscape");
-    auto flags = Gio::APPLICATION_HANDLES_OPEN | // Use default file opening.
-                 Gio::APPLICATION_CAN_OVERRIDE_APP_ID;
+    auto flags = Gio::Application::Flags::HANDLES_OPEN | // Use default file opening.
+                 Gio::Application::Flags::CAN_OVERRIDE_APP_ID;
     auto non_unique = false;
 
     // Allow an independent instance of Inkscape to run. Will have matching DBus name and paths
@@ -618,7 +618,7 @@ InkscapeApplication::InkscapeApplication()
     // If this flag isn't set, any new instance of Inkscape will be merged with the already running
     // instance of Inkscape before on_open() or on_activate() is called.
     if (Glib::getenv("INKSCAPE_APP_ID_TAG") != "") {
-        flags |= Gio::APPLICATION_CAN_OVERRIDE_APP_ID;
+        flags |= Gio::Application::Flags::CAN_OVERRIDE_APP_ID;
         app_id += "." + Glib::getenv("INKSCAPE_APP_ID_TAG");
         if (!Gio::Application::id_is_valid(app_id)) {
             std::cerr << "InkscapeApplication: invalid application id: " << app_id.raw() << std::endl;
@@ -699,7 +699,7 @@ InkscapeApplication::InkscapeApplication()
     // ====================== Command Line ======================
 
     // Will automatically handle character conversions.
-    // Note: OPTION_TYPE_FILENAME => std::string, OPTION_TYPE_STRING => Glib::ustring.
+    // Note: OptionType::FILENAME => std::string, OptionType::STRING => Glib::ustring.
 
 #if GLIBMM_CHECK_VERSION(2,56,0)
     // Additional informational strings for --help output
@@ -716,89 +716,89 @@ InkscapeApplication::InkscapeApplication()
 
     // clang-format off
     // General
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "version",                 'V', N_("Print Inkscape version"),                                                  "");
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "debug-info",             '\0', N_("Print debugging information"),                                                        "");
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "system-data-directory",  '\0', N_("Print system data directory"),                                             "");
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "user-data-directory",    '\0', N_("Print user data directory"),                                               "");
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "list-input-types",       '\0', N_("List all available input file extensions"),                                               "");
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "app-id-tag",             '\0', N_("Create a unique instance of Inkscape with the application ID 'org.inkscape.Inkscape.TAG'"), "");
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "version",                 'V', N_("Print Inkscape version"),                                                  "");
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "debug-info",             '\0', N_("Print debugging information"),                                                        "");
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "system-data-directory",  '\0', N_("Print system data directory"),                                             "");
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "user-data-directory",    '\0', N_("Print user data directory"),                                               "");
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "list-input-types",       '\0', N_("List all available input file extensions"),                                               "");
+    gapp->add_main_option_entry(T::OptionType::STRING,   "app-id-tag",             '\0', N_("Create a unique instance of Inkscape with the application ID 'org.inkscape.Inkscape.TAG'"), "");
 
     // Open/Import
     _start_main_option_section(_("File import"));
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "pipe",                    'p', N_("Read input file from standard input (stdin)"),                             "");
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "pages",                   'n', N_("Page numbers to import from multi-page document, i.e. PDF"), N_("PAGE[,PAGE]"));
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "pdf-poppler",            '\0', N_("Use poppler when importing via commandline"),                              "");
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "pdf-font-strategy",      '\0', N_("How fonts are parsed in the internal PDF importer [draw-missing|draw-all|delete-missing|delete-all|substitute|keep]"), N_("STRATEGY")); // xSP
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "convert-dpi-method",     '\0', N_("Method used to convert pre-0.92 document dpi, if needed: [none|scale-viewbox|scale-document]"), N_("METHOD"));
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "no-convert-text-baseline-spacing", '\0', N_("Do not fix pre-0.92 document's text baseline spacing on opening"), "");
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "pipe",                    'p', N_("Read input file from standard input (stdin)"),                             "");
+    gapp->add_main_option_entry(T::OptionType::STRING,   "pages",                   'n', N_("Page numbers to import from multi-page document, i.e. PDF"), N_("PAGE[,PAGE]"));
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "pdf-poppler",            '\0', N_("Use poppler when importing via commandline"),                              "");
+    gapp->add_main_option_entry(T::OptionType::STRING,   "pdf-font-strategy",      '\0', N_("How fonts are parsed in the internal PDF importer [draw-missing|draw-all|delete-missing|delete-all|substitute|keep]"), N_("STRATEGY")); // xSP
+    gapp->add_main_option_entry(T::OptionType::STRING,   "convert-dpi-method",     '\0', N_("Method used to convert pre-0.92 document dpi, if needed: [none|scale-viewbox|scale-document]"), N_("METHOD"));
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "no-convert-text-baseline-spacing", '\0', N_("Do not fix pre-0.92 document's text baseline spacing on opening"), "");
 
     // Export - File and File Type
     _start_main_option_section(_("File export"));
-    gapp->add_main_option_entry(T::OPTION_TYPE_FILENAME, "export-filename",        'o', N_("Output file name (defaults to input filename; file type is guessed from extension if present; use '-' to write to stdout)"), N_("FILENAME"));
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "export-overwrite",      '\0', N_("Overwrite input file (otherwise add '_out' suffix if type doesn't change)"), "");
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "export-type",           '\0', N_("File type(s) to export: [svg,png,ps,eps,pdf,emf,wmf,xaml]"), N_("TYPE[,TYPE]*"));
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "export-extension",      '\0', N_("Extension ID to use for exporting"),                         N_("EXTENSION-ID"));
+    gapp->add_main_option_entry(T::OptionType::FILENAME, "export-filename",        'o', N_("Output file name (defaults to input filename; file type is guessed from extension if present; use '-' to write to stdout)"), N_("FILENAME"));
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "export-overwrite",      '\0', N_("Overwrite input file (otherwise add '_out' suffix if type doesn't change)"), "");
+    gapp->add_main_option_entry(T::OptionType::STRING,   "export-type",           '\0', N_("File type(s) to export: [svg,png,ps,eps,pdf,emf,wmf,xaml]"), N_("TYPE[,TYPE]*"));
+    gapp->add_main_option_entry(T::OptionType::STRING,   "export-extension",      '\0', N_("Extension ID to use for exporting"),                         N_("EXTENSION-ID"));
 
     // Export - Geometry
     _start_main_option_section(_("Export geometry"));                                                                                                                        // B = PNG, S = SVG, P = PS/EPS/PDF
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "export-area-page",       'C', N_("Area to export is page"),                                                   ""); // BSP
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "export-area-drawing",    'D', N_("Area to export is whole drawing (ignoring page size)"),                     ""); // BSP
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "export-area",            'a', N_("Area to export in SVG user units"),                          N_("x0:y0:x1:y1")); // BSP
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "export-area-snap",      '\0', N_("Snap the bitmap export area outwards to the nearest integer values"),       ""); // Bxx
-    gapp->add_main_option_entry(T::OPTION_TYPE_DOUBLE,   "export-dpi",             'd', N_("Resolution for bitmaps and rasterized filters; default is 96"),      N_("DPI")); // BxP
-    gapp->add_main_option_entry(T::OPTION_TYPE_INT,      "export-width",           'w', N_("Bitmap width in pixels (overrides --export-dpi)"),                 N_("WIDTH")); // Bxx
-    gapp->add_main_option_entry(T::OPTION_TYPE_INT,      "export-height",          'h', N_("Bitmap height in pixels (overrides --export-dpi)"),               N_("HEIGHT")); // Bxx
-    gapp->add_main_option_entry(T::OPTION_TYPE_INT,      "export-margin",         '\0', N_("Margin around export area: units of page size for SVG, mm for PS/PDF"), N_("MARGIN")); // xSP
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "export-area-page",       'C', N_("Area to export is page"),                                                   ""); // BSP
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "export-area-drawing",    'D', N_("Area to export is whole drawing (ignoring page size)"),                     ""); // BSP
+    gapp->add_main_option_entry(T::OptionType::STRING,   "export-area",            'a', N_("Area to export in SVG user units"),                          N_("x0:y0:x1:y1")); // BSP
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "export-area-snap",      '\0', N_("Snap the bitmap export area outwards to the nearest integer values"),       ""); // Bxx
+    gapp->add_main_option_entry(T::OptionType::DOUBLE,   "export-dpi",             'd', N_("Resolution for bitmaps and rasterized filters; default is 96"),      N_("DPI")); // BxP
+    gapp->add_main_option_entry(T::OptionType::INT,      "export-width",           'w', N_("Bitmap width in pixels (overrides --export-dpi)"),                 N_("WIDTH")); // Bxx
+    gapp->add_main_option_entry(T::OptionType::INT,      "export-height",          'h', N_("Bitmap height in pixels (overrides --export-dpi)"),               N_("HEIGHT")); // Bxx
+    gapp->add_main_option_entry(T::OptionType::INT,      "export-margin",         '\0', N_("Margin around export area: units of page size for SVG, mm for PS/PDF"), N_("MARGIN")); // xSP
 
     // Export - Options
     _start_main_option_section(_("Export options"));
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "export-page",           '\0', N_("Page number to export"), N_("all|n[,a-b]"));
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "export-id",              'i', N_("ID(s) of object(s) to export"),                   N_("OBJECT-ID[;OBJECT-ID]*")); // BSP
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "export-id-only",         'j', N_("Hide all objects except object with ID selected by export-id"),             ""); // BSx
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "export-plain-svg",       'l', N_("Remove Inkscape-specific SVG attributes/properties"),                       ""); // xSx
-    gapp->add_main_option_entry(T::OPTION_TYPE_INT,      "export-ps-level",       '\0', N_("Postscript level (2 or 3); default is 3"),                         N_("LEVEL")); // xxP
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "export-pdf-version",    '\0', N_("PDF version (1.4 or 1.5); default is 1.5"),                      N_("VERSION")); // xxP
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "export-text-to-path",    'T', N_("Convert text to paths (PS/EPS/PDF/SVG)"),                                   ""); // xxP
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "export-latex",          '\0', N_("Export text separately to LaTeX file (PS/EPS/PDF)"),                        ""); // xxP
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "export-ignore-filters", '\0', N_("Render objects without filters instead of rasterizing (PS/EPS/PDF)"),       ""); // xxP
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "export-use-hints",       't', N_("Use stored filename and DPI hints when exporting object selected by --export-id"), ""); // Bxx
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "export-background",      'b', N_("Background color for exported bitmaps (any SVG color string)"),         N_("COLOR")); // Bxx
+    gapp->add_main_option_entry(T::OptionType::STRING,   "export-page",           '\0', N_("Page number to export"), N_("all|n[,a-b]"));
+    gapp->add_main_option_entry(T::OptionType::STRING,   "export-id",              'i', N_("ID(s) of object(s) to export"),                   N_("OBJECT-ID[;OBJECT-ID]*")); // BSP
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "export-id-only",         'j', N_("Hide all objects except object with ID selected by export-id"),             ""); // BSx
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "export-plain-svg",       'l', N_("Remove Inkscape-specific SVG attributes/properties"),                       ""); // xSx
+    gapp->add_main_option_entry(T::OptionType::INT,      "export-ps-level",       '\0', N_("Postscript level (2 or 3); default is 3"),                         N_("LEVEL")); // xxP
+    gapp->add_main_option_entry(T::OptionType::STRING,   "export-pdf-version",    '\0', N_("PDF version (1.4 or 1.5); default is 1.5"),                      N_("VERSION")); // xxP
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "export-text-to-path",    'T', N_("Convert text to paths (PS/EPS/PDF/SVG)"),                                   ""); // xxP
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "export-latex",          '\0', N_("Export text separately to LaTeX file (PS/EPS/PDF)"),                        ""); // xxP
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "export-ignore-filters", '\0', N_("Render objects without filters instead of rasterizing (PS/EPS/PDF)"),       ""); // xxP
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "export-use-hints",       't', N_("Use stored filename and DPI hints when exporting object selected by --export-id"), ""); // Bxx
+    gapp->add_main_option_entry(T::OptionType::STRING,   "export-background",      'b', N_("Background color for exported bitmaps (any SVG color string)"),         N_("COLOR")); // Bxx
     // FIXME: Opacity should really be a DOUBLE, but an upstream bug means 0.0 is detected as NULL
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "export-background-opacity", 'y', N_("Background opacity for exported bitmaps (0.0 to 1.0, or 1 to 255)"), N_("VALUE")); // Bxx
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "export-png-color-mode", '\0', N_("Color mode (bit depth and color type) for exported bitmaps (Gray_1/Gray_2/Gray_4/Gray_8/Gray_16/RGB_8/RGB_16/GrayAlpha_8/GrayAlpha_16/RGBA_8/RGBA_16)"), N_("COLOR-MODE")); // Bxx
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,      "export-png-use-dithering", '\0', N_("Force dithering or disables it"), "false|true"); // Bxx
+    gapp->add_main_option_entry(T::OptionType::STRING,   "export-background-opacity", 'y', N_("Background opacity for exported bitmaps (0.0 to 1.0, or 1 to 255)"), N_("VALUE")); // Bxx
+    gapp->add_main_option_entry(T::OptionType::STRING,   "export-png-color-mode", '\0', N_("Color mode (bit depth and color type) for exported bitmaps (Gray_1/Gray_2/Gray_4/Gray_8/Gray_16/RGB_8/RGB_16/GrayAlpha_8/GrayAlpha_16/RGBA_8/RGBA_16)"), N_("COLOR-MODE")); // Bxx
+    gapp->add_main_option_entry(T::OptionType::STRING,      "export-png-use-dithering", '\0', N_("Force dithering or disables it"), "false|true"); // Bxx
     // FIXME: Compression should really be an INT, but an upstream bug means 0 is detected as NULL
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "export-png-compression", '\0', N_("Compression level for PNG export (0 to 9); default is 6"), N_("LEVEL"));
+    gapp->add_main_option_entry(T::OptionType::STRING,   "export-png-compression", '\0', N_("Compression level for PNG export (0 to 9); default is 6"), N_("LEVEL"));
     // FIXME: Antialias should really be an INT, but an upstream bug means 0 is detected as NULL
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "export-png-antialias",   '\0', N_("Antialias level for PNG export (0 to 3); default is 2"),   N_("LEVEL"));
+    gapp->add_main_option_entry(T::OptionType::STRING,   "export-png-antialias",   '\0', N_("Antialias level for PNG export (0 to 3); default is 2"),   N_("LEVEL"));
 
     // Query - Geometry
     _start_main_option_section(_("Query object/document geometry"));
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "query-id",               'I', N_("ID(s) of object(s) to be queried"),              N_("OBJECT-ID[,OBJECT-ID]*"));
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "query-all",              'S', N_("Print bounding boxes of all objects"),                                     "");
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "query-x",                'X', N_("X coordinate of drawing or object (if specified by --query-id)"),          "");
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "query-y",                'Y', N_("Y coordinate of drawing or object (if specified by --query-id)"),          "");
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "query-width",            'W', N_("Width of drawing or object (if specified by --query-id)"),                 "");
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "query-height",           'H', N_("Height of drawing or object (if specified by --query-id)"),                "");
+    gapp->add_main_option_entry(T::OptionType::STRING,   "query-id",               'I', N_("ID(s) of object(s) to be queried"),              N_("OBJECT-ID[,OBJECT-ID]*"));
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "query-all",              'S', N_("Print bounding boxes of all objects"),                                     "");
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "query-x",                'X', N_("X coordinate of drawing or object (if specified by --query-id)"),          "");
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "query-y",                'Y', N_("Y coordinate of drawing or object (if specified by --query-id)"),          "");
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "query-width",            'W', N_("Width of drawing or object (if specified by --query-id)"),                 "");
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "query-height",           'H', N_("Height of drawing or object (if specified by --query-id)"),                "");
 
     // Processing
     _start_main_option_section(_("Advanced file processing"));
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "vacuum-defs",           '\0', N_("Remove unused definitions from the <defs> section(s) of document"),        "");
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "select",                '\0', N_("Select objects: comma-separated list of IDs"),   N_("OBJECT-ID[,OBJECT-ID]*"));
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "vacuum-defs",           '\0', N_("Remove unused definitions from the <defs> section(s) of document"),        "");
+    gapp->add_main_option_entry(T::OptionType::STRING,   "select",                '\0', N_("Select objects: comma-separated list of IDs"),   N_("OBJECT-ID[,OBJECT-ID]*"));
 
     // Actions
     _start_main_option_section();
-    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "actions",                'a', N_("List of actions (with optional arguments) to execute"),     N_("ACTION(:ARG)[;ACTION(:ARG)]*"));
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "action-list",           '\0', N_("List all available actions"),                                               "");
-    gapp->add_main_option_entry(T::OPTION_TYPE_FILENAME, "actions-file",          '\0', N_("Use a file to input actions list"),                             N_("FILENAME"));
+    gapp->add_main_option_entry(T::OptionType::STRING,   "actions",                'a', N_("List of actions (with optional arguments) to execute"),     N_("ACTION(:ARG)[;ACTION(:ARG)]*"));
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "action-list",           '\0', N_("List all available actions"),                                               "");
+    gapp->add_main_option_entry(T::OptionType::FILENAME, "actions-file",          '\0', N_("Use a file to input actions list"),                             N_("FILENAME"));
 
     // Interface
     _start_main_option_section(_("Interface"));
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "with-gui",               'g', N_("With graphical user interface (required by some actions)"),                 "");
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "batch-process",         '\0', N_("Close GUI after executing all actions"),                                    "");
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "with-gui",               'g', N_("With graphical user interface (required by some actions)"),                 "");
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "batch-process",         '\0', N_("Close GUI after executing all actions"),                                    "");
     _start_main_option_section();
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "shell",                 '\0', N_("Start Inkscape in interactive shell mode"),                                 "");
-    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "active-window",          'q', N_("Use active window from commandline"),                                       "");
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "shell",                 '\0', N_("Start Inkscape in interactive shell mode"),                                 "");
+    gapp->add_main_option_entry(T::OptionType::BOOL,     "active-window",          'q', N_("Use active window from commandline"),                                       "");
     // clang-format on
 
     gapp->signal_handle_local_options().connect(sigc::mem_fun(*this, &InkscapeApplication::on_handle_local_options));
@@ -1171,7 +1171,7 @@ InkscapeApplication::parse_actions(const Glib::ustring& input, action_vector_t& 
     std::vector<Glib::ustring> tokens = Glib::Regex::split_simple("\\s*;\\s*", input);
     for (auto token : tokens) {
         // Note: split into 2 tokens max ("param:value"); allows value to contain colon (e.g. abs. paths on Windows)
-        std::vector<Glib::ustring> tokens2 = re_colon->split(token, 0,  static_cast<Glib::RegexMatchFlags>(0), 2);
+        std::vector<Glib::ustring> tokens2 = re_colon->split(token, 0,  static_cast<Glib::Regex::MatchFlags>(0), 2);
         Glib::ustring action;
         Glib::ustring value;
         if (tokens2.size() > 0) {
@@ -1393,7 +1393,7 @@ void InkscapeApplication::redirect_output()
     auto const tmpfile = get_active_desktop_commands_location();
 
     for (int counter = 0; ; counter++) {
-        if (Glib::file_test(tmpfile, Glib::FILE_TEST_EXISTS)) {
+        if (Glib::file_test(tmpfile, Glib::FileTest::EXISTS)) {
             break;
         } else if (counter >= 300) { // 30 seconds exit
             std::cerr << "couldn't process response. File not found" << std::endl;

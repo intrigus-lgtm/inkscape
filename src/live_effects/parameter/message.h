@@ -24,8 +24,8 @@ public:
                Effect* effect,
                const gchar * default_message = "Default message",
                Glib::ustring  legend = "Use Label",
-               Gtk::Align halign = Gtk::ALIGN_START,
-               Gtk::Align valign = Gtk::ALIGN_CENTER,
+               Gtk::Align halign = Gtk::Align::START,
+               Gtk::Align valign = Gtk::Align::CENTER,
                double marginstart = 6,
                double marginend = 6);
     ~MessageParam() override = default;

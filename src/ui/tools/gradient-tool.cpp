@@ -437,7 +437,7 @@ bool GradientTool::root_handler(CanvasEvent const &event)
                 // remember clicked item, disregarding groups, honoring Alt; do nothing with Crtl to
                 // enable Ctrl+doubleclick of exactly the selected item(s)
                 if (!(event.modifiers & GDK_CONTROL_MASK)) {
-                    item_to_select = sp_event_context_find_item(_desktop, event.pos, event.modifiers & GDK_MOD1_MASK, true);
+                    item_to_select = sp_event_context_find_item(_desktop, event.pos, event.modifiers & GDK_ALT_MASK, true);
                 }
 
                 if (!selection->isEmpty()) {
@@ -503,7 +503,7 @@ bool GradientTool::root_handler(CanvasEvent const &event)
 
             auto item = is_over_curve(event.pos);
 
-            if ((event.modifiers & GDK_CONTROL_MASK) && (event.modifiers & GDK_MOD1_MASK)) {
+            if ((event.modifiers & GDK_CONTROL_MASK) && (event.modifiers & GDK_ALT_MASK)) {
                 if (item) {
                     add_stop_near_point(item, mousepoint_doc);
                     ret = true;

@@ -294,7 +294,7 @@ void ColorWheelHSL::update_ring_source()
     auto const cx = width  / 2.0;
     auto const cy = height / 2.0;
 
-    auto const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::FORMAT_RGB24, width);
+    auto const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::Surface::Format::RGB24, width);
     _buffer_ring.resize(height * stride / 4);
 
     auto const &[r_min, r_max] = get_radii();
@@ -323,7 +323,7 @@ void ColorWheelHSL::update_ring_source()
 
     auto const data = reinterpret_cast<unsigned char *>(_buffer_ring.data());
     _source_ring = Cairo::ImageSurface::create(data,
-                                               Cairo::FORMAT_RGB24,
+                                               Cairo::Surface::Format::RGB24,
                                                width, height, stride);
 }
 
@@ -353,7 +353,7 @@ ColorWheelHSL::update_triangle_source()
     constexpr int padding = 3; // Avoid edge artifacts.
 
     auto const &width = _cache_width.value(), &height = _cache_height.value();
-    auto const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::FORMAT_RGB24, width);
+    auto const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::Surface::Format::RGB24, width);
     _buffer_triangle.resize(height * stride / 4);
 
     for (int y = 0; y < height; ++y) {
@@ -407,7 +407,7 @@ ColorWheelHSL::update_triangle_source()
 
     auto const data = reinterpret_cast<unsigned char *>(_buffer_triangle.data());
     _source_triangle = Cairo::ImageSurface::create(data,
-                                                   Cairo::FORMAT_RGB24,
+                                                   Cairo::Surface::Format::RGB24,
                                                    width, height, stride);
 
     return {p0, p1, p2};
@@ -505,7 +505,7 @@ bool ColorWheelHSL::on_drawing_area_focus(Gtk::DirectionType const direction)
     // In forward direction, focus passes from no focus to ring focus to triangle
     // focus to no focus.
     if (!drawing_area_has_focus()) {
-        _focus_on_ring = (direction == Gtk::DIR_TAB_FORWARD);
+        _focus_on_ring = (direction == Gtk::DirectionType::TAB_FORWARD);
         focus_drawing_area();
         queue_draw();
         return true;
@@ -515,7 +515,7 @@ bool ColorWheelHSL::on_drawing_area_focus(Gtk::DirectionType const direction)
     bool keep_focus = true;
 
     switch (direction) {
-        case Gtk::DIR_TAB_BACKWARD:
+        case Gtk::DirectionType::TAB_BACKWARD:
             if (!_focus_on_ring) {
                 _focus_on_ring = true;
             } else {
@@ -523,7 +523,7 @@ bool ColorWheelHSL::on_drawing_area_focus(Gtk::DirectionType const direction)
             }
             break;
 
-        case Gtk::DIR_TAB_FORWARD:
+        case Gtk::DirectionType::TAB_FORWARD:
             if (_focus_on_ring) {
                 _focus_on_ring = false;
             } else {
@@ -627,7 +627,7 @@ void ColorWheelHSL::_update_ring_color(double x, double y)
     }
 }
 
-Gtk::EventSequenceState ColorWheelHSL::on_click_pressed(Gtk::GestureMultiPress const & /*click*/,
+Gtk::EventSequenceState ColorWheelHSL::on_click_pressed(Gtk::GestureClick const & /*click*/,
                                                         int /*n_press*/, double const x, double const y)
 {
     if (_is_in_ring(x, y) ) {
@@ -636,25 +636,25 @@ Gtk::EventSequenceState ColorWheelHSL::on_click_pressed(Gtk::GestureMultiPress c
         focus_drawing_area();
         _focus_on_ring = true;
         _update_ring_color(x, y);
-        return Gtk::EVENT_SEQUENCE_CLAIMED;
+        return Gtk::EventSequenceState::CLAIMED;
     } else if (_is_in_triangle(x, y)) {
         _adjusting = true;
         _mode = DragMode::SATURATION_VALUE;
         focus_drawing_area();
         _focus_on_ring = false;
         _set_from_xy(x, y);
-        return Gtk::EVENT_SEQUENCE_CLAIMED;
+        return Gtk::EventSequenceState::CLAIMED;
     }
 
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
-Gtk::EventSequenceState ColorWheelHSL::on_click_released(Gtk::GestureMultiPress const & /*click*/,
+Gtk::EventSequenceState ColorWheelHSL::on_click_released(Gtk::GestureClick const & /*click*/,
                                                          int /*n_press*/, double /*x*/, double /*y*/)
 {
     _mode = DragMode::NONE;
     _adjusting = false;
-    return Gtk::EVENT_SEQUENCE_CLAIMED;
+    return Gtk::EventSequenceState::CLAIMED;
 }
 
 void ColorWheelHSL::on_motion(GtkEventControllerMotion const * /*motion*/,
@@ -1098,7 +1098,7 @@ void ColorWheelHSLuv::_updatePolygon()
     auto const bounding_max = bounding_rect.max().ceil();
     auto const bounding_min = bounding_rect.min().floor();
 
-    int const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::FORMAT_RGB24, _cache_width);
+    int const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::Surface::Format::RGB24, _cache_width);
 
     _buffer_polygon.resize(_cache_height * stride / 4);
     std::vector<guint32> buffer_line(stride / 4);
@@ -1130,10 +1130,10 @@ void ColorWheelHSLuv::_updatePolygon()
     }
 
     _surface_polygon = ::Cairo::ImageSurface::create(reinterpret_cast<unsigned char *>(_buffer_polygon.data()),
-                                                     Cairo::FORMAT_RGB24, _cache_width, _cache_height, stride);
+                                                     Cairo::Surface::Format::RGB24, _cache_width, _cache_height, stride);
 }
 
-Gtk::EventSequenceState ColorWheelHSLuv::on_click_pressed(Gtk::GestureMultiPress const & /*click*/,
+Gtk::EventSequenceState ColorWheelHSLuv::on_click_pressed(Gtk::GestureClick const & /*click*/,
                                                           int /*n_press*/, double const x, double const y)
 {
     auto const event_pt = Geom::Point(x, y);
@@ -1145,17 +1145,17 @@ Gtk::EventSequenceState ColorWheelHSLuv::on_click_pressed(Gtk::GestureMultiPress
         _adjusting = true;
         focus_drawing_area();
         _setFromPoint(event_pt);
-        return Gtk::EVENT_SEQUENCE_CLAIMED;
+        return Gtk::EventSequenceState::CLAIMED;
     }
 
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
-Gtk::EventSequenceState ColorWheelHSLuv::on_click_released(Gtk::GestureMultiPress const & /*click*/,
+Gtk::EventSequenceState ColorWheelHSLuv::on_click_released(Gtk::GestureClick const & /*click*/,
                                                            int /*n_press*/, double /*x*/, double /*y*/)
 {
     _adjusting = false;
-    return Gtk::EVENT_SEQUENCE_CLAIMED;
+    return Gtk::EventSequenceState::CLAIMED;
 }
 
 void ColorWheelHSLuv::on_motion(GtkEventControllerMotion const * /*motion*/,

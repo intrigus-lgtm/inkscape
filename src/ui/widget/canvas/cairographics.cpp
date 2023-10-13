@@ -36,7 +36,7 @@ void CairoGraphics::recreate_store(Geom::IntPoint const &dims)
     auto surface_size = dims * scale_factor;
 
     auto make_surface = [&, this] {
-        auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, surface_size.x(), surface_size.y());
+        auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, surface_size.x(), surface_size.y());
         cairo_surface_set_device_scale(surface->cobj(), scale_factor, scale_factor); // No C++ API!
         return surface;
     };
@@ -53,7 +53,7 @@ void CairoGraphics::recreate_store(Geom::IntPoint const &dims)
         paint_background(stores.store(), pi, page, desk, cr);
     } else if (reuse_surface) {
         auto cr = Cairo::Context::create(store.surface);
-        cr->set_operator(Cairo::OPERATOR_CLEAR);
+        cr->set_operator(Cairo::Context::Operator::CLEAR);
         cr->paint();
     }
 
@@ -64,7 +64,7 @@ void CairoGraphics::recreate_store(Geom::IntPoint const &dims)
             store.outline_surface = make_surface();
         } else {
             auto cr = Cairo::Context::create(store.outline_surface);
-            cr->set_operator(Cairo::OPERATOR_CLEAR);
+            cr->set_operator(Cairo::Context::Operator::CLEAR);
             cr->paint();
         }
     }
@@ -80,7 +80,7 @@ void CairoGraphics::shift_store(Fragment const &dest)
     assert(reuse_rect); // Should not be called if there is no overlap.
 
     auto make_surface = [&, this] {
-        auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, surface_size.x(), surface_size.y());
+        auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, surface_size.x(), surface_size.y());
         cairo_surface_set_device_scale(surface->cobj(), scale_factor, scale_factor); // No C++ API!
         return surface;
     };
@@ -101,7 +101,7 @@ void CairoGraphics::shift_store(Fragment const &dest)
         if (background_in_stores) {
             paint_background(dest, pi, page, desk, cr);
         } else { // otherwise, reuse_surface is true
-            cr->set_operator(Cairo::OPERATOR_CLEAR);
+            cr->set_operator(Cairo::Context::Operator::CLEAR);
             cr->paint();
         }
         cr->restore();
@@ -111,7 +111,7 @@ void CairoGraphics::shift_store(Fragment const &dest)
     cr->rectangle(reuse_rect->left() - dest.rect.left(), reuse_rect->top() - dest.rect.top(), reuse_rect->width(), reuse_rect->height());
     cr->clip();
     cr->set_source(store.surface, -shift.x(), -shift.y());
-    cr->set_operator(Cairo::OPERATOR_SOURCE);
+    cr->set_operator(Cairo::Context::Operator::SOURCE);
     cr->paint();
 
     // Set the result as the new store surface.
@@ -126,14 +126,14 @@ void CairoGraphics::shift_store(Fragment const &dest)
         // Background.
         auto cr = Cairo::Context::create(new_outline_surface);
         if (reuse_outline_surface) {
-            cr->set_operator(Cairo::OPERATOR_CLEAR);
+            cr->set_operator(Cairo::Context::Operator::CLEAR);
             cr->paint();
         }
         // Copy.
         cr->rectangle(reuse_rect->left() - dest.rect.left(), reuse_rect->top() - dest.rect.top(), reuse_rect->width(), reuse_rect->height());
         cr->clip();
         cr->set_source(store.outline_surface, -shift.x(), -shift.y());
-        cr->set_operator(Cairo::OPERATOR_SOURCE);
+        cr->set_operator(Cairo::Context::Operator::SOURCE);
         cr->paint();
         // Set.
         snapshot.outline_surface = std::move(store.outline_surface);
@@ -152,7 +152,7 @@ void CairoGraphics::fast_snapshot_combine()
                            Cairo::RefPtr<Cairo::ImageSurface> const &to) {
         auto cr = Cairo::Context::create(to);
         cr->set_antialias(Cairo::ANTIALIAS_NONE);
-        cr->set_operator(Cairo::OPERATOR_SOURCE);
+        cr->set_operator(Cairo::Context::Operator::SOURCE);
         cr->translate(-stores.snapshot().rect.left(), -stores.snapshot().rect.top());
         cr->transform(geom_to_cairo(stores.store().affine.inverse() * stores.snapshot().affine));
         cr->translate(-1.0, -1.0);
@@ -160,7 +160,7 @@ void CairoGraphics::fast_snapshot_combine()
         cr->translate(1.0, 1.0);
         cr->clip();
         cr->set_source(from, stores.store().rect.left(), stores.store().rect.top());
-        Cairo::SurfacePattern(cr->get_source()->cobj()).set_filter(Cairo::FILTER_FAST);
+        Cairo::SurfacePattern(cr->get_source()->cobj()).set_filter(Cairo::SurfacePattern::Filter::FAST);
         cr->paint();
     };
 
@@ -174,7 +174,7 @@ void CairoGraphics::snapshot_combine(Fragment const &dest)
     auto content_size = dest.rect.dimensions() * scale_factor;
 
     auto make_surface = [&] {
-        auto result = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, content_size.x(), content_size.y());
+        auto result = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, content_size.x(), content_size.y());
         cairo_surface_set_device_scale(result->cobj(), scale_factor, scale_factor); // No C++ API!
         return result;
     };
@@ -188,13 +188,13 @@ void CairoGraphics::snapshot_combine(Fragment const &dest)
                            Cairo::RefPtr<Cairo::ImageSurface> const &to, bool background) {
         auto cr = Cairo::Context::create(to);
         cr->set_antialias(Cairo::ANTIALIAS_NONE);
-        cr->set_operator(Cairo::OPERATOR_SOURCE);
+        cr->set_operator(Cairo::Context::Operator::SOURCE);
         if (background) paint_background(dest, pi, page, desk, cr);
         cr->translate(-dest.rect.left(), -dest.rect.top());
         cr->transform(geom_to_cairo(stores.snapshot().affine.inverse() * dest.affine));
         cr->rectangle(stores.snapshot().rect.left(), stores.snapshot().rect.top(), stores.snapshot().rect.width(), stores.snapshot().rect.height());
         cr->set_source(snapshot_from, stores.snapshot().rect.left(), stores.snapshot().rect.top());
-        Cairo::SurfacePattern(cr->get_source()->cobj()).set_filter(Cairo::FILTER_FAST);
+        Cairo::SurfacePattern(cr->get_source()->cobj()).set_filter(Cairo::SurfacePattern::Filter::FAST);
         cr->fill();
         cr->transform(geom_to_cairo(stores.store().affine.inverse() * stores.snapshot().affine));
         cr->translate(-1.0, -1.0);
@@ -202,7 +202,7 @@ void CairoGraphics::snapshot_combine(Fragment const &dest)
         cr->translate(1.0, 1.0);
         cr->clip();
         cr->set_source(store_from, stores.store().rect.left(), stores.store().rect.top());
-        Cairo::SurfacePattern(cr->get_source()->cobj()).set_filter(Cairo::FILTER_FAST);
+        Cairo::SurfacePattern(cr->get_source()->cobj()).set_filter(Cairo::SurfacePattern::Filter::FAST);
         cr->paint();
     };
 
@@ -215,7 +215,7 @@ void CairoGraphics::snapshot_combine(Fragment const &dest)
 Cairo::RefPtr<Cairo::ImageSurface> CairoGraphics::request_tile_surface(Geom::IntRect const &rect, bool /*nogl*/)
 {
     // Create temporary surface, isolated from store.
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, rect.width() *  scale_factor, rect.height() *  scale_factor);
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, rect.width() *  scale_factor, rect.height() *  scale_factor);
     cairo_surface_set_device_scale(surface->cobj(), scale_factor, scale_factor);
     return surface;
 }
@@ -226,14 +226,14 @@ void CairoGraphics::draw_tile(Fragment const &fragment, Cairo::RefPtr<Cairo::Ima
     auto diff = fragment.rect.min() - stores.store().rect.min();
 
     auto cr = Cairo::Context::create(store.surface);
-    cr->set_operator(Cairo::OPERATOR_SOURCE);
+    cr->set_operator(Cairo::Context::Operator::SOURCE);
     cr->set_source(surface, diff.x(), diff.y());
     cr->rectangle(diff.x(), diff.y(), fragment.rect.width(), fragment.rect.height());
     cr->fill();
 
     if (outlines_enabled) {
         auto cr = Cairo::Context::create(store.outline_surface);
-        cr->set_operator(Cairo::OPERATOR_SOURCE);
+        cr->set_operator(Cairo::Context::Operator::SOURCE);
         cr->set_source(outline_surface, diff.x(), diff.y());
         cr->rectangle(diff.x(), diff.y(), fragment.rect.width(), fragment.rect.height());
         cr->fill();
@@ -271,7 +271,7 @@ void CairoGraphics::paint_widget(Fragment const &view, PaintArgs const &a, Cairo
         if (!(Geom::Parallelogram(s.rect) * s.affine.inverse() * view.affine).contains(view.rect)) {
             if (prefs.debug_framecheck) f = FrameCheck::Event("background", 2);
             cr->save();
-            cr->set_fill_rule(Cairo::FILL_RULE_EVEN_ODD);
+            cr->set_fill_rule(Cairo::Context::FillRule::EVEN_ODD);
             cr->rectangle(0, 0, view.rect.width(), view.rect.height());
             cr->translate(-view.rect.left(), -view.rect.top());
             cr->transform(geom_to_cairo(s.affine.inverse() * view.affine));
@@ -294,7 +294,7 @@ void CairoGraphics::paint_widget(Fragment const &view, PaintArgs const &a, Cairo
             cr->transform(geom_to_cairo(stores.store().affine.inverse() * view.affine)); // Almost always the identity.
             cr->rectangle(r.left(), r.top(), r.width(), r.height());
             cr->set_source(store, r.left(), r.top());
-            Cairo::SurfacePattern(cr->get_source()->cobj()).set_filter(Cairo::FILTER_FAST);
+            Cairo::SurfacePattern(cr->get_source()->cobj()).set_filter(Cairo::SurfacePattern::Filter::FAST);
             cr->fill();
             cr->restore();
         } else {
@@ -302,7 +302,7 @@ void CairoGraphics::paint_widget(Fragment const &view, PaintArgs const &a, Cairo
             if (prefs.debug_framecheck) f = FrameCheck::Event("composite", 1);
 
             cr->save();
-            cr->set_fill_rule(Cairo::FILL_RULE_EVEN_ODD);
+            cr->set_fill_rule(Cairo::Context::FillRule::EVEN_ODD);
             cr->rectangle(0, 0, view.rect.width(), view.rect.height());
             cr->translate(-view.rect.left(), -view.rect.top());
             cr->transform(geom_to_cairo(stores.store().affine.inverse() * view.affine));
@@ -313,11 +313,11 @@ void CairoGraphics::paint_widget(Fragment const &view, PaintArgs const &a, Cairo
             cr->rectangle(r.left(), r.top(), r.width(), r.height());
             cr->clip();
             cr->set_source(snapshot_store, r.left(), r.top());
-            Cairo::SurfacePattern(cr->get_source()->cobj()).set_filter(Cairo::FILTER_FAST);
+            Cairo::SurfacePattern(cr->get_source()->cobj()).set_filter(Cairo::SurfacePattern::Filter::FAST);
             cr->paint();
             if (prefs.debug_show_snapshot) {
                 cr->set_source_rgba(0, 0, 1, 0.2);
-                cr->set_operator(Cairo::OPERATOR_OVER);
+                cr->set_operator(Cairo::Context::Operator::OVER);
                 cr->paint();
             }
             cr->restore();
@@ -328,7 +328,7 @@ void CairoGraphics::paint_widget(Fragment const &view, PaintArgs const &a, Cairo
             cr->translate(-view.rect.left(), -view.rect.top());
             cr->transform(geom_to_cairo(stores.store().affine.inverse() * view.affine));
             cr->set_source(store, stores.store().rect.left(), stores.store().rect.top());
-            Cairo::SurfacePattern(cr->get_source()->cobj()).set_filter(Cairo::FILTER_FAST);
+            Cairo::SurfacePattern(cr->get_source()->cobj()).set_filter(Cairo::SurfacePattern::Filter::FAST);
             region_to_path(cr, stores.store().drawn);
             cr->fill();
             cr->restore();
@@ -342,7 +342,7 @@ void CairoGraphics::paint_widget(Fragment const &view, PaintArgs const &a, Cairo
         // Partially obscure drawing by painting semi-transparent white, then paint outline content.
         // Note: Unfortunately this also paints over the background, but this is unavoidable.
         cr->save();
-        cr->set_operator(Cairo::OPERATOR_OVER);
+        cr->set_operator(Cairo::Context::Operator::OVER);
         cr->set_source_rgb(1.0, 1.0, 1.0);
         cr->paint_with_alpha(outline_overlay_opacity);
         draw_store(store.outline_surface, snapshot.outline_surface);
@@ -358,7 +358,7 @@ void CairoGraphics::paint_widget(Fragment const &view, PaintArgs const &a, Cairo
         cr->save();
         cr->rectangle(store_clip.left(), store_clip.top(), store_clip.width(), store_clip.height());
         cr->clip();
-        cr->set_operator(background_in_stores ? Cairo::OPERATOR_SOURCE : Cairo::OPERATOR_OVER);
+        cr->set_operator(background_in_stores ? Cairo::Context::Operator::SOURCE : Cairo::Context::Operator::OVER);
         draw_store(store.surface, snapshot.surface);
         if (a.render_mode == Inkscape::RenderMode::OUTLINE_OVERLAY) draw_overlay();
         cr->restore();
@@ -373,14 +373,14 @@ void CairoGraphics::paint_widget(Fragment const &view, PaintArgs const &a, Cairo
         cr->save();
         cr->rectangle(outline_clip.left(), outline_clip.top(), outline_clip.width(), outline_clip.height());
         cr->clip();
-        cr->set_operator(Cairo::OPERATOR_OVER);
+        cr->set_operator(Cairo::Context::Operator::OVER);
         draw_store(store.outline_surface, snapshot.outline_surface);
         cr->restore();
 
     } else {
 
         // Draw the normal content over the whole view.
-        cr->set_operator(background_in_stores ? Cairo::OPERATOR_SOURCE : Cairo::OPERATOR_OVER);
+        cr->set_operator(background_in_stores ? Cairo::Context::Operator::SOURCE : Cairo::Context::Operator::OVER);
         draw_store(store.surface, snapshot.surface);
         if (a.render_mode == Inkscape::RenderMode::OUTLINE_OVERLAY) draw_overlay();
 
@@ -394,7 +394,7 @@ void CairoGraphics::paint_widget(Fragment const &view, PaintArgs const &a, Cairo
             // Draw background.
             paint_background(view, pi, page, desk, cr);
             // Draw outline.
-            cr->set_operator(Cairo::OPERATOR_OVER);
+            cr->set_operator(Cairo::Context::Operator::OVER);
             draw_store(store.outline_surface, snapshot.outline_surface);
         }
     }

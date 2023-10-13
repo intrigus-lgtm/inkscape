@@ -175,7 +175,7 @@ ColorScales<MODE>::ColorScales(SelectedColor &color, bool no_alpha)
 template <SPColorScalesMode MODE>
 void ColorScales<MODE>::_initUI(bool no_alpha)
 {
-    set_orientation(Gtk::ORIENTATION_VERTICAL);
+    set_orientation(Gtk::Orientation::VERTICAL);
 
     Gtk::Expander *wheel_frame = nullptr;
 
@@ -195,8 +195,8 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
         }
 
         _wheel->set_visible(true);
-        _wheel->set_halign(Gtk::ALIGN_FILL);
-        _wheel->set_valign(Gtk::ALIGN_FILL);
+        _wheel->set_halign(Gtk::Align::FILL);
+        _wheel->set_valign(Gtk::Align::FILL);
         _wheel->set_hexpand(true);
         _wheel->set_vexpand(true);
         _wheel->set_name("ColorWheel");
@@ -221,7 +221,7 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
         expander_box->set_visible(true);
         UI::pack_start(*expander_box, *expander_icon);
         UI::pack_start(*expander_box, *expander_label);
-        expander_box->set_orientation(Gtk::ORIENTATION_HORIZONTAL);
+        expander_box->set_orientation(Gtk::Orientation::HORIZONTAL);
         // Expander
         wheel_frame = Gtk::make_managed<Gtk::Expander>();
         wheel_frame->set_visible(true);
@@ -229,8 +229,8 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
         wheel_frame->set_margin_end(XPAD);
         wheel_frame->set_margin_top(2 * YPAD);
         wheel_frame->set_margin_bottom(2 * YPAD);
-        wheel_frame->set_halign(Gtk::ALIGN_FILL);
-        wheel_frame->set_valign(Gtk::ALIGN_FILL);
+        wheel_frame->set_halign(Gtk::Align::FILL);
+        wheel_frame->set_valign(Gtk::Align::FILL);
         wheel_frame->set_hexpand(true);
         wheel_frame->set_vexpand(false);
         wheel_frame->set_label_widget(*expander_box);
@@ -257,7 +257,7 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
         /* Label */
         _l[i] = Gtk::make_managed<Gtk::Label>("", true);
 
-        _l[i]->set_halign(Gtk::ALIGN_START);
+        _l[i]->set_halign(Gtk::Align::START);
         _l[i]->set_visible(true);
 
         _l[i]->set_margin_start(2 * XPAD);
@@ -289,8 +289,8 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
         _b[i]->set_margin_end(XPAD);
         _b[i]->set_margin_top(YPAD);
         _b[i]->set_margin_bottom(YPAD);
-        _b[i]->set_halign(Gtk::ALIGN_END);
-        _b[i]->set_valign(Gtk::ALIGN_CENTER);
+        _b[i]->set_halign(Gtk::Align::END);
+        _b[i]->set_valign(Gtk::Align::CENTER);
         grid->attach(*_b[i], 2, i, 1, 1);
 
         /* Signals */

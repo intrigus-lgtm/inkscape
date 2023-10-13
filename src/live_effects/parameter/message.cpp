@@ -88,7 +88,7 @@ MessageParam::param_newWidget()
     widg_frame->set_margin_end(_marginend);
     widg_frame->set_margin_start(_marginstart);
 
-    _label = Gtk::make_managed<Gtk::Label>(defmessage, Gtk::ALIGN_END);
+    _label = Gtk::make_managed<Gtk::Label>(defmessage, Gtk::Align::END);
     _label->set_use_underline (true);
     _label->set_use_markup();
     _label->set_line_wrap(true);

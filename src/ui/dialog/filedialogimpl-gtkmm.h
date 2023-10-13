@@ -55,7 +55,7 @@ class FileDialogBaseGtk : public Gtk::FileChooserDialog
 {
 public:
     FileDialogBaseGtk(Gtk::Window &parentWindow, Glib::ustring const &title,
-    		      Gtk::FileChooserAction dialogType, FileDialogType type,
+    		      Gtk::FileChooser::Action dialogType, FileDialogType type,
                       char const *preferenceBase);
     ~FileDialogBaseGtk() override;
 

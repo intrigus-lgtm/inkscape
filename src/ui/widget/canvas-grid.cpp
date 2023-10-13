@@ -78,14 +78,14 @@ CanvasGrid::CanvasGrid(SPDesktopWidget *dtw)
     _canvas_overlay.add_overlay(*_notice);
 
     // Horizontal Ruler
-    _hruler = std::make_unique<Inkscape::UI::Widget::Ruler>(Gtk::ORIENTATION_HORIZONTAL);
+    _hruler = std::make_unique<Inkscape::UI::Widget::Ruler>(Gtk::Orientation::HORIZONTAL);
     _hruler->add_track_widget(*_canvas);
     _hruler->set_hexpand(true);
     _hruler->set_visible(true);
     // Tooltip/Unit set elsewhere
 
     // Vertical Ruler
-    _vruler = std::make_unique<Inkscape::UI::Widget::Ruler>(Gtk::ORIENTATION_VERTICAL);
+    _vruler = std::make_unique<Inkscape::UI::Widget::Ruler>(Gtk::Orientation::VERTICAL);
     _vruler->add_track_widget(*_canvas);
     _vruler->set_vexpand(true);
     _vruler->set_visible(true);
@@ -108,14 +108,14 @@ CanvasGrid::CanvasGrid(SPDesktopWidget *dtw)
     // Horizontal Scrollbar
     _hadj = Gtk::Adjustment::create(0.0, -4000.0, 4000.0, 10.0, 100.0, 4.0);
     _hadj->signal_value_changed().connect(sigc::mem_fun(*this, &CanvasGrid::_adjustmentChanged));
-    _hscrollbar = Gtk::Scrollbar(_hadj, Gtk::ORIENTATION_HORIZONTAL);
+    _hscrollbar = Gtk::Scrollbar(_hadj, Gtk::Orientation::HORIZONTAL);
     _hscrollbar.set_name("CanvasScrollbar");
     _hscrollbar.set_hexpand(true);
 
     // Vertical Scrollbar
     _vadj = Gtk::Adjustment::create(0.0, -4000.0, 4000.0, 10.0, 100.0, 4.0);
     _vadj->signal_value_changed().connect(sigc::mem_fun(*this, &CanvasGrid::_adjustmentChanged));
-    _vscrollbar = Gtk::Scrollbar(_vadj, Gtk::ORIENTATION_VERTICAL);
+    _vscrollbar = Gtk::Scrollbar(_vadj, Gtk::Orientation::VERTICAL);
     _vscrollbar.set_name("CanvasScrollbar");
     _vscrollbar.set_vexpand(true);
 
@@ -382,11 +382,11 @@ Geom::IntPoint CanvasGrid::_rulerToCanvas(bool horiz) const
 }
 
 // Start guide creation by dragging from ruler.
-Gtk::EventSequenceState CanvasGrid::_rulerButtonPress(Gtk::GestureMultiPress const &gesture,
+Gtk::EventSequenceState CanvasGrid::_rulerButtonPress(Gtk::GestureClick const &gesture,
                                                       int /*n_press*/, double x, double y)
 {
     if (_ruler_clicked) {
-        return Gtk::EVENT_SEQUENCE_NONE;
+        return Gtk::EventSequenceState::NONE;
     }
 
     auto const state = Controller::get_current_event_state(gesture);
@@ -396,7 +396,7 @@ Gtk::EventSequenceState CanvasGrid::_rulerButtonPress(Gtk::GestureMultiPress con
     _ruler_ctrl_clicked = Controller::has_flag(state, Gdk::CONTROL_MASK);
     _ruler_drag_origin = Geom::Point(x, y).floor();
 
-    return Gtk::EVENT_SEQUENCE_CLAIMED;
+    return Gtk::EventSequenceState::CLAIMED;
 }
 
 void CanvasGrid::_createGuideItem(Geom::Point const &pos, bool horiz)
@@ -583,11 +583,11 @@ void CanvasGrid::_createGuide(Geom::Point origin, Geom::Point normal)
 }
 
 // End guide creation or toggle guides on/off.
-Gtk::EventSequenceState CanvasGrid::_rulerButtonRelease(Gtk::GestureMultiPress const &gesture,
+Gtk::EventSequenceState CanvasGrid::_rulerButtonRelease(Gtk::GestureClick const &gesture,
                                                         int /*n_press*/, double x, double y, bool horiz)
 {
     if (!_ruler_clicked) {
-        return Gtk::EVENT_SEQUENCE_NONE;
+        return Gtk::EventSequenceState::NONE;
     }
 
     auto const desktop = _dtw->get_desktop();
@@ -626,7 +626,7 @@ Gtk::EventSequenceState CanvasGrid::_rulerButtonRelease(Gtk::GestureMultiPress c
     _ruler_clicked = false;
     _ruler_dragged = false;
 
-    return Gtk::EVENT_SEQUENCE_CLAIMED;
+    return Gtk::EventSequenceState::CLAIMED;
 }
 
 void CanvasGrid::_blinkLockButton()

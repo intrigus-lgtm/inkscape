@@ -634,7 +634,7 @@ std::pair<Glib::ustring, Glib::ustring> FontLister::ui_from_fontspec(Glib::ustri
     //   'Delicious, 500' with a style of 'Medium Italic'. We chop of any weight numbers
     //   at the end of the family:  match ",[1-9]00^".
     Glib::RefPtr<Glib::Regex> weight = Glib::Regex::create(",[1-9]00$");
-    Family = weight->replace(Family, 0, "", Glib::REGEX_MATCH_PARTIAL);
+    Family = weight->replace(Family, 0, "", Glib::Regex::MatchFlags::PARTIAL);
 
     // Pango canonized strings remove space after comma between family names. Put it back.
     size_t i = 0;

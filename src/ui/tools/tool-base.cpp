@@ -556,7 +556,7 @@ bool ToolBase::root_handler(CanvasEvent const &event)
                 delta_angle = std::round(delta_angle / rotation_snap) * rotation_snap;
             } else if (event.modifiers & GDK_CONTROL_MASK) {
                 // ?
-            } else if (event.modifiers & GDK_MOD1_MASK) {
+            } else if (event.modifiers & GDK_ALT_MASK) {
                 // Decimal raw angle
             } else {
                 delta_angle = std::floor(delta_angle);
@@ -1180,7 +1180,7 @@ void ToolBase::set_high_motion_precision(bool high_precision)
 void ToolBase::setup_for_drag_start(ButtonPressEvent const &ev)
 {
     saveDragOrigin(ev.pos);
-    item_to_select = sp_event_context_find_item(_desktop, ev.pos, ev.modifiers & GDK_MOD1_MASK, true);
+    item_to_select = sp_event_context_find_item(_desktop, ev.pos, ev.modifiers & GDK_ALT_MASK, true);
 }
 
 void ToolBase::saveDragOrigin(Geom::Point const &pos)

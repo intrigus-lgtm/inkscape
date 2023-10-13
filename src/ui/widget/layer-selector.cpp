@@ -36,7 +36,7 @@ namespace Inkscape::UI::Widget {
 class AlternateIcons final : public Gtk::Box {
 public:
     AlternateIcons(Gtk::BuiltinIconSize size, Glib::ustring const &a, Glib::ustring const &b)
-    : Gtk::Box(Gtk::ORIENTATION_HORIZONTAL)
+    : Gtk::Box(Gtk::Orientation::HORIZONTAL)
     {
         set_name("AlternateIcons");
 
@@ -77,7 +77,7 @@ private:
 static constexpr auto cssName = "LayerSelector";
 
 LayerSelector::LayerSelector(SPDesktop *desktop)
-    : Gtk::Box(Gtk::ORIENTATION_HORIZONTAL)
+    : Gtk::Box(Gtk::Orientation::HORIZONTAL)
     , _label_style{Gtk::CssProvider::create()}
     , _observer{std::make_unique<Inkscape::XML::SignalObserver>()}
 {
@@ -109,9 +109,9 @@ LayerSelector::LayerSelector(SPDesktop *desktop)
 
     _layer_name.add(_layer_label);
     _layer_label.set_max_width_chars(16);
-    _layer_label.set_ellipsize(Pango::ELLIPSIZE_END);
+    _layer_label.set_ellipsize(Pango::EllipsizeMode::END);
     _layer_label.set_markup("<i>Unset</i>");
-    _layer_label.set_valign(Gtk::ALIGN_CENTER);
+    _layer_label.set_valign(Gtk::Align::CENTER);
     Gtk::StyleContext::add_provider_for_screen(_layer_label.get_screen(), _label_style,
                                                GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 

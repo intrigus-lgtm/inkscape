@@ -244,7 +244,7 @@ SPDesktop::init (SPNamedView *nv, Inkscape::UI::Widget::Canvas *acanvas, SPDeskt
     Inkscape::UI::Controller::add_motion<&SPDesktop::on_motion, &SPDesktop::on_motion, &SPDesktop::on_leave>
                                         (*canvas, *this);
     Inkscape::UI::Controller::add_zoom<&SPDesktop::on_zoom_begin, &SPDesktop::on_zoom_scale, &SPDesktop::on_zoom_end>
-                                      (*canvas, *this, Gtk::PHASE_CAPTURE);
+                                      (*canvas, *this, Gtk::PropagationPhase::CAPTURE);
 
     /* Set up notification of rebuilding the document, this allows
        for saving object related settings in the document. */

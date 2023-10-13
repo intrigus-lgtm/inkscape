@@ -100,14 +100,14 @@ void ObjectProperties::_init()
 
     /* Create the label for the object id */
     _label_id.set_label(_label_id.get_label() + " ");
-    _label_id.set_halign(Gtk::ALIGN_START);
-    _label_id.set_valign(Gtk::ALIGN_CENTER);
+    _label_id.set_halign(Gtk::Align::START);
+    _label_id.set_valign(Gtk::Align::CENTER);
 
     /* Create the entry box for the object id */
     _entry_id.set_tooltip_text(_("The id= attribute (only letters, digits, and the characters .-_: allowed)"));
     _entry_id.set_max_length(64);
     _entry_id.set_hexpand();
-    _entry_id.set_valign(Gtk::ALIGN_CENTER);
+    _entry_id.set_valign(Gtk::Align::CENTER);
 
     _label_id.set_mnemonic_widget(_entry_id);
 
@@ -119,15 +119,15 @@ void ObjectProperties::_init()
 
     /* Create the label for the object label */
     _label_label.set_label(_label_label.get_label() + " ");
-    _label_label.set_halign(Gtk::ALIGN_START);
-    _label_label.set_valign(Gtk::ALIGN_CENTER);
+    _label_label.set_halign(Gtk::Align::START);
+    _label_label.set_valign(Gtk::Align::CENTER);
 
     /* Create the entry box for the object label */
     _entry_label.set_tooltip_text(_("A freeform label for the object"));
     _entry_label.set_max_length(256);
 
     _entry_label.set_hexpand();
-    _entry_label.set_valign(Gtk::ALIGN_CENTER);
+    _entry_label.set_valign(Gtk::Align::CENTER);
 
     _label_label.set_mnemonic_widget(_entry_label);
 
@@ -137,22 +137,22 @@ void ObjectProperties::_init()
 
     /* Create the label for the object title */
     _label_title.set_label(_label_title.get_label() + " ");
-    _label_title.set_halign(Gtk::ALIGN_START);
-    _label_title.set_valign(Gtk::ALIGN_CENTER);
+    _label_title.set_halign(Gtk::Align::START);
+    _label_title.set_valign(Gtk::Align::CENTER);
 
     /* Create the entry box for the object title */
     _entry_title.set_sensitive (FALSE);
     _entry_title.set_max_length (256);
 
     _entry_title.set_hexpand();
-    _entry_title.set_valign(Gtk::ALIGN_CENTER);
+    _entry_title.set_valign(Gtk::Align::CENTER);
 
     _label_title.set_mnemonic_widget(_entry_title);
     // pressing enter in the label field is the same as clicking Set:
     _entry_title.signal_activate().connect(sigc::mem_fun(*this, &ObjectProperties::_labelChanged));
 
     _label_color.set_mnemonic_widget(_highlight_color);
-    _label_color.set_halign(Gtk::ALIGN_START);
+    _label_color.set_halign(Gtk::Align::START);
     _highlight_color.connectChanged(sigc::mem_fun(*this, &ObjectProperties::_highlightChanged));
 
     /* Create the frame for the object description */
@@ -167,15 +167,15 @@ void ObjectProperties::_init()
     _ft_description.set_sensitive(FALSE);
     frame_desc->add(_ft_description);
 
-    _tv_description.set_wrap_mode(Gtk::WRAP_WORD);
+    _tv_description.set_wrap_mode(Gtk::WrapMode::WORD);
     _tv_description.get_buffer()->set_text("");
     _ft_description.add(_tv_description);
     _tv_description.add_mnemonic_label(*label_desc);
 
     /* Create the label for the object title */
     _label_dpi.set_label(_label_dpi.get_label() + " ");
-    _label_dpi.set_halign(Gtk::ALIGN_START);
-    _label_dpi.set_valign(Gtk::ALIGN_CENTER);
+    _label_dpi.set_halign(Gtk::Align::START);
+    _label_dpi.set_valign(Gtk::Align::CENTER);
 
     /* Create the entry box for the SVG DPI */
     _spin_dpi.set_digits(2);
@@ -188,8 +188,8 @@ void ObjectProperties::_init()
     /* Image rendering */
     /* Create the label for the object ImageRendering */
     _label_image_rendering.set_label(_label_image_rendering.get_label() + " ");
-    _label_image_rendering.set_halign(Gtk::ALIGN_START);
-    _label_image_rendering.set_valign(Gtk::ALIGN_CENTER);
+    _label_image_rendering.set_halign(Gtk::Align::START);
+    _label_image_rendering.set_valign(Gtk::Align::CENTER);
 
     /* Create the combo box text for the 'image-rendering' property  */
     for (unsigned i = 0; enum_image_rendering[i].key; ++i) {
@@ -204,7 +204,7 @@ void ObjectProperties::_init()
                                               "Note that the specification of this property is not finalized. "
                                               "Support and interpretation of these values varies between renderers."));
 
-    _combo_image_rendering.set_valign(Gtk::ALIGN_CENTER);
+    _combo_image_rendering.set_valign(Gtk::Align::CENTER);
 
     _label_image_rendering.set_mnemonic_widget(_combo_image_rendering);
 
@@ -227,7 +227,7 @@ void ObjectProperties::_init()
     grid_top->attach(_combo_image_rendering, 1, 5, 1, 1);
 
     /* Check boxes */
-    auto const hb_checkboxes = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+    auto const hb_checkboxes = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
     UI::pack_start(*this, *hb_checkboxes, UI::PackOptions::shrink);
 
     auto const grid_cb = Gtk::make_managed<Gtk::Grid>();
@@ -240,7 +240,7 @@ void ObjectProperties::_init()
     /* Hide */
     _cb_hide.set_tooltip_text (_("Check to make the object invisible"));
     _cb_hide.set_hexpand();
-    _cb_hide.set_valign(Gtk::ALIGN_CENTER);
+    _cb_hide.set_valign(Gtk::Align::CENTER);
     grid_cb->attach(_cb_hide, 0, 0, 1, 1);
 
     _cb_hide.signal_toggled().connect(sigc::mem_fun(*this, &ObjectProperties::_hiddenToggled));
@@ -249,7 +249,7 @@ void ObjectProperties::_init()
     // TRANSLATORS: "Lock" is a verb here
     _cb_lock.set_tooltip_text(_("Check to make the object insensitive (not selectable by mouse)"));
     _cb_lock.set_hexpand();
-    _cb_lock.set_valign(Gtk::ALIGN_CENTER);
+    _cb_lock.set_valign(Gtk::Align::CENTER);
     grid_cb->attach(_cb_lock, 1, 0, 1, 1);
 
     _cb_lock.signal_toggled().connect(sigc::mem_fun(*this, &ObjectProperties::_sensitivityToggled));
@@ -257,7 +257,7 @@ void ObjectProperties::_init()
     /* Preserve aspect ratio */
     _cb_aspect_ratio.set_tooltip_text(_("Check to preserve aspect ratio on images"));
     _cb_aspect_ratio.set_hexpand();
-    _cb_aspect_ratio.set_valign(Gtk::ALIGN_CENTER);
+    _cb_aspect_ratio.set_valign(Gtk::Align::CENTER);
     grid_cb->attach(_cb_aspect_ratio, 0, 1, 1, 1);
 
     _cb_aspect_ratio.signal_toggled().connect(sigc::mem_fun(*this, &ObjectProperties::_aspectRatioToggled));
@@ -266,7 +266,7 @@ void ObjectProperties::_init()
     /* Button for setting the object's id, label, title and description. */
     auto const btn_set = Gtk::make_managed<Gtk::Button>(_("_Set"), true);
     btn_set->set_hexpand();
-    btn_set->set_valign(Gtk::ALIGN_CENTER);
+    btn_set->set_valign(Gtk::Align::CENTER);
     grid_cb->attach(*btn_set, 1, 1, 1, 1);
 
     btn_set->signal_clicked().connect(sigc::mem_fun(*this, &ObjectProperties::_labelChanged));

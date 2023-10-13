@@ -26,7 +26,7 @@ namespace Dialog {
 class ArrangeTab : public Gtk::Box
 {
 public:
-	ArrangeTab() : Gtk::Box(Gtk::ORIENTATION_VERTICAL) {}
+	ArrangeTab() : Gtk::Box(Gtk::Orientation::VERTICAL) {}
 	~ArrangeTab() override = default;
 
 	/**

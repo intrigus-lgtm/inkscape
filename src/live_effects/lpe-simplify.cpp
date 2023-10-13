@@ -105,10 +105,10 @@ Gtk::Widget *
 LPESimplify::newWidget()
 {
     // use manage here, because after deletion of Effect object, others might still be pointing to this widget.
-    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 2);
+    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
     vbox->property_margin().set_value(5);
 
-    auto const buttons = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
+    auto const buttons = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL,0);
 
     for (auto const param: param_vector) {
         if (!param->widget_is_visible) continue;
@@ -139,7 +139,7 @@ LPESimplify::newWidget()
         }
     }
 
-    buttons->set_halign(Gtk::ALIGN_START);
+    buttons->set_halign(Gtk::Align::START);
     UI::pack_start(*vbox, *buttons, true, true, 2);
     return vbox;
 }

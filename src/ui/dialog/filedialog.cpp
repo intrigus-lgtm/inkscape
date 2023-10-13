@@ -70,7 +70,7 @@ void get_start_directory(std::string &start_path, Glib::ustring const &prefs_pat
     }
 
     // Test if the path directory exists.
-    if (!Glib::file_test(start_path, Glib::FILE_TEST_EXISTS)) {
+    if (!Glib::file_test(start_path, Glib::FileTest::EXISTS)) {
         start_path = "";
     }
 

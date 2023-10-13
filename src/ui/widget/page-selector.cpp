@@ -30,7 +30,7 @@ namespace UI {
 namespace Widget {
 
 PageSelector::PageSelector(SPDesktop *desktop)
-    : Gtk::Box(Gtk::ORIENTATION_HORIZONTAL)
+    : Gtk::Box(Gtk::Orientation::HORIZONTAL)
     , _desktop(desktop)
 {
     set_name("PageSelector");

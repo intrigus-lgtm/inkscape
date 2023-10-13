@@ -199,19 +199,19 @@ Gtk::Widget *
 LPEMeasureSegments::newWidget()
 {
     // use manage here, because after deletion of Effect object, others might still be pointing to this widget.
-    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
 
-    auto const vbox0 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 2);
+    auto const vbox0 = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
     vbox0->property_margin().set_value(5);
 
-    auto const vbox1 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 2);
+    auto const vbox1 = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
     vbox1->property_margin().set_value(5);
 
-    auto const vbox2 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 2);
+    auto const vbox2 = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
     vbox2->property_margin().set_value(5);
 
     //Help page
-    auto const vbox3 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 2);
+    auto const vbox3 = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
     vbox3->property_margin().set_value(5);
 
     std::vector<Parameter *>::iterator it = param_vector.begin();

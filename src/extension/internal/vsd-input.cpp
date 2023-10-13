@@ -64,9 +64,9 @@ private:
 
     // Signal handlers
     void _onPageNumberChanged();
-    Gtk::EventSequenceState _onSpinButtonClickPressed (Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState _onSpinButtonClickPressed (Gtk::GestureClick const &click,
                                                        int n_press, double x, double y);
-    Gtk::EventSequenceState _onSpinButtonClickReleased(Gtk::GestureMultiPress const &click,
+    Gtk::EventSequenceState _onSpinButtonClickReleased(Gtk::GestureClick const &click,
                                                        int n_press, double x, double y);
 
     class Gtk::Box * vbox1;
@@ -104,12 +104,12 @@ VsdImportDialog::VsdImportDialog(const std::vector<RVNGString> &vec)
     this->property_destroy_with_parent().set_value(false);
 
     // Preview area
-    vbox1 = Gtk::make_managed<class Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 4);
+    vbox1 = Gtk::make_managed<class Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
     vbox1->property_margin().set_value(4);
     UI::pack_start(*this->get_content_area(), *vbox1);
 
     // CONTROLS
-    _page_selector_box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
+    _page_selector_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
 
     // Labels
     _labelSelect = Gtk::make_managed<class Gtk::Label>(_("Select page:"));
@@ -141,8 +141,8 @@ VsdImportDialog::VsdImportDialog(const std::vector<RVNGString> &vec)
     // Buttons
     cancelbutton = Gtk::make_managed<Gtk::Button>(_("_Cancel"), true);
     okbutton    = Gtk::make_managed<Gtk::Button>(_("_OK"),    true);
-    this->add_action_widget(*cancelbutton, Gtk::RESPONSE_CANCEL);
-    this->add_action_widget(*okbutton, Gtk::RESPONSE_OK);
+    this->add_action_widget(*cancelbutton, Gtk::ResponseType::CANCEL);
+    this->add_action_widget(*okbutton, Gtk::ResponseType::OK);
 
     // Show all widgets in dialog
     this->show_all();
@@ -151,7 +151,7 @@ VsdImportDialog::VsdImportDialog(const std::vector<RVNGString> &vec)
     _pageNumberSpin->signal_value_changed().connect(sigc::mem_fun(*this, &VsdImportDialog::_onPageNumberChanged));
     UI::Controller::add_click(*_pageNumberSpin, sigc::mem_fun(*this, &VsdImportDialog::_onSpinButtonClickPressed ),
                                                 sigc::mem_fun(*this, &VsdImportDialog::_onSpinButtonClickReleased),
-                              UI::Controller::Button::any, Gtk::PHASE_TARGET);
+                              UI::Controller::Button::any, Gtk::PropagationPhase::TARGET);
 
     _setPreviewPage();
 }
@@ -161,7 +161,7 @@ VsdImportDialog::~VsdImportDialog() = default;
 bool VsdImportDialog::showDialog()
 {
     gint b = UI::dialog_run(*this);
-    if (b == Gtk::RESPONSE_OK || b == Gtk::RESPONSE_ACCEPT) {
+    if (b == Gtk::ResponseType::OK || b == Gtk::ResponseType::ACCEPT) {
         return TRUE;
     } else {
         return FALSE;
@@ -181,20 +181,20 @@ void VsdImportDialog::_onPageNumberChanged()
 }
 
 Gtk::EventSequenceState
-VsdImportDialog::_onSpinButtonClickPressed(Gtk::GestureMultiPress const & /*click*/,
+VsdImportDialog::_onSpinButtonClickPressed(Gtk::GestureClick const & /*click*/,
                                            int /*n_press*/, double /*x*/, double /*y*/)
 {
     _spinning = true;
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
 Gtk::EventSequenceState
-VsdImportDialog::_onSpinButtonClickReleased(Gtk::GestureMultiPress const & /*click*/,
+VsdImportDialog::_onSpinButtonClickReleased(Gtk::GestureClick const & /*click*/,
                                             int /*n_press*/, double /*x*/, double /*y*/)
 {
     _spinning = false;
     _setPreviewPage();
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
 /**

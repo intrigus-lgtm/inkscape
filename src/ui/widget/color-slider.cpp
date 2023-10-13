@@ -98,7 +98,7 @@ static double get_value_at(Gtk::Widget const &self, double const x, double const
     return CLAMP((x - cx) / cw, 0.0, 1.0);
 }
 
-Gtk::EventSequenceState ColorSlider::on_click_pressed(Gtk::GestureMultiPress const &click,
+Gtk::EventSequenceState ColorSlider::on_click_pressed(Gtk::GestureClick const &click,
                                                       int /*n_press*/, double const x, double const y)
 {
     signal_grabbed.emit();
@@ -109,10 +109,10 @@ Gtk::EventSequenceState ColorSlider::on_click_pressed(Gtk::GestureMultiPress con
     auto const constrained = get_constrained(state);
     ColorScales<>::setScaled(_adjustment, value, constrained);
     signal_dragged.emit();
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
-Gtk::EventSequenceState ColorSlider::on_click_released(Gtk::GestureMultiPress const & /*click*/,
+Gtk::EventSequenceState ColorSlider::on_click_released(Gtk::GestureClick const & /*click*/,
                                                        int /*n_press*/, double /*x*/, double /*y*/)
 {
     _dragging = false;
@@ -120,7 +120,7 @@ Gtk::EventSequenceState ColorSlider::on_click_released(Gtk::GestureMultiPress co
     if (_value != _oldvalue) {
         signal_value_changed.emit();
     }
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
 void ColorSlider::on_motion(GtkEventControllerMotion const * const motion,
@@ -250,7 +250,7 @@ bool ColorSlider::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr)
 
         if (b != nullptr && carea.get_width() > 0) {
             Glib::RefPtr<Gdk::Pixbuf> pb = Gdk::Pixbuf::create_from_data(
-                b, Gdk::COLORSPACE_RGB, false, 8, carea.get_width(), carea.get_height(), carea.get_width() * 3);
+                b, Gdk::Colorspace::RGB, false, 8, carea.get_width(), carea.get_height(), carea.get_width() * 3);
 
             Gdk::Cairo::set_source_pixbuf(cr, pb, carea.get_x(), carea.get_y());
             cr->paint();
@@ -273,7 +273,7 @@ bool ColorSlider::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr)
             /* Draw pixelstore 1 */
             if (b != nullptr && wi > 0) {
                 Glib::RefPtr<Gdk::Pixbuf> pb =
-                    Gdk::Pixbuf::create_from_data(b, Gdk::COLORSPACE_RGB, false, 8, wi, carea.get_height(), wi * 3);
+                    Gdk::Pixbuf::create_from_data(b, Gdk::Colorspace::RGB, false, 8, wi, carea.get_height(), wi * 3);
 
                 Gdk::Cairo::set_source_pixbuf(cr, pb, carea.get_x(), carea.get_y());
                 cr->paint();
@@ -293,7 +293,7 @@ bool ColorSlider::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr)
             /* Draw pixelstore 2 */
             if (b != nullptr && wi > 0) {
                 Glib::RefPtr<Gdk::Pixbuf> pb =
-                    Gdk::Pixbuf::create_from_data(b, Gdk::COLORSPACE_RGB, false, 8, wi, carea.get_height(), wi * 3);
+                    Gdk::Pixbuf::create_from_data(b, Gdk::Colorspace::RGB, false, 8, wi, carea.get_height(), wi * 3);
 
                 Gdk::Cairo::set_source_pixbuf(cr, pb, carea.get_width() / 2 + carea.get_x(), carea.get_y());
                 cr->paint();

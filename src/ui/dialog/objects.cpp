@@ -667,7 +667,7 @@ ObjectsPanel::ObjectsPanel()
     , _model{std::make_unique<ModelColumns>()}
     , _layer(nullptr)
     , _is_editing(false)
-    , _page(Gtk::ORIENTATION_VERTICAL)
+    , _page(Gtk::Orientation::VERTICAL)
     , _color_picker(_("Highlight color"), "", 0, true)
     , _builder(create_builder("dialog-objects.glade"))
     , _settings_menu(get_widget<Gtk::Popover>(_builder, "settings-menu"))
@@ -685,7 +685,7 @@ ObjectsPanel::ObjectsPanel()
     _tree.set_headers_visible(false);
     // Reorderable means that we allow drag-and-drop, but we only allow that
     // when at least one row is selected
-    _tree.enable_model_drag_dest (Gdk::ACTION_MOVE);
+    _tree.enable_model_drag_dest (Gdk::DragAction::MOVE);
     _tree.set_name("ObjectsTreeView");
 
     auto& header = get_widget<Gtk::Box>(_builder, "header");
@@ -711,7 +711,7 @@ ObjectsPanel::ObjectsPanel()
     _name_column = Gtk::make_managed<Gtk::TreeViewColumn>();
     _text_renderer = Gtk::make_managed<Gtk::CellRendererText>();
     _text_renderer->property_editable() = true;
-    _text_renderer->property_ellipsize().set_value(Pango::ELLIPSIZE_END);
+    _text_renderer->property_ellipsize().set_value(Pango::EllipsizeMode::END);
     _text_renderer->signal_editing_started().connect([=](Gtk::CellEditable*,const Glib::ustring&){
         _is_editing = true;
     });
@@ -782,7 +782,7 @@ ObjectsPanel::ObjectsPanel()
     });
     const int min = 0, max = 100;
     for (int i = min; i <= max; i += 50) {
-        _opacity_slider.add_mark(i, Gtk::POS_BOTTOM, "");
+        _opacity_slider.add_mark(i, Gtk::PositionType::BOTTOM, "");
     }
     _opacity_slider.signal_value_changed().connect([=](){
         if (current_item) {
@@ -820,7 +820,7 @@ ObjectsPanel::ObjectsPanel()
                 top++;
 
             auto const check = Gtk::make_managed<Gtk::RadioButton>(group, label);
-            check->set_halign(Gtk::ALIGN_START);
+            check->set_halign(Gtk::Align::START);
             check->signal_toggled().connect([=, this]{
                 if (!check->get_active()) return;
                 // set blending mode
@@ -896,18 +896,18 @@ ObjectsPanel::ObjectsPanel()
     _tree.set_expander_column(*_name_column);
     _tree.set_search_column(-1);
     _tree.set_enable_search(false);
-    _tree.get_selection()->set_mode(Gtk::SELECTION_NONE);
+    _tree.get_selection()->set_mode(Gtk::SelectionMode::NONE);
 
     //Set up tree signals
     Controller::add_click(_tree,
         sigc::bind(sigc::mem_fun(*this, &ObjectsPanel::on_click), EventType::pressed ),
         sigc::bind(sigc::mem_fun(*this, &ObjectsPanel::on_click), EventType::released),
-        Controller::Button::any, Gtk::PHASE_TARGET);
+        Controller::Button::any, Gtk::PropagationPhase::TARGET);
     Controller::add_key<&ObjectsPanel::on_tree_key_pressed>(_tree, *this);
     Controller::add_motion<&ObjectsPanel::on_motion_enter ,
                            &ObjectsPanel::on_motion_motion,
                            &ObjectsPanel::on_motion_leave >
-                       (_tree, *this, Gtk::PHASE_TARGET);
+                       (_tree, *this, Gtk::PropagationPhase::TARGET);
     // Track Alt key on parent window so we donʼt need to have key focus to work
     Controller::add_key_on_window<&ObjectsPanel::on_window_key_pressed ,
                                   &ObjectsPanel::on_window_key_released>(_tree, *this);
@@ -944,7 +944,7 @@ ObjectsPanel::ObjectsPanel()
     // turn off overlay scrollbars - they block access to the 'lock' icon
     _scroller.set_overlay_scrolling(false);
     _scroller.add(_tree);
-    _scroller.set_policy( Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC );
+    _scroller.set_policy( Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC );
     _scroller.set_shadow_type(Gtk::SHADOW_IN);
     Gtk::Requisition sreq;
     Gtk::Requisition sreq_natural;
@@ -1492,7 +1492,7 @@ void ObjectsPanel::on_motion_motion(GtkEventControllerMotion const * const contr
     }
 
     auto const state = Controller::get_device_state(GTK_EVENT_CONTROLLER(controller));
-    _handleTransparentHover(Controller::has_flag(state, Gdk::MOD1_MASK));
+    _handleTransparentHover(Controller::has_flag(state, Gdk::ALT_MASK));
 }
 
 void ObjectsPanel::_handleTransparentHover(bool enabled)
@@ -1536,13 +1536,13 @@ void ObjectsPanel::_handleTransparentHover(bool enabled)
  * Handles mouse button click events
  * @return whether to eat the event (om nom nom)
  */
-Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureMultiPress const &gesture,
+Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureClick const &gesture,
                                                int const n_press, double const ex, double const ey,
                                                EventType const event_type)
 {
     auto selection = getSelection();
     if (!selection)
-        return Gtk::EVENT_SEQUENCE_NONE;
+        return Gtk::EventSequenceState::NONE;
 
     if (event_type == EventType::released) {
         _drag_column = nullptr;
@@ -1552,7 +1552,7 @@ Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureMultiPress const &ges
     Gtk::TreeViewColumn* col = nullptr;
     int x, y;
     if (!_tree.get_path_at_pos(ex, ey, path, col, x, y)) {
-        return Gtk::EVENT_SEQUENCE_NONE;
+        return Gtk::EventSequenceState::NONE;
     }
 
     if (auto row = *_store->get_iter(path)) {
@@ -1566,8 +1566,8 @@ Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureMultiPress const &ges
                 _drag_flip = toggleLocked(state, row);
             } else if (col == _blend_mode_column) {
                 auto const [cx, cy] = get_cell_center(_tree, path, *_blend_mode_column);
-                return blendModePopup(cx, cy, row) ? Gtk::EVENT_SEQUENCE_CLAIMED
-                                                   : Gtk::EVENT_SEQUENCE_NONE;
+                return blendModePopup(cx, cy, row) ? Gtk::EventSequenceState::CLAIMED
+                                                   : Gtk::EventSequenceState::NONE;
             }
         }
     }
@@ -1577,21 +1577,21 @@ Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureMultiPress const &ges
     auto const is_expander = x < get_cell_area(_tree, path, *_name_column).get_x();
 
     if (col != _name_column || is_expander)
-        return Gtk::EVENT_SEQUENCE_NONE;
+        return Gtk::EventSequenceState::NONE;
 
     if (n_press == 2) {
         _tree.set_cursor(path, *col, true);
         _is_editing = true;
-        return Gtk::EVENT_SEQUENCE_CLAIMED;
+        return Gtk::EventSequenceState::CLAIMED;
     }
 
     _is_editing &= event_type == EventType::released;
 
     auto row = *_store->get_iter(path);
-    if (!row) return Gtk::EVENT_SEQUENCE_NONE;
+    if (!row) return Gtk::EventSequenceState::NONE;
 
     SPItem *item = getItem(row);
-    if (!item) return Gtk::EVENT_SEQUENCE_NONE;
+    if (!item) return Gtk::EventSequenceState::NONE;
 
     auto layer = Inkscape::LayerManager::asLayer(item);
     auto const state = Controller::get_current_event_state(gesture);
@@ -1629,13 +1629,13 @@ Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureMultiPress const &ges
             selectCursorItem(state);
         }
 
-        return Gtk::EVENT_SEQUENCE_CLAIMED;
+        return Gtk::EventSequenceState::CLAIMED;
     } else {
         // Remember the item for we are about to drag it!
         current_item = item;
     }
 
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
 /**
@@ -1762,7 +1762,7 @@ bool ObjectsPanel::on_drag_motion(const Glib::RefPtr<Gdk::DragContext> &context,
 
     }
     // need to cater scenarios where we got no selection/empty bottom space
-    context->drag_status(Gdk::ACTION_MOVE, time);
+    context->drag_status(Gdk::DragAction::MOVE, time);
     return false;
 
 finally:
@@ -1790,15 +1790,15 @@ bool ObjectsPanel::on_drag_drop(const Glib::RefPtr<Gdk::DragContext> &context, i
             // drop the layer at end.
             // We will move to the last node/path and set drop position accordingly 
             path = --_store->children().end();
-            pos = Gtk::TREE_VIEW_DROP_AFTER;    
+            pos = Gtk::TreeView::DropPosition::AFTER;    
         } else {
             return true;
         }
     }
     
     auto drop_repr = getRepr(*_store->get_iter(path));
-    bool const drop_into = pos != Gtk::TREE_VIEW_DROP_BEFORE && //
-                           pos != Gtk::TREE_VIEW_DROP_AFTER;
+    bool const drop_into = pos != Gtk::TreeView::DropPosition::BEFORE && //
+                           pos != Gtk::TreeView::DropPosition::AFTER;
 
     auto selection = getSelection();
     auto document = getDocument();
@@ -1808,7 +1808,7 @@ bool ObjectsPanel::on_drag_drop(const Glib::RefPtr<Gdk::DragContext> &context, i
         if (drop_into && is<SPGroup>(item)) {
             selection->toLayer(item);
         } else {
-            Node *after = (pos == Gtk::TREE_VIEW_DROP_BEFORE) ? drop_repr : drop_repr->prev();
+            Node *after = (pos == Gtk::TreeView::DropPosition::BEFORE) ? drop_repr : drop_repr->prev();
             selection->toLayer(item->parent, after);
         }
         DocumentUndo::done(document, _("Move items"), INKSCAPE_ICON("selection-move-to-layer"));
@@ -1823,7 +1823,7 @@ void ObjectsPanel::on_drag_start(const Glib::RefPtr<Gdk::DragContext> &context)
     _scroll_lock = true;
 
     auto selection = _tree.get_selection();
-    selection->set_mode(Gtk::SELECTION_MULTIPLE);
+    selection->set_mode(Gtk::SelectionMode::MULTIPLE);
     selection->unselect_all();
 
     auto obj_selection = getSelection();
@@ -1855,7 +1855,7 @@ void ObjectsPanel::on_drag_end(const Glib::RefPtr<Gdk::DragContext> &context)
 {
     auto selection = _tree.get_selection();
     selection->unselect_all();
-    selection->set_mode(Gtk::SELECTION_NONE);
+    selection->set_mode(Gtk::SelectionMode::NONE);
     current_item = nullptr;
 }
 

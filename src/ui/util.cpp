@@ -118,7 +118,7 @@ void set_icon_sizes(GtkWidget* parent, int pixel_size)
 void gui_warning(const std::string &msg, Gtk::Window *parent_window) {
     g_warning("%s", msg.c_str());
     if (INKSCAPE.active_desktop()) {
-        Gtk::MessageDialog warning(_(msg.c_str()), false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK, true);
+        Gtk::MessageDialog warning(_(msg.c_str()), false, Gtk::MessageType::WARNING, Gtk::ButtonsType::OK, true);
         warning.set_transient_for( parent_window ? *parent_window : *(INKSCAPE.active_desktop()->getToplevel()) );
         dialog_run(warning);
     }

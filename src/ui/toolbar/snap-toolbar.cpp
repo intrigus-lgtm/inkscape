@@ -85,19 +85,19 @@ void SnapToolbar::mode_update() {
     switch (mode) {
         case SIMPLE:
             btn_simple.set_visible(true);
-            set_orientation(Gtk::ORIENTATION_HORIZONTAL);
-            snap_toolbar.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
+            set_orientation(Gtk::Orientation::HORIZONTAL);
+            snap_toolbar.set_orientation(Gtk::Orientation::HORIZONTAL);
             transition_to_simple_snapping();  // Defined in actions-canvas-snapping.cpp
             break;
         case ADVANCED:
             btn_advanced.set_visible(true);
-            set_orientation(Gtk::ORIENTATION_HORIZONTAL);
-            snap_toolbar.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
+            set_orientation(Gtk::Orientation::HORIZONTAL);
+            snap_toolbar.set_orientation(Gtk::Orientation::HORIZONTAL);
             break;
         case PERMANENT:
             scroll_permanent.set_visible(true);
-            box_permanent.set_orientation(Gtk::ORIENTATION_VERTICAL);
-            snap_toolbar.set_orientation(Gtk::ORIENTATION_VERTICAL);
+            box_permanent.set_orientation(Gtk::Orientation::VERTICAL);
+            snap_toolbar.set_orientation(Gtk::Orientation::VERTICAL);
             break;
         default:
             std::cerr << "SnapToolbar::mode_update: unhandled case!" << std::endl;

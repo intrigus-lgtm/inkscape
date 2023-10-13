@@ -137,7 +137,7 @@ void LPERoughen::doBeforeEffect(SPLPEItem const *lpeitem)
 
 Gtk::Widget *LPERoughen::newWidget()
 {
-    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 2);
+    auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
     vbox->property_margin().set_value(5);
 
     std::vector<Parameter *>::iterator it = param_vector.begin();
@@ -147,18 +147,18 @@ Gtk::Widget *LPERoughen::newWidget()
             auto widg = param->param_newWidget();
             if (param->param_key == "method") {
                 auto const method_label = Gtk::make_managed<Gtk::Label>(
-                    Glib::ustring(_("<b>Resolution</b>")), Gtk::ALIGN_START);
+                    Glib::ustring(_("<b>Resolution</b>")), Gtk::Align::START);
                 method_label->set_use_markup(true);
                 UI::pack_start(*vbox, *method_label, false, false, 2);
-                UI::pack_start(*vbox, *Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL),
+                UI::pack_start(*vbox, *Gtk::make_managed<Gtk::Separator>(Gtk::Orientation::HORIZONTAL),
                                UI::PackOptions::expand_widget);
             }
             if (param->param_key == "handles") {
                 auto const options = Gtk::make_managed<Gtk::Label>(
-                    Glib::ustring(_("<b>Options</b>")), Gtk::ALIGN_START);
+                    Glib::ustring(_("<b>Options</b>")), Gtk::Align::START);
                 options->set_use_markup(true);
                 UI::pack_start(*vbox, *options, false, false, 2);
-                UI::pack_start(*vbox, *Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL),
+                UI::pack_start(*vbox, *Gtk::make_managed<Gtk::Separator>(Gtk::Orientation::HORIZONTAL),
                                UI::PackOptions::expand_widget);
             }
 

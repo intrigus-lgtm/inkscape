@@ -93,7 +93,7 @@ Cairo::RefPtr<Cairo::Surface> add_shadow(Geom::Point image_size, Cairo::RefPtr<C
     auto height = h + 2 * margin;
     auto rect = Geom::Rect::from_xywh(margin, margin, w, h);
 
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, width * device_scale, height * device_scale);
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, width * device_scale, height * device_scale);
     cairo_surface_set_device_scale(surface->cobj(), device_scale, device_scale);
     auto ctx = Cairo::Context::create(surface);
 
@@ -146,7 +146,7 @@ Cairo::RefPtr<Cairo::Surface> render_icon(Extension::Effect* effect, std::string
 
     if (icon.empty() || !IO::file_test(icon.c_str(), G_FILE_TEST_EXISTS)) {
         // placeholder
-        image = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, icon_size.x(), icon_size.y());
+        image = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, icon_size.x(), icon_size.y());
         cairo_surface_set_device_scale(image->cobj(), device_scale, device_scale);
     }
     else {
@@ -320,7 +320,7 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
     auto effects = prepare_effects(Inkscape::Extension::db.get_effect_list(), _type == Effects);
 
     add_effects(_store, effects, _type == Effects);
-    model->set_sort_column(g_effect_columns.order.index(), Gtk::SORT_ASCENDING);
+    model->set_sort_column(g_effect_columns.order.index(), Gtk::SortType::ASCENDING);
 
     auto categories = add_categories(_categories, effects);
     if (!categories.count(_current_category.raw())) {

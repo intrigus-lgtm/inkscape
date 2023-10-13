@@ -35,7 +35,7 @@ Rotateable::Rotateable():
                                                                      GTK_EVENT_CONTROLLER_SCROLL_VERTICAL);
 }
 
-Gtk::EventSequenceState Rotateable::on_click(Gtk::GestureMultiPress const &click,
+Gtk::EventSequenceState Rotateable::on_click(Gtk::GestureClick const &click,
                                              int /*n_press*/, double const x, double const y)
 {
     drag_started_x = x;
@@ -45,7 +45,7 @@ Gtk::EventSequenceState Rotateable::on_click(Gtk::GestureMultiPress const &click
     dragging = true;
     working = false;
     current_axis = axis;
-    return Gtk::EVENT_SEQUENCE_NONE; // no claim, would stop release being fired
+    return Gtk::EventSequenceState::NONE; // no claim, would stop release being fired
 }
 
 unsigned Rotateable::get_single_modifier(unsigned const old, unsigned const state)
@@ -55,13 +55,13 @@ unsigned Rotateable::get_single_modifier(unsigned const old, unsigned const stat
             return 1; // ctrl
         if (state & GDK_SHIFT_MASK)
             return 2; // shift
-        if (state & GDK_MOD1_MASK)
+        if (state & GDK_ALT_MASK)
             return 3; // alt
         return 0;
     }
 
     if (!(state & GDK_CONTROL_MASK) && !(state & GDK_SHIFT_MASK)) {
-        if (state & GDK_MOD1_MASK)
+        if (state & GDK_ALT_MASK)
             return 3; // alt
         else
             return 0; // none
@@ -70,7 +70,7 @@ unsigned Rotateable::get_single_modifier(unsigned const old, unsigned const stat
     if (old == 1) {
         if (state & GDK_SHIFT_MASK && !(state & GDK_CONTROL_MASK))
             return 2; // shift
-        if (state & GDK_MOD1_MASK && !(state & GDK_CONTROL_MASK))
+        if (state & GDK_ALT_MASK && !(state & GDK_CONTROL_MASK))
            return 3; // alt
         return 1;
     }
@@ -78,7 +78,7 @@ unsigned Rotateable::get_single_modifier(unsigned const old, unsigned const stat
     if (old == 2) {
         if (state & GDK_CONTROL_MASK && !(state & GDK_SHIFT_MASK))
             return 1; // ctrl
-        if (state & GDK_MOD1_MASK && !(state & GDK_SHIFT_MASK))
+        if (state & GDK_ALT_MASK && !(state & GDK_SHIFT_MASK))
            return 3; // alt
         return 2;
     }
@@ -119,7 +119,7 @@ void Rotateable::on_motion(GtkEventControllerMotion const * const motion,
 }
 
 
-Gtk::EventSequenceState Rotateable::on_release(Gtk::GestureMultiPress const & /*click*/,
+Gtk::EventSequenceState Rotateable::on_release(Gtk::GestureClick const & /*click*/,
                                                int /*n_press*/, double const x, double const y)
 {
     if (dragging && working) {
@@ -132,12 +132,12 @@ Gtk::EventSequenceState Rotateable::on_release(Gtk::GestureMultiPress const & /*
         current_axis = axis;
         dragging = false;
         working = false;
-        return Gtk::EVENT_SEQUENCE_CLAIMED;
+        return Gtk::EventSequenceState::CLAIMED;
     }
 
     dragging = false;
     working = false;
-    return Gtk::EVENT_SEQUENCE_NONE;
+    return Gtk::EventSequenceState::NONE;
 }
 
 bool Rotateable::on_scroll(GtkEventControllerScroll const * const scroll,

@@ -22,9 +22,9 @@ std::string choose_file_save(Glib::ustring const &title, Gtk::Window *parent,
         current_folder = Glib::get_home_dir();
     }
 
-    Gtk::FileChooserDialog dlg(*parent, title, Gtk::FILE_CHOOSER_ACTION_SAVE);
-    constexpr int save_id = Gtk::RESPONSE_OK;
-    dlg.add_button(_("Cancel"), Gtk::RESPONSE_CANCEL);
+    Gtk::FileChooserDialog dlg(*parent, title, Gtk::FileChooser::Action::SAVE);
+    constexpr int save_id = Gtk::ResponseType::OK;
+    dlg.add_button(_("Cancel"), Gtk::ResponseType::CANCEL);
     dlg.add_button(_("Save"), save_id);
     dlg.set_default_response(save_id);
     auto filter = Gtk::FileFilter::create();
@@ -57,9 +57,9 @@ std::string _choose_file_open(Glib::ustring const &title, Gtk::Window *parent,
         current_folder = Glib::get_home_dir();
     }
 
-    Gtk::FileChooserDialog dlg(*parent, title, Gtk::FILE_CHOOSER_ACTION_OPEN);
-    constexpr int open_id = Gtk::RESPONSE_OK;
-    dlg.add_button(_("Cancel"), Gtk::RESPONSE_CANCEL);
+    Gtk::FileChooserDialog dlg(*parent, title, Gtk::FileChooser::Action::OPEN);
+    constexpr int open_id = Gtk::ResponseType::OK;
+    dlg.add_button(_("Cancel"), Gtk::ResponseType::CANCEL);
     dlg.add_button(_("Open"), open_id);
     dlg.set_default_response(open_id);
 

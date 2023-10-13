@@ -34,7 +34,7 @@ void initialize_gettext() {
         localepath = Glib::build_filename(Glib::path_get_dirname(get_inkscape_datadir()), PACKAGE_LOCALE_DIR);
     }
 
-    if (!Glib::file_test(localepath, Glib::FILE_TEST_IS_DIR)) {
+    if (!Glib::file_test(localepath, Glib::FileTest::IS_DIR)) {
         localepath = PACKAGE_LOCALE_DIR_ABSOLUTE;
     }
 

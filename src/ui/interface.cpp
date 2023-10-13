@@ -99,7 +99,7 @@ void sp_ui_error_dialog(char const *message)
 {
     auto const safeMsg = Inkscape::IO::sanitizeString(message);
 
-    auto dlg = Gtk::MessageDialog(safeMsg, true, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_CLOSE);
+    auto dlg = Gtk::MessageDialog(safeMsg, true, Gtk::MessageType::ERROR, Gtk::ButtonsType::CLOSE);
     sp_transientize(dlg.Gtk::Widget::gobj());
 
     Inkscape::UI::dialog_run(dlg);
@@ -119,12 +119,12 @@ bool sp_ui_overwrite_file(std::string const &filename)
                                             basename, dirname);
 
     auto window = SP_ACTIVE_DESKTOP->getToplevel();
-    auto dlg = Gtk::MessageDialog(*window, msg, true, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_NONE);
-    dlg.add_button(_("_Cancel"), Gtk::RESPONSE_NO);
-    dlg.add_button(_("Replace"), Gtk::RESPONSE_YES);
-    dlg.set_default_response(Gtk::RESPONSE_YES);
+    auto dlg = Gtk::MessageDialog(*window, msg, true, Gtk::MessageType::QUESTION, Gtk::ButtonsType::NONE);
+    dlg.add_button(_("_Cancel"), Gtk::ResponseType::NO);
+    dlg.add_button(_("Replace"), Gtk::ResponseType::YES);
+    dlg.set_default_response(Gtk::ResponseType::YES);
 
-    return Inkscape::UI::dialog_run(dlg) == Gtk::RESPONSE_YES;
+    return Inkscape::UI::dialog_run(dlg) == Gtk::ResponseType::YES;
 }
 
 /*

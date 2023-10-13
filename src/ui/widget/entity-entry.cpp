@@ -60,7 +60,7 @@ EntityEntry::create (rdf_work_entity_t* ent, Registry& wr)
 }
 
 EntityEntry::EntityEntry (rdf_work_entity_t* ent, Registry& wr)
-    : _label(Glib::ustring(_(ent->title)), Gtk::ALIGN_END),
+    : _label(Glib::ustring(_(ent->title)), Gtk::Align::END),
       _packable(nullptr),
       _entity(ent), _wr(&wr)
 {
@@ -140,11 +140,11 @@ EntityMultiLineEntry::EntityMultiLineEntry (rdf_work_entity_t* ent, Registry& wr
 : EntityEntry (ent, wr)
 {
     Gtk::ScrolledWindow *s = new Gtk::ScrolledWindow;
-    s->set_policy (Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    s->set_policy (Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     s->set_shadow_type (Gtk::SHADOW_IN);
     _packable = s;
     _v.set_size_request (-1, 35);
-    _v.set_wrap_mode (Gtk::WRAP_WORD);
+    _v.set_wrap_mode (Gtk::WrapMode::WORD);
     _v.set_accepts_tab (false);
     s->add (_v);
     _v.set_tooltip_text (_(ent->tip));

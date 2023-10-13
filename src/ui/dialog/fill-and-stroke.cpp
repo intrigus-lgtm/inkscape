@@ -150,7 +150,7 @@ FillAndStroke::_layoutPageStrokeStyle()
 {
     strokeStyleWdgt = Gtk::make_managed<UI::Widget::StrokeStyle>();
     strokeStyleWdgt->set_hexpand();
-    strokeStyleWdgt->set_halign(Gtk::ALIGN_START);
+    strokeStyleWdgt->set_halign(Gtk::Align::START);
     _page_stroke_style->table().attach(*strokeStyleWdgt, 0, 0, 1, 1);
 }
 
@@ -183,7 +183,7 @@ FillAndStroke::showPageStrokeStyle()
 Gtk::Box&
 FillAndStroke::_createPageTabLabel(const Glib::ustring& label, const char *label_image)
 {
-    auto const _tab_label_box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
+    auto const _tab_label_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
 
     auto img = Gtk::manage(sp_get_icon_image(label_image, Gtk::ICON_SIZE_MENU));
     _tab_label_box->add(*img);

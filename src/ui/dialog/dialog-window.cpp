@@ -83,7 +83,7 @@ DialogWindow::DialogWindow(InkscapeWindow *inkscape_window, Gtk::Widget *page)
     int window_height = INITIAL_WINDOW_HEIGHT;
 
     // =============== Outer Box ================
-    auto const box_outer = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+    auto const box_outer = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     add(*box_outer);
 
     // =============== Container ================

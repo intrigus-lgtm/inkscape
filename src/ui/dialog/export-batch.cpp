@@ -26,41 +26,27 @@
 #include <png.h>
 
 #include "desktop.h"
-#include "document-undo.h"
 #include "document.h"
-#include "file.h"
 #include "inkscape-window.h"
-#include "inkscape.h"
 #include "layer-manager.h"
 #include "message-stack.h"
 #include "page-manager.h"
 #include "preferences.h"
 #include "selection.h"
-#include "selection-chemistry.h"
 
-#include "extension/db.h"
 #include "extension/output.h"
 #include "helper/auto-connection.h"
-#include "helper/png-write.h"
-#include "io/resource.h"
-#include "io/fix-broken-links.h"
-#include "io/sys.h"
-#include "object/object-set.h"
 #include "object/sp-namedview.h"
 #include "object/sp-page.h"
 #include "object/sp-root.h"
 #include "ui/builder-utils.h"
-#include "ui/dialog-events.h"
-#include "ui/dialog/dialog-notebook.h"
 #include "ui/dialog/export-batch.h"
 #include "ui/dialog/export.h"
 #include "ui/icon-names.h"
-#include "ui/interface.h"
+#include "ui/dialog/filedialog.h"
 #include "ui/widget/color-picker.h"
 #include "ui/widget/export-lists.h"
 #include "ui/widget/export-preview.h"
-#include "ui/widget/scrollprotected.h"
-#include "ui/widget/unit-menu.h"
 
 namespace Inkscape::UI::Dialog {
 
@@ -139,7 +125,7 @@ void BatchItem::init(std::shared_ptr<PreviewDrawing> drawing) {
 
     set_valign(Gtk::Align::START);
     set_halign(Gtk::Align::START);
-    add(_grid);
+    set_child(_grid);
     this->set_focusable(false);
 
     _selector.signal_toggled().connect([this]() {
@@ -151,6 +137,8 @@ void BatchItem::init(std::shared_ptr<PreviewDrawing> drawing) {
 
     // This initially packs the widgets with a hidden preview.
     refresh(!is_hide, 0);
+
+    property_parent().signal_changed().connect([this] { on_parent_changed(); });
 }
 
 /**
@@ -194,7 +182,7 @@ void BatchItem::on_mode_changed(Gtk::SelectionMode mode)
 /**
  * Update the connection to the parent FlowBox
  */
-void BatchItem::on_parent_changed(Gtk::Widget *previous) {
+void BatchItem::on_parent_changed() {
     auto parent = dynamic_cast<Gtk::FlowBox *>(get_parent());
     if (!parent)
         return;
@@ -211,7 +199,7 @@ void BatchItem::on_parent_changed(Gtk::Widget *previous) {
 
     if (auto first = dynamic_cast<BatchItem *>(parent->get_child_at_index(0))) {
         auto group = first->get_radio_group();
-        _option.set_group(group);
+        _option.set_group(*group);
     }
 }
 
@@ -283,9 +271,9 @@ BatchExport::BatchExport(BaseObjectType * const cobject, Glib::RefPtr<Gtk::Build
     selection_names[SELECTION_LAYER] = "layer";
     selection_names[SELECTION_PAGE] = "page";
 
-    selection_buttons[SELECTION_SELECTION] = &get_widget<Gtk::RadioButton>(builder, "b_s_selection"); 
-    selection_buttons[SELECTION_LAYER]     = &get_widget<Gtk::RadioButton>(builder, "b_s_layers"); 
-    selection_buttons[SELECTION_PAGE]      = &get_widget<Gtk::RadioButton>(builder, "b_s_pages"); 
+    selection_buttons[SELECTION_SELECTION] = &get_widget<Gtk::ToggleButton>(builder, "b_s_selection");
+    selection_buttons[SELECTION_LAYER]     = &get_widget<Gtk::ToggleButton>(builder, "b_s_layers");
+    selection_buttons[SELECTION_PAGE]      = &get_widget<Gtk::ToggleButton>(builder, "b_s_pages");
 
     auto &button = get_widget<Gtk::Button>(builder, "b_backgnd");
     _bgnd_color_picker = std::make_unique<Inkscape::UI::Widget::ColorPicker>(

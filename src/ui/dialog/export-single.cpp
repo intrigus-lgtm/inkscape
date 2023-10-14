@@ -26,7 +26,7 @@
 #include <gtkmm/label.h>
 #include <gtkmm/menubutton.h>
 #include <gtkmm/progressbar.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/togglebutton.h>
 #include <gtkmm/recentmanager.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/spinbutton.h>
@@ -37,7 +37,6 @@
 #include "document-undo.h"
 #include "document.h"
 #include "inkscape-window.h"
-#include "message-stack.h"
 #include "page-manager.h"
 #include "preferences.h"
 #include "selection.h"
@@ -55,7 +54,6 @@
 #include "ui/widget/color-picker.h"
 #include "ui/widget/export-lists.h"
 #include "ui/widget/export-preview.h"
-#include "ui/widget/scrollprotected.h"
 #include "ui/widget/unit-menu.h"
 
 using Inkscape::Util::UnitTable;
@@ -90,10 +88,10 @@ SingleExport::SingleExport(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Buil
     selection_names[SELECTION_SELECTION] = "selection";
     selection_names[SELECTION_CUSTOM] = "custom";
 
-    selection_buttons[SELECTION_DRAWING]   = &get_widget<Gtk::RadioButton>(builder, "si_s_document");  
-    selection_buttons[SELECTION_PAGE]      = &get_widget<Gtk::RadioButton>(builder, "si_s_page");      
-    selection_buttons[SELECTION_SELECTION] = &get_widget<Gtk::RadioButton>(builder, "si_s_selection"); 
-    selection_buttons[SELECTION_CUSTOM]    = &get_widget<Gtk::RadioButton>(builder, "si_s_custom");    
+    selection_buttons[SELECTION_DRAWING]   = &get_widget<Gtk::ToggleButton>(builder, "si_s_document");
+    selection_buttons[SELECTION_PAGE]      = &get_widget<Gtk::ToggleButton>(builder, "si_s_page");
+    selection_buttons[SELECTION_SELECTION] = &get_widget<Gtk::ToggleButton>(builder, "si_s_selection");
+    selection_buttons[SELECTION_CUSTOM]    = &get_widget<Gtk::ToggleButton>(builder, "si_s_custom");
 
     spin_buttons[SPIN_X0]       = &get_derived_widget<SpinButton>(builder, "si_left_sb");
     spin_buttons[SPIN_X1]       = &get_derived_widget<SpinButton>(builder, "si_right_sb");
@@ -113,7 +111,7 @@ SingleExport::SingleExport(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Buil
     spin_labels[SPIN_WIDTH]     = &get_widget<Gtk::Label>(builder, "si_label_width");
 
     auto &pref_button_box = get_widget<Gtk::Box>(builder, "si_prefs");
-    pref_button_box.add(*si_extension_cb.getPrefButton());
+    pref_button_box.append(*si_extension_cb.getPrefButton());
 
     auto &button = get_widget<Gtk::Button>(builder, "si_backgnd");
     _bgnd_color_picker = std::make_unique<Inkscape::UI::Widget::ColorPicker>(
@@ -323,27 +321,32 @@ void SingleExport::refreshPage()
 void SingleExport::setPagesMode(bool multi)
 {
     // Set set the internal mode to NONE to preserve selections while changing
-    pages_list.foreach([=](Gtk::Widget& widget) {
-        if (auto item = dynamic_cast<BatchItem *>(&widget))
+    UI::for_each_child(pages_list, [] (Gtk::Widget &widget) {
+        if (auto item = dynamic_cast<BatchItem *>(&widget)) {
             item->on_mode_changed(Gtk::SelectionMode::NONE);
+        }
+        return UI::ForEachResult::_continue;
     });
     pages_list.set_selection_mode(multi ? Gtk::SelectionMode::MULTIPLE : Gtk::SelectionMode::SINGLE);
-    // A second call it needed in it's own loop because of how updates happen in the FlowBox
-    pages_list.foreach([=](Gtk::Widget& widget) {
-        if (auto item = dynamic_cast<BatchItem *>(&widget))
+    // A second call is needed in its own loop because of how updates happen in the FlowBox
+    UI::for_each_child(pages_list, [] (Gtk::Widget &widget) {
+        if (auto item = dynamic_cast<BatchItem *>(&widget)) {
             item->update_selected();
+        }
+        return UI::ForEachResult::_continue;
     });
     refreshPage();
 }
 
 void SingleExport::selectPage(SPPage *page)
 {
-    pages_list.foreach([=](Gtk::Widget& widget) {
+    UI::for_each_child(pages_list, [=] (Gtk::Widget &widget) {
         if (auto item = dynamic_cast<BatchItem *>(&widget)) {
             if (item->getPage() == page) {
                 item->set_selected(true);
             }
         }
+        return UI::ForEachResult::_continue;
     });
 }
 
@@ -716,7 +719,7 @@ void SingleExport::onExport()
     interrupted = false;
 }
 
-void SingleExport::onBrowse(Gtk::EntryIconPosition pos, const GdkEventButton *ev)
+void SingleExport::onBrowse(Gtk::Entry::IconPosition pos)
 {
     if (!_app || !_app->get_active_window() || !_document) {
         return;

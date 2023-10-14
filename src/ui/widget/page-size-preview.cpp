@@ -23,6 +23,7 @@ namespace Widget {
 
 PageSizePreview::PageSizePreview() {
     set_visible(true);
+    set_draw_func(sigc::mem_fun(*this, &PageSizePreview::draw_func));
 }
 
 void rounded_rectangle(const Cairo::RefPtr<Cairo::Context>& cr, double x, double y, double w, double h, double r) {
@@ -38,12 +39,9 @@ void set_source_rgba(const Cairo::RefPtr<Cairo::Context>& ctx, unsigned int rgba
     ctx->set_source_rgba(SP_RGBA32_R_F(rgba), SP_RGBA32_G_F(rgba), SP_RGBA32_B_F(rgba), SP_RGBA32_A_F(rgba));
 }
 
-bool PageSizePreview::on_draw(const Cairo::RefPtr<Cairo::Context>& ctx) {
-    auto alloc = get_allocation();
-    double width = alloc.get_width();
-    double height = alloc.get_height();
+void PageSizePreview::draw_func(Cairo::RefPtr<Cairo::Context> const &ctx, int width, int height) {
     // too small to fit anything?
-    if (width <= 2 || height <= 2) return false;
+    if (width <= 2 || height <= 2) return;
 
     double x = 0;//alloc.get_x();
     double y = 0;//alloc.get_y();
@@ -145,8 +143,6 @@ bool PageSizePreview::on_draw(const Cairo::RefPtr<Cairo::Context>& ctx) {
             ink_cairo_draw_drop_shadow(ctx, rect, 12, _border_color, a);
         }
     }
-
-    return true;
 }
 
 void PageSizePreview::draw_border(bool border) {

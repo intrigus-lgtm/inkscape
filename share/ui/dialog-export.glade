@@ -41,7 +41,7 @@
                                 <property name="valign">start</property>
                                 <property name="margin-top">5</property>
                                 <child>
-                                  <object class="GtkRadioButton" id="si_s_selection">
+                                  <object class="GtkToggleButton" id="si_s_selection">
                                     <property name="label" translatable="yes">Selection</property>
                                     <property name="name">export_selection</property>
                                     <property name="focusable">True</property>
@@ -57,7 +57,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkRadioButton" id="si_s_document">
+                                  <object class="GtkToggleButton" id="si_s_document">
                                     <property name="label" translatable="yes">Document</property>
                                     <property name="name">export_selection</property>
                                     <property name="focusable">True</property>
@@ -73,7 +73,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkRadioButton" id="si_s_page">
+                                  <object class="GtkToggleButton" id="si_s_page">
                                     <property name="label" translatable="yes">Page</property>
                                     <property name="name">export_selection</property>
                                     <property name="focusable">True</property>
@@ -89,7 +89,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkRadioButton" id="si_s_custom">
+                                  <object class="GtkToggleButton" id="si_s_custom">
                                     <property name="label" translatable="yes">Custom</property>
                                     <property name="name">export_selection</property>
                                     <property name="focusable">True</property>
@@ -700,7 +700,7 @@
                               <object class="GtkBox">
                                 <property name="hexpand">True</property>
                                 <child>
-                                  <object class="GtkRadioButton" id="b_s_selection">
+                                  <object class="GtkToggleButton" id="b_s_selection">
                                     <property name="label" translatable="yes">Selection</property>
                                     <property name="name">export_selection</property>
                                     <property name="hexpand">True</property>
@@ -710,7 +710,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkRadioButton" id="b_s_layers">
+                                  <object class="GtkToggleButton" id="b_s_layers">
                                     <property name="label" translatable="yes">Layers</property>
                                     <property name="name">export_selection</property>
                                     <property name="hexpand">True</property>
@@ -721,7 +721,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkRadioButton" id="b_s_pages">
+                                  <object class="GtkToggleButton" id="b_s_pages">
                                     <property name="label" translatable="yes">Pages</property>
                                     <property name="name">export_selection</property>
                                     <property name="hexpand">True</property>

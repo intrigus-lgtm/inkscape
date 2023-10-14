@@ -33,7 +33,7 @@ public:
     ~PageSizePreview() override = default;
 
 private:
-    bool on_draw(const Cairo::RefPtr<Cairo::Context>& ctx) override;
+    void draw_func(Cairo::RefPtr<Cairo::Context> const &cr, int width, int height);
     unsigned int _border_color = 0x0000001f;
     unsigned int _page_color = 0xffffff00;
     unsigned int _desk_color = 0xc8c8c8ff;

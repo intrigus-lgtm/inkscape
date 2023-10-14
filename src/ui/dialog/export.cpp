@@ -442,7 +442,7 @@ std::string Export::filePathFromObject(SPDocument *doc, SPObject *obj, const std
  */
 std::string Export::prependDirectory(Glib::ustring name, const std::string &orig, SPDocument *doc)
 {
-    if (Glib::path_is_absolute(name) || name.empty())
+    if (Glib::path_is_absolute(Glib::filename_from_utf8(name)) || name.empty())
         return name;
 
     std::string directory;

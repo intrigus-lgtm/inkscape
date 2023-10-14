@@ -44,7 +44,7 @@ Messages::Messages()
     , buttonBox(Gtk::Orientation::HORIZONTAL)
 {
     messageText.set_editable(false);
-    textScroll.add(messageText);
+    textScroll.set_child(messageText);
     textScroll.set_policy(Gtk::PolicyType::ALWAYS, Gtk::PolicyType::ALWAYS);
     UI::pack_start(*this, textScroll);
 
@@ -59,7 +59,7 @@ Messages::Messages()
     message(_("Ready."));
 
     buttonClear.signal_clicked().connect(sigc::mem_fun(*this, &Messages::clear));
-    checkCapture.signal_clicked().connect(sigc::mem_fun(*this, &Messages::toggleCapture));
+    checkCapture.signal_toggled().connect(sigc::mem_fun(*this, &Messages::toggleCapture));
 }
 
 //#########################################################################

@@ -32,7 +32,7 @@ class FlowBox;
 class Grid;
 class Label;
 class ProgressBar;
-class RadioButton;
+class ToggleButton;
 class ScrolledWindow;
 class SpinButton;
 } // namespace Gtk
@@ -112,7 +112,7 @@ private:
 
     std::map<sb_type, SpinButton *> spin_buttons;
     std::map<sb_type, Gtk::Label *> spin_labels;
-    std::map<selection_mode, Gtk::RadioButton *> selection_buttons;
+    std::map<selection_mode, Gtk::ToggleButton *> selection_buttons;
 
     Gtk::CheckButton *show_export_area = nullptr;
 
@@ -166,7 +166,7 @@ private:
     void onExtensionChanged();
     void onExport();
     void onCancel();
-    void onBrowse(Gtk::EntryIconPosition pos, const GdkEventButton *ev);
+    void onBrowse(Gtk::Entry::IconPosition pos);
     void on_inkscape_selection_modified(Inkscape::Selection *selection, guint flags);
     void on_inkscape_selection_changed(Inkscape::Selection *selection);
 

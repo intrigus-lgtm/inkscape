@@ -15,8 +15,9 @@
 #include "ui/widget/anchor-selector.h"
 #include "ui/dialog/arrange-tab.h"
 
-#include <gtkmm/radiobutton.h>
-#include <gtkmm/radiobuttongroup.h>
+#include <gtkmm/checkbutton.h>
+#include <gtkmm/label.h>
+#include <gtkmm/togglebutton.h>
 #include <gtkmm/grid.h>
 
 namespace Inkscape::UI::Dialog {
@@ -53,17 +54,15 @@ private:
 
     Gtk::Label             anchorPointLabel;
 
-    Gtk::RadioButtonGroup  anchorRadioGroup;
-    Gtk::RadioButton       anchorBoundingBoxRadio;
-    Gtk::RadioButton       anchorObjectPivotRadio;
+    Gtk::CheckButton       anchorBoundingBoxRadio;
+    Gtk::CheckButton       anchorObjectPivotRadio;
     Inkscape::UI::Widget::AnchorSelector anchorSelector;
 
     Gtk::Label             arrangeOnLabel;
 
-    Gtk::RadioButtonGroup  arrangeRadioGroup;
-    Gtk::RadioButton       arrangeOnFirstCircleRadio;
-    Gtk::RadioButton       arrangeOnLastCircleRadio;
-    Gtk::RadioButton       arrangeOnParametersRadio;
+    Gtk::CheckButton       arrangeOnFirstCircleRadio;
+    Gtk::CheckButton       arrangeOnLastCircleRadio;
+    Gtk::CheckButton       arrangeOnParametersRadio;
 
     Gtk::Grid              parametersTable;
 

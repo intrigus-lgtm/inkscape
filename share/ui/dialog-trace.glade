@@ -975,7 +975,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRadioButton">
+                      <object class="GtkCheckButton">
                         <property name="label" translatable="yes">B-splines</property>
                         <property name="focusable">True</property>
                         <property name="tooltip-text" translatable="yes">Preserve staircasing artifacts</property>
@@ -990,7 +990,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRadioButton" id="RB_PA_voronoi">
+                      <object class="GtkCheckButton" id="RB_PA_voronoi">
                         <property name="label" translatable="yes">Voronoi</property>
                         <property name="focusable">True</property>
                         <property name="tooltip-text" translatable="yes">Output composed of straight lines</property>

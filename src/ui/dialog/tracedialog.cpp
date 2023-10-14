@@ -26,10 +26,11 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/drawingarea.h>
+#include <gtkmm/eventcontrollerfocus.h>
 #include <gtkmm/frame.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/notebook.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/checkbutton.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/progressbar.h>
 #include <gtkmm/stack.h>
@@ -83,9 +84,11 @@ protected:
     void selectionModified(Selection *selection, unsigned flags) final;
     void selectionChanged(Selection *selection) final;
 
+    void size_allocate_vfunc(int width, int height, int baseline) override;
+
 private:
     TraceData getTraceData() const;
-    bool paintPreview(Cairo::RefPtr<Cairo::Context> const &cr);
+    void paintPreview(Cairo::RefPtr<Cairo::Context> const &cr, int, int);
     void setDefaults();
     void adjustParamsVisible();
     void onTraceClicked();
@@ -112,7 +115,7 @@ private:
     Gtk::CheckButton &CB_invert, &CB_MS_smooth, &CB_MS_stack, &CB_MS_rb;
     Gtk::CheckButton &CB_speckles,  &CB_smooth,  &CB_optimize,  &CB_SIOX;
     Gtk::CheckButton &CB_speckles1, &CB_smooth1, &CB_optimize1, &CB_SIOX1, &CB_PA_optimize;
-    Gtk::RadioButton &RB_PA_voronoi;
+    Gtk::CheckButton &RB_PA_voronoi;
     Gtk::Button &B_RESET, &B_STOP, &B_OK, &B_Update;
     Gtk::Box &mainBox;
     Gtk::Notebook &choice_tab;
@@ -227,7 +230,7 @@ TraceData TraceDialogImpl::getTraceData() const
     return data;
 }
 
-bool TraceDialogImpl::paintPreview(Cairo::RefPtr<Cairo::Context> const &cr)
+void TraceDialogImpl::paintPreview(Cairo::RefPtr<Cairo::Context> const &cr, int, int)
 {
     if (preview_image) {
         int width = preview_image->get_width();
@@ -247,13 +250,34 @@ bool TraceDialogImpl::paintPreview(Cairo::RefPtr<Cairo::Context> const &cr)
         cr->set_source_rgba(0, 0, 0, 0);
         cr->paint();
     }
-
-    return false;
 }
 
 void TraceDialogImpl::selectionChanged(Inkscape::Selection *selection)
 {
     updatePreview();
+}
+
+// attempt at making UI responsive: relocate preview to the right or bottom of dialog depending on dialog size
+void TraceDialogImpl::size_allocate_vfunc(int width, int height, int baseline)
+{
+    // skip bogus sizes
+    if (width >= 10 && height >= 10) {
+        // ratio: is dialog wide or is it tall?
+        double const ratio = width / static_cast<double>(height);
+        // g_warning("size alloc: %d x %d - %f", alloc.get_width(), alloc.get_height(), ratio);
+        constexpr double hysteresis = 0.01;
+        if (ratio < 1 - hysteresis) {
+            // narrow/tall
+            choice_tab.set_valign(Gtk::Align::START);
+            orient_box.set_orientation(Gtk::Orientation::VERTICAL);
+        } else if (ratio > 1 + hysteresis) {
+            // wide/short
+            orient_box.set_orientation(Gtk::Orientation::HORIZONTAL);
+            choice_tab.set_valign(Gtk::Align::FILL);
+        }
+    }
+
+    TraceDialog::size_allocate_vfunc(width, height, baseline);
 }
 
 void TraceDialogImpl::selectionModified(Selection *selection, unsigned flags)
@@ -378,7 +402,7 @@ TraceDialogImpl::TraceDialogImpl()
   , CB_SIOX1       (get_widget<Gtk::CheckButton> (builder,            "CB_SIOX1"))
   , CB_PA_optimize (get_widget<Gtk::CheckButton> (builder,      "CB_PA_optimize"))
     // RadioButton
-  , RB_PA_voronoi  (get_widget<Gtk::RadioButton> (builder,       "RB_PA_voronoi"))
+  , RB_PA_voronoi  (get_widget<Gtk::CheckButton> (builder,       "RB_PA_voronoi"))
     // Button
   , B_RESET        (get_widget<Gtk::Button>      (builder,             "B_RESET"))
   , B_STOP         (get_widget<Gtk::Button>      (builder,              "B_STOP"))
@@ -397,7 +421,7 @@ TraceDialogImpl::TraceDialogImpl()
   , boxchild1      (get_widget<Gtk::Box>         (builder,           "boxchild1"))
   , boxchild2      (get_widget<Gtk::Box>         (builder,           "boxchild2"))
 {
-    add(mainBox);
+    append(mainBox);
 
     Inkscape::Preferences* prefs = Inkscape::Preferences::get();
 
@@ -407,27 +431,7 @@ TraceDialogImpl::TraceDialogImpl()
     B_OK.signal_clicked().connect(sigc::mem_fun(*this, &TraceDialogImpl::onTraceClicked));
     B_STOP.signal_clicked().connect(sigc::mem_fun(*this, &TraceDialogImpl::onAbortClicked));
     B_RESET.signal_clicked().connect(sigc::mem_fun(*this, &TraceDialogImpl::setDefaults));
-    previewArea.signal_draw().connect(sigc::mem_fun(*this, &TraceDialogImpl::paintPreview));
-
-    // attempt at making UI responsive: relocate preview to the right or bottom of dialog depending on dialog size
-    signal_size_allocate().connect([=] (Gtk::Allocation const &alloc) {
-        // skip bogus sizes
-        if (alloc.get_width() < 10 || alloc.get_height() < 10) return;
-        // ratio: is dialog wide or is it tall?
-        double const ratio = alloc.get_width() / static_cast<double>(alloc.get_height());
-        // g_warning("size alloc: %d x %d - %f", alloc.get_width(), alloc.get_height(), ratio);
-        double constexpr hysteresis = 0.01;
-        if (ratio < 1 - hysteresis) {
-            // narrow/tall
-            choice_tab.set_valign(Gtk::Align::START);
-            orient_box.set_orientation(Gtk::Orientation::VERTICAL);
-        }
-        else if (ratio > 1 + hysteresis) {
-            // wide/short
-            orient_box.set_orientation(Gtk::Orientation::HORIZONTAL);
-            choice_tab.set_valign(Gtk::Align::FILL);
-        }
-    });
+    previewArea.set_draw_func(sigc::mem_fun(*this, &TraceDialogImpl::paintPreview));
 
     CBT_SS.signal_changed().connect([=] { adjustParamsVisible(); });
     adjustParamsVisible();
@@ -444,9 +448,10 @@ TraceDialogImpl::TraceDialogImpl()
     }
     choice_tab.signal_switch_page().connect([=] (Gtk::Widget*, unsigned) { updatePreview(); });
 
-    signal_set_focus_child().connect([=] (Gtk::Widget *w) {
-        if (w) updatePreview();
-    });
+    auto focus = Gtk::EventControllerFocus::create();
+    focus->set_propagation_phase(Gtk::PropagationPhase::BUBBLE);
+    add_controller(focus);
+    focus->signal_enter().connect([this] { updatePreview(); });
 }
 
 TraceDialogImpl::~TraceDialogImpl()

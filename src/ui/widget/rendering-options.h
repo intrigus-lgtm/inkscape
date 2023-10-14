@@ -16,7 +16,7 @@
 
 #include <gtkmm/box.h>
 #include <gtkmm/frame.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/checkbutton.h>
 
 namespace Inkscape::UI::Widget {
 
@@ -38,8 +38,8 @@ public:
 protected:
     // Radio buttons to select desired rendering
     Gtk::Frame       _frame_backends;
-    Gtk::RadioButton _radio_vector;
-    Gtk::RadioButton _radio_bitmap;
+    Gtk::CheckButton _radio_vector;
+    Gtk::CheckButton _radio_bitmap;
 
     // Bitmap options
     Gtk::Frame       _frame_bitmap;

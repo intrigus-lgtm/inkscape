@@ -18,15 +18,11 @@
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
-#include "inkscape.h"
-#include "preferences.h"
 #include "selection.h"
 #include "object/sp-ellipse.h"
-#include "object/sp-item-transform.h"
 #include "ui/dialog/tile.h"
 #include "ui/pack.h"
 #include "ui/icon-names.h"
-#include "ui/dialog-run.h"
 
 namespace Inkscape::UI::Dialog {
 
@@ -47,7 +43,6 @@ PolarArrangeTab::PolarArrangeTab(ArrangeDialog *parent_)
     UI::pack_start(*this, anchorPointLabel, false, false);
 
     anchorBoundingBoxRadio.set_label(C_("Polar arrange tab", "Objects' bounding boxes:"));
-    anchorRadioGroup = anchorBoundingBoxRadio.get_group();
     anchorBoundingBoxRadio.signal_toggled().connect(sigc::mem_fun(*this, &PolarArrangeTab::on_anchor_radio_changed));
     anchorBoundingBoxRadio.set_margin_start(4);
     UI::pack_start(*this, anchorBoundingBoxRadio, false, false);
@@ -57,7 +52,7 @@ PolarArrangeTab::PolarArrangeTab(ArrangeDialog *parent_)
     UI::pack_start(*this, anchorSelector, false, false);
 
     anchorObjectPivotRadio.set_label(C_("Polar arrange tab", "Objects' rotational centers"));
-    anchorObjectPivotRadio.set_group(anchorRadioGroup);
+    anchorObjectPivotRadio.set_group(anchorBoundingBoxRadio);
     anchorObjectPivotRadio.signal_toggled().connect(sigc::mem_fun(*this, &PolarArrangeTab::on_anchor_radio_changed));
     anchorObjectPivotRadio.set_margin_start(4);
     UI::pack_start(*this, anchorObjectPivotRadio, false, false);
@@ -68,19 +63,18 @@ PolarArrangeTab::PolarArrangeTab(ArrangeDialog *parent_)
     UI::pack_start(*this, arrangeOnLabel, false, false);
 
     arrangeOnFirstCircleRadio.set_label(C_("Polar arrange tab", "First selected circle/ellipse/arc"));
-    arrangeRadioGroup = arrangeOnFirstCircleRadio.get_group();
     arrangeOnFirstCircleRadio.signal_toggled().connect(sigc::mem_fun(*this, &PolarArrangeTab::on_arrange_radio_changed));
     arrangeOnFirstCircleRadio.set_margin_start(4);
     UI::pack_start(*this, arrangeOnFirstCircleRadio, false, false);
 
     arrangeOnLastCircleRadio.set_label(C_("Polar arrange tab", "Last selected circle/ellipse/arc"));
-    arrangeOnLastCircleRadio.set_group(arrangeRadioGroup);
+    arrangeOnLastCircleRadio.set_group(arrangeOnFirstCircleRadio);
     arrangeOnLastCircleRadio.signal_toggled().connect(sigc::mem_fun(*this, &PolarArrangeTab::on_arrange_radio_changed));
     arrangeOnLastCircleRadio.set_margin_start(4);
     UI::pack_start(*this, arrangeOnLastCircleRadio, false, false);
 
     arrangeOnParametersRadio.set_label(C_("Polar arrange tab", "Parameterized:"));
-    arrangeOnParametersRadio.set_group(arrangeRadioGroup);
+    arrangeOnParametersRadio.set_group(arrangeOnFirstCircleRadio);
     arrangeOnParametersRadio.signal_toggled().connect(sigc::mem_fun(*this, &PolarArrangeTab::on_arrange_radio_changed));
     arrangeOnParametersRadio.set_margin_start(4);
     UI::pack_start(*this, arrangeOnParametersRadio, false, false);

@@ -57,7 +57,7 @@ void show(std::vector<SPItem*> const &list, Glib::ustring const &out)
    textview.get_buffer()->set_text(_(out.c_str()));
 
    Gtk::ScrolledWindow scrollwindow;
-   scrollwindow.add(textview);
+   scrollwindow.set_child(textview);
    scrollwindow.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
    scrollwindow.set_has_frame(true);
    scrollwindow.set_size_request(0, 100);

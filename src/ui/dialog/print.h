@@ -41,7 +41,7 @@ namespace Dialog {
 class Print {
 public:
     Print(SPDocument *doc, SPItem *base);
-    Gtk::PrintOperationResult run(Gtk::PrintOperationAction, Gtk::Window &parent_window);
+    Gtk::PrintOperation::Result run(Gtk::PrintOperation::Action, Gtk::Window &parent_window);
 
 protected:
 

@@ -195,7 +195,7 @@ InkscapeApplication::document_open(const Glib::RefPtr<Gio::File>& file, bool *ca
                 if ((is_crash = orig->has_group("Crash"))) {
                     document->setModifiedSinceSave(true);
                     // Crash files store the original name in the display name field.
-                    auto old_path = Inkscape::IO::find_original_file(path, orig->get_display_name());
+                    auto old_path = Inkscape::IO::find_original_file(path, Glib::filename_from_utf8(orig->get_display_name()));
                     document->setDocumentFilename(old_path.empty() ? nullptr : old_path.c_str());
                     // We don't want other programs to gain access to this crash file
                     recentmanager->remove_item(uri);
@@ -641,7 +641,7 @@ InkscapeApplication::InkscapeApplication()
         Gio::Application::unset_default();
     }
 
-    if (gtk_init_check(nullptr, nullptr)) {
+    if (gtk_init_check()) {
         g_set_prgname(app_id.c_str());
         _gio_application = Gtk::Application::create(app_id, flags);
     } else {
@@ -801,7 +801,7 @@ InkscapeApplication::InkscapeApplication()
     gapp->add_main_option_entry(T::OptionType::BOOL,     "active-window",          'q', N_("Use active window from commandline"),                                       "");
     // clang-format on
 
-    gapp->signal_handle_local_options().connect(sigc::mem_fun(*this, &InkscapeApplication::on_handle_local_options));
+    gapp->signal_handle_local_options().connect(sigc::mem_fun(*this, &InkscapeApplication::on_handle_local_options), true);
 
     if (_with_gui && !non_unique) { // Will fail to register if not unique.
         // On macOS, this enables:
@@ -1208,7 +1208,7 @@ InkscapeApplication::parse_actions(const Glib::ustring& input, action_vector_t& 
                 } else if (type.get_string() == "s") {
                     action_vector.emplace_back(action, Glib::Variant<Glib::ustring>::create(value));
                  } else if (type.get_string() == "(dd)") {
-                    std::vector<Glib::ustring> tokens3 = Glib::Regex::split_simple(",", value);
+                    std::vector<Glib::ustring> tokens3 = Glib::Regex::split_simple(",", value.c_str());
                     if (tokens3.size() != 2) {
                         std::cerr << "InkscapeApplication::parse_actions: " << action << " requires two comma separated numbers" << std::endl;
                         continue;

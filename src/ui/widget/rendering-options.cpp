@@ -51,8 +51,7 @@ RenderingOptions::RenderingOptions () :
 
     set_margin(2);
 
-    Gtk::RadioButtonGroup group = _radio_vector.get_group ();
-    _radio_bitmap.set_group (group);
+    _radio_bitmap.set_group(_radio_vector);
     _radio_bitmap.signal_toggled().connect(sigc::mem_fun(*this, &RenderingOptions::_toggled));
     
     // default to vector operations
@@ -72,19 +71,19 @@ RenderingOptions::RenderingOptions () :
 
     // fill frames
     auto const box_vector = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
-    box_vector->set_border_width (2);
-    box_vector->add (_radio_vector);
-    box_vector->add (_radio_bitmap);
-    _frame_backends.add (*box_vector);
+    box_vector->set_margin(2);
+    box_vector->append(_radio_vector);
+    box_vector->append(_radio_bitmap);
+    _frame_backends.set_child(*box_vector);
 
     auto const box_bitmap = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
-    box_bitmap->set_border_width (2);
-    box_bitmap->add (_dpi);
-    _frame_bitmap.add (*box_bitmap);
+    box_bitmap->set_margin(2);
+    box_bitmap->append(_dpi);
+    _frame_bitmap.set_child(*box_bitmap);
 
     // fill up container
-    add (_frame_backends);
-    add (_frame_bitmap);
+    append(_frame_backends);
+    append(_frame_bitmap);
 
     // initialize states
     _toggled();

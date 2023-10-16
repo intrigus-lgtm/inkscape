@@ -7,7 +7,7 @@
 
 namespace Gtk {
 class Dialog;
-class Widget;
+class Root;
 } // namespace Gtk
 
 namespace Inkscape::UI {
@@ -25,7 +25,7 @@ int dialog_run(Gtk::Dialog &dialog);
  * Show a dialog modally, destroying it when the user dismisses it.
  * If toplevel is not null, the dialog is shown as a transient for toplevel.
  */
-void dialog_show_modal_and_selfdestruct(std::unique_ptr<Gtk::Dialog> dialog, Gtk::Widget *toplevel = nullptr);
+void dialog_show_modal_and_selfdestruct(std::unique_ptr<Gtk::Dialog> dialog, Gtk::Root *root = nullptr);
 
 } // namespace Inkscape::UI
 

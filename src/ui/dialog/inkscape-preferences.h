@@ -21,6 +21,7 @@
 
 #include <glibmm/refptr.h>
 #include <gtk/gtk.h> // GtkEventControllerKey
+#include <gtkmm/checkbutton.h>
 #include <gtkmm/colorbutton.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/frame.h>
@@ -29,6 +30,7 @@
 #include <gtkmm/searchentry.h>
 #include <gtkmm/sizegroup.h>
 #include <gtkmm/textview.h>
+#include <gtkmm/togglebutton.h>
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treemodelfilter.h>
 #include <gtkmm/treemodelsort.h>

@@ -63,7 +63,7 @@ private:
     int _x = 0, _y = 0;
     SvgFont *_svgfont = nullptr;
     Glib::ustring _text;
-    bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr) final;
+    void draw_func(Cairo::RefPtr<Cairo::Context> const &cr, int width, int height);
 };
 
 class SPFont;
@@ -108,7 +108,7 @@ public:
     Glib::PropertyProxy<bool> property_active() { return _property_active.get_proxy(); }
     Glib::PropertyProxy<bool> property_activatable() { return _property_activatable.get_proxy(); }
 
-    sigc::signal<void (const GdkEvent*, const Glib::ustring&)>& signal_clicked() {
+    [[nodiscard]] auto signal_clicked() {
         return _signal_clicked;
     }
  
@@ -133,13 +133,14 @@ public:
         return _width;
     }
 
-    void render_vfunc(Cairo::RefPtr<Cairo::Context> const& cr,
-                      Gtk::Widget &widget,
-                      Gdk::Rectangle const &background_area,
-                      Gdk::Rectangle const &cell_area,
-                      Gtk::CellRendererState flags) final;
+    void snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const& snapshot,
+                        Gtk::Widget &widget,
+                        Gdk::Rectangle const &background_area,
+                        Gdk::Rectangle const &cell_area,
+                        Gtk::CellRendererState flags) final;
 
-    bool activate_vfunc(GdkEvent *event, Gtk::Widget &widget,
+    bool activate_vfunc(Glib::RefPtr<Gdk::Event const> const &event,
+                        Gtk::Widget &widget,
                         Glib::ustring  const &path,
                         Gdk::Rectangle const &background_area,
                         Gdk::Rectangle const &cell_area,
@@ -164,7 +165,8 @@ private:
     Glib::Property<bool> _property_activatable;
     SvgFont* _font = nullptr;
     Gtk::Widget* _tree = nullptr;
-    sigc::signal<void (const GdkEvent*, const Glib::ustring&)> _signal_clicked;
+    sigc::signal<void (Glib::RefPtr<Gdk::Event const> const &,
+                       Glib::ustring                  const &)> _signal_clicked;
 };
 
 
@@ -246,15 +248,6 @@ private:
     void font_selected(SvgFont* svgfont, SPFont* spfont);
 
     void add_kerning_pair();
-
-    void create_glyphs_popup_menu(Gtk::Widget& parent, sigc::slot<void ()> rem);
-    void glyphs_list_button_release(GdkEventButton* event);
-
-    void create_fonts_popup_menu(Gtk::Widget& parent, sigc::slot<void ()> rem);
-    void fonts_list_button_release(GdkEventButton* event);
-
-    void create_kerning_pairs_popup_menu(Gtk::Widget& parent, sigc::slot<void ()> rem);
-    void kerning_pairs_list_button_release(GdkEventButton* event);
 
     Gtk::TreeModel::iterator get_selected_glyph_iter();
     void set_selected_glyph(SPGlyph* glyph);
@@ -379,8 +372,8 @@ private:
     public:
         EntryWidget()
         : Gtk::Box(Gtk::Orientation::HORIZONTAL) {
-            this->add(this->_label);
-            this->add(this->_entry);
+            append(_label);
+            append(_entry);
         }
         void set_label(const gchar* l){
             this->_label.set_text(l);

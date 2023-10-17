@@ -27,8 +27,10 @@
 #include <gtkmm/image.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/notebook.h>
-#include <gtkmm/radiobutton.h>
 #include <gtkmm/scale.h>
+#include <gtkmm/snapshot.h>
+#include <gtkmm/togglebutton.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include "desktop.h"
 #include "document.h"
@@ -57,6 +59,7 @@
 SvgFontDrawingArea::SvgFontDrawingArea()
 {
     set_name("SVGFontDrawingArea");
+    set_draw_func(sigc::mem_fun(*this, &SvgFontDrawingArea::draw_func));
 }
 
 void SvgFontDrawingArea::set_svgfont(SvgFont* svgfont){
@@ -78,8 +81,11 @@ void SvgFontDrawingArea::redraw(){
     queue_draw();
 }
 
-bool SvgFontDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
-  if (_svgfont){
+void SvgFontDrawingArea::draw_func(Cairo::RefPtr<Cairo::Context> const &cr,
+                                   int /*width*/, int /*height*/)
+{
+  if (!_svgfont) return;
+
     cr->set_font_face( Cairo::RefPtr<Cairo::FontFace>(new Cairo::FontFace(_svgfont->get_font_face(), false /* does not have reference */)) );
     cr->set_font_size (_y-20);
     cr->move_to (10, 10);
@@ -91,17 +97,17 @@ bool SvgFontDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
     } catch (std::exception const &ex) {
         g_warning("Error drawing custom SVG font text: %s", ex.what());
     }
-  }
-  return true;
 }
 
 namespace Inkscape::UI::Dialog {
 
-void SvgGlyphRenderer::render_vfunc(
-        const Cairo::RefPtr<Cairo::Context>& cr, Gtk::Widget& widget,
-        const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) {
+void SvgGlyphRenderer::snapshot_vfunc(
+    Glib::RefPtr<Gtk::Snapshot> const &snapshot, Gtk::Widget& widget,
+    const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) {
 
     if (!_font || !_tree) return;
+
+    auto const cr = snapshot->append_cairo(background_area);
 
     cr->set_font_face(Cairo::RefPtr<Cairo::FontFace>(new Cairo::FontFace(_font->get_font_face(), false /* does not have reference */)));
     cr->set_font_size(_font_size);
@@ -112,7 +118,7 @@ void SvgGlyphRenderer::render_vfunc(
 
     auto const selected = (flags & Gtk::CellRendererState::SELECTED) != Gtk::CellRendererState{};
     auto const css_class = selected ? "theme_selected_bg_color" : "";
-    auto const fg = get_color_with_class(_tree, css_class);
+    auto const fg = get_color_with_class(*_tree, css_class);
     cr->set_source_rgb(fg.get_red(), fg.get_green(), fg.get_blue());
 
     // crash on macos: https://gitlab.com/inkscape/inkscape/-/issues/266
@@ -124,8 +130,9 @@ void SvgGlyphRenderer::render_vfunc(
 }
 
 bool SvgGlyphRenderer::activate_vfunc(
-        GdkEvent* event, Gtk::Widget& widget, const Glib::ustring& path, const Gdk::Rectangle& background_area,
-        const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) {
+    Glib::RefPtr<Gdk::Event const> const &event,
+    Gtk::Widget &widget, Glib::ustring const &path, Gdk::Rectangle const &background_area,
+    const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) {
 
     Glib::ustring glyph = _property_glyph.get_value();
     _signal_clicked.emit(event, glyph);
@@ -250,8 +257,8 @@ void SvgFontsDialog::AttrSpin::on_attr_changed(){
 
 Gtk::Box* SvgFontsDialog::AttrCombo(gchar* lbl, const SPAttr /*attr*/){
     auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
-    hbox->add(* Gtk::make_managed<Gtk::Label>(lbl) );
-    hbox->add(* Gtk::make_managed<Gtk::ComboBox>() );
+    hbox->append(*Gtk::make_managed<Gtk::Label>(lbl));
+    hbox->append(*Gtk::make_managed<Gtk::ComboBox>());
     return hbox;
 }
 
@@ -260,14 +267,13 @@ GlyphMenuButton::GlyphMenuButton()
 {
     _label.set_width_chars(2);
 
-    auto const arrow = Gtk::make_managed<Gtk::Image>("pan-down-symbolic", Gtk::ICON_SIZE_BUTTON);
+    auto const arrow = Gtk::make_managed<Gtk::Image>(Gio::ThemedIcon::create("pan-down-symbolic"));
     arrow->add_css_class("arrow");
 
     auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 2);
-    box->add(_label);
-    box->add(*arrow);
-    add(*box);
-    show_all();
+    box->append(_label);
+    box->append(*arrow);
+    set_child(*box);
 
     set_popover(*_menu);
 }
@@ -302,7 +308,6 @@ void GlyphMenuButton::update(SPFont const * const spfont)
 
     set_sensitive(true);
     _label.set_label(active_label);
-    _menu->show_all_children();
 }
 
 Glib::ustring GlyphMenuButton::get_active_text() const
@@ -807,7 +812,7 @@ const int MARGIN_SPACE = 4;
 
 Gtk::Box* SvgFontsDialog::global_settings_tab(){
     _fonts_scroller.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
-    _fonts_scroller.add(_FontsList);
+    _fonts_scroller.set_child(_FontsList);
     _fonts_scroller.set_hexpand();
     _fonts_scroller.set_visible(true);
 
@@ -928,7 +933,7 @@ SvgFontsDialog::populate_glyphs_box()
         for (auto& node: spfont->children) {
             if (is<SPGlyph>(&node)) {
                 auto& glyph = static_cast<SPGlyph&>(node);
-                Gtk::TreeModel::Row row = *_GlyphsListStore->append();
+                auto row = *_GlyphsListStore->append();
                 set_glyph_row(row, glyph);
             }
         }
@@ -1333,11 +1338,11 @@ Gtk::Box* SvgFontsDialog::glyphs_tab() {
 
     auto const missing_glyph = Gtk::make_managed<Gtk::Expander>();
     missing_glyph->set_label(_("Missing glyph"));
-    missing_glyph->add(*missing_glyph_hbox);
+    missing_glyph->set_child(*missing_glyph_hbox);
     missing_glyph->set_valign(Gtk::Align::CENTER);
 
     _GlyphsListScroller.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::ALWAYS);
-    _GlyphsListScroller.add(_GlyphsList);
+    _GlyphsListScroller.set_child(_GlyphsList);
     fix_inner_scroll(&_GlyphsListScroller);
     _GlyphsList.set_model(_GlyphsListStore);
     _GlyphsList.set_enable_search(false);
@@ -1347,7 +1352,9 @@ Gtk::Box* SvgFontsDialog::glyphs_tab() {
     _glyph_renderer->set_font_size(size * 9 / 10);
     _glyph_renderer->set_cell_size(size * 3 / 2, size);
     _glyph_renderer->set_tree(&_GlyphsList);
-    _glyph_renderer->signal_clicked().connect([this](GdkEvent const *, Glib::ustring const &unicodes) {
+    _glyph_renderer->signal_clicked().connect([this](Glib::RefPtr<Gdk::Event const> const &/*event*/,
+                                                     Glib::ustring const &unicodes)
+    {
         // set preview: show clicked glyph only
         _preview_entry.set_text(unicodes);
     });
@@ -1366,17 +1373,17 @@ Gtk::Box* SvgFontsDialog::glyphs_tab() {
 
     auto const glyph_from_path_button = Gtk::make_managed<Gtk::Button>();
     auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 2);
-    box->add(*Gtk::make_managed<Gtk::Image>("glyph-copy-from", Gtk::ICON_SIZE_BUTTON));
-    box->add(*Gtk::make_managed<Gtk::Label>(_("Get curves")));
-    glyph_from_path_button->add(*box);
+    box->append(*Gtk::make_managed<Gtk::Image>(Gio::ThemedIcon::create("glyph-copy-from")));
+    box->append(*Gtk::make_managed<Gtk::Label>(_("Get curves")));
+    glyph_from_path_button->set_child(*box);
     glyph_from_path_button->set_tooltip_text(_("Get curves from selection to replace current glyph"));
     glyph_from_path_button->signal_clicked().connect(sigc::mem_fun(*this, &SvgFontsDialog::set_glyph_description_from_selected_path));
 
     auto const edit = Gtk::make_managed<Gtk::Button>();
     box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 2);
-    box->add(*Gtk::make_managed<Gtk::Image>("edit", Gtk::ICON_SIZE_BUTTON));
-    box->add(*Gtk::make_managed<Gtk::Label>(_("Edit")));
-    edit->add(*box);
+    box->append(*Gtk::make_managed<Gtk::Image>(Gio::ThemedIcon::create("edit")));
+    box->append(*Gtk::make_managed<Gtk::Label>(_("Edit")));
+    edit->set_child(*box);
     edit->set_tooltip_text(_("Switch to a layer with the same name as current glyph"));
     edit->signal_clicked().connect([this]{ edit_glyph(get_selected_glyph()); });
 
@@ -1407,7 +1414,7 @@ Gtk::Box* SvgFontsDialog::glyphs_tab() {
     const int cell_height = 50;
     _glyph_cell_renderer->set_cell_size(cell_width, cell_height);
     _glyph_cell_renderer->set_font_size(cell_height * 8 / 10); // font size: 80% of height
-    _glyphs_icon_scroller.add(_glyphs_grid);
+    _glyphs_icon_scroller.set_child(_glyphs_grid);
     _glyphs_icon_scroller.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     _glyphs_grid.set_name("GlyphsGrid");
     _glyphs_grid.set_model(_GlyphsListStore);
@@ -1449,16 +1456,14 @@ Gtk::Box* SvgFontsDialog::glyphs_tab() {
 
     // display mode switching buttons
     auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
-    Gtk::RadioButtonGroup group;
-    auto const list = Gtk::make_managed<Gtk::RadioButton>(group);
-    list->set_mode(false);
-    list->set_image_from_icon_name("glyph-list");
+    auto const list = Gtk::make_managed<Gtk::ToggleButton>();
+    list->set_icon_name("glyph-list");
     list->set_tooltip_text(_("Glyph list view"));
     list->set_valign(Gtk::Align::START);
     list->signal_toggled().connect([this]{ set_glyphs_view_mode(true); });
-    auto const grid = Gtk::make_managed<Gtk::RadioButton>(group);
-    grid->set_mode(false);
-    grid->set_image_from_icon_name("glyph-grid");
+    auto const grid = Gtk::make_managed<Gtk::ToggleButton>();
+    grid->set_group(*list);
+    grid->set_icon_name("glyph-grid");
     grid->set_tooltip_text(_("Glyph grid view"));
     grid->set_valign(Gtk::Align::START);
     grid->signal_toggled().connect([this] { set_glyphs_view_mode(false); });
@@ -1549,11 +1554,11 @@ Gtk::Box* SvgFontsDialog::kerning_tab(){
     remove_kernpair_button->signal_clicked().connect(sigc::mem_fun(*this, &SvgFontsDialog::remove_selected_kerning_pair));
 
     auto const kerning_selector = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, MARGIN_SPACE);
-    kerning_selector->add(*Gtk::make_managed<Gtk::Label>(_("Select glyphs:")));
-    kerning_selector->add(first_glyph);
-    kerning_selector->add(second_glyph);
-    kerning_selector->add(*add_kernpair_button);
-    kerning_selector->add(*remove_kernpair_button);
+    kerning_selector->append(*Gtk::make_managed<Gtk::Label>(_("Select glyphs:")));
+    kerning_selector->append(first_glyph);
+    kerning_selector->append(second_glyph);
+    kerning_selector->append(*add_kernpair_button);
+    kerning_selector->append(*remove_kernpair_button);
 
     _KerningPairsList.set_model(_KerningPairsListStore);
     _KerningPairsList.append_column(_("First glyph"), _KerningPairsListColumns.first_glyph);
@@ -1561,7 +1566,7 @@ Gtk::Box* SvgFontsDialog::kerning_tab(){
     _KerningPairsList.get_selection()->signal_changed().connect(sigc::mem_fun(*this, &SvgFontsDialog::on_kerning_pair_selection_changed));
 
     _KerningPairsListScroller.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::ALWAYS);
-    _KerningPairsListScroller.add(_KerningPairsList);
+    _KerningPairsListScroller.set_child(_KerningPairsList);
 
     kerning_slider->signal_value_changed().connect(sigc::mem_fun(*this, &SvgFontsDialog::on_kerning_value_changed));
 

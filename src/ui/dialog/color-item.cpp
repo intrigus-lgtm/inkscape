@@ -17,13 +17,18 @@
 #include <cairomm/context.h>
 #include <cairomm/pattern.h>
 #include <cairomm/surface.h>
+#include <glibmm/bytes.h>
 #include <glibmm/convert.h>
 #include <glibmm/i18n.h>
 #include <giomm/menu.h>
 #include <giomm/menuitem.h>
 #include <giomm/simpleaction.h>
 #include <giomm/simpleactiongroup.h>
+#include <gdkmm/contentprovider.h>
 #include <gdkmm/general.h>
+#include <gdkmm/pixbuf.h>
+#include <gdkmm/texture.h>
+#include <gtkmm/dragsource.h>
 #include <gtkmm/gestureclick.h>
 #include <gtkmm/popover.h>
 #include <sigc++/functors/mem_fun.h>
@@ -51,52 +56,21 @@
 #include "ui/menuize.h"
 #include "ui/util.h"
 
-namespace {
-
-class Globals
+[[nodiscard]] static auto const &get_removecolor()
 {
-    Globals()
-    {
-        load_removecolor();
-        load_mimetargets();
-    }
-
-    void load_removecolor()
-    {
-        auto path_utf8 = (Glib::ustring)Inkscape::IO::Resource::get_path(Inkscape::IO::Resource::SYSTEM,
-            Inkscape::IO::Resource::UIS, "resources", "remove-color.png");
-        auto path = Glib::filename_from_utf8(path_utf8);
-        auto pixbuf = Gdk::Pixbuf::create_from_file(path);
-        if (!pixbuf) {
-            g_warning("Null pixbuf for %p [%s]", path.c_str(), path.c_str());
-        }
-        removecolor = Gdk::Cairo::create_surface_from_pixbuf(pixbuf, 1);
-    }
-
-    void load_mimetargets()
-    {
-        auto &mimetypes = PaintDef::getMIMETypes();
-        mimetargets.reserve(mimetypes.size());
-        for (int i = 0; i < mimetypes.size(); i++) {
-            mimetargets.emplace_back(mimetypes[i], (Gtk::TargetFlags)0, i);
-        }
-    }
-
-public:
-    static Globals &get()
-    {
-        static Globals instance;
-        return instance;
-    }
-
     // The "remove-color" image.
-    Cairo::RefPtr<Cairo::ImageSurface> removecolor;
+    static Glib::RefPtr<Gdk::Pixbuf> pixbuf;
+    if (pixbuf) return pixbuf;
 
-    // The MIME targets for drag and drop, in the format expected by GTK.
-    std::vector<Gtk::TargetEntry> mimetargets;
-};
-
-} // namespace
+    auto path_utf8 = (Glib::ustring)Inkscape::IO::Resource::get_path(Inkscape::IO::Resource::SYSTEM,
+        Inkscape::IO::Resource::UIS, "resources", "remove-color.png");
+    auto path = Glib::filename_from_utf8(path_utf8);
+    pixbuf = Gdk::Pixbuf::create_from_file(path);
+    if (!pixbuf) {
+        g_warning("Null pixbuf for %p [%s]", path.c_str(), path.c_str());
+    }
+    return pixbuf;
+}
 
 namespace Inkscape::UI::Dialog {
 
@@ -168,6 +142,7 @@ void ColorItem::common_setup()
 {
     set_name("ColorItem");
     set_tooltip_text(description + (tooltip.empty() ? tooltip : "\n" + tooltip));
+    set_draw_func(sigc::mem_fun(*this, &ColorItem::draw_func));
 
     Controller::add_motion<&ColorItem::on_motion_enter,
                            nullptr,
@@ -178,7 +153,12 @@ void ColorItem::common_setup()
                           sigc::mem_fun(*this, &ColorItem::on_click_pressed),
                           sigc::mem_fun(*this, &ColorItem::on_click_released));
 
-    drag_source_set(Globals::get().mimetargets, Gdk::ModifierType::BUTTON1_MASK, Gdk::DragAction::MOVE | Gdk::DragAction::COPY);
+    Controller::add_drag_source(*this, {
+        .button  = Controller::Button::left,
+        .actions = Gdk::DragAction::MOVE | Gdk::DragAction::COPY,
+        .prepare = sigc::mem_fun(*this, &ColorItem::on_drag_prepare),
+        .begin   = sigc::mem_fun(*this, &ColorItem::on_drag_begin  )
+    });
 }
 
 void ColorItem::set_pinned_pref(const std::string &path)
@@ -201,11 +181,11 @@ void ColorItem::draw_color(Cairo::RefPtr<Cairo::Context> const &cr, int w, int h
         cr->stroke();
     }
     else if (is_paint_none()) {
-        if (auto surface = Globals::get().removecolor) {
+        if (auto const pixbuf = get_removecolor()) {
             const auto device_scale = get_scale_factor();
             cr->save();
-            cr->scale((double)w / surface->get_width() / device_scale, (double)h / surface->get_height() / device_scale);
-            cr->set_source(surface, 0, 0);
+            cr->scale((double)w / pixbuf->get_width() / device_scale, (double)h / pixbuf->get_height() / device_scale);
+            Gdk::Cairo::set_source_pixbuf(cr, pixbuf, 0, 0);
             cr->paint();
             cr->restore();
         }
@@ -235,11 +215,8 @@ void ColorItem::draw_color(Cairo::RefPtr<Cairo::Context> const &cr, int w, int h
     }
 }
 
-bool ColorItem::on_draw(Cairo::RefPtr<Cairo::Context> const &cr)
+void ColorItem::draw_func(Cairo::RefPtr<Cairo::Context> const &cr, int const w, int const h)
 {
-    auto w = get_width();
-    auto h = get_height();
-
     // Only using caching for none and gradients. None is included because the image is huge.
     bool const use_cache = std::holds_alternative<PaintNone>(data) || std::holds_alternative<GradientData>(data);
 
@@ -288,13 +265,12 @@ bool ColorItem::on_draw(Cairo::RefPtr<Cairo::Context> const &cr)
             cr->fill();
         }
     }
-
-    return true;
 }
 
-void ColorItem::on_size_allocate(Gtk::Allocation &allocation)
+void ColorItem::size_allocate_vfunc(int const width, int const height, int const baseline)
 {
-    Gtk::DrawingArea::on_size_allocate(allocation);
+    Gtk::DrawingArea::size_allocate_vfunc(width, height, baseline);
+
     cache_dirty = true;
 }
 
@@ -341,7 +317,7 @@ Gtk::EventSequenceState ColorItem::on_click_released(Gtk::GestureClick const &cl
     auto const button = click.get_current_button();
     if (mouse_inside && (button == 1 || button == 2)) {
         auto const state = click.get_current_event_state();
-        auto const stroke = button == 2 || (state & Gdk::SHIFT_MASK) != 0;
+        auto const stroke = button == 2 || Controller::has_flag(state, Gdk::ModifierType::SHIFT_MASK);
         on_click(stroke);
         return Gtk::EventSequenceState::CLAIMED;
     }
@@ -534,32 +510,36 @@ PaintDef ColorItem::to_paintdef() const
     return {};
 }
 
-void ColorItem::on_drag_data_get(Glib::RefPtr<Gdk::DragContext> const &context, Gtk::SelectionData &selection_data, guint info, guint time)
+Glib::RefPtr<Gdk::ContentProvider> ColorItem::on_drag_prepare(Gtk::DragSource const &/*source*/,
+                                                              double /*x*/, double /*y*/)
 {
-    if (!dialog) return;
+    if (!dialog) return {};
 
-    auto &mimetypes = PaintDef::getMIMETypes();
-    if (info < 0 || info >= mimetypes.size()) {
-        g_warning("ERROR: unknown value (%d)", info);
-        return;
+    auto def = to_paintdef();
+    std::vector<Glib::RefPtr<Gdk::ContentProvider>> providers;
+
+    for (auto const &key: PaintDef::getMIMETypes()) {
+        auto [vec, format] = def.getMIMEData(key);
+        if (vec.empty()) continue;
+
+        auto bytes = Glib::Bytes::create(vec.data(), vec.size());
+        auto provider = Gdk::ContentProvider::create(key, std::move(bytes));
+        providers.push_back(std::move(provider));
     }
 
-    auto &key = mimetypes[info];
-    auto def = to_paintdef();
-    auto [vec, format] = def.getMIMEData(key);
-    if (vec.empty()) return;
-
-    selection_data.set(key, format, reinterpret_cast<guint8 const*>(vec.data()), vec.size());
+    return Gdk::ContentProvider::create(std::move(providers));
 }
 
-void ColorItem::on_drag_begin(Glib::RefPtr<Gdk::DragContext> const &context)
+void ColorItem::on_drag_begin(Gtk::DragSource &source, Glib::RefPtr<Gdk::Drag> const &/*drag*/)
 {
     constexpr int w = 32;
     constexpr int h = 24;
 
     auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, w, h);
     draw_color(Cairo::Context::create(surface), w, h);
-    context->set_icon(Gdk::Pixbuf::create(surface, 0, 0, w, h), 0, 0);
+    auto const pixbuf = Gdk::Pixbuf::create(surface, 0, 0, w, h);
+    auto const texture = Gdk::Texture::create_for_pixbuf(pixbuf);
+    source.set_icon(texture, 0, 0);
 }
 
 void ColorItem::set_fill(bool b)
@@ -600,7 +580,6 @@ std::array<double, 3> ColorItem::average_color() const
         cr->paint();
         cr->set_source(pat);
         cr->paint();
-        cr.clear();
         auto rgb = img->get_data();
         return {rgb[0] / 255.0, rgb[1] / 255.0, rgb[2] / 255.0};
     }

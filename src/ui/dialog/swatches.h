@@ -33,7 +33,7 @@ class Builder;
 class Button;
 class Label;
 class MenuButton;
-class RadioButton;
+class ToggleButton;
 } // namespace Gtk
 
 class SPGradient;
@@ -69,7 +69,7 @@ private:
     void selectionChanged(Selection *selection) final;
     void selectionModified(Selection *selection, guint flags) final;
 
-    void on_size_allocate(Gtk::Allocation &) final;
+    void size_allocate_vfunc(int width, int height, int baseline) final;
 
     void update_palettes(bool compact);
     void rebuild();
@@ -116,8 +116,8 @@ private:
 
     Inkscape::PrefObserver _pinned_observer;
     Glib::RefPtr<Gtk::Builder> _builder;
-    Gtk::RadioButton& _list_btn;
-    Gtk::RadioButton& _grid_btn;
+    Gtk::ToggleButton &_list_btn;
+    Gtk::ToggleButton &_grid_btn;
     PaletteFileData _loaded_palette;
 
     Gtk::MenuButton &_selector;

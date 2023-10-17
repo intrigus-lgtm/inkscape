@@ -91,12 +91,12 @@ private:
 
     EventLog::CallbackMap _callback_connections;
 
-    static void *_handleEventLogDestroyCB(void *data);
+    static void _handleEventLogDestroyCB(sigc::notifiable *data);
 
     void disconnectEventLog();
     void connectEventLog();
 
-    void *_handleEventLogDestroy();
+    void _handleEventLogDestroy();
     void _onListSelectionChange();
     void _onExpandEvent(const Gtk::TreeModel::iterator &iter, const Gtk::TreeModel::Path &path);
     void _onCollapseEvent(const Gtk::TreeModel::iterator &iter, const Gtk::TreeModel::Path &path);

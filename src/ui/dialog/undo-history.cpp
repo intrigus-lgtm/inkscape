@@ -71,7 +71,7 @@ UndoHistory::UndoHistory()
 
     _event_list_view.set_expander_column( *_event_list_view.get_column(cols_count - 1) );
 
-    _scrolled_window.add(_event_list_view);
+    _scrolled_window.set_child(_event_list_view);
     _scrolled_window.set_overlay_scrolling(false);
     // connect EventLog callbacks
     _callback_connections[EventLog::CALLB_SELECTION_CHANGE] =
@@ -120,18 +120,16 @@ void UndoHistory::connectEventLog()
     }
 }
 
-void *UndoHistory::_handleEventLogDestroyCB(void *data)
+void UndoHistory::_handleEventLogDestroyCB(sigc::notifiable * const data)
 {
-    void *result = nullptr;
     if (data) {
         UndoHistory *self = reinterpret_cast<UndoHistory*>(data);
-        result = self->_handleEventLogDestroy();
+        self->_handleEventLogDestroy();
     }
-    return result;
 }
 
 // called *after* _event_log has been destroyed.
-void *UndoHistory::_handleEventLogDestroy()
+void UndoHistory::_handleEventLogDestroy()
 {
     if (_event_log) {
         SignalBlocker blocker(&_callback_connections[EventLog::CALLB_SELECTION_CHANGE]);
@@ -140,8 +138,6 @@ void *UndoHistory::_handleEventLogDestroy()
         _event_list_store.reset();
         _event_log = nullptr;
     }
-
-    return nullptr;
 }
 
 void

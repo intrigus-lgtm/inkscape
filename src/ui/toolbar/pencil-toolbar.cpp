@@ -29,7 +29,7 @@
 #include "pencil-toolbar.h"
 
 #include <glibmm/i18n.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/togglebutton.h>
 
 #include "desktop.h"
 #include "display/curve.h"
@@ -79,7 +79,7 @@ PencilToolbar::PencilToolbar(SPDesktop *desktop, bool pencil_mode)
     // Configure mode buttons
     int btn_index = 0;
     for_each_child(get_widget<Gtk::Box>(_builder, "mode_buttons_box"), [&](Gtk::Widget &item){
-        auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
+        auto &btn = dynamic_cast<Gtk::ToggleButton &>(item);
         _mode_buttons.push_back(&btn);
         btn.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &PencilToolbar::mode_changed), btn_index++));
         return ForEachResult::_continue;
@@ -132,12 +132,12 @@ PencilToolbar::PencilToolbar(SPDesktop *desktop, bool pencil_mode)
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
 
-    add(*_toolbar);
+    append(*_toolbar);
 
     hide_extra_widgets();
 }
@@ -168,7 +168,7 @@ void PencilToolbar::add_powerstroke_cap()
 
     _cap_item->signal_changed().connect(sigc::mem_fun(*this, &PencilToolbar::change_cap));
 
-    get_widget<Gtk::Box>(_builder, "powerstroke_cap_box").add(*_cap_item);
+    get_widget<Gtk::Box>(_builder, "powerstroke_cap_box").append(*_cap_item);
 }
 
 void PencilToolbar::add_shape_option()
@@ -200,7 +200,7 @@ void PencilToolbar::add_shape_option()
     _shape_item->set_active(shape);
 
     _shape_item->signal_changed().connect(sigc::mem_fun(*this, &PencilToolbar::change_shape));
-    get_widget<Gtk::Box>(_builder, "shape_box").add(*_shape_item);
+    get_widget<Gtk::Box>(_builder, "shape_box").append(*_shape_item);
 }
 
 void PencilToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
@@ -225,8 +225,8 @@ void PencilToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib:
 void PencilToolbar::hide_extra_widgets()
 {
     std::vector<Gtk::Widget *> pen_only_items;
-    pen_only_items.push_back(&get_widget<Gtk::RadioButton>(_builder, "zigzag_btn"));
-    pen_only_items.push_back(&get_widget<Gtk::RadioButton>(_builder, "paraxial_btn"));
+    pen_only_items.push_back(&get_widget<Gtk::ToggleButton>(_builder, "zigzag_btn"));
+    pen_only_items.push_back(&get_widget<Gtk::ToggleButton>(_builder, "paraxial_btn"));
 
     std::vector<Gtk::Widget *> pencil_only_items;
     pencil_only_items.push_back(&get_widget<Gtk::Box>(_builder, "pencil_only_box"));

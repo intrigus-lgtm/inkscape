@@ -29,7 +29,9 @@
 #include "arc-toolbar.h"
 
 #include <glibmm/i18n.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/adjustment.h>
+#include <gtkmm/label.h>
+#include <gtkmm/togglebutton.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -40,6 +42,7 @@
 #include "ui/builder-utils.h"
 #include "ui/icon-names.h"
 #include "ui/tools/arc-tool.h"
+#include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
@@ -70,16 +73,16 @@ ArcToolbar::ArcToolbar(SPDesktop *desktop)
     _tracker->setActiveUnit(init_units);
 
     auto unit_menu = _tracker->create_tool_item(_("Units"), (""));
-    get_widget<Gtk::Box>(_builder, "unit_menu_box").add(*unit_menu);
+    get_widget<Gtk::Box>(_builder, "unit_menu_box").append(*unit_menu);
 
     setup_derived_spin_button(_rx_item, "rx");
     setup_derived_spin_button(_ry_item, "ry");
     setup_startend_button(_start_item, "start");
     setup_startend_button(_end_item, "end");
 
-    _type_buttons.push_back(&get_widget<Gtk::RadioButton>(_builder, "slice_btn"));
-    _type_buttons.push_back(&get_widget<Gtk::RadioButton>(_builder, "arc_btn"));
-    _type_buttons.push_back(&get_widget<Gtk::RadioButton>(_builder, "chord_btn"));
+    _type_buttons.push_back(&get_widget<Gtk::ToggleButton>(_builder, "slice_btn"));
+    _type_buttons.push_back(&get_widget<Gtk::ToggleButton>(_builder, "arc_btn"));
+    _type_buttons.push_back(&get_widget<Gtk::ToggleButton>(_builder, "chord_btn"));
 
     int type = Preferences::get()->getInt("/tools/shapes/arc/arc_type", 0);
     _type_buttons[type]->set_active();
@@ -103,7 +106,7 @@ ArcToolbar::ArcToolbar(SPDesktop *desktop)
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
@@ -111,7 +114,7 @@ ArcToolbar::ArcToolbar(SPDesktop *desktop)
     menu_btn2->init(2, "tag2", popover_box2, children);
     addCollapsibleButton(menu_btn2);
 
-    add(*_toolbar);
+    append(*_toolbar);
 
     _make_whole.signal_clicked().connect(sigc::mem_fun(*this, &ArcToolbar::defaults));
 

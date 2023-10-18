@@ -38,6 +38,7 @@
 #include "object/sp-namedview.h"
 #include "ui/builder-utils.h"
 #include "ui/tools/measure-tool.h"
+#include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
@@ -81,7 +82,7 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
 
     auto unit_menu = _tracker->create_tool_item(_("Units"), (""));
     unit_menu->signal_changed().connect(sigc::mem_fun(*this, &MeasureToolbar::unit_changed));
-    get_widget<Gtk::Box>(_builder, "unit_menu_box").add(*unit_menu);
+    get_widget<Gtk::Box>(_builder, "unit_menu_box").append(*unit_menu);
 
     setup_derived_spin_button(_font_size_item, "fontsize", 10.0, &MeasureToolbar::fontsize_value_changed);
     setup_derived_spin_button(_precision_item, "precision", 2, &MeasureToolbar::precision_value_changed);
@@ -101,7 +102,7 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     menu_btn2->init(2, "tag2", popover_box2, children);
@@ -145,7 +146,7 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
         .signal_clicked()
         .connect(sigc::mem_fun(*this, &MeasureToolbar::to_mark_dimension));
 
-    add(*_toolbar);
+    append(*_toolbar);
 }
 
 MeasureToolbar::~MeasureToolbar() = default;

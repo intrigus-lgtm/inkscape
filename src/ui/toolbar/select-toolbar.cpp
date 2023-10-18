@@ -19,7 +19,6 @@
 #include <2geom/rect.h>
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
-
 #include <gtkmm/adjustment.h>
 #include <gtkmm/box.h>
 #include <gtkmm/enums.h>
@@ -36,6 +35,7 @@
 #include "selection.h"
 #include "ui/builder-utils.h"
 #include "ui/icon-names.h"
+#include "ui/util.h"
 #include "ui/widget/canvas.h" // Focus widget
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
@@ -77,7 +77,7 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     setup_derived_spin_button(_h_item, "height");
 
     auto unit_menu = _tracker->create_tool_item(_("Units"), (""));
-    get_widget<Gtk::Box>(_builder, "unit_menu_box").add(*unit_menu);
+    get_widget<Gtk::Box>(_builder, "unit_menu_box").append(*unit_menu);
 
     // Fetch all the ToolbarMenuButtons at once from the UI file
     // Menu Button #1
@@ -92,14 +92,14 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
     menu_btn2->init(2, "tag2", popover_box2, children);
     addCollapsibleButton(menu_btn2);
 
-    add(*_toolbar);
+    append(*_toolbar);
 
     _select_touch_btn.set_active(prefs->getBool("/tools/select/touch_box", false));
     _select_touch_btn.signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_touch));
@@ -108,7 +108,8 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     _tracker->setActiveUnit(desktop->getNamedView()->display_units);
 
     // Use StyleContext to check if the child is a context item.
-    for (auto child : _toolbar->get_children()) {
+    children = UI::get_children(*_toolbar);
+    for (auto const child : children) {
         bool const is_context_item = child->has_css_class("context_item");
         if (is_context_item) {
             _context_items.push_back(child);

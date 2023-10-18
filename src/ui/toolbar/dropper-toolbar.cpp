@@ -69,7 +69,7 @@ DropperToolbar::DropperToolbar(SPDesktop *desktop)
 {
     _toolbar = &get_widget<Gtk::Box>(_builder, "dropper-toolbar");
 
-    add(*_toolbar);
+    append(*_toolbar);
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 

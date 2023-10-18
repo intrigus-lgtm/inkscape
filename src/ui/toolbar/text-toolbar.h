@@ -40,7 +40,6 @@
 namespace Gtk {
 class Builder;
 class ListBox;
-class RadioButton;
 class ToggleButton;
 } // namespace Gtk
 
@@ -79,10 +78,10 @@ private:
     UI::Widget::UnitTracker *_tracker;
     UI::Widget::UnitTracker *_tracker_fs;
 
-    std::vector<Gtk::RadioButton *> _alignment_buttons;
-    std::vector<Gtk::RadioButton *> _writing_buttons;
-    std::vector<Gtk::RadioButton *> _orientation_buttons;
-    std::vector<Gtk::RadioButton *> _direction_buttons;
+    std::vector<Gtk::ToggleButton *> _alignment_buttons;
+    std::vector<Gtk::ToggleButton *> _writing_buttons;
+    std::vector<Gtk::ToggleButton *> _orientation_buttons;
+    std::vector<Gtk::ToggleButton *> _direction_buttons;
 
     Gtk::ListBox &_font_collections_list;
 
@@ -122,7 +121,7 @@ private:
 
     void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value,
                                    ValueChangedMemFun const value_changed_mem_fun);
-    void configure_mode_buttons(std::vector<Gtk::RadioButton *> &buttons, Gtk::Box &box, Glib::ustring const &name,
+    void configure_mode_buttons(std::vector<Gtk::ToggleButton *> &buttons, Gtk::Box &box, Glib::ustring const &name,
                                 ModeChangedMemFun const mode_changed_mem_fun);
     void text_outer_set_style(SPCSSAttr *css);
     void fontfamily_value_changed();

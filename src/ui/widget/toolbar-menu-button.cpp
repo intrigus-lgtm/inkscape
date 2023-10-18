@@ -21,7 +21,7 @@ ToolbarMenuButton::ToolbarMenuButton(BaseObjectType *cobject, Glib::RefPtr<Gtk::
     set_visible(false);
     signal_show().connect([this]{
         g_assert(_popover_box);
-        if (_popover_box && _popover_box->get_children().empty()) {
+        if (!_popover_box->get_first_child()) {
             set_visible(false);
         }
     }, false);
@@ -54,8 +54,8 @@ static int minw(Gtk::Widget const *widget)
     if (!widget) return 0;
 
     int min = 0;
-    int nat = 0;
-    widget->get_preferred_width(min, nat);
+    int ignore = 0;
+    widget->measure(Gtk::Orientation::HORIZONTAL, -1, min, ignore, ignore, ignore);
     return min;
 };
 

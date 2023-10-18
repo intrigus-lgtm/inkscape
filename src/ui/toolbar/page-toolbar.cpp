@@ -35,6 +35,7 @@
 #include "ui/builder-utils.h"
 #include "ui/icon-names.h"
 #include "ui/tools/pages-tool.h"
+#include "ui/util.h"
 #include "ui/widget/toolbar-menu-button.h"
 #include "util/paper.h"
 #include "util/units.h"
@@ -89,12 +90,12 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
 
-    add(*_toolbar);
+    append(*_toolbar);
 
     _text_page_label.signal_changed().connect(sigc::mem_fun(*this, &PageToolbar::labelEdited));
 
@@ -112,7 +113,7 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
 
     _text_page_bleeds.signal_activate().connect(sigc::mem_fun(*this, &PageToolbar::bleedsEdited));
     _text_page_margins.signal_activate().connect(sigc::mem_fun(*this, &PageToolbar::marginsEdited));
-    _text_page_margins.signal_icon_press().connect([=](Gtk::EntryIconPosition, const GdkEventButton *) {
+    _text_page_margins.signal_icon_press().connect([this] (Gtk::Entry::IconPosition) {
         if (auto page = _document->getPageManager().getSelected()) {
             auto margin = page->getMargin();
             auto unit = _document->getDisplayUnit()->abbr;
@@ -147,7 +148,7 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
         _entry_page_sizes->add_css_class("symbolic");
         _entry_page_sizes->signal_activate().connect(sigc::mem_fun(*this, &PageToolbar::sizeChanged));
 
-        _entry_page_sizes->signal_icon_press().connect([=](Gtk::EntryIconPosition, const GdkEventButton *) {
+        _entry_page_sizes->signal_icon_press().connect([this] (Gtk::Entry::IconPosition) {
             _document->getPageManager().changeOrientation();
             DocumentUndo::maybeDone(_document, "page-resize", _("Resize Page"), INKSCAPE_ICON("tool-pages"));
             setSizeText();
@@ -413,8 +414,7 @@ void PageToolbar::setSizeText(SPPage *page, bool display_only)
     auto label = _document->getPageManager().getSizeLabel(page);
 
     // If this is a known size in our list, add the size paren to it.
-    for (auto iter : _sizes_search->children()) {
-        auto row = *iter;
+    for (auto &row : _sizes_search->children()) {
         if (label == row[cols.name]) {
             label = label + " (" + row[cols.label] + ")";
             break;

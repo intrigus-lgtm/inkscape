@@ -86,7 +86,7 @@ Box3DToolbar::Box3DToolbar(SPDesktop *desktop)
 
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &Box3DToolbar::check_ec));
 
-    add(*_toolbar);
+    append(*_toolbar);
 }
 
 void Box3DToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,

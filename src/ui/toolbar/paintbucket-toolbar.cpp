@@ -39,6 +39,7 @@
 #include "preferences.h"
 #include "ui/builder-utils.h"
 #include "ui/tools/flood-tool.h"
+#include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
@@ -81,7 +82,7 @@ PaintbucketToolbar::PaintbucketToolbar(SPDesktop *desktop)
         _channels_item->set_active(channels);
 
         _channels_item->signal_changed().connect(sigc::mem_fun(*this, &PaintbucketToolbar::channels_changed));
-        get_widget<Gtk::Box>(_builder, "channels_box").add(*_channels_item);
+        get_widget<Gtk::Box>(_builder, "channels_box").append(*_channels_item);
 
         // Create the units menu.
         Glib::ustring stored_unit = prefs->getString("/tools/paintbucket/offsetunits");
@@ -110,10 +111,10 @@ PaintbucketToolbar::PaintbucketToolbar(SPDesktop *desktop)
         _autogap_item->set_active(autogap);
 
         _autogap_item->signal_changed().connect(sigc::mem_fun(*this, &PaintbucketToolbar::autogap_changed));
-        get_widget<Gtk::Box>(_builder, "autogap_box").add(*_autogap_item);
+        get_widget<Gtk::Box>(_builder, "autogap_box").append(*_autogap_item);
 
         auto units_menu = _tracker->create_tool_item(_("Units"), (""));
-        get_widget<Gtk::Box>(_builder, "unit_menu_box").add(*units_menu);
+        get_widget<Gtk::Box>(_builder, "unit_menu_box").append(*units_menu);
     }
 
     // Fetch all the ToolbarMenuButtons at once from the UI file
@@ -125,12 +126,12 @@ PaintbucketToolbar::PaintbucketToolbar(SPDesktop *desktop)
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
 
-    add(*_toolbar);
+    append(*_toolbar);
 
     // Signals.
     get_widget<Gtk::Button>(_builder, "reset_btn")

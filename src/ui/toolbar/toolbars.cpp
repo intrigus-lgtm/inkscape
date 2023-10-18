@@ -150,7 +150,7 @@ void Toolbars::create_toolbars(SPDesktop *desktop)
                 grid->attach(*swatch, 1, 0, 1, 1);
             }
 
-            add(*grid);
+            append(*grid);
 
         } else if (aux_toolboxes[i].swatch_tip) {
             std::cerr << "Toolbars::create_toolbars: Could not create: " << aux_toolboxes[i].tool_name << std::endl;
@@ -171,11 +171,7 @@ void Toolbars::change_toolbar(SPDesktop * /*desktop*/, Tools::ToolBase *tool)
     }
 
     for (int i = 0; aux_toolboxes[i].type_name; i++) {
-        if (tool->getPrefsPath() == aux_toolboxes[i].type_name) {
-            toolbar_map[aux_toolboxes[i].tool_name]->show_now();
-        } else {
-            toolbar_map[aux_toolboxes[i].tool_name]->set_visible(false);
-        }
+        toolbar_map[aux_toolboxes[i].tool_name]->set_visible(tool->getPrefsPath() == aux_toolboxes[i].type_name);
     }
 }
 

@@ -35,7 +35,8 @@
 namespace Gtk {
 class Button;
 class Builder;
-class RadioButton;
+class Label;
+class ToggleButton;
 } // namespace Gtk
 
 class SPDesktop;
@@ -79,7 +80,7 @@ private:
 
     Gtk::Label &_mode_item;
 
-    std::vector<Gtk::RadioButton *> _type_buttons;
+    std::vector<Gtk::ToggleButton *> _type_buttons;
     Gtk::Button &_make_whole;
 
     bool _freeze{false};

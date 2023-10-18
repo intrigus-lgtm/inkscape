@@ -15,6 +15,7 @@
 #include "command-toolbar.h"
 
 #include "ui/builder-utils.h"
+#include "ui/util.h"
 #include "ui/widget/toolbar-menu-button.h"
 
 namespace Inkscape::UI::Toolbar {
@@ -58,7 +59,7 @@ CommandToolbar::CommandToolbar(SPDesktop *desktop)
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
@@ -81,7 +82,7 @@ CommandToolbar::CommandToolbar(SPDesktop *desktop)
     menu_btn7->init(6, "tag7", popover_box7, children);
     addCollapsibleButton(menu_btn7);
 
-    add(*_toolbar);
+    append(*_toolbar);
 }
 
 CommandToolbar::~CommandToolbar() = default;

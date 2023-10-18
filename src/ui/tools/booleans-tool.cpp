@@ -273,7 +273,7 @@ bool InteractiveBooleansTool::event_key_press_handler(KeyPressEvent const &event
             return true;
         case GDK_KEY_z:
         case GDK_KEY_Z:
-            if (event.modifiers & INK_GDK_PRIMARY_MASK) {
+            if (event.modifiers & GDK_CONTROL_MASK) {
                 return catch_undo(event.modifiers & GDK_SHIFT_MASK);
             }
             break;

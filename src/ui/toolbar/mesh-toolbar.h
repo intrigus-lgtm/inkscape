@@ -26,7 +26,6 @@ class SPObject;
 
 namespace Gtk {
 class Builder;
-class RadioButton;
 class ToggleButton;
 } // namespace Gtk
 
@@ -60,8 +59,8 @@ private:
 
     Glib::RefPtr<Gtk::Builder> _builder;
 
-    std::vector<Gtk::RadioButton *> _new_type_buttons;
-    std::vector<Gtk::RadioButton *> _new_fillstroke_buttons;
+    std::vector<Gtk::ToggleButton *> _new_type_buttons;
+    std::vector<Gtk::ToggleButton *> _new_fillstroke_buttons;
     UI::Widget::ComboToolItem *_select_type_item;
 
     Gtk::ToggleButton *_edit_fill_btn;

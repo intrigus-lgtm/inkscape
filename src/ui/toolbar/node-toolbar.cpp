@@ -34,6 +34,7 @@
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
 #include <gtkmm/image.h>
+#include <gtkmm/menubutton.h>
 #include <gtkmm/togglebutton.h>
 #include <sigc++/functors/mem_fun.h>
 
@@ -48,6 +49,7 @@
 #include "ui/tool/control-point-selection.h"
 #include "ui/tool/multi-path-manipulator.h"
 #include "ui/tools/node-tool.h"
+#include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
@@ -97,7 +99,7 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
     setup_derived_spin_button(_nodes_y_item, "Ycoord");
 
     auto unit_menu = _tracker->create_tool_item(_("Units"), (""));
-    get_widget<Gtk::Box>(_builder, "unit_menu_box").add(*unit_menu);
+    get_widget<Gtk::Box>(_builder, "unit_menu_box").append(*unit_menu);
 
     // Fetch all the ToolbarMenuButtons at once from the UI file
     // Menu Button #1
@@ -112,14 +114,14 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
     menu_btn2->init(2, "tag2", popover_box2, children);
     addCollapsibleButton(menu_btn2);
 
-    add(*_toolbar);
+    append(*_toolbar);
 
     // Attach the signals.
 

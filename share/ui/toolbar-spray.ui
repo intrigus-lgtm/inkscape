@@ -40,12 +40,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkRadioButton" id="mode_buttons_group">
-    <property name="focusable">True</property>
-    <property name="always-show-image">True</property>
-    <property name="active">True</property>
-    <property name="draw-indicator">False</property>
-  </object>
   <object class="GtkPopover" id="popover1">
     <property name="modal">True</property>
     <child>
@@ -93,11 +87,7 @@
         <property name="receives-default">True</property>
         <property name="has-frame">false</property>
         <property name="popover">popover1</property>
-        <child>
-          <object class="GtkImage" id="image17">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
+        <property name="icon-name">go-down</property>
       </object>
     </child>
     <child>
@@ -116,65 +106,44 @@
       <object class="GtkBox" id="mode_buttons_box">
         <property name="spacing">3</property>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton" id="mode_buttons_group">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Spray copies of the initial selection</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
-            <property name="group">mode_buttons_group</property>
-            <child>
-              <object class="GtkImage" id="image1">
-                <property name="icon-name">spray-mode-copy</property>
-              </object>
-            </child>
+            <property name="icon-name">spray-mode-copy</property>
           </object>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Spray clones of the initial selection</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
-            <child>
-              <object class="GtkImage" id="image2">
-                <property name="icon-name">spray-mode-clone</property>
-              </object>
-            </child>
+            <property name="icon-name">spray-mode-clone</property>
           </object>
           <packing>
             <property name="position">1</property>
           </packing>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Spray objects in a single path</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
-            <child>
-              <object class="GtkImage" id="image3">
-                <property name="icon-name">spray-mode-union</property>
-              </object>
-            </child>
+            <property name="icon-name">spray-mode-union</property>
           </object>
           <packing>
             <property name="position">2</property>
           </packing>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Delete sprayed items from selection</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
-            <child>
-              <object class="GtkImage" id="image4">
-                <property name="icon-name">draw-eraser</property>
-              </object>
-            </child>
+            <property name="icon-name">draw-eraser</property>
           </object>
           <packing>
             <property name="position">5</property>
@@ -202,11 +171,7 @@
         <property name="receives-default">True</property>
         <property name="has-frame">false</property>
         <property name="popover">popover2</property>
-        <child>
-          <object class="GtkImage" id="image18">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
+        <property name="icon-name">go-down</property>
       </object>
       <packing>
         <property name="position">4</property>
@@ -247,14 +212,10 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of spray area</property>
         <property name="has-frame">false</property>
+        <property name="icon-name">draw-use-pressure</property>
         <style>
           <class name="tag2"/>
         </style>
-        <child>
-          <object class="GtkImage" id="image5">
-            <property name="icon-name">draw-use-pressure</property>
-          </object>
-        </child>
       </object>
       <packing>
         <property name="position">6</property>
@@ -295,14 +256,10 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of spray area</property>
         <property name="has-frame">false</property>
+        <property name="icon-name">draw-use-pressure</property>
         <style>
           <class name="tag2"/>
         </style>
-        <child>
-          <object class="GtkImage" id="image6">
-            <property name="icon-name">draw-use-pressure</property>
-          </object>
-        </child>
       </object>
       <packing>
         <property name="position">8</property>
@@ -371,11 +328,7 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the scale of new items</property>
         <property name="has-frame">false</property>
-        <child>
-          <object class="GtkImage" id="image7">
-            <property name="icon-name">draw-use-pressure</property>
-          </object>
-        </child>
+        <property name="icon-name">draw-use-pressure</property>
       </object>
       <packing>
         <property name="position">12</property>
@@ -452,11 +405,7 @@
         <property name="receives-default">True</property>
         <property name="has-frame">false</property>
         <property name="popover">popover3</property>
-        <child>
-          <object class="GtkImage" id="image19">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
+        <property name="icon-name">go-down</property>
       </object>
       <packing>
         <property name="position">17</property>
@@ -468,14 +417,10 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Apply over no transparent areas</property>
         <property name="has-frame">false</property>
+        <property name="icon-name">object-visible</property>
         <style>
           <class name="tag3"/>
         </style>
-        <child>
-          <object class="GtkImage" id="image8">
-            <property name="icon-name">object-visible</property>
-          </object>
-        </child>
       </object>
       <packing>
         <property name="position">18</property>
@@ -487,14 +432,10 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Apply over transparent areas</property>
         <property name="has-frame">false</property>
+        <property name="icon-name">object-hidden</property>
         <style>
           <class name="tag3"/>
         </style>
-        <child>
-          <object class="GtkImage" id="image9">
-            <property name="icon-name">object-hidden</property>
-          </object>
-        </child>
       </object>
       <packing>
         <property name="position">19</property>
@@ -506,14 +447,10 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">No overlap between colors</property>
         <property name="has-frame">false</property>
+        <property name="icon-name">symbol-bigger</property>
         <style>
           <class name="tag3"/>
         </style>
-        <child>
-          <object class="GtkImage" id="image10">
-            <property name="icon-name">symbol-bigger</property>
-          </object>
-        </child>
       </object>
       <packing>
         <property name="position">20</property>
@@ -525,14 +462,10 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Prevent overlapping objects</property>
         <property name="has-frame">false</property>
+        <property name="icon-name">distribute-randomize</property>
         <style>
           <class name="tag3"/>
         </style>
-        <child>
-          <object class="GtkImage" id="image11">
-            <property name="icon-name">distribute-randomize</property>
-          </object>
-        </child>
       </object>
       <packing>
         <property name="position">21</property>
@@ -577,11 +510,7 @@
         <property name="receives-default">True</property>
         <property name="has-frame">false</property>
         <property name="popover">popover4</property>
-        <child>
-          <object class="GtkImage" id="image20">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
+        <property name="icon-name">go-down</property>
       </object>
       <packing>
         <property name="position">24</property>
@@ -596,11 +525,7 @@
         <style>
           <class name="tag4"/>
         </style>
-        <child>
-          <object class="GtkImage" id="image12">
-            <property name="icon-name">color-picker</property>
-          </object>
-        </child>
+        <property name="icon-name">color-picker</property>
       </object>
       <packing>
         <property name="position">27</property>
@@ -612,14 +537,10 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Apply picked color to fill</property>
         <property name="has-frame">false</property>
+        <property name="icon-name">paint-solid</property>
         <style>
           <class name="tag4"/>
         </style>
-        <child>
-          <object class="GtkImage" id="image13">
-            <property name="icon-name">paint-solid</property>
-          </object>
-        </child>
       </object>
       <packing>
         <property name="position">28</property>
@@ -631,14 +552,10 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Apply picked color to stroke</property>
         <property name="has-frame">false</property>
+        <property name="icon-name">no-marker</property>
         <style>
           <class name="tag4"/>
         </style>
-        <child>
-          <object class="GtkImage" id="image14">
-            <property name="icon-name">no-marker</property>
-          </object>
-        </child>
       </object>
       <packing>
         <property name="position">29</property>
@@ -650,14 +567,10 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Inverted pick value, retaining color in advanced trace mode</property>
         <property name="has-frame">false</property>
+        <property name="icon-name">object-tweak-shrink</property>
         <style>
           <class name="tag4"/>
         </style>
-        <child>
-          <object class="GtkImage" id="image15">
-            <property name="icon-name">object-tweak-shrink</property>
-          </object>
-        </child>
       </object>
       <packing>
         <property name="position">30</property>
@@ -669,14 +582,10 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Pick from center instead of average area.</property>
         <property name="has-frame">false</property>
+        <property name="icon-name">snap-bounding-box-center</property>
         <style>
           <class name="tag4"/>
         </style>
-        <child>
-          <object class="GtkImage" id="image16">
-            <property name="icon-name">snap-bounding-box-center</property>
-          </object>
-        </child>
       </object>
       <packing>
         <property name="position">31</property>

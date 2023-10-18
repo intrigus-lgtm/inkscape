@@ -33,7 +33,6 @@
 
 namespace Gtk {
 class Builder;
-class RadioButton;
 class ToggleButton;
 } // namespace Gtk
 
@@ -71,7 +70,7 @@ private:
     Glib::RefPtr<Gtk::Builder> _builder;
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
 
-    std::vector<Gtk::RadioButton *> _mode_buttons;
+    std::vector<Gtk::ToggleButton *> _mode_buttons;
     Gtk::ToggleButton &_show_bbox_btn;
     Gtk::ToggleButton &_bbox_from_selection_btn;
     Gtk::ToggleButton &_measuring_btn;

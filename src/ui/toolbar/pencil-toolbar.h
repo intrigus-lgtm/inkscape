@@ -35,7 +35,6 @@ namespace Gtk {
 class Builder;
 class Button;
 class ToggleButton;
-class RadioButton;
 } // namespace Gtk
 
 class SPDesktop;
@@ -65,7 +64,7 @@ private:
     Glib::RefPtr<Gtk::Builder> _builder;
 
     bool const _tool_is_pencil;
-    std::vector<Gtk::RadioButton *> _mode_buttons;
+    std::vector<Gtk::ToggleButton *> _mode_buttons;
     Gtk::Button &_flatten_spiro_bspline_btn;
 
     Gtk::ToggleButton &_usepressure_btn;

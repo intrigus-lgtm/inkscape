@@ -24,7 +24,7 @@
 #include <gtkmm/flowbox.h>
 #include <gtkmm/gestureclick.h>
 #include <gtkmm/popover.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/togglebutton.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/separator.h>
 
@@ -46,18 +46,12 @@ ToolToolbar::ToolToolbar(InkscapeWindow *window)
 {
     set_name("ToolToolbar");
 
-    Gtk::ScrolledWindow* tool_toolbar = nullptr;
-
     auto builder = Inkscape::UI::create_builder("toolbar-tool.ui");
-    builder->get_widget("tool-toolbar", tool_toolbar);
-    if (!tool_toolbar) {
-        std::cerr << "ToolToolbar: Failed to load tool toolbar!" << std::endl;
-        return;
-    }
+    auto &tool_toolbar = UI::get_widget<Gtk::ScrolledWindow>(builder, "tool-toolbar");
 
     attachHandlers(builder, window);
 
-    UI::pack_start(*this, *tool_toolbar, true, true);
+    UI::pack_start(*this, tool_toolbar, true, true);
 
     // Hide/show buttons based on preferences.
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
@@ -150,7 +144,7 @@ void ToolToolbar::showContextMenu(InkscapeWindow * const window,
 void ToolToolbar::attachHandlers(Glib::RefPtr<Gtk::Builder> builder, InkscapeWindow *window)
 {
     for (auto &object : builder->get_objects()) {
-        auto const radio = dynamic_cast<Gtk::RadioButton *>(object.get());
+        auto const radio = dynamic_cast<Gtk::ToggleButton *>(object.get());
         if (!radio) {
             continue;
         }

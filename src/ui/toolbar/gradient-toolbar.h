@@ -18,7 +18,6 @@
 
 namespace Gtk {
 class Builder;
-class RadioButton;
 class Button;
 class ToggleButton;
 } // namespace Gtk
@@ -52,8 +51,8 @@ public:
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
 
-    std::vector<Gtk::RadioButton *> _new_type_buttons;
-    std::vector<Gtk::RadioButton *> _new_fillstroke_buttons;
+    std::vector<Gtk::ToggleButton *> _new_type_buttons;
+    std::vector<Gtk::ToggleButton *> _new_fillstroke_buttons;
 
     UI::Widget::ComboToolItem *_select_cb;
     Gtk::ToggleButton &_linked_btn;

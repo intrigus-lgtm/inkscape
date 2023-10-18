@@ -21,7 +21,7 @@
 #include <glibmm/i18n.h>
 #include <gtkmm/button.h>
 #include <gtkmm/comboboxtext.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/togglebutton.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -347,7 +347,7 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
     // Configure mode buttons
     int btn_index = 0;
     for_each_child(get_widget<Gtk::Box>(_builder, "new_type_buttons_box"), [&](Gtk::Widget &item){
-        auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
+        auto &btn = dynamic_cast<Gtk::ToggleButton &>(item);
         _new_type_buttons.push_back(&btn);
         btn.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &GradientToolbar::new_type_changed), btn_index++));
         return ForEachResult::_continue;
@@ -358,7 +358,7 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
 
     btn_index = 0;
     for_each_child(get_widget<Gtk::Box>(_builder, "new_fillstroke_buttons_box"), [&](Gtk::Widget &item){
-        auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
+        auto &btn = dynamic_cast<Gtk::ToggleButton &>(item);
         _new_fillstroke_buttons.push_back(&btn);
         btn.signal_clicked().connect(
             sigc::bind(sigc::mem_fun(*this, &GradientToolbar::new_fillstroke_changed), btn_index++));
@@ -390,7 +390,7 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
         _select_cb->set_active( 0 );
         _select_cb->set_sensitive( false );
 
-        get_widget<Gtk::Box>(_builder, "select_box").add(*_select_cb);
+        get_widget<Gtk::Box>(_builder, "select_box").append(*_select_cb);
         _select_cb->signal_changed().connect(sigc::mem_fun(*this, &GradientToolbar::gradient_changed));
     }
 
@@ -434,7 +434,7 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
         _spread_cb->set_sensitive(false);
 
         _spread_cb->signal_changed().connect(sigc::mem_fun(*this, &GradientToolbar::spread_changed));
-        get_widget<Gtk::Box>(_builder, "spread_box").add(*_spread_cb);
+        get_widget<Gtk::Box>(_builder, "spread_box").append(*_spread_cb);
     }
 
     // Gradient Stop list
@@ -463,7 +463,7 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
         _stop_cb->set_active( 0 );
         _stop_cb->set_sensitive( false );
 
-        get_widget<Gtk::Box>(_builder, "stop_box").add(*_stop_cb);
+        get_widget<Gtk::Box>(_builder, "stop_box").append(*_stop_cb);
         _stop_cb->signal_changed().connect(sigc::mem_fun(*this, &GradientToolbar::stop_changed));
     }
 
@@ -484,12 +484,12 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
 
-    add(*_toolbar);
+    append(*_toolbar);
 
     // Signals.
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &GradientToolbar::check_ec));

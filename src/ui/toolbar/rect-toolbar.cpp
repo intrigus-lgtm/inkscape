@@ -43,6 +43,7 @@
 #include "ui/builder-utils.h"
 #include "ui/icon-names.h"
 #include "ui/tools/rect-tool.h"
+#include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
@@ -71,7 +72,7 @@ RectToolbar::RectToolbar(SPDesktop *desktop)
     _toolbar = &get_widget<Gtk::Box>(_builder, "rect-toolbar");
 
     auto unit_menu = _tracker->create_tool_item(_("Units"), (""));
-    get_widget<Gtk::Box>(_builder, "unit_menu_box").add(*unit_menu);
+    get_widget<Gtk::Box>(_builder, "unit_menu_box").append(*unit_menu);
 
     // rx/ry units menu: create
     //tracker->addUnit( SP_UNIT_PERCENT, 0 );
@@ -93,7 +94,7 @@ RectToolbar::RectToolbar(SPDesktop *desktop)
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
@@ -101,7 +102,7 @@ RectToolbar::RectToolbar(SPDesktop *desktop)
     _not_rounded.signal_clicked().connect(sigc::mem_fun(*this, &RectToolbar::defaults));
     _desktop->connectEventContextChanged(sigc::mem_fun(*this, &RectToolbar::watch_ec));
 
-    add(*_toolbar);
+    append(*_toolbar);
 
     sensitivize();
 }

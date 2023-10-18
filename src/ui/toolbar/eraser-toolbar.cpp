@@ -29,7 +29,8 @@
 #include "eraser-toolbar.h"
 
 #include <glibmm/i18n.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/adjustment.h>
+#include <gtkmm/togglebutton.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -71,7 +72,7 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
     // Configure mode buttons
     int btn_index = 0;
     for_each_child(get_widget<Gtk::Box>(_builder, "mode_buttons_box"), [&](Gtk::Widget &item){
-        auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
+        auto &btn = dynamic_cast<Gtk::ToggleButton &>(item);
         btn.set_active(btn_index == eraser_mode);
         btn.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &EraserToolbar::mode_changed), btn_index++));
         return ForEachResult::_continue;
@@ -92,12 +93,12 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
 
-    add(*_toolbar);
+    append(*_toolbar);
 
     // Signals.
     _usepressure_btn->signal_toggled().connect(sigc::mem_fun(*this, &EraserToolbar::usepressure_toggled));
@@ -170,7 +171,7 @@ void EraserToolbar::set_eraser_mode_visibility(unsigned const eraser_mode)
     using namespace Inkscape::UI::Tools;
 
     bool const visibility = eraser_mode != _modeAsInt(EraserToolMode::DELETE);
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
     const int visible_children_count = 2;
 
     // Set all the children except the modes as invisible.

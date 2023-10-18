@@ -29,7 +29,8 @@
 #include "tweak-toolbar.h"
 
 #include <glibmm/i18n.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/adjustment.h>
+#include <gtkmm/togglebutton.h>
 
 #include "desktop.h"
 #include "ui/builder-utils.h"
@@ -64,10 +65,9 @@ TweakToolbar::TweakToolbar(SPDesktop *desktop)
     // Configure mode buttons
     int btn_index = 0;
     for_each_child(get_widget<Gtk::Box>(_builder, "mode_buttons_box"), [&](Gtk::Widget &item){
-        auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
+        auto &btn = dynamic_cast<Gtk::ToggleButton &>(item);
         _mode_buttons.push_back(&btn);
         btn.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &TweakToolbar::mode_changed), btn_index++));
-
         return ForEachResult::_continue;
     });
 
@@ -106,14 +106,14 @@ TweakToolbar::TweakToolbar(SPDesktop *desktop)
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
     menu_btn2->init(2, "tag2", popover_box2, children);
     addCollapsibleButton(menu_btn2);
 
-    add(*_toolbar);
+    append(*_toolbar);
 
     // Elements must be hidden after being initially visible.
     if (mode == Inkscape::UI::Tools::TWEAK_MODE_COLORPAINT || mode == Inkscape::UI::Tools::TWEAK_MODE_COLORJITTER) {

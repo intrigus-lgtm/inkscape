@@ -46,7 +46,7 @@
       </object>
     </child>
   </object>
-  <object class="GtkRadioButton" id="radio_button_group">
+  <object class="GtkToggleButton" id="radio_button_group">
     <property name="focusable">True</property>
     <property name="receives-default">False</property>
     <property name="active">True</property>
@@ -294,7 +294,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkRadioButton" id="slice_btn">
+      <object class="GtkToggleButton" id="slice_btn">
         <property name="focusable">True</property>
         <property name="receives-default">False</property>
         <property name="tooltip-text" translatable="yes">Switch to slice (closed shape with two radii)</property>
@@ -318,7 +318,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkRadioButton" id="arc_btn">
+      <object class="GtkToggleButton" id="arc_btn">
         <property name="focusable">True</property>
         <property name="receives-default">False</property>
         <property name="tooltip-text" translatable="yes">Switch to arc (unclosed shape)</property>
@@ -342,7 +342,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkRadioButton" id="chord_btn">
+      <object class="GtkToggleButton" id="chord_btn">
         <property name="focusable">True</property>
         <property name="receives-default">False</property>
         <property name="tooltip-text" translatable="yes">Switch to chord (closed shape)</property>

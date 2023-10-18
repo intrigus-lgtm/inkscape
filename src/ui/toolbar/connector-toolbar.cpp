@@ -69,7 +69,7 @@ ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
     setup_derived_spin_button(_length_item, "length", 100, &ConnectorToolbar::length_changed);
 
     _toolbar = &get_widget<Gtk::Box>(_builder, "connector-toolbar");
-    add(*_toolbar);
+    append(*_toolbar);
 
     // Orthogonal connectors toggle button
     bool tbuttonstate = prefs->getBool("/tools/connector/orthogonal");

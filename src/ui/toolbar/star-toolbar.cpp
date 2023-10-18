@@ -41,6 +41,7 @@
 #include "ui/builder-utils.h"
 #include "ui/icon-names.h"
 #include "ui/tools/star-tool.h"
+#include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/spinbutton.h"
 #include "ui/widget/toolbar-menu-button.h"
@@ -103,14 +104,14 @@ StarToolbar::StarToolbar(SPDesktop *desktop)
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
 
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &StarToolbar::watch_tool));
 
-    add(*_toolbar);
+    append(*_toolbar);
 
     // Signals.
     get_widget<Gtk::Button>(_builder, "reset_btn")

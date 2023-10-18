@@ -28,7 +28,7 @@
 
 #include "lpe-toolbar.h"
 
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/togglebutton.h>
 
 #include "live_effects/lpe-line_segment.h"
 #include "selection.h"
@@ -95,13 +95,13 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
         _line_segment_combo->set_active(0);
 
         _line_segment_combo->signal_changed().connect(sigc::mem_fun(*this, &LPEToolbar::change_line_segment_type));
-        get_widget<Gtk::Box>(_builder, "line_segment_box").add(*_line_segment_combo);
+        get_widget<Gtk::Box>(_builder, "line_segment_box").append(*_line_segment_combo);
     }
 
     // Configure mode buttons
     int btn_index = 0;
     for_each_child(get_widget<Gtk::Box>(_builder, "mode_buttons_box"), [&](Gtk::Widget &item){
-        auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
+        auto &btn = dynamic_cast<Gtk::ToggleButton &>(item);
         _mode_buttons.push_back(&btn);
         btn.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPEToolbar::mode_changed), btn_index++));
         return ForEachResult::_continue;
@@ -115,7 +115,7 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
         _units_item = _tracker->create_tool_item(_("Units"), (""));
         _units_item->signal_changed_after().connect(sigc::mem_fun(*this, &LPEToolbar::unit_changed));
         _units_item->set_sensitive( prefs->getBool("/tools/lpetool/show_measuring_info", true));
-        get_widget<Gtk::Box>(_builder, "units_box").add(*_units_item);
+        get_widget<Gtk::Box>(_builder, "units_box").append(*_units_item);
     }
 
     // Set initial states
@@ -133,7 +133,7 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
@@ -146,7 +146,7 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
 
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &LPEToolbar::watch_ec));
 
-    add(*_toolbar);
+    append(*_toolbar);
 }
 
 LPEToolbar::~LPEToolbar() = default;

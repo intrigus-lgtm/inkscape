@@ -37,15 +37,6 @@
     <property name="step-increment">0.01</property>
     <property name="page-increment">0.10</property>
   </object>
-  <object class="GtkRadioButton" id="alignment_mode_group">
-    <property name="focusable">True</property>
-    <property name="active">True</property>
-    <property name="draw-indicator">False</property>
-  </object>
-  <object class="GtkRadioButton" id="direction_buttons_mode_group">
-    <property name="focusable">True</property>
-    <property name="draw-indicator">False</property>
-  </object>
   <object class="GtkPopover" id="font_collections_popover">
     <property name="modal">True</property>
     <child>
@@ -87,10 +78,6 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkRadioButton" id="orientation_buttons_mode_group">
-    <property name="focusable">True</property>
-    <property name="draw-indicator">False</property>
   </object>
   <object class="GtkPopover" id="popover1">
     <property name="modal">True</property>
@@ -146,10 +133,6 @@
       </object>
     </child>
   </object>
-  <object class="GtkRadioButton" id="writing_buttons_mode_group">
-    <property name="focusable">True</property>
-    <property name="draw-indicator">False</property>
-  </object>
   <object class="GtkBox" id="text-toolbar">
     <property name="halign">start</property>
     <property name="valign">center</property>
@@ -162,11 +145,7 @@
         <property name="tooltip-text" translatable="yes">Select Font Collections</property>
         <property name="has-frame">false</property>
         <property name="popover">font_collections_popover</property>
-        <child>
-          <object class="GtkImage" id="image1">
-            <property name="icon-name">font_collections</property>
-          </object>
-        </child>
+        <property name="icon-name">font_collections</property>
       </object>
     </child>
     <child>
@@ -175,11 +154,7 @@
         <property name="focus-on-click">False</property>
         <property name="tooltip-text" translatable="yes">Reset the font list (Deselects all the font collections and clears search results)</property>
         <property name="has-frame">false</property>
-        <child>
-          <object class="GtkImage" id="image2">
-            <property name="icon-name">view-refresh</property>
-          </object>
-        </child>
+        <property name="icon-name">view-refresh</property>
       </object>
       <packing>
         <property name="position">1</property>
@@ -227,11 +202,7 @@
         <property name="receives-default">True</property>
         <property name="has-frame">false</property>
         <property name="popover">popover1</property>
-        <child>
-          <object class="GtkImage" id="image23">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
+        <property name="icon-name">go-down</property>
       </object>
       <packing>
         <property name="position">7</property>
@@ -290,11 +261,7 @@
         <property name="receives-default">True</property>
         <property name="has-frame">false</property>
         <property name="popover">popover2</property>
-        <child>
-          <object class="GtkImage" id="image24">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
+        <property name="icon-name">go-down</property>
       </object>
       <packing>
         <property name="position">11</property>
@@ -304,69 +271,48 @@
       <object class="GtkBox" id="alignment_buttons_box">
         <property name="spacing">3</property>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton" id="alignment_mode_group">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Align left</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
-            <property name="group">alignment_mode_group</property>
-            <child>
-              <object class="GtkImage" id="image4">
-                <property name="icon-name">format-justify-left</property>
-              </object>
-            </child>
+            <property name="icon-name">format-justify-left</property>
           </object>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Align center</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">alignment_mode_group</property>
-            <child>
-              <object class="GtkImage" id="image5">
-                <property name="icon-name">format-justify-center</property>
-              </object>
-            </child>
+            <property name="icon-name">format-justify-center</property>
           </object>
           <packing>
             <property name="position">3</property>
           </packing>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Align right</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">alignment_mode_group</property>
-            <child>
-              <object class="GtkImage" id="image6">
-                <property name="icon-name">format-justify-right</property>
-              </object>
-            </child>
+            <property name="icon-name">format-justify-right</property>
           </object>
           <packing>
             <property name="position">4</property>
           </packing>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Justify (only flowed text)</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">alignment_mode_group</property>
-            <child>
-              <object class="GtkImage" id="image7">
-                <property name="icon-name">format-justify-fill</property>
-              </object>
-            </child>
+            <property name="icon-name">format-justify-fill</property>
           </object>
           <packing>
             <property name="position">5</property>
@@ -393,11 +339,7 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Toggle superscript</property>
         <property name="has-frame">false</property>
-        <child>
-          <object class="GtkImage" id="image8">
-            <property name="icon-name">text_superscript</property>
-          </object>
-        </child>
+        <property name="icon-name">text_superscript</property>
       </object>
       <packing>
         <property name="position">14</property>
@@ -409,11 +351,7 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Toggle subscript</property>
         <property name="has-frame">false</property>
-        <child>
-          <object class="GtkImage" id="image9">
-            <property name="icon-name">text_subscript</property>
-          </object>
-        </child>
+        <property name="icon-name">text_subscript</property>
       </object>
       <packing>
         <property name="position">15</property>
@@ -433,11 +371,7 @@
         <property name="receives-default">True</property>
         <property name="has-frame">false</property>
         <property name="popover">popover3</property>
-        <child>
-          <object class="GtkImage" id="image25">
-            <property name="icon-name">text_horz_kern</property>
-          </object>
-        </child>
+        <property name="icon-name">text_horz_kern</property>
       </object>
       <packing>
         <property name="position">17</property>
@@ -448,51 +382,35 @@
         <property name="tooltip-text" translatable="yes">Block progression</property>
         <property name="spacing">3</property>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton" id="writing_buttons_mode_group">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Horizontal text</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
-            <property name="group">writing_buttons_mode_group</property>
-            <child>
-              <object class="GtkImage" id="image15">
-                <property name="icon-name">frmt-text-direction-horizontal</property>
-              </object>
-            </child>
+            <property name="icon-name">frmt-text-direction-horizontal</property>
           </object>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Vertical text — lines: right to left</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">writing_buttons_mode_group</property>
-            <child>
-              <object class="GtkImage" id="image16">
-                <property name="icon-name">frmt-text-direction-vertical</property>
-              </object>
-            </child>
+            <property name="icon-name">frmt-text-direction-vertical</property>
           </object>
           <packing>
             <property name="position">3</property>
           </packing>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Vertical text — lines: left to right</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">writing_buttons_mode_group</property>
-            <child>
-              <object class="GtkImage" id="image17">
-                <property name="icon-name">frmt-text-direction-vertical-lr</property>
-              </object>
-            </child>
+            <property name="icon-name">frmt-text-direction-vertical-lr</property>
           </object>
           <packing>
             <property name="position">4</property>
@@ -520,11 +438,7 @@
         <property name="receives-default">True</property>
         <property name="has-frame">false</property>
         <property name="popover">popover4</property>
-        <child>
-          <object class="GtkImage" id="image26">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
+        <property name="icon-name">go-down</property>
       </object>
       <packing>
         <property name="position">20</property>
@@ -535,51 +449,35 @@
         <property name="tooltip-text" translatable="yes">Text (glyph) orientation in vertical text.</property>
         <property name="spacing">3</property>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton" id="orientation_buttons_mode_group">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Auto glyph orientation</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
-            <property name="group">orientation_buttons_mode_group</property>
-            <child>
-              <object class="GtkImage" id="image18">
-                <property name="icon-name">text-orientation-auto</property>
-              </object>
-            </child>
+            <property name="icon-name">text-orientation-auto</property>
           </object>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Upright glyph orientation</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">orientation_buttons_mode_group</property>
-            <child>
-              <object class="GtkImage" id="image19">
-                <property name="icon-name">text-orientation-upright</property>
-              </object>
-            </child>
+            <property name="icon-name">text-orientation-upright</property>
           </object>
           <packing>
             <property name="position">3</property>
           </packing>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Sideways glyph orientation</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">orientation_buttons_mode_group</property>
-            <child>
-              <object class="GtkImage" id="image20">
-                <property name="icon-name">text-orientation-sideways</property>
-              </object>
-            </child>
+            <property name="icon-name">text-orientation-sideways</property>
           </object>
           <packing>
             <property name="position">4</property>
@@ -607,11 +505,7 @@
         <property name="receives-default">True</property>
         <property name="has-frame">false</property>
         <property name="popover">popover5</property>
-        <child>
-          <object class="GtkImage" id="image27">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
+        <property name="icon-name">go-down</property>
       </object>
       <packing>
         <property name="position">23</property>
@@ -622,33 +516,22 @@
         <property name="tooltip-text" translatable="yes">Text direction for normally horizontal text.</property>
         <property name="spacing">3</property>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton" id="direction_buttons_mode_group">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Left to right text</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
-            <property name="group">direction_buttons_mode_group</property>
-            <child>
-              <object class="GtkImage" id="image21">
-                <property name="icon-name">frmt-text-direction-horizontal</property>
-              </object>
-            </child>
+            <property name="icon-name">frmt-text-direction-horizontal</property>
           </object>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Right to left text</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">direction_buttons_mode_group</property>
-            <child>
-              <object class="GtkImage" id="image22">
-                <property name="icon-name">frmt-text-direction-r2l</property>
-              </object>
-            </child>
+            <property name="icon-name">frmt-text-direction-r2l</property>
           </object>
           <packing>
             <property name="position">3</property>
@@ -676,11 +559,7 @@
         <property name="receives-default">True</property>
         <property name="has-frame">false</property>
         <property name="popover">popover6</property>
-        <child>
-          <object class="GtkImage" id="image28">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
+        <property name="icon-name">go-down</property>
       </object>
       <packing>
         <property name="position">29</property>

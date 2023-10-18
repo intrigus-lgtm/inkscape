@@ -2,12 +2,6 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <object class="GtkRadioButton" id="mode_buttons_group">
-    <property name="focusable">True</property>
-    <property name="always-show-image">True</property>
-    <property name="active">True</property>
-    <property name="draw-indicator">False</property>
-  </object>
   <object class="GtkPopover" id="popover1">
     <property name="modal">True</property>
     <child>
@@ -28,145 +22,100 @@
         <property name="receives-default">True</property>
         <property name="has-frame">false</property>
         <property name="popover">popover1</property>
-        <child>
-          <object class="GtkImage" id="image1">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
+        <property name="icon-name">go-down</property>
       </object>
     </child>
     <child>
       <object class="GtkBox" id="mode_buttons_box">
         <property name="name">mode_group_box</property>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton" id="mode_buttons_group">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">No geometric tool is active</property>
             <property name="has-frame">false</property>
             <property name="active">True</property>
-            <property name="draw-indicator">False</property>
-            <property name="group">mode_buttons_group</property>
-            <child>
-              <object class="GtkImage" id="image3">
-                <property name="icon-name">draw-geometry-inactive</property>
-              </object>
-            </child>
+            <property name="icon-name">draw-geometry-inactive</property>
           </object>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Line Segment</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
-            <child>
-              <object class="GtkImage" id="image5">
-                <property name="icon-name">draw-geometry-line-segment</property>
-              </object>
-            </child>
+            <property name="icon-name">draw-geometry-line-segment</property>
           </object>
           <packing>
             <property name="position">1</property>
           </packing>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Circle by 3 points</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
-            <child>
-              <object class="GtkImage" id="image6">
-                <property name="icon-name">draw-geometry-circle-from-three-points</property>
-              </object>
-            </child>
+            <property name="icon-name">draw-geometry-circle-from-three-points</property>
           </object>
           <packing>
             <property name="position">2</property>
           </packing>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Circle</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
-            <child>
-              <object class="GtkImage" id="image7">
-                <property name="icon-name">draw-geometry-circle-from-radius</property>
-              </object>
-            </child>
+            <property name="icon-name">draw-geometry-circle-from-radius</property>
           </object>
           <packing>
             <property name="position">3</property>
           </packing>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Parallel</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
-            <child>
-              <object class="GtkImage" id="image8">
-                <property name="icon-name">draw-geometry-line-parallel</property>
-              </object>
-            </child>
+            <property name="icon-name">draw-geometry-line-parallel</property>
           </object>
           <packing>
             <property name="position">4</property>
           </packing>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Perpendicular bisector</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
-            <child>
-              <object class="GtkImage" id="image9">
-                <property name="icon-name">draw-geometry-line-perpendicular</property>
-              </object>
-            </child>
+            <property name="icon-name">draw-geometry-line-perpendicular</property>
           </object>
           <packing>
             <property name="position">5</property>
           </packing>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Angle Bisector</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
-            <child>
-              <object class="GtkImage" id="image10">
-                <property name="icon-name">draw-geometry-angle-bisector</property>
-              </object>
-            </child>
+            <property name="icon-name">draw-geometry-angle-bisector</property>
           </object>
           <packing>
             <property name="position">6</property>
           </packing>
         </child>
         <child>
-          <object class="GtkRadioButton">
+          <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Mirror symmetry</property>
             <property name="has-frame">false</property>
-            <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
-            <child>
-              <object class="GtkImage" id="image11">
-                <property name="icon-name">draw-geometry-mirror</property>
-              </object>
-            </child>
+            <property name="icon-name">draw-geometry-mirror</property>
           </object>
           <packing>
             <property name="position">7</property>
@@ -193,11 +142,7 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Show bounding box (used to cut infinite lines)</property>
         <property name="has-frame">false</property>
-        <child>
-          <object class="GtkImage" id="image12">
-            <property name="icon-name">show-bounding-box</property>
-          </object>
-        </child>
+        <property name="icon-name">show-bounding-box</property>
       </object>
       <packing>
         <property name="position">3</property>
@@ -209,11 +154,7 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Set limiting bounding box (used to cut infinite lines) to the bounding box of current selection</property>
         <property name="has-frame">false</property>
-        <child>
-          <object class="GtkImage" id="image13">
-            <property name="icon-name">draw-geometry-set-bounding-box</property>
-          </object>
-        </child>
+        <property name="icon-name">draw-geometry-set-bounding-box</property>
       </object>
       <packing>
         <property name="position">4</property>
@@ -247,11 +188,7 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Display measuring info for selected items</property>
         <property name="has-frame">false</property>
-        <child>
-          <object class="GtkImage" id="image4">
-            <property name="icon-name">draw-geometry-show-measuring-info</property>
-          </object>
-        </child>
+        <property name="icon-name">draw-geometry-show-measuring-info</property>
       </object>
       <packing>
         <property name="position">8</property>
@@ -278,11 +215,7 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Open LPE dialog (to adapt parameters numerically)</property>
         <property name="has-frame">false</property>
-        <child>
-          <object class="GtkImage" id="image2">
-            <property name="icon-name">dialog-geometry</property>
-          </object>
-        </child>
+        <property name="icon-name">dialog-geometry</property>
       </object>
       <packing>
         <property name="position">11</property>

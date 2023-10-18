@@ -37,6 +37,7 @@
 #include "ui/builder-utils.h"
 #include "ui/dialog/calligraphic-profile-rename.h"
 #include "ui/simple-pref-pusher.h"
+#include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
@@ -100,7 +101,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
 
     // Unit menu.
     auto unit_menu = _tracker->create_tool_item(_("Units"), "");
-    get_widget<Gtk::Box>(_builder, "unit_menu_box").add(*unit_menu);
+    get_widget<Gtk::Box>(_builder, "unit_menu_box").append(*unit_menu);
     unit_menu->signal_changed_after().connect(sigc::mem_fun(*this, &CalligraphyToolbar::unit_changed));
 
     // Use pressure button.
@@ -144,7 +145,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
@@ -158,7 +159,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
     menu_btn4->init(4, "tag4", popover_box4, children);
     addCollapsibleButton(menu_btn4);
 
-    add(*_toolbar);
+    append(*_toolbar);
 
     // Signals.
     get_widget<Gtk::Button>(_builder, "profile_edit_btn")

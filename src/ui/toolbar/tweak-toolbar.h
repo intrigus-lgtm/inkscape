@@ -33,7 +33,6 @@
 
 namespace Gtk {
 class Builder;
-class RadioButton;
 class ToggleButton;
 } // namespace Gtk
 
@@ -58,7 +57,7 @@ public:
 private:
     using ValueChangedMemFun = void (TweakToolbar::*)();
     Glib::RefPtr<Gtk::Builder> _builder;
-    std::vector<Gtk::RadioButton *> _mode_buttons;
+    std::vector<Gtk::ToggleButton *> _mode_buttons;
 
     UI::Widget::SpinButton &_width_item;
     UI::Widget::SpinButton &_force_item;

@@ -23,46 +23,25 @@ void Toolbar::addCollapsibleButton(UI::Widget::ToolbarMenuButton *button)
     _expanded_menu_btns.emplace(button);
 }
 
-void Toolbar::get_preferred_width_vfunc(int &min_w, int &nat_w) const
+void Toolbar::measure(Gtk::Orientation orientation, int for_size, int &min, int &nat, int &min_baseline, int &nat_baseline) const
 {
-    _toolbar->get_preferred_width(min_w, nat_w);
+    _toolbar->measure(orientation, for_size, min, nat, min_baseline, nat_baseline);
 
-    if (_toolbar->get_orientation() == Gtk::Orientation::HORIZONTAL && !_expanded_menu_btns.empty()) {
+    if (_toolbar->get_orientation() == orientation && !_expanded_menu_btns.empty()) {
         // HACK: Return too-small value to allow shrinking.
-        min_w = 0;
+        min = 0;
     }
-}
-
-void Toolbar::get_preferred_height_vfunc(int &min_h, int &nat_h) const
-{
-    _toolbar->get_preferred_height(min_h, nat_h);
-
-    if (_toolbar->get_orientation() == Gtk::Orientation::VERTICAL && !_expanded_menu_btns.empty()) {
-        // HACK: Return too-small value to allow shrinking.
-        min_h = 0;
-    }
-}
-
-void Toolbar::on_size_allocate(Gtk::Allocation &allocation)
-{
-    _resize_handler(allocation);
-    Gtk::Box::on_size_allocate(allocation);
 }
 
 static int min_dimension(Gtk::Widget const *widget, Gtk::Orientation const orientation)
 {
     int min = 0;
-    int nat = 0;
-
-    if (orientation == Gtk::Orientation::HORIZONTAL) {
-        widget->get_preferred_width(min, nat);
-    } else {
-        widget->get_preferred_height(min, nat);
-    }
-
+    int ignore = 0;
+    widget->measure(orientation, -1, min, ignore, ignore, ignore);
     return min;
 };
 
+// Todo: Create a layout manager that calls this then chains up to the Box layout manager.
 void Toolbar::_resize_handler(Gtk::Allocation &allocation)
 {
     if (!_toolbar) {
@@ -117,18 +96,17 @@ void Toolbar::_resize_handler(Gtk::Allocation &allocation)
     }
 }
 
-void Toolbar::_move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> const &children,
-                             bool is_expanding)
+void Toolbar::_move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> const &children, bool is_expanding)
 {
     for (auto [pos, child] : children) {
         src->remove(*child);
-        dest->add(*child);
+        dest->append(*child);
 
         // is_expanding will be true when the children are being put back into
         // the toolbar. In that case, insert the children at their previous
         // positions.
         if (is_expanding) {
-            dest->reorder_child(*child, pos);
+            // dest->reorder_child(*child, pos);
         }
     }
 }

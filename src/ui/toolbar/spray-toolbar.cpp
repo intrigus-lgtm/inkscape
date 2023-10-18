@@ -30,7 +30,8 @@
 #include "spray-toolbar.h"
 
 #include <glibmm/i18n.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/adjustment.h>
+#include <gtkmm/togglebutton.h>
 
 #include "desktop.h"
 #include "ui/builder-utils.h"
@@ -101,7 +102,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop)
     // Configure mode buttons
     int btn_index = 0;
     for_each_child(get_widget<Gtk::Box>(_builder, "mode_buttons_box"), [&](Gtk::Widget &item){
-        auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
+        auto &btn = dynamic_cast<Gtk::ToggleButton &>(item);
         _mode_buttons.push_back(&btn);
         btn.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::mode_changed), btn_index++));
         return ForEachResult::_continue;
@@ -194,7 +195,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop)
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
-    auto children = _toolbar->get_children();
+    auto children = UI::get_children(*_toolbar);
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
@@ -208,7 +209,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop)
     menu_btn4->init(4, "tag4", popover_box4, children);
     addCollapsibleButton(menu_btn4);
 
-    add(*_toolbar);
+    append(*_toolbar);
 
     int mode = prefs->getIntLimited("/tools/spray/mode", 1, 0, _mode_buttons.size() - 1);
     _mode_buttons[mode]->set_active();

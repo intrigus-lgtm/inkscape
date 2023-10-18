@@ -16,24 +16,15 @@
             <property name="margin-top">5</property>
             <property name="label" translatable="yes">Export Format Options</property>
           </object>
-          <packing>
-            <property name="fill">False</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSeparator">
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkViewport" id="pref_holder">
             <property name="has-frame">false</property>
           </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
         </child>
       </object>
     </child>
@@ -41,7 +32,7 @@
   <object class="GtkMenuButton" id="pref_button">
     <property name="focusable">True</property>
     <property name="receives-default">True</property>
-    <property name="image">gear_icon</property>
+    <property name="icon-name">gear_icon</property>
     <property name="direction">left</property>
     <property name="popover">pref_popover</property>
     <property name="tooltip-text" translatable="yes">View export format options</property>

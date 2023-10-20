@@ -7,11 +7,9 @@
         <property name="homogeneous">True</property>
         <child>
           <object class="GtkButton" id="show-first">
-            <property name="visible">True</property>
             <property name="action-name">viewer.show_first</property>
             <child>
               <object class="GtkImage">
-                <property name="visible">True</property>
                 <property name="icon_name">go-first</property>
               </object>
             </child>
@@ -19,11 +17,9 @@
         </child>
         <child>
           <object class="GtkButton" id="show-prev">
-            <property name="visible">True</property>
             <property name="action-name">viewer.show_prev</property>
             <child>
               <object class="GtkImage">
-                <property name="visible">True</property>
                 <property name="icon_name">go-previous</property>
               </object>
             </child>
@@ -31,11 +27,9 @@
         </child>
         <child>
           <object class="GtkButton" id="show-next">
-            <property name="visible">True</property>
             <property name="action-name">viewer.show_next</property>
             <child>
               <object class="GtkImage">
-                <property name="visible">True</property>
                 <property name="icon_name">go-next</property>
               </object>
             </child>
@@ -43,11 +37,9 @@
         </child>
         <child>
           <object class="GtkButton" id="show-last">
-            <property name="visible">True</property>
             <property name="action-name">viewer.show_last</property>
             <child>
               <object class="GtkImage">
-                <property name="visible">True</property>
                 <property name="icon_name">go-last</property>
               </object>
             </child>

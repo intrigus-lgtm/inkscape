@@ -115,7 +115,7 @@ SpellCheck::SpellCheck()
     }
 
     scrolled_window.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
-    scrolled_window.set_shadow_type(Gtk::SHADOW_IN);
+    scrolled_window.set_has_frame(true);
     scrolled_window.set_size_request(120, 96);
     scrolled_window.add(tree_view);
 

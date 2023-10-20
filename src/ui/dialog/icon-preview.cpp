@@ -141,7 +141,7 @@ IconPreviewPanel::IconPreviewPanel()
 
         buttons[i] = Gtk::make_managed<Gtk::ToggleButton>();
         buttons[i]->get_style_context()->add_class("icon-preview");
-        buttons[i]->set_relief(Gtk::RELIEF_NONE);
+        buttons[i]->set_has_frame(false);
         buttons[i]->set_active( i == hot );
 
         if ( prefs->getBool("/iconpreview/showFrames", true) ) {

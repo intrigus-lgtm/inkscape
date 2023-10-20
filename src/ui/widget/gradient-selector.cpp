@@ -43,7 +43,7 @@ void GradientSelector::style_button(Gtk::Button *btn, char const *iconName)
     GtkWidget *child = sp_get_icon_image(iconName, GTK_ICON_SIZE_SMALL_TOOLBAR);
     gtk_widget_set_visible(child, true);
     btn->add(*manage(Glib::wrap(child)));
-    btn->set_relief(Gtk::RELIEF_NONE);
+    btn->set_has_frame(false);
 }
 
 GradientSelector::GradientSelector()
@@ -101,7 +101,7 @@ GradientSelector::GradientSelector()
     _scrolled_window = Gtk::make_managed<Gtk::ScrolledWindow>();
     _scrolled_window->add(*_treeview);
     _scrolled_window->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
-    _scrolled_window->set_shadow_type(Gtk::SHADOW_IN);
+    _scrolled_window->set_has_frame(true);
     _scrolled_window->set_size_request(0, 180);
     _scrolled_window->set_hexpand();
     _scrolled_window->set_visible(true);
@@ -121,7 +121,7 @@ GradientSelector::GradientSelector()
 
     _add->signal_clicked().connect(sigc::mem_fun(*this, &GradientSelector::add_vector_clicked));
     _add->set_sensitive(false);
-    _add->set_relief(Gtk::RELIEF_NONE);
+    _add->set_has_frame(false);
     _add->set_tooltip_text(_("Create a duplicate gradient"));
 
     _del2 = Gtk::make_managed<Gtk::Button>();
@@ -131,7 +131,7 @@ GradientSelector::GradientSelector()
     UI::pack_start(*hb, *_del2, false, false);
     _del2->signal_clicked().connect(sigc::mem_fun(*this, &GradientSelector::delete_vector_clicked_2));
     _del2->set_sensitive(false);
-    _del2->set_relief(Gtk::RELIEF_NONE);
+    _del2->set_has_frame(false);
     _del2->set_tooltip_text(_("Delete unused gradient"));
 
     // The only use of this button is hidden!
@@ -142,7 +142,7 @@ GradientSelector::GradientSelector()
     UI::pack_start(*hb, *_edit, false, false);
     _edit->signal_clicked().connect(sigc::mem_fun(*this, &GradientSelector::edit_vector_clicked));
     _edit->set_sensitive(false);
-    _edit->set_relief(Gtk::RELIEF_NONE);
+    _edit->set_has_frame(false);
     _edit->set_tooltip_text(_("Edit gradient"));
     _edit->set_no_show_all();
 
@@ -153,7 +153,7 @@ GradientSelector::GradientSelector()
     UI::pack_start(*hb, *_del, false, false);
     _del->signal_clicked().connect(sigc::mem_fun(*this, &GradientSelector::delete_vector_clicked));
     _del->set_sensitive(false);
-    _del->set_relief(Gtk::RELIEF_NONE);
+    _del->set_has_frame(false);
     _del->set_tooltip_text(_("Delete swatch"));
 
     hb->show_all();

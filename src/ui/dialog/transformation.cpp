@@ -282,14 +282,14 @@ void Transformation::layoutPageRotate()
 
     _counterclockwise_rotate.add(*object_rotate_left_icon);
     _counterclockwise_rotate.set_mode(false);
-    _counterclockwise_rotate.set_relief(Gtk::RELIEF_NONE);
+    _counterclockwise_rotate.set_has_frame(false);
     _counterclockwise_rotate.set_tooltip_text(_("Rotate in a counterclockwise direction"));
 
     auto object_rotate_right_icon = Gtk::manage(sp_get_icon_image("object-rotate-right", Gtk::IconSize::NORMAL));
 
     _clockwise_rotate.add(*object_rotate_right_icon);
     _clockwise_rotate.set_mode(false);
-    _clockwise_rotate.set_relief(Gtk::RELIEF_NONE);
+    _clockwise_rotate.set_has_frame(false);
     _clockwise_rotate.set_tooltip_text(_("Rotate in a clockwise direction"));
 
     Gtk::RadioButton::Group group = _counterclockwise_rotate.get_group();

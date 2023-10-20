@@ -19,9 +19,9 @@ namespace Inkscape::UI::Widget {
 
 void AlignmentSelector::setupButton(const Glib::ustring& icon, Gtk::Button& button) {
     auto const buttonIcon = Gtk::manage(sp_get_icon_image(icon, Gtk::IconSize::NORMAL));
-    button.set_relief(Gtk::RELIEF_NONE);
+    button.set_has_frame(false);
     button.set_child(*buttonIcon);
-    button.set_can_focus(false);
+    button.set_focusable(false);
 }
 
 AlignmentSelector::AlignmentSelector()

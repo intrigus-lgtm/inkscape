@@ -887,7 +887,7 @@ void PrefMultiEntry::init(Glib::ustring const &prefs_path, int height)
     //       and how to obtain a reasonable default width if 'expand_widget' is not used
     set_size_request(100, height);
     set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
-    set_shadow_type(Gtk::SHADOW_IN);
+    set_has_frame(true);
 
     add(_text);
 

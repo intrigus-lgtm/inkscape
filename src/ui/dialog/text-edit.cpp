@@ -510,7 +510,7 @@ void TextEdit::display_font_collections()
         });
 // g_message("tag: %s", tag.display_name.c_str());
         auto const row = Gtk::make_managed<Gtk::ListBoxRow>();
-        row->set_can_focus(false);
+        row->set_focusable(false);
         row->add(*btn);
         row->show_all();
         collections_list.append(*row);
@@ -520,7 +520,7 @@ void TextEdit::display_font_collections()
     auto const sep = Gtk::make_managed<Gtk::Separator>();
     sep->set_margin_bottom(2);
     auto const sep_row = Gtk::make_managed<Gtk::ListBoxRow>();
-    sep_row->set_can_focus(false);
+    sep_row->set_focusable(false);
     sep_row->add(*sep);
     sep_row->show_all();
     collections_list.append(*sep_row);
@@ -536,7 +536,7 @@ void TextEdit::display_font_collections()
         });
 // g_message("tag: %s", tag.display_name.c_str());
         auto const row = Gtk::make_managed<Gtk::ListBoxRow>();
-        row->set_can_focus(false);
+        row->set_focusable(false);
         row->add(*btn);
         row->show_all();
         collections_list.append(*row);

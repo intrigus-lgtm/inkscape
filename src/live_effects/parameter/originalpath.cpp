@@ -51,7 +51,7 @@ OriginalPathParam::param_newWidget()
         auto const pIcon = Gtk::make_managed<Gtk::Image>();
         pIcon->set_from_icon_name("edit-clone");
         auto const pButton = Gtk::make_managed<Gtk::Button>();
-        pButton->set_relief(Gtk::RELIEF_NONE);
+        pButton->set_has_frame(false);
         pIcon->set_visible(true);
         pButton->add(*pIcon);
         pButton->set_visible(true);
@@ -64,7 +64,7 @@ OriginalPathParam::param_newWidget()
         auto const pIcon = Gtk::make_managed<Gtk::Image>();
         pIcon->set_from_icon_name("edit-select-original");
         auto const pButton = Gtk::make_managed<Gtk::Button>();
-        pButton->set_relief(Gtk::RELIEF_NONE);
+        pButton->set_has_frame(false);
         pIcon->set_visible(true);
         pButton->add(*pIcon);
         pButton->set_visible(true);

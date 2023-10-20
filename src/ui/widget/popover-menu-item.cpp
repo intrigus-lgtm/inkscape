@@ -34,7 +34,7 @@ PopoverMenuItem::PopoverMenuItem(Glib::ustring const &text,
     , Gtk::Button{}
 {
     get_style_context()->add_class("menuitem");
-    set_relief(Gtk::RELIEF_NONE);
+    set_has_frame(false);
 
     Gtk::Label *label = nullptr;
     Gtk::Image *image = nullptr;

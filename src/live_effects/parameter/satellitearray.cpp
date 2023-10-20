@@ -345,7 +345,7 @@ Gtk::Widget *SatelliteArrayParam::param_newWidget()
     { // Paste item to link button
         Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("edit-clone", Gtk::IconSize::NORMAL));
         auto const pButton = Gtk::make_managed<Gtk::Button>();
-        pButton->set_relief(Gtk::RELIEF_NONE);
+        pButton->set_has_frame(false);
         pIcon->set_visible(true);
         pButton->add(*pIcon);
         pButton->set_visible(true);
@@ -357,7 +357,7 @@ Gtk::Widget *SatelliteArrayParam::param_newWidget()
     { // Remove linked item
         Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("list-remove", Gtk::IconSize::NORMAL));
         auto const pButton = Gtk::make_managed<Gtk::Button>();
-        pButton->set_relief(Gtk::RELIEF_NONE);
+        pButton->set_has_frame(false);
         pIcon->set_visible(true);
         pButton->add(*pIcon);
         pButton->set_visible(true);
@@ -369,7 +369,7 @@ Gtk::Widget *SatelliteArrayParam::param_newWidget()
     { // Move Down
         Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("go-down", Gtk::IconSize::NORMAL));
         auto const pButton = Gtk::make_managed<Gtk::Button>();
-        pButton->set_relief(Gtk::RELIEF_NONE);
+        pButton->set_has_frame(false);
         pIcon->set_visible(true);
         pButton->add(*pIcon);
         pButton->set_visible(true);
@@ -381,7 +381,7 @@ Gtk::Widget *SatelliteArrayParam::param_newWidget()
     { // Move Down
         Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("go-up", Gtk::IconSize::NORMAL));
         auto const pButton = Gtk::make_managed<Gtk::Button>();
-        pButton->set_relief(Gtk::RELIEF_NONE);
+        pButton->set_has_frame(false);
         pIcon->set_visible(true);
         pButton->add(*pIcon);
         pButton->set_visible(true);

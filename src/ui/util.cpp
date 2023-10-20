@@ -202,7 +202,7 @@ Gtk::Widget *find_widget_by_name(Gtk::Widget &parent, Glib::ustring const &name)
 Gtk::Widget *find_focusable_widget(Gtk::Widget &parent)
 {
     return for_each_descendant(parent, [](auto const &widget)
-          { return widget.get_can_focus() ? ForEachResult::_break : ForEachResult::_continue; });
+          { return widget.get_focusable() ? ForEachResult::_break : ForEachResult::_continue; });
 }
 
 /// Returns if widget is a descendant of given ancestor, i.e.: itself, a child, or a childʼs child.

@@ -207,7 +207,7 @@ Gtk::Widget *ParamString::get_widget(sigc::signal<void ()> *changeSignal)
 
         auto const textarea = Gtk::make_managed<Gtk::ScrolledWindow>();
         textarea->set_vexpand();
-        textarea->set_shadow_type(Gtk::SHADOW_IN);
+        textarea->set_has_frame(true);
 
         auto const entry = Gtk::make_managed<ParamMultilineStringEntry>(this, changeSignal);
         entry->set_visible(true);

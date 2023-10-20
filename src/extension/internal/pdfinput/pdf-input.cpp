@@ -195,7 +195,7 @@ PdfImportDialog::PdfImportDialog(std::shared_ptr<PDFDoc> doc, const gchar * /*ur
     _current_pages = "all";
     _setPreviewPage(1);
 
-    okbutton->set_can_focus();
+    okbutton->set_focusable();
     set_default_widget(*okbutton);
     set_focus(*okbutton);
 

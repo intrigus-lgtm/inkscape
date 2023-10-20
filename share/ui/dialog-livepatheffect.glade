@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="3.20"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkBox" id="LPEContainer">
     <property name="name">LPEContainer</property>
     <property name="width-request">250</property>
-    <property name="visible">True</property>
     <property name="hexpand">True</property>
     <property name="vexpand">True</property>
     <property name="orientation">vertical</property>
@@ -13,7 +12,6 @@
     <child>
       <object class="GtkBox" id="LPEAddContainer">
         <property name="name">LPEAddContainer</property>
-        <property name="visible">True</property>
         <property name="margin-left">5</property>
         <property name="margin-right">5</property>
         <property name="margin-start">5</property>
@@ -24,7 +22,6 @@
     <child>
       <object class="GtkBox" id="LPECurrentItem">
         <property name="name">LPECurrentItem</property>
-        <property name="visible">True</property>
         <property name="orientation">vertical</property>
       </object>
       <packing>
@@ -33,8 +30,6 @@
     </child>
     <child>
       <object class="GtkLabel" id="LPESelectionInfo">
-        <property name="visible">True</property>
-        <property name="no-show-all">True</property>
         <property name="margin-left">5</property>
         <property name="margin-right">5</property>
         <property name="margin-start">5</property>
@@ -49,7 +44,6 @@
     <child>
       <object class="GtkListBox" id="LPEListBox">
         <property name="name">LPEListBox</property>
-        <property name="visible">True</property>
         <property name="selection-mode">none</property>
         <style>
           <class name="lpelistbox"/>
@@ -62,7 +56,6 @@
     <child>
       <object class="GtkListBox" id="LPEParentBox">
         <property name="name">LPEParentBox</property>
-        <property name="visible">True</property>
         <property name="selection-mode">none</property>
       </object>
       <packing>

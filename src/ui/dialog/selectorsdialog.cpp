@@ -1366,7 +1366,7 @@ void SelectorsDialog::_styleButton(Gtk::Button &btn, char const *iconName, char 
     GtkWidget *child = sp_get_icon_image(iconName, GTK_ICON_SIZE_SMALL_TOOLBAR);
     gtk_widget_set_visible(child, true);
     btn.add(*manage(Glib::wrap(child)));
-    btn.set_relief(Gtk::RELIEF_NONE);
+    btn.set_has_frame(false);
     btn.set_tooltip_text (tooltip);
 }
 

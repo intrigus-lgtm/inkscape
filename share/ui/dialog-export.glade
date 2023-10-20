@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="3.24"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkBox" id="export-box">
     <property name="name">ExportDialog</property>
-    <property name="visible">True</property>
     <property name="double-buffered">False</property>
     <property name="orientation">vertical</property>
     <property name="homogeneous">True</property>
     <child>
       <object class="GtkNotebook" id="export-notebook">
-        <property name="visible">True</property>
         <property name="double-buffered">False</property>
         <property name="margin-start">4</property>
         <property name="margin-end">4</property>
@@ -17,18 +15,14 @@
         <property name="show-border">False</property>
         <child>
           <object class="GtkOverlay">
-            <property name="visible">True</property>
             <child>
               <object class="GtkBox" id="single-image">
-                <property name="visible">True</property>
                 <property name="sensitive">False</property>
-                <property name="no-show-all">True</property>
                 <property name="orientation">vertical</property>
                 <property name="spacing">5</property>
                 <child>
                   <object class="GtkScrolledWindow" id="si_scroll">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
+                    <property name="focusable">True</property>
                     <property name="double-buffered">False</property>
                     <property name="vexpand">True</property>
                     <property name="hscrollbar-policy">never</property>
@@ -36,25 +30,21 @@
                     <property name="overlay-scrolling">False</property>
                     <child>
                       <object class="GtkViewport">
-                        <property name="visible">True</property>
                         <property name="hscroll-policy">natural</property>
-                        <property name="shadow-type">none</property>
+                        <property name="has-frame">false</property>
                         <child>
                           <object class="GtkBox">
-                            <property name="visible">True</property>
                             <property name="orientation">vertical</property>
                             <!-- n-columns=4 n-rows=1 -->
                             <child>
                               <object class="GtkGrid">
-                                <property name="visible">True</property>
                                 <property name="valign">start</property>
                                 <property name="margin-top">5</property>
                                 <child>
                                   <object class="GtkRadioButton" id="si_s_selection">
                                     <property name="label" translatable="yes">Selection</property>
                                     <property name="name">export_selection</property>
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
+                                    <property name="focusable">True</property>
                                     <property name="focus-on-click">False</property>
                                     <property name="tooltip-text" translatable="yes">Export selected objects</property>
                                     <property name="hexpand">True</property>
@@ -70,8 +60,7 @@
                                   <object class="GtkRadioButton" id="si_s_document">
                                     <property name="label" translatable="yes">Document</property>
                                     <property name="name">export_selection</property>
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
+                                    <property name="focusable">True</property>
                                     <property name="focus-on-click">False</property>
                                     <property name="tooltip-text" translatable="yes">Export everything inside document</property>
                                     <property name="hexpand">True</property>
@@ -87,8 +76,7 @@
                                   <object class="GtkRadioButton" id="si_s_page">
                                     <property name="label" translatable="yes">Page</property>
                                     <property name="name">export_selection</property>
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
+                                    <property name="focusable">True</property>
                                     <property name="focus-on-click">False</property>
                                     <property name="tooltip-text" translatable="yes">Export cropped content inside the page</property>
                                     <property name="hexpand">True</property>
@@ -104,8 +92,7 @@
                                   <object class="GtkRadioButton" id="si_s_custom">
                                     <property name="label" translatable="yes">Custom</property>
                                     <property name="name">export_selection</property>
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
+                                    <property name="focusable">True</property>
                                     <property name="focus-on-click">False</property>
                                     <property name="tooltip-text" translatable="yes">Export custom area by specifying coordinates</property>
                                     <property name="hexpand">True</property>
@@ -121,17 +108,14 @@
                             </child>
                             <child>
                               <object class="GtkScrolledWindow" id="si_pages_box">
-                                <property name="can-focus">True</property>
-                                <property name="no-show-all">True</property>
+                                <property name="focusable">True</property>
                                 <property name="margin-start">4</property>
                                 <property name="margin-end">4</property>
-                                <property name="shadow-type">in</property>
+                                <property name="has-frame">true</property>
                                 <child>
                                   <object class="GtkViewport">
-                                    <property name="visible">True</property>
                                     <child>
                                       <object class="GtkFlowBox" id="si_pages">
-                                        <property name="visible">True</property>
                                         <property name="margin-left">5</property>
                                         <property name="margin-right">5</property>
                                         <property name="margin-start">6</property>
@@ -157,8 +141,6 @@
                             <!-- n-columns=4 n-rows=7 -->
                             <child>
                               <object class="GtkGrid" id="si_sizes">
-                                <property name="visible">True</property>
-                                <property name="no-show-all">True</property>
                                 <property name="margin-start">6</property>
                                 <property name="margin-end">6</property>
                                 <property name="margin-top">5</property>
@@ -166,8 +148,7 @@
                                 <property name="column-spacing">10</property>
                                 <child>
                                   <object class="GtkSpinButton" id="si_left_sb">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
+                                    <property name="focusable">True</property>
                                     <property name="valign">center</property>
                                     <property name="hexpand">True</property>
                                     <property name="width-chars">0</property>
@@ -181,8 +162,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkSpinButton" id="si_bottom_sb">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
+                                    <property name="focusable">True</property>
                                     <property name="valign">center</property>
                                     <property name="hexpand">True</property>
                                     <property name="width-chars">0</property>
@@ -195,8 +175,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkSpinButton" id="si_width_sb">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
+                                    <property name="focusable">True</property>
                                     <property name="valign">center</property>
                                     <property name="hexpand">True</property>
                                     <property name="width-chars">0</property>
@@ -209,8 +188,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkSpinButton" id="si_height_sb">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
+                                    <property name="focusable">True</property>
                                     <property name="valign">center</property>
                                     <property name="hexpand">True</property>
                                     <property name="width-chars">0</property>
@@ -223,7 +201,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel">
-                                    <property name="visible">True</property>
                                     <property name="valign">center</property>
                                     <property name="margin-top">5</property>
                                     <property name="margin-bottom">5</property>
@@ -241,8 +218,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkSpinButton" id="si_top_sb">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
+                                    <property name="focusable">True</property>
                                     <property name="valign">center</property>
                                     <property name="hexpand">True</property>
                                     <property name="width-chars">0</property>
@@ -255,8 +231,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkSpinButton" id="si_right_sb">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
+                                    <property name="focusable">True</property>
                                     <property name="valign">center</property>
                                     <property name="hexpand">True</property>
                                     <property name="width-chars">0</property>
@@ -269,7 +244,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="si_label_height">
-                                    <property name="visible">True</property>
                                     <property name="valign">center</property>
                                     <property name="label" translatable="yes">Height</property>
                                     <property name="wrap">True</property>
@@ -282,7 +256,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="si_label_width">
-                                    <property name="visible">True</property>
                                     <property name="valign">center</property>
                                     <property name="label" translatable="yes">Width</property>
                                     <property name="wrap">True</property>
@@ -295,7 +268,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="si_label_left">
-                                    <property name="visible">True</property>
                                     <property name="valign">center</property>
                                     <property name="label" translatable="yes">Left</property>
                                     <property name="wrap">True</property>
@@ -308,7 +280,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="si_label_right">
-                                    <property name="visible">True</property>
                                     <property name="valign">center</property>
                                     <property name="label" translatable="yes">Right</property>
                                     <property name="wrap">True</property>
@@ -321,7 +292,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="si_label_bottom">
-                                    <property name="visible">True</property>
                                     <property name="valign">center</property>
                                     <property name="label" translatable="yes">Bottom</property>
                                     <property name="wrap">True</property>
@@ -334,7 +304,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="si_label_top">
-                                    <property name="visible">True</property>
                                     <property name="valign">center</property>
                                     <property name="label" translatable="yes">Top</property>
                                     <property name="wrap">True</property>
@@ -347,7 +316,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel">
-                                    <property name="visible">True</property>
                                     <property name="label" translatable="yes">Width
 (px)</property>
                                     <property name="wrap">True</property>
@@ -360,7 +328,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel">
-                                    <property name="visible">True</property>
                                     <property name="label" translatable="yes">Height
 (px)</property>
                                     <property name="wrap">True</property>
@@ -373,8 +340,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkSpinButton" id="si_img_width_sb">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
+                                    <property name="focusable">True</property>
                                     <property name="valign">center</property>
                                     <property name="hexpand">True</property>
                                     <property name="width-chars">0</property>
@@ -387,8 +353,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkSpinButton" id="si_img_height_sb">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
+                                    <property name="focusable">True</property>
                                     <property name="valign">center</property>
                                     <property name="hexpand">True</property>
                                     <property name="width-chars">0</property>
@@ -401,7 +366,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel">
-                                    <property name="visible">True</property>
                                     <property name="valign">center</property>
                                     <property name="label" translatable="yes">DPI</property>
                                     <property name="wrap">True</property>
@@ -414,8 +378,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkSpinButton" id="si_dpi_sb">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
+                                    <property name="focusable">True</property>
                                     <property name="valign">center</property>
                                     <property name="hexpand">True</property>
                                     <property name="width-chars">0</property>
@@ -428,13 +391,11 @@
                                 </child>
                                 <child>
                                   <object class="GtkBox" id="si_units_row">
-                                    <property name="visible">True</property>
                                     <property name="halign">end</property>
                                     <property name="hexpand">True</property>
                                     <property name="spacing">5</property>
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="visible">True</property>
                                         <property name="valign">center</property>
                                         <property name="label" translatable="yes">Units</property>
                                         <property name="wrap">True</property>
@@ -443,7 +404,6 @@
                                     </child>
                                     <child>
                                       <object class="GtkComboBoxText" id="si_units">
-                                        <property name="visible">True</property>
                                         <property name="valign">center</property>
                                         <property name="active">1</property>
                                       </object>
@@ -466,8 +426,6 @@
                             </child>
                             <child>
                               <object class="GtkBox">
-                                <property name="visible">True</property>
-                                <property name="no-show-all">True</property>
                                 <property name="valign">center</property>
                                 <property name="margin-start">6</property>
                                 <property name="margin-end">6</property>
@@ -476,13 +434,11 @@
                                 <property name="spacing">20</property>
                                 <child>
                                   <object class="GtkBox" id="si_preview_box">
-                                    <property name="visible">True</property>
                                     <property name="valign">center</property>
                                     <property name="orientation">vertical</property>
                                     <child>
                                       <object class="GtkImage" id="si_preview">
                                         <property name="name">export_preview_single</property>
-                                        <property name="visible">True</property>
                                         <property name="halign">center</property>
                                         <property name="valign">center</property>
                                         <property name="icon-name">image-missing</property>
@@ -495,14 +451,12 @@
                                 </child>
                                 <child>
                                   <object class="GtkBox">
-                                    <property name="visible">True</property>
                                     <property name="valign">center</property>
                                     <property name="orientation">vertical</property>
                                     <child>
                                       <object class="GtkCheckButton" id="si_show_preview">
                                         <property name="label" translatable="yes">Show Preview</property>
-                                        <property name="can-focus">True</property>
-                                        <property name="no-show-all">True</property>
+                                        <property name="focusable">True</property>
                                         <property name="active">True</property>
                                         <property name="draw-indicator">True</property>
                                       </object>
@@ -510,8 +464,7 @@
                                     <child>
                                       <object class="GtkCheckButton" id="si_hide_all">
                                         <property name="label" translatable="yes">Export Selected Only</property>
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">True</property>
+                                        <property name="focusable">True</property>
                                         <property name="draw-indicator">True</property>
                                       </object>
                                       <packing>
@@ -520,17 +473,14 @@
                                     </child>
                                     <child>
                                       <object class="GtkBox">
-                                        <property name="visible">True</property>
                                         <child>
                                           <object class="GtkButton" id="si_backgnd">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">True</property>
+                                            <property name="focusable">True</property>
                                             <property name="halign">start</property>
                                           </object>
                                         </child>
                                         <child>
                                           <object class="GtkLabel">
-                                            <property name="visible">True</property>
                                             <property name="margin-left">7</property>
                                             <property name="margin-start">7</property>
                                             <property name="label" translatable="yes">Background Color</property>
@@ -568,12 +518,10 @@
                 <!-- n-columns=3 n-rows=2 -->
                 <child>
                   <object class="GtkGrid" id="si_buttons">
-                    <property name="visible">True</property>
                     <property name="row-spacing">5</property>
                     <child>
                       <object class="GtkEntry" id="si_filename">
-                        <property name="visible">True</property>
-                        <property name="can-focus">True</property>
+                        <property name="focusable">True</property>
                         <property name="hexpand">True</property>
                         <property name="secondary-icon-name">folder-open</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Browse export directory</property>
@@ -586,7 +534,6 @@
                     </child>
                     <child>
                       <object class="GtkComboBoxText" id="si_extention">
-                        <property name="visible">True</property>
                         <property name="tooltip-text" translatable="yes">Select export format</property>
                         <property name="valign">center</property>
                         <property name="margin-start">5</property>
@@ -600,8 +547,7 @@
                     <child>
                       <object class="GtkButton" id="si_export">
                         <property name="label" translatable="yes">Export</property>
-                        <property name="visible">True</property>
-                        <property name="can-focus">True</property>
+                        <property name="focusable">True</property>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>
@@ -611,7 +557,6 @@
                     </child>
                     <child>
                       <object class="GtkBox" id="si_prefs">
-                        <property name="visible">True</property>
                         <property name="orientation">vertical</property>
                       </object>
                       <packing>
@@ -631,14 +576,12 @@
             </child>
             <child type="overlay">
               <object class="GtkBox" id="si_inprogress">
-                <property name="no-show-all">True</property>
                 <property name="halign">center</property>
                 <property name="valign">center</property>
                 <property name="vexpand">True</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkSpinner">
-                    <property name="visible">True</property>
                     <property name="margin-start">10</property>
                     <property name="margin-end">10</property>
                     <property name="margin-top">10</property>
@@ -651,7 +594,6 @@
                 </child>
                 <child>
                   <object class="GtkProgressBar" id="si_progress">
-                    <property name="visible">True</property>
                     <property name="valign">start</property>
                     <property name="margin-start">10</property>
                     <property name="margin-end">10</property>
@@ -667,8 +609,7 @@
                 <child>
                   <object class="GtkButton" id="si_cancel">
                     <property name="label" translatable="yes">Cancel Export</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
+                    <property name="focusable">True</property>
                     <property name="receives-default">True</property>
                     <property name="valign">center</property>
                     <property name="hexpand">True</property>
@@ -683,17 +624,14 @@
         </child>
         <child type="tab">
           <object class="GtkBox">
-            <property name="visible">True</property>
             <child>
               <object class="GtkImage" id="single_image_icon">
-                <property name="visible">True</property>
                 <property name="valign">center</property>
                 <property name="icon-name">export-single</property>
               </object>
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Export a part of document</property>
                 <property name="label" translatable="yes">Single File</property>
                 <property name="justify">right</property>
@@ -707,28 +645,22 @@
         </child>
         <child>
           <object class="GtkOverlay">
-            <property name="visible">True</property>
             <child>
               <object class="GtkBox" id="batch-export">
-                <property name="visible">True</property>
-                <property name="no-show-all">True</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkScrolledWindow" id="b_scroll">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
+                    <property name="focusable">True</property>
                     <property name="vexpand">True</property>
                     <property name="hscrollbar-policy">never</property>
                     <property name="window-placement-set">False</property>
                     <property name="overlay-scrolling">False</property>
                     <child>
                       <object class="GtkViewport">
-                        <property name="visible">True</property>
-                        <property name="shadow-type">none</property>
+                        <property name="has-frame">false</property>
                         <!-- n-columns=6 n-rows=6 -->
                         <child>
                           <object class="GtkGrid">
-                            <property name="visible">True</property>
                             <property name="margin-top">5</property>
                             <property name="orientation">vertical</property>
                             <property name="row-spacing">10</property>
@@ -736,17 +668,14 @@
                             <child>
                               <object class="GtkScrolledWindow" id="b_pbox_scroll">
                                 <property name="height-request">150</property>
-                                <property name="visible">True</property>
-                                <property name="can-focus">True</property>
+                                <property name="focusable">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
-                                <property name="shadow-type">in</property>
+                                <property name="has-frame">true</property>
                                 <child>
                                   <object class="GtkViewport">
-                                    <property name="visible">True</property>
                                     <child>
                                       <object class="GtkFlowBox" id="b_preview_box">
-                                        <property name="visible">True</property>
                                         <property name="margin-start">5</property>
                                         <property name="margin-end">5</property>
                                         <property name="margin-top">5</property>
@@ -769,13 +698,11 @@
                             </child>
                             <child>
                               <object class="GtkBox">
-                                <property name="visible">True</property>
                                 <property name="hexpand">True</property>
                                 <child>
                                   <object class="GtkRadioButton" id="b_s_selection">
                                     <property name="label" translatable="yes">Selection</property>
                                     <property name="name">export_selection</property>
-                                    <property name="visible">True</property>
                                     <property name="hexpand">True</property>
                                     <property name="tooltip-text" translatable="yes">Export selected objects to separate files</property>
                                     <property name="active">True</property>
@@ -786,7 +713,6 @@
                                   <object class="GtkRadioButton" id="b_s_layers">
                                     <property name="label" translatable="yes">Layers</property>
                                     <property name="name">export_selection</property>
-                                    <property name="visible">True</property>
                                     <property name="hexpand">True</property>
                                     <property name="tooltip-text" translatable="yes">Export layers as separate files</property>
                                     <property name="active">True</property>
@@ -798,7 +724,6 @@
                                   <object class="GtkRadioButton" id="b_s_pages">
                                     <property name="label" translatable="yes">Pages</property>
                                     <property name="name">export_selection</property>
-                                    <property name="visible">True</property>
                                     <property name="hexpand">True</property>
                                     <property name="tooltip-text" translatable="yes">Export pages as separate files</property>
                                     <property name="active">True</property>
@@ -816,7 +741,6 @@
                             <child>
                               <object class="GtkCheckButton" id="b_show_preview">
                                 <property name="label" translatable="yes">Preview</property>
-                                <property name="visible">True</property>
                                 <property name="focus-on-click">False</property>
                                 <property name="halign">start</property>
                                 <property name="active">True</property>
@@ -830,7 +754,6 @@
                             </child>
                             <child>
                               <object class="GtkLabel" id="b_num_elements">
-                                <property name="visible">True</property>
                                 <property name="label">5 Items</property>
                               </object>
                               <packing>
@@ -841,7 +764,6 @@
                             <child>
                               <object class="GtkCheckButton" id="b_hide_all">
                                 <property name="label" translatable="yes">Export Selected Only</property>
-                                <property name="visible">True</property>
                                 <property name="focus-on-click">False</property>
                                 <property name="halign">start</property>
                                 <property name="draw-indicator">True</property>
@@ -854,21 +776,18 @@
                             </child>
                             <child>
                               <object class="GtkBox">
-                                <property name="visible">True</property>
                                 <property name="halign">end</property>
                                 <property name="valign">center</property>
                                 <property name="margin-end">8</property>
                                 <child>
                                   <object class="GtkLabel">
-                                    <property name="visible">True</property>
                                     <property name="margin-end">6</property>
                                     <property name="label" translatable="yes">Background Color</property>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="b_backgnd">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
+                                    <property name="focusable">True</property>
                                     <property name="halign">start</property>
                                   </object>
                                   <packing>
@@ -884,7 +803,6 @@
                             <!-- n-columns=2 n-rows=2 -->
                             <child>
                               <object class="GtkGrid" id="b_export_list">
-                                <property name="visible">True</property>
                                 <property name="margin-start">5</property>
                                 <property name="margin-end">5</property>
                                 <property name="margin-top">5</property>
@@ -902,8 +820,7 @@
                             <child>
                               <object class="GtkCheckButton" id="b_overwrite">
                                 <property name="label" translatable="yes">Overwrite existing files</property>
-                                <property name="visible">True</property>
-                                <property name="can-focus">True</property>
+                                <property name="focusable">True</property>
                                 <property name="focus-on-click">False</property>
                                 <property name="receives-default">False</property>
                                 <property name="tooltip-text" translatable="yes">When exporting each of the images in the batch, generated filenames which already exist will be overwritten without confirmation.</property>
@@ -929,14 +846,12 @@
                 <!-- n-columns=1 n-rows=2 -->
                 <child>
                   <object class="GtkGrid" id="b_buttons">
-                    <property name="visible">True</property>
                     <property name="margin-top">5</property>
                     <property name="row-spacing">5</property>
                     <property name="column-spacing">10</property>
                     <child>
                       <object class="GtkEntry" id="b_name">
-                        <property name="visible">True</property>
-                        <property name="can-focus">True</property>
+                        <property name="focusable">True</property>
                         <property name="hexpand">True</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Browse export directory</property>
                         <property name="placeholder-text" translatable="yes">Filename</property>
@@ -949,7 +864,6 @@
                     <child>
                       <object class="GtkButton" id="b_export">
                         <property name="label" translatable="yes">Export</property>
-                        <property name="visible">True</property>
                         <property name="receives-default">True</property>
                       </object>
                       <packing>
@@ -960,8 +874,7 @@
                     </child>
                     <child>
                       <object class="GtkFileChooserButton" id="b_path">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
+                        <property name="focusable">False</property>
                         <property name="hexpand">True</property>
                         <property name="action">select-folder</property>
                         <property name="title" translatable="yes"/>
@@ -983,13 +896,11 @@
             </child>
             <child type="overlay">
               <object class="GtkBox" id="b_inprogress">
-                <property name="no-show-all">True</property>
                 <property name="halign">center</property>
                 <property name="valign">center</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkSpinner">
-                    <property name="visible">True</property>
                     <property name="margin-left">10</property>
                     <property name="margin-right">10</property>
                     <property name="margin-start">10</property>
@@ -1002,7 +913,6 @@
                 </child>
                 <child>
                   <object class="GtkProgressBar" id="b_progress">
-                    <property name="visible">True</property>
                     <property name="valign">center</property>
                     <property name="margin-left">10</property>
                     <property name="margin-right">10</property>
@@ -1018,7 +928,6 @@
                 </child>
                 <child>
                   <object class="GtkProgressBar" id="b_progress_batch">
-                    <property name="visible">True</property>
                     <property name="valign">start</property>
                     <property name="margin-left">10</property>
                     <property name="margin-right">10</property>
@@ -1036,8 +945,7 @@
                 <child>
                   <object class="GtkButton" id="b_cancel">
                     <property name="label" translatable="yes">Cancel Export</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
+                    <property name="focusable">True</property>
                     <property name="receives-default">True</property>
                     <property name="valign">center</property>
                     <property name="hexpand">True</property>
@@ -1055,17 +963,14 @@
         </child>
         <child type="tab">
           <object class="GtkBox">
-            <property name="visible">True</property>
             <child>
               <object class="GtkImage" id="batch_export_icon">
-                <property name="visible">True</property>
                 <property name="valign">center</property>
                 <property name="icon-name">export-multi</property>
               </object>
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Export to multiple files and file formats</property>
                 <property name="label" translatable="yes">Batch Export</property>
               </object>

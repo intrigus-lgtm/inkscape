@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="3.22"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="_curvature_adj">
     <property name="upper">100</property>
     <property name="step-increment">1</property>
@@ -19,20 +19,17 @@
     <property name="page-increment">10</property>
   </object>
   <object class="GtkBox" id="connector-toolbar">
-    <property name="visible">True</property>
     <property name="halign">start</property>
     <property name="valign">center</property>
     <property name="spacing">3</property>
     <child>
       <object class="GtkButton" id="avoid_btn">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make connectors avoid selected objects</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <child>
           <object class="GtkImage" id="image1">
-            <property name="visible">True</property>
             <property name="icon-name">connector-avoid</property>
           </object>
         </child>
@@ -40,14 +37,12 @@
     </child>
     <child>
       <object class="GtkButton" id="ignore_btn">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make connectors ignore selected objects</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <child>
           <object class="GtkImage" id="image2">
-            <property name="visible">True</property>
             <property name="icon-name">connector-ignore</property>
           </object>
         </child>
@@ -58,14 +53,12 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_orthogonal_btn">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make connector orthogonal or polyline</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <child>
           <object class="GtkImage" id="image3">
-            <property name="visible">True</property>
             <property name="icon-name">connector-orthogonal</property>
           </object>
         </child>
@@ -76,7 +69,6 @@
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="visible">True</property>
       </object>
       <packing>
         <property name="position">3</property>
@@ -84,18 +76,15 @@
     </child>
     <child>
       <object class="GtkBox" id="curvature_box">
-        <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">The amount of connectors curvature</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
             <property name="label" translatable="yes">Curvature:</property>
           </object>
         </child>
         <child>
           <object class="GtkSpinButton" id="_curvature_item">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="width-chars">5</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_curvature_adj</property>
@@ -112,18 +101,15 @@
     </child>
     <child>
       <object class="GtkBox" id="spacing_box">
-        <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">The amount of space left around objects by auto-routing connectors</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
             <property name="label" translatable="yes">Spacing:</property>
           </object>
         </child>
         <child>
           <object class="GtkSpinButton" id="_spacing_item">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="width-chars">5</property>
             <property name="text" translatable="yes">0</property>
             <property name="adjustment">_spacing_adj</property>
@@ -141,14 +127,12 @@
     </child>
     <child>
       <object class="GtkButton" id="graph_btn">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Nicely arrange selected connector network</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <child>
           <object class="GtkImage" id="image4">
-            <property name="visible">True</property>
             <property name="icon-name">distribute-graph</property>
           </object>
         </child>
@@ -159,18 +143,15 @@
     </child>
     <child>
       <object class="GtkBox" id="length_box">
-        <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Ideal length for connectors when layout is applied</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
             <property name="label" translatable="yes">Length:</property>
           </object>
         </child>
         <child>
           <object class="GtkSpinButton" id="_length_item">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="width-chars">7</property>
             <property name="text" translatable="yes">0</property>
             <property name="adjustment">_length_adj</property>
@@ -187,14 +168,12 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_directed_btn">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make connectors with end-markers (arrows) point downwards</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <child>
           <object class="GtkImage" id="image5">
-            <property name="visible">True</property>
             <property name="icon-name">distribute-graph-directed</property>
           </object>
         </child>
@@ -205,14 +184,12 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_overlap_btn">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Do not allow overlapping shapes</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <child>
           <object class="GtkImage" id="image6">
-            <property name="visible">True</property>
             <property name="icon-name">distribute-remove-overlaps</property>
           </object>
         </child>

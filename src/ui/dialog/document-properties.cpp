@@ -138,7 +138,7 @@ static void docprops_style_button(Gtk::Button& btn, char const* iconName)
     GtkWidget *child = sp_get_icon_image(iconName, GTK_ICON_SIZE_SMALL_TOOLBAR);
     gtk_widget_set_visible(child, true);
     btn.add(*Gtk::manage(Glib::wrap(child)));
-    btn.set_relief(Gtk::RELIEF_NONE);
+    btn.set_has_frame(false);
 }
 
 static bool do_remove_popup_menu(PopupMenuOptionalClick const click,
@@ -882,7 +882,7 @@ void DocumentProperties::build_cms()
     populate_linked_profiles_box();
 
     _LinkedProfilesListScroller.add(_LinkedProfilesList);
-    _LinkedProfilesListScroller.set_shadow_type(Gtk::SHADOW_IN);
+    _LinkedProfilesListScroller.set_has_frame(true);
     _LinkedProfilesListScroller.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::ALWAYS);
     _LinkedProfilesListScroller.set_size_request(-1, 90);
 
@@ -1035,7 +1035,7 @@ void DocumentProperties::build_scripting()
     _page_embedded_scripts->table().attach(_EmbeddedContentScroller, 0, row, 3, 1);
 
     _EmbeddedContentScroller.add(_EmbeddedContent);
-    _EmbeddedContentScroller.set_shadow_type(Gtk::SHADOW_IN);
+    _EmbeddedContentScroller.set_has_frame(true);
     _EmbeddedContentScroller.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     _EmbeddedContentScroller.set_size_request(-1, 140);
 
@@ -1049,14 +1049,14 @@ void DocumentProperties::build_scripting()
     populate_script_lists();
 
     _ExternalScriptsListScroller.add(_ExternalScriptsList);
-    _ExternalScriptsListScroller.set_shadow_type(Gtk::SHADOW_IN);
+    _ExternalScriptsListScroller.set_has_frame(true);
     _ExternalScriptsListScroller.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::ALWAYS);
     _ExternalScriptsListScroller.set_size_request(-1, 90);
 
     _external_add_btn.signal_clicked().connect(sigc::mem_fun(*this, &DocumentProperties::addExternalScript));
 
     _EmbeddedScriptsListScroller.add(_EmbeddedScriptsList);
-    _EmbeddedScriptsListScroller.set_shadow_type(Gtk::SHADOW_IN);
+    _EmbeddedScriptsListScroller.set_has_frame(true);
     _EmbeddedScriptsListScroller.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::ALWAYS);
     _EmbeddedScriptsListScroller.set_size_request(-1, 90);
 

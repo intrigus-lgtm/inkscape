@@ -115,13 +115,13 @@ void BatchItem::init(std::shared_ptr<PreviewDrawing> drawing) {
     _grid.set_valign(Gtk::Align::CENTER);
 
     _selector.set_active(true);
-    _selector.set_can_focus(false);
+    _selector.set_focusable(false);
     _selector.set_margin_start(2);
     _selector.set_margin_bottom(2);
     _selector.set_valign(Gtk::Align::END);
 
     _option.set_active(false);
-    _option.set_can_focus(false);
+    _option.set_focusable(false);
     _option.set_margin_start(2);
     _option.set_margin_bottom(2);
     _option.set_valign(Gtk::Align::END);
@@ -141,7 +141,7 @@ void BatchItem::init(std::shared_ptr<PreviewDrawing> drawing) {
     set_halign(Gtk::Align::START);
     add(_grid);
     set_visible(true);
-    this->set_can_focus(false);
+    this->set_focusable(false);
 
     _selector.signal_toggled().connect([this]() {
         set_selected(_selector.get_active());

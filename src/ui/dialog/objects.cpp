@@ -945,7 +945,7 @@ ObjectsPanel::ObjectsPanel()
     _scroller.set_overlay_scrolling(false);
     _scroller.add(_tree);
     _scroller.set_policy( Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC );
-    _scroller.set_shadow_type(Gtk::SHADOW_IN);
+    _scroller.set_has_frame(true);
     Gtk::Requisition sreq;
     Gtk::Requisition sreq_natural;
     _scroller.get_preferred_size(sreq_natural, sreq);
@@ -1189,7 +1189,7 @@ Gtk::Button* ObjectsPanel::_addBarButton(char const* iconName, char const* toolt
     auto child = Glib::wrap(sp_get_icon_image(iconName, GTK_ICON_SIZE_SMALL_TOOLBAR));
     child->set_visible(true);
     btn->add(*child);
-    btn->set_relief(Gtk::RELIEF_NONE);
+    btn->set_has_frame(false);
     btn->set_tooltip_text(tooltip);
     // Must use C API until GTK4.
     gtk_actionable_set_action_name(GTK_ACTIONABLE(btn->gobj()), action_name);

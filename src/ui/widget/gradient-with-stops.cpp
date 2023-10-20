@@ -56,8 +56,8 @@ GradientWithStops::GradientWithStops() :
 
     _drawing_area->set_visible(true);
     _drawing_area->signal_draw().connect(sigc::mem_fun(*this, &GradientWithStops::on_drawing_area_draw));
-    _drawing_area->property_expand() = true; // DrawingArea fills self Box,
-    property_expand() = false;               // but the Box doesnʼt expand.
+    _drawing_area->set_expand(true); // DrawingArea fills self Box,
+    set_expand(false);               // but the Box doesnʼt expand.
     add(*_drawing_area);
 
     Controller::add_click(*_drawing_area, sigc::mem_fun(*this, &GradientWithStops::on_click_pressed ),
@@ -65,7 +65,7 @@ GradientWithStops::GradientWithStops() :
                           Controller::Button::left);
     Controller::add_motion<nullptr, &GradientWithStops::on_motion, nullptr>(*_drawing_area, *this);
     Controller::add_key<&GradientWithStops::on_key_pressed>(*_drawing_area, *this);
-    _drawing_area->set_can_focus(true);
+    _drawing_area->set_focusable(true);
     _drawing_area->property_has_focus().signal_changed().connect(
         sigc::mem_fun(*this, &GradientWithStops::on_drawing_area_has_focus));
 }

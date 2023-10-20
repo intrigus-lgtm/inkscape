@@ -228,7 +228,7 @@ void ExportList::append_row()
 
     auto const pIcon = Gtk::manage(sp_get_icon_image("window-close", Gtk::IconSize::NORMAL));
     auto const delete_btn = Gtk::make_managed<Gtk::Button>();
-    delete_btn->set_relief(Gtk::RELIEF_NONE);
+    delete_btn->set_has_frame(false);
     delete_btn->add(*pIcon);
     delete_btn->show_all();
     delete_btn->set_no_show_all(true);

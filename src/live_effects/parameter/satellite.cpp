@@ -267,7 +267,7 @@ Gtk::Widget *SatelliteParam::param_newWidget()
     auto const pLabel = Gtk::make_managed<Gtk::Label>(param_label);
     UI::pack_start(*_widget, *pLabel, true, true);
     pLabel->set_tooltip_text(param_tooltip);
-    pButton->set_relief(Gtk::RELIEF_NONE);
+    pButton->set_has_frame(false);
     pIcon->set_visible(true);
     pButton->add(*pIcon);
     pButton->set_visible(true);

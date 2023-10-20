@@ -59,7 +59,7 @@ void show(std::vector<SPItem*> const &list, Glib::ustring const &out)
    Gtk::ScrolledWindow scrollwindow;
    scrollwindow.add(textview);
    scrollwindow.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
-   scrollwindow.set_shadow_type(Gtk::SHADOW_IN);
+   scrollwindow.set_has_frame(true);
    scrollwindow.set_size_request(0, 100);
    scrollwindow.set_visible(true);
 

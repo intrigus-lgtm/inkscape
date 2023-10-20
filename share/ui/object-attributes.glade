@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="3.24"/>
+  <requires lib="gtk" version="4.0"/>
   <!-- n-columns=4 n-rows=5 -->
   <object class="GtkGrid">
     <property name="name">text-main</property>
-    <property name="visible">True</property>
     <property name="row-spacing">4</property>
     <property name="column-spacing">4</property>
   </object>
@@ -77,12 +76,10 @@
   </object>
   <!-- n-columns=5 n-rows=6 -->
   <object class="GtkGrid" id="rect-main">
-    <property name="visible">True</property>
     <property name="row-spacing">4</property>
     <property name="column-spacing">4</property>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Dimensions</property>
       </object>
@@ -94,7 +91,6 @@
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">W:</property>
       </object>
@@ -105,8 +101,7 @@
     </child>
     <child>
       <object class="GtkSpinButton" id="rect-width">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Width of rectangle (without stroke)</property>
         <property name="hexpand">True</property>
         <property name="width-chars">6</property>
@@ -120,7 +115,6 @@
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes" context="Abbreviation of Height">H:</property>
       </object>
@@ -131,8 +125,7 @@
     </child>
     <child>
       <object class="GtkSpinButton" id="rect-height">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Height of rectangle (without stroke)</property>
         <property name="hexpand">True</property>
         <property name="width-chars">6</property>
@@ -146,7 +139,6 @@
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="margin-top">4</property>
         <property name="label" translatable="yes">Corner radius</property>
@@ -159,7 +151,6 @@
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Rx:</property>
       </object>
@@ -170,8 +161,7 @@
     </child>
     <child>
       <object class="GtkSpinButton" id="rect-rx">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Horizontal radius of rounded corners</property>
         <property name="hexpand">True</property>
         <property name="width-chars">6</property>
@@ -185,7 +175,6 @@
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Ry:</property>
       </object>
@@ -196,8 +185,7 @@
     </child>
     <child>
       <object class="GtkSpinButton" id="rect-ry">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Vertical radius of rounded corners</property>
         <property name="hexpand">True</property>
         <property name="width-chars">6</property>
@@ -211,19 +199,16 @@
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
         <property name="spacing">4</property>
         <child>
           <object class="GtkButton" id="rect-sharp">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Make corners sharp</property>
             <property name="halign">start</property>
             <property name="valign">start</property>
             <child>
               <object class="GtkImage" id="image-sharp">
-                <property name="visible">True</property>
                 <property name="icon-name">rectangle-make-corners-sharp</property>
               </object>
             </child>
@@ -231,7 +216,6 @@
         </child>
         <child>
           <object class="GtkSeparator">
-            <property name="visible">True</property>
             <property name="margin-start">3</property>
             <property name="margin-end">3</property>
             <property name="orientation">vertical</property>
@@ -242,15 +226,13 @@
         </child>
         <child>
           <object class="GtkButton" id="rect-corners">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Make corners independent (path effect)</property>
             <property name="halign">start</property>
             <property name="valign">start</property>
             <child>
               <object class="GtkImage" id="image-round-corners">
-                <property name="visible">True</property>
                 <property name="icon-name">rectangle-make-corners-round</property>
               </object>
             </child>
@@ -267,16 +249,14 @@
     </child>
     <child>
       <object class="GtkButton" id="rect-round">
-        <property name="visible">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Round numbers to nearest integer</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <style>
           <class name="small-button"/>
         </style>
         <child>
           <object class="GtkImage" id="image-round">
-            <property name="visible">True</property>
             <property name="icon-name">rounding</property>
           </object>
         </child>
@@ -289,12 +269,10 @@
   </object>
   <!-- n-columns=4 n-rows=6 -->
   <object class="GtkGrid" id="star-main">
-    <property name="visible">True</property>
     <property name="row-spacing">4</property>
     <property name="column-spacing">4</property>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Shape</property>
       </object>
@@ -305,7 +283,6 @@
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Corner:</property>
       </object>
@@ -316,7 +293,6 @@
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Rounded:</property>
       </object>
@@ -327,7 +303,6 @@
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Randomized:</property>
       </object>
@@ -338,8 +313,7 @@
     </child>
     <child>
       <object class="GtkSpinButton" id="star-corners">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Number of corners of a polygon or star</property>
         <property name="hexpand">True</property>
         <property name="width-chars">6</property>
@@ -352,8 +326,7 @@
     </child>
     <child>
       <object class="GtkSpinButton" id="star-rounded">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">How rounded are the corners (0 for sharp)</property>
         <property name="hexpand">True</property>
         <property name="width-chars">6</property>
@@ -367,8 +340,7 @@
     </child>
     <child>
       <object class="GtkSpinButton" id="star-rand">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Scatter randomly the corners and angles</property>
         <property name="hexpand">True</property>
         <property name="width-chars">6</property>
@@ -382,18 +354,15 @@
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
         <property name="spacing">4</property>
         <child>
           <object class="GtkRadioButton" id="star-poly">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Regular polygon (with one handle) instead of a star</property>
             <property name="draw-indicator">False</property>
             <child>
               <object class="GtkImage" id="image-poly">
-                <property name="visible">True</property>
                 <property name="icon-name">draw-polygon</property>
               </object>
             </child>
@@ -401,15 +370,13 @@
         </child>
         <child>
           <object class="GtkRadioButton" id="star-star">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Star instead of a regular polygon (with one handle)</property>
             <property name="draw-indicator">False</property>
             <property name="group">star-poly</property>
             <child>
               <object class="GtkImage" id="image-star">
-                <property name="visible">True</property>
                 <property name="icon-name">draw-star</property>
               </object>
             </child>
@@ -420,7 +387,6 @@
         </child>
         <child>
           <object class="GtkSeparator">
-            <property name="visible">True</property>
             <property name="margin-start">3</property>
             <property name="margin-end">3</property>
             <property name="orientation">vertical</property>
@@ -431,13 +397,11 @@
         </child>
         <child>
           <object class="GtkButton" id="star-align">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Level shape</property>
             <child>
               <object class="GtkImage" id="image-level">
-                <property name="visible">True</property>
                 <property name="icon-name">object-level</property>
               </object>
             </child>
@@ -454,7 +418,6 @@
     </child>
     <child>
       <object class="GtkLabel" id="star-ratio-label">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Spoke ratio:</property>
       </object>
@@ -465,8 +428,7 @@
     </child>
     <child>
       <object class="GtkSpinButton" id="star-ratio">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Base radius to tip radius ratio</property>
         <property name="width-chars">6</property>
         <property name="adjustment">adjustment-star-ratio</property>
@@ -479,7 +441,6 @@
     </child>
     <child>
       <object class="GtkLabel" id="star-spacer">
-        <property name="visible">True</property>
         <property name="hexpand">True</property>
       </object>
       <packing>
@@ -489,16 +450,14 @@
     </child>
     <child>
       <object class="GtkButton" id="star-rnd-clear">
-        <property name="visible">True</property>
         <property name="receives-default">True</property>
         <property name="halign">start</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <style>
           <class name="small-button"/>
         </style>
         <child>
           <object class="GtkImage" id="image-clea">
-            <property name="visible">True</property>
             <property name="icon-name">edit-clear-value</property>
           </object>
         </child>
@@ -510,16 +469,14 @@
     </child>
     <child>
       <object class="GtkButton" id="star-round-clear">
-        <property name="visible">True</property>
         <property name="receives-default">True</property>
         <property name="halign">start</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <style>
           <class name="small-button"/>
         </style>
         <child>
           <object class="GtkImage" id="image-clear1">
-            <property name="visible">True</property>
             <property name="icon-name">edit-clear-value</property>
           </object>
         </child>
@@ -531,16 +488,14 @@
     </child>
     <child>
       <object class="GtkButton" id="star-ratio-clear">
-        <property name="visible">True</property>
         <property name="receives-default">True</property>
         <property name="halign">start</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <style>
           <class name="small-button"/>
         </style>
         <child>
           <object class="GtkImage" id="image-clear2">
-            <property name="visible">True</property>
             <property name="icon-name">edit-clear-value</property>
           </object>
         </child>
@@ -553,7 +508,6 @@
     <child>
       <object class="GtkLabel" id="star-spacer1">
         <property name="width-request">40</property>
-        <property name="visible">True</property>
         <property name="hexpand">True</property>
       </object>
       <packing>
@@ -564,12 +518,10 @@
   </object>
   <!-- n-columns=5 n-rows=6 -->
   <object class="GtkGrid" id="ellipse-main">
-    <property name="visible">True</property>
     <property name="row-spacing">4</property>
     <property name="column-spacing">4</property>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Radii</property>
       </object>
@@ -581,7 +533,6 @@
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Rx:</property>
       </object>
@@ -592,8 +543,7 @@
     </child>
     <child>
       <object class="GtkSpinButton" id="el-rx">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Horizontal radius of the circle, ellipse, or arc</property>
         <property name="hexpand">True</property>
         <property name="width-chars">6</property>
@@ -607,7 +557,6 @@
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Ry:</property>
       </object>
@@ -618,8 +567,7 @@
     </child>
     <child>
       <object class="GtkSpinButton" id="el-ry">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Vertical radius of the circle, ellipse, or arc</property>
         <property name="hexpand">True</property>
         <property name="width-chars">6</property>
@@ -633,7 +581,6 @@
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="margin-top">4</property>
         <property name="label" translatable="yes">Angles</property>
@@ -646,7 +593,6 @@
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Start:</property>
       </object>
@@ -657,7 +603,6 @@
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="label" translatable="yes">End:</property>
       </object>
       <packing>
@@ -667,8 +612,7 @@
     </child>
     <child>
       <object class="GtkSpinButton" id="el-start">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">The angle (in degrees) from the horizontal to the arc's start point</property>
         <property name="hexpand">True</property>
         <property name="width-chars">6</property>
@@ -682,8 +626,7 @@
     </child>
     <child>
       <object class="GtkSpinButton" id="el-end">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">The angle (in degrees) from the horizontal to the arc's end point</property>
         <property name="hexpand">True</property>
         <property name="width-chars">6</property>
@@ -697,18 +640,15 @@
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
         <property name="spacing">4</property>
         <child>
           <object class="GtkRadioButton" id="el-slice">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Switch to slice (closed shape with two radii)</property>
             <property name="draw-indicator">False</property>
             <child>
               <object class="GtkImage" id="image-seg">
-                <property name="visible">True</property>
                 <property name="icon-name">draw-ellipse-segment</property>
               </object>
             </child>
@@ -716,15 +656,13 @@
         </child>
         <child>
           <object class="GtkRadioButton" id="el-arc">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Switch to arc (unclosed shape)</property>
             <property name="draw-indicator">False</property>
             <property name="group">el-slice</property>
             <child>
               <object class="GtkImage" id="image-arc">
-                <property name="visible">True</property>
                 <property name="icon-name">draw-ellipse-arc</property>
               </object>
             </child>
@@ -735,15 +673,13 @@
         </child>
         <child>
           <object class="GtkRadioButton" id="el-chord">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Switch to chord (closed shape)</property>
             <property name="draw-indicator">False</property>
             <property name="group">el-slice</property>
             <child>
               <object class="GtkImage" id="image-chord">
-                <property name="visible">True</property>
                 <property name="icon-name">draw-ellipse-chord</property>
               </object>
             </child>
@@ -754,7 +690,6 @@
         </child>
         <child>
           <object class="GtkSeparator">
-            <property name="visible">True</property>
             <property name="margin-start">3</property>
             <property name="margin-end">3</property>
             <property name="orientation">vertical</property>
@@ -765,13 +700,11 @@
         </child>
         <child>
           <object class="GtkButton" id="el-whole">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Make the shape a whole ellipse, not arc or segment</property>
             <child>
               <object class="GtkImage" id="image-whole">
-                <property name="visible">True</property>
                 <property name="icon-name">draw-ellipse-whole</property>
               </object>
             </child>
@@ -789,17 +722,15 @@
     </child>
     <child>
       <object class="GtkButton" id="el-round">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Round numbers to nearest integer</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <style>
           <class name="small-button"/>
         </style>
         <child>
           <object class="GtkImage" id="image-round1">
-            <property name="visible">True</property>
             <property name="icon-name">rounding</property>
           </object>
         </child>
@@ -811,8 +742,6 @@
     </child>
   </object>
   <object class="GtkBox" id="main-widget">
-    <property name="visible">True</property>
-    <property name="no-show-all">True</property>
     <property name="margin-start">4</property>
     <property name="margin-end">4</property>
     <property name="margin-top">6</property>
@@ -821,12 +750,10 @@
     <property name="spacing">5</property>
     <child>
       <object class="GtkBox" id="main-header">
-        <property name="visible">True</property>
         <property name="hexpand">True</property>
         <property name="spacing">5</property>
         <child>
           <object class="GtkLabel" id="main-obj-name">
-            <property name="visible">True</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="hexpand">True</property>
@@ -843,7 +770,6 @@
     </child>
     <child>
       <object class="GtkBox" id="main-panel">
-        <property name="visible">True</property>
         <property name="hexpand">True</property>
       </object>
       <packing>

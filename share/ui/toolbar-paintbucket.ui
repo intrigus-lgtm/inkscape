@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="3.22"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="_offset_adj">
     <property name="lower">-10000</property>
     <property name="upper">10000</property>
@@ -17,25 +17,21 @@
     <property name="modal">True</property>
     <child>
       <object class="GtkBox" id="popover_box1">
-        <property name="visible">True</property>
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
     </child>
   </object>
   <object class="GtkBox" id="paintbucket-toolbar">
-    <property name="visible">True</property>
     <property name="halign">start</property>
     <property name="valign">center</property>
     <property name="spacing">3</property>
     <child>
       <object class="GtkBox" id="channels_box">
-        <property name="visible">True</property>
       </object>
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="visible">True</property>
       </object>
       <packing>
         <property name="position">1</property>
@@ -43,15 +39,13 @@
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn1">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <property name="popover">popover1</property>
         <child>
           <object class="GtkImage" id="image2">
-            <property name="visible">True</property>
             <property name="icon-name">go-down</property>
           </object>
         </child>
@@ -62,18 +56,15 @@
     </child>
     <child>
       <object class="GtkBox" id="threshold_box">
-        <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">The maximum allowed difference between the clicked pixel and the neighboring pixels to be counted in the fill</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
             <property name="label" translatable="yes">Threshold:</property>
           </object>
         </child>
         <child>
           <object class="GtkSpinButton" id="_threshold_item">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="width-chars">5</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_threshold_adj</property>
@@ -93,18 +84,15 @@
     </child>
     <child>
       <object class="GtkBox" id="offset_box">
-        <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">The amount to grow (positive) or shrink (negative) the created fill path</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
             <property name="label" translatable="yes">Grow/shrink by:</property>
           </object>
         </child>
         <child>
           <object class="GtkSpinButton" id="_offset_item">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="width-chars">5</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_offset_adj</property>
@@ -125,7 +113,6 @@
     </child>
     <child>
       <object class="GtkBox" id="unit_menu_box">
-        <property name="visible">True</property>
         <style>
           <class name="tag1"/>
         </style>
@@ -136,7 +123,6 @@
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="visible">True</property>
       </object>
       <packing>
         <property name="position">6</property>
@@ -144,7 +130,6 @@
     </child>
     <child>
       <object class="GtkBox" id="autogap_box">
-        <property name="visible">True</property>
       </object>
       <packing>
         <property name="position">7</property>
@@ -152,7 +137,6 @@
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="visible">True</property>
       </object>
       <packing>
         <property name="position">8</property>
@@ -160,14 +144,12 @@
     </child>
     <child>
       <object class="GtkButton" id="reset_btn">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Reset paint bucket parameters to defaults (use Inkscape Preferences &gt; Tools to change defaults)</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <child>
           <object class="GtkImage" id="image1">
-            <property name="visible">True</property>
             <property name="icon-name">edit-clear</property>
           </object>
         </child>

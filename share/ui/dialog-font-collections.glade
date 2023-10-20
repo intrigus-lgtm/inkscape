@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.38.2 -->
 <interface>
-  <requires lib="gtk+" version="3.24"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkBox" id="contents">
     <property name="name">TextEdit Dialog Box</property>
     <property name="width-request">510</property>
@@ -9,11 +9,9 @@
     <property name="spacing">4</property>
     <child>
       <object class="GtkBox" id="font_list_filter_box">
-        <property name="visible">True</property>
         <child>
           <object class="GtkSearchEntry" id="search_entry">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Search fonts present in the font list</property>
             <property name="primary-icon-name">edit-find-symbolic</property>
             <property name="primary-icon-activatable">False</property>
@@ -22,14 +20,12 @@
         </child>
         <child>
           <object class="GtkButton" id="reset_button">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Reset the font list</property>
             <property name="margin-start">2</property>
             <child>
               <object class="GtkImage" id="refresh_button_image">
-                <property name="visible">True</property>
                 <property name="icon-name">view-refresh</property>
               </object>
             </child>
@@ -42,18 +38,15 @@
     </child>
     <child>
       <object class="GtkPaned" id="paned">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="vexpand">True</property>
         <property name="position">250</property>
         <property name="wide-handle">True</property>
         <child>
           <object class="GtkBox" id="font_list_box">
-            <property name="visible">True</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel" id="font_count_label">
-                <property name="visible">True</property>
                 <property name="halign">start</property>
                 <property name="label" translatable="no">label</property>
               </object>
@@ -62,26 +55,22 @@
         </child>
         <child>
           <object class="GtkBox" id="collections_box">
-            <property name="visible">True</property>
             <property name="margin-start">8</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkBox" id="buttons_box">
-                <property name="visible">True</property>
                 <property name="margin-top">8</property>
                 <property name="margin-bottom">8</property>
                 <child>
                   <object class="GtkButton" id="create_button">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
+                    <property name="focusable">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Create new collection</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkButton" id="edit_button">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
+                    <property name="focusable">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Edit selected collection</property>
                     <property name="margin-start">2</property>
@@ -92,8 +81,7 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="delete_button">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
+                    <property name="focusable">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Delete selected item</property>
                     <property name="margin-start">2</property>

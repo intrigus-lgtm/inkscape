@@ -161,7 +161,7 @@ StartScreen::StartScreen()
 {
     set_name("start-screen-window");
     set_title(Inkscape::inkscape_version());
-    set_can_focus(true);
+    set_focusable(true);
     grab_focus();
     set_can_default(true);
     grab_default();

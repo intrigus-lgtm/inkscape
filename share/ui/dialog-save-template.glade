@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.22.2 -->
 <interface>
-  <requires lib="gtk+" version="3.20"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkDialog" id="dialog">
     <property name="width-request">400</property>
     <property name="height-request">200</property>
@@ -22,10 +22,8 @@
         </child>
         <child>
           <object class="GtkGrid">
-            <property name="visible">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="halign">start</property>
                 <property name="label" translatable="yes">Name: </property>
               </object>
@@ -36,7 +34,6 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="halign">start</property>
                 <property name="label" translatable="yes">Author: </property>
               </object>
@@ -47,7 +44,6 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="halign">start</property>
                 <property name="label" translatable="yes">Description: </property>
               </object>
@@ -58,7 +54,6 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="halign">start</property>
                 <property name="label" translatable="yes">Keywords: </property>
               </object>
@@ -69,8 +64,7 @@
             </child>
             <child>
               <object class="GtkEntry" id="name">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
                 <property name="hexpand">True</property>
               </object>
               <packing>
@@ -80,8 +74,7 @@
             </child>
             <child>
               <object class="GtkEntry" id="author">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -90,8 +83,7 @@
             </child>
             <child>
               <object class="GtkEntry" id="description">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -100,8 +92,7 @@
             </child>
             <child>
               <object class="GtkEntry" id="keywords">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -116,8 +107,7 @@
         <child>
           <object class="GtkCheckButton" id="set-default">
             <property name="label" translatable="yes">Set as default template</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="halign">start</property>
             <property name="draw-indicator">True</property>
           </object>

@@ -288,7 +288,7 @@ InkscapePreferences::InkscapePreferences()
     scrolled_window->add(_page_list);
     scrolled_window->set_vexpand_set(true);
     scrolled_window->set_vexpand(true);
-    scrolled_window->set_shadow_type(Gtk::SHADOW_IN);
+    scrolled_window->set_has_frame(true);
     _page_list_model = Gtk::TreeStore::create(_page_list_columns);
     _page_list_model_filter = Gtk::TreeModelFilter::create(_page_list_model);
     _page_list_model_sort = Gtk::TreeModelSort::create(_page_list_model_filter);
@@ -3779,7 +3779,7 @@ void InkscapePreferences::initPageSystem()
     _sys_systemdata_scroll.add(_sys_systemdata);
     _sys_systemdata_scroll.set_size_request(100, 80);
     _sys_systemdata_scroll.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
-    _sys_systemdata_scroll.set_shadow_type(Gtk::SHADOW_IN);
+    _sys_systemdata_scroll.set_has_frame(true);
     _page_system.add_line(true,  _("System data:"), _sys_systemdata_scroll, "", _("Locations of system data"), true);
 
     _sys_fontdirs_custom.init("/options/font/custom_fontdirs", 50);
@@ -3794,7 +3794,7 @@ void InkscapePreferences::initPageSystem()
     _sys_icon_scroll.add(_sys_icon);
     _sys_icon_scroll.set_size_request(100, 80);
     _sys_icon_scroll.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
-    _sys_icon_scroll.set_shadow_type(Gtk::SHADOW_IN);
+    _sys_icon_scroll.set_has_frame(true);
     _page_system.add_line(true,  _("Icon theme:"), _sys_icon_scroll, "", _("Locations of icon themes"), true);
 
     this->AddPage(_page_system, _("System"), PREFS_PAGE_SYSTEM);

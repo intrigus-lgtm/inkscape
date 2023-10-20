@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="3.24"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkListStore" id="liststore">
     <columns>
       <!-- column-name resource -->
@@ -101,34 +101,28 @@
     </data>
   </object>
   <object class="GtkBox" id="main">
-    <property name="visible">True</property>
     <property name="hexpand">True</property>
     <property name="vexpand">True</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox" id="tbar">
-        <property name="visible">True</property>
-        <property name="no-show-all">True</property>
         <property name="margin-start">3</property>
         <property name="margin-top">3</property>
         <property name="margin-bottom">3</property>
         <property name="spacing">3</property>
         <child>
           <object class="GtkLabel" id="spacer">
-            <property name="visible">True</property>
             <property name="label"/>
           </object>
         </child>
         <child>
           <object class="GtkButton" id="edit">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Edit label</property>
-            <property name="relief">none</property>
+            <property name="has-frame">false</property>
             <child>
               <object class="GtkImage" id="image1">
-                <property name="visible">True</property>
                 <property name="icon-name">edit</property>
               </object>
             </child>
@@ -139,14 +133,12 @@
         </child>
         <child>
           <object class="GtkButton" id="select">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Select this on canvas (if applicable) or in the XML dialog (e.g. a pattern in the 'defs' section)</property>
-            <property name="relief">none</property>
+            <property name="has-frame">false</property>
             <child>
               <object class="GtkImage" id="image-select">
-                <property name="visible">True</property>
                 <property name="icon-name">object-select</property>
               </object>
             </child>
@@ -157,14 +149,12 @@
         </child>
         <child>
           <object class="GtkButton" id="delete">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Delete selected item from the document</property>
-            <property name="relief">none</property>
+            <property name="has-frame">false</property>
             <child>
               <object class="GtkImage" id="image3">
-                <property name="visible">True</property>
                 <property name="icon-name">edit-delete</property>
               </object>
             </child>
@@ -175,14 +165,12 @@
         </child>
         <child>
           <object class="GtkButton" id="extract">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Export</property>
-            <property name="relief">none</property>
+            <property name="has-frame">false</property>
             <child>
               <object class="GtkImage" id="image4">
-                <property name="visible">True</property>
                 <property name="icon-name">document-export</property>
               </object>
             </child>
@@ -193,8 +181,7 @@
         </child>
         <child>
           <object class="GtkSearchEntry" id="search">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="width-chars">15</property>
             <property name="primary-icon-name">edit-find-symbolic</property>
             <property name="primary-icon-activatable">False</property>
@@ -207,15 +194,13 @@
         </child>
         <child>
           <object class="GtkButton" id="cleanup">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Remove unused definitions</property>
             <property name="action-name">win.document-cleanup</property>
-            <property name="relief">none</property>
+            <property name="has-frame">false</property>
             <child>
               <object class="GtkImage" id="image2">
-                <property name="visible">True</property>
                 <property name="icon-name">document-cleanup</property>
               </object>
             </child>
@@ -229,21 +214,18 @@
     </child>
     <child>
       <object class="GtkPaned" id="paned">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="position">120</property>
         <property name="position-set">True</property>
         <property name="wide-handle">True</property>
         <child>
           <object class="GtkScrolledWindow" id="scrolledwindow1">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="margin-end">1</property>
-            <property name="shadow-type">in</property>
+            <property name="has-frame">true</property>
             <child>
               <object class="GtkTreeView" id="tree">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
                 <property name="model">liststore</property>
                 <property name="headers-visible">False</property>
                 <property name="enable-search">False</property>
@@ -276,18 +258,15 @@
         <child>
           <object class="GtkStack" id="stack">
             <property name="width-request">50</property>
-            <property name="visible">True</property>
             <property name="margin-start">1</property>
             <child>
               <object class="GtkScrolledWindow">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="shadow-type">in</property>
+                <property name="focusable">True</property>
+                <property name="has-frame">true</property>
                 <property name="overlay-scrolling">False</property>
                 <child>
                   <object class="GtkIconView" id="iconview">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
+                    <property name="focusable">True</property>
                     <property name="margin">3</property>
                     <property name="item-width">55</property>
                     <property name="row-spacing">4</property>
@@ -303,14 +282,12 @@
             </child>
             <child>
               <object class="GtkScrolledWindow">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="shadow-type">in</property>
+                <property name="focusable">True</property>
+                <property name="has-frame">true</property>
                 <property name="overlay-scrolling">False</property>
                 <child>
                   <object class="GtkTreeView" id="treeview">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
+                    <property name="focusable">True</property>
                     <property name="enable-search">False</property>
                     <property name="show-expanders">False</property>
                     <property name="enable-grid-lines">both</property>
@@ -371,17 +348,14 @@
             </child>
             <child>
               <object class="GtkScrolledWindow">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="shadow-type">in</property>
+                <property name="focusable">True</property>
+                <property name="has-frame">true</property>
                 <property name="overlay-scrolling">False</property>
                 <child>
                   <object class="GtkViewport">
-                    <property name="visible">True</property>
                     <!-- n-columns=2 n-rows=3 -->
                     <child>
                       <object class="GtkGrid" id="grid">
-                        <property name="visible">True</property>
                         <property name="valign">start</property>
                         <property name="margin-start">4</property>
                         <property name="margin-end">4</property>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="3.22"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="_expansion_adj">
     <property name="upper">1000</property>
     <property name="step-increment">0.10</property>
@@ -19,13 +19,11 @@
     <property name="page-increment">0.10</property>
   </object>
   <object class="GtkBox" id="spiral-toolbar">
-    <property name="visible">True</property>
     <property name="halign">start</property>
     <property name="valign">center</property>
     <property name="spacing">3</property>
     <child>
       <object class="GtkLabel" id="_mode_item">
-        <property name="visible">True</property>
         <property name="margin-start">3</property>
         <property name="label" translatable="yes">&lt;b&gt;New:&lt;/b&gt;</property>
         <property name="use-markup">True</property>
@@ -33,18 +31,15 @@
     </child>
     <child>
       <object class="GtkBox" id="revolution_box">
-        <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Number of revolutions</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
             <property name="label" translatable="yes">Turns:</property>
           </object>
         </child>
         <child>
           <object class="GtkSpinButton" id="_revolution_item">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="width-chars">10</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_revolution_adj</property>
@@ -62,18 +57,15 @@
     </child>
     <child>
       <object class="GtkBox" id="expansion_box">
-        <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">How much denser/sparser are outer revolutions; 1 = uniform</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
             <property name="label" translatable="yes">Divergence</property>
           </object>
         </child>
         <child>
           <object class="GtkSpinButton" id="_expansion_item">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="width-chars">10</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_expansion_adj</property>
@@ -91,18 +83,15 @@
     </child>
     <child>
       <object class="GtkBox" id="t0_box">
-        <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Radius of the innermost revolution (relative to the spiral size)</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
             <property name="label" translatable="yes">Inner Radius:</property>
           </object>
         </child>
         <child>
           <object class="GtkSpinButton" id="_t0_item">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="width-chars">10</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_t0_adj</property>
@@ -120,7 +109,6 @@
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="visible">True</property>
       </object>
       <packing>
         <property name="position">4</property>
@@ -128,14 +116,12 @@
     </child>
     <child>
       <object class="GtkButton" id="reset_btn">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Reset shape parameters to defaults (use Inkscape Preferences &gt; Tools to change defaults)</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <child>
           <object class="GtkImage" id="image2">
-            <property name="visible">True</property>
             <property name="icon-name">edit-clear</property>
           </object>
         </child>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="3.24"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkPopover" id="gen-settings">
     <property name="width-request">300</property>
     <property name="margin">5</property>
@@ -11,21 +11,17 @@
     <property name="height-request">350</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <property name="margin">5</property>
         <property name="spacing">3</property>
         <child>
           <object class="GtkScrolledWindow" id="filter-wnd">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="shadow-type">in</property>
+            <property name="focusable">True</property>
+            <property name="has-frame">true</property>
             <child>
               <object class="GtkViewport">
-                <property name="visible">True</property>
                 <child>
                   <object class="GtkTreeView" id="filter-list">
-                    <property name="visible">True</property>
                     <property name="enable-search">False</property>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection"/>
@@ -41,17 +37,14 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
             <child>
               <object class="GtkButton" id="btn-new">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Create a new filter</property>
-                <property name="relief">none</property>
+                <property name="has-frame">false</property>
                 <child>
                   <object class="GtkImage" id="image-new-2">
-                    <property name="visible">True</property>
                     <property name="icon-name">list-add</property>
                   </object>
                 </child>
@@ -59,14 +52,12 @@
             </child>
             <child>
               <object class="GtkButton" id="btn-dup">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Duplicate current filter</property>
-                <property name="relief">none</property>
+                <property name="has-frame">false</property>
                 <child>
                   <object class="GtkImage" id="image-dup-2">
-                    <property name="visible">True</property>
                     <property name="icon-name">edit-duplicate</property>
                   </object>
                 </child>
@@ -77,14 +68,12 @@
             </child>
             <child>
               <object class="GtkButton" id="btn-del">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Delete current filter</property>
-                <property name="relief">none</property>
+                <property name="has-frame">false</property>
                 <child>
                   <object class="GtkImage" id="image-del">
-                    <property name="visible">True</property>
                     <property name="icon-name">edit-delete</property>
                   </object>
                 </child>
@@ -95,7 +84,6 @@
             </child>
             <child>
               <object class="GtkSeparator">
-                <property name="visible">True</property>
               </object>
               <packing>
                 <property name="position">3</property>
@@ -103,14 +91,12 @@
             </child>
             <child>
               <object class="GtkButton" id="btn-select">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Select objects that use this filter</property>
-                <property name="relief">none</property>
+                <property name="has-frame">false</property>
                 <child>
                   <object class="GtkImage" id="image-select">
-                    <property name="visible">True</property>
                     <property name="icon-name">object-select</property>
                   </object>
                 </child>
@@ -121,7 +107,7 @@
             </child>
             <child>
               <object class="GtkSearchEntry" id="stock-filters">
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
                 <property name="margin-start">8</property>
                 <property name="width-chars">3</property>
                 <property name="caps-lock-warning">False</property>
@@ -149,12 +135,10 @@
     <!-- n-columns=2 n-rows=4 -->
     <child>
       <object class="GtkGrid">
-        <property name="visible">True</property>
         <property name="margin">5</property>
         <property name="column-spacing">5</property>
         <child>
           <object class="GtkImage" id="effect-icon">
-            <property name="visible">True</property>
             <property name="icon-name">effect</property>
             <property name="icon-size">large</property>
           </object>
@@ -165,7 +149,6 @@
         </child>
         <child>
           <object class="GtkTextView" id="effect-info">
-            <property name="visible">True</property>
             <property name="hexpand">True</property>
             <property name="editable">False</property>
             <property name="wrap-mode">word</property>
@@ -179,7 +162,6 @@
         </child>
         <child>
           <object class="GtkTextView" id="effect-desc">
-            <property name="visible">True</property>
             <property name="hexpand">True</property>
             <property name="editable">False</property>
             <property name="wrap-mode">word</property>
@@ -212,18 +194,14 @@
   </object>
   <!-- n-columns=3 n-rows=4 -->
   <object class="GtkGrid" id="main">
-    <property name="visible">True</property>
-    <property name="no-show-all">True</property>
     <property name="margin-top">3</property>
     <property name="row-spacing">4</property>
     <property name="column-spacing">3</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
         <child>
           <object class="GtkCheckButton" id="label">
             <property name="label" translatable="yes">Filter</property>
-            <property name="visible">True</property>
             <property name="tooltip-text" translatable="yes">Apply filter to selection</property>
             <property name="margin-end">5</property>
             <property name="draw-indicator">True</property>
@@ -234,17 +212,14 @@
         </child>
         <child>
           <object class="GtkMenuButton">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="popover">filters-popover</property>
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
                 <child>
                   <object class="GtkLabel" id="filter-name">
-                    <property name="visible">True</property>
                     <property name="halign">start</property>
                     <property name="label" translatable="yes">-</property>
                     <property name="ellipsize">end</property>
@@ -256,7 +231,6 @@
                 </child>
                 <child>
                   <object class="GtkImage">
-                    <property name="visible">True</property>
                     <property name="icon-name">pan-down-symbolic</property>
                     <style>
                       <class name="arrow"/>
@@ -282,17 +256,14 @@
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
         <child>
           <object class="GtkButton" id="new-filter">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Create a new filter</property>
-            <property name="relief">none</property>
+            <property name="has-frame">false</property>
             <child>
               <object class="GtkImage" id="image-new">
-                <property name="visible">True</property>
                 <property name="icon-name">list-add</property>
               </object>
             </child>
@@ -300,16 +271,14 @@
         </child>
         <child>
           <object class="GtkMenuButton" id="filter-opt">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">General filter parameters</property>
-            <property name="relief">none</property>
+            <property name="has-frame">false</property>
             <property name="popover">gen-settings</property>
             <child>
               <object class="GtkImage">
-                <property name="visible">True</property>
                 <property name="icon-name">gear</property>
               </object>
             </child>
@@ -326,18 +295,16 @@
     </child>
     <child>
       <object class="GtkPaned" id="paned">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="vexpand">True</property>
         <property name="orientation">vertical</property>
         <property name="position">200</property>
         <child>
           <object class="GtkScrolledWindow" id="filter">
-            <property name="visible">True</property>
             <property name="margin-bottom">2</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
-            <property name="shadow-type">in</property>
+            <property name="has-frame">true</property>
             <property name="propagate-natural-height">True</property>
             <style>
               <class name="filter-effects"/>
@@ -349,28 +316,23 @@
         </child>
         <child>
           <object class="GtkScrolledWindow" id="params-wnd">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="hscrollbar-policy">never</property>
             <property name="min-content-height">50</property>
             <property name="overlay-scrolling">False</property>
             <property name="propagate-natural-height">True</property>
             <child>
               <object class="GtkViewport">
-                <property name="visible">True</property>
                 <child>
                   <object class="GtkBox" id="params">
-                    <property name="visible">True</property>
                     <property name="margin-start">5</property>
                     <property name="margin-end">5</property>
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkBox" id="effect-header">
-                        <property name="visible">True</property>
                         <property name="margin-bottom">2</property>
                         <child>
                           <object class="GtkLabel" id="cur-effect">
-                            <property name="visible">True</property>
                             <property name="halign">start</property>
                             <property name="label" translatable="yes">label</property>
                             <property name="xalign">0</property>
@@ -381,18 +343,16 @@
                         </child>
                         <child>
                           <object class="GtkMenuButton" id="info-btn">
-                            <property name="visible">True</property>
-                            <property name="can-focus">True</property>
+                            <property name="focusable">True</property>
                             <property name="focus-on-click">False</property>
                             <property name="receives-default">True</property>
                             <property name="margin-left">5</property>
                             <property name="margin-start">5</property>
-                            <property name="relief">none</property>
+                            <property name="has-frame">false</property>
                             <property name="popover">info-popover</property>
                             <property name="tooltip-text">View information about the effect</property>
                             <child>
                               <object class="GtkImage">
-                                <property name="visible">True</property>
                                 <property name="icon-name">info-outline</property>
                               </object>
                             </child>
@@ -403,14 +363,12 @@
                         </child>
                         <child>
                           <object class="GtkButton" id="dup-btn">
-                            <property name="visible">True</property>
-                            <property name="can-focus">True</property>
+                            <property name="focusable">True</property>
                             <property name="receives-default">True</property>
                             <property name="tooltip-text" translatable="yes">Duplicate effect</property>
-                            <property name="relief">none</property>
+                            <property name="has-frame">false</property>
                             <child>
                               <object class="GtkImage" id="image-dup">
-                                <property name="visible">True</property>
                                 <property name="icon-name">edit-duplicate</property>
                               </object>
                             </child>
@@ -421,14 +379,12 @@
                         </child>
                         <child>
                           <object class="GtkButton" id="del-btn">
-                            <property name="visible">True</property>
-                            <property name="can-focus">True</property>
+                            <property name="focusable">True</property>
                             <property name="receives-default">True</property>
                             <property name="tooltip-text" translatable="yes">Remove effect</property>
-                            <property name="relief">none</property>
+                            <property name="has-frame">false</property>
                             <child>
                               <object class="GtkImage" id="image-delete">
-                                <property name="visible">True</property>
                                 <property name="icon-name">edit-delete</property>
                               </object>
                             </child>
@@ -460,11 +416,9 @@
     </child>
     <child>
       <object class="GtkBox" id="search-wide">
-        <property name="visible">True</property>
         <property name="homogeneous">True</property>
         <child>
           <object class="GtkBox" id="connect-box-wide">
-            <property name="visible">True</property>
             <property name="halign">end</property>
           </object>
           <packing>
@@ -480,19 +434,16 @@
     </child>
     <child>
       <object class="GtkBox" id="connect-box">
-        <property name="visible">True</property>
         <property name="halign">end</property>
         <child>
           <object class="GtkToggleButton" id="btn-connect">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Show all filter input sources</property>
             <property name="halign">end</property>
-            <property name="relief">none</property>
+            <property name="has-frame">false</property>
             <child>
               <object class="GtkImage" id="image-connect">
-                <property name="visible">True</property>
                 <property name="icon-name">show-sources</property>
               </object>
             </child>
@@ -506,7 +457,6 @@
     </child>
     <child>
       <object class="GtkBox" id="search">
-        <property name="visible">True</property>
       </object>
       <packing>
         <property name="left-attach">0</property>

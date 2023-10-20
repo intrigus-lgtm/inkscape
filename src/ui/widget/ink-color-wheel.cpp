@@ -92,8 +92,8 @@ ColorWheel::ColorWheel()
     get_style_context()->add_class("flat");
 
     _drawing_area->set_visible(true);
-    _drawing_area->set_can_focus(true);
-    _drawing_area->property_expand() = true;
+    _drawing_area->set_focusable(true);
+    _drawing_area->set_expand(true);
     _drawing_area->signal_size_allocate().connect(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_size ));
     _drawing_area->signal_draw         ().connect(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_draw ));
     _drawing_area->signal_focus        ().connect(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_focus));

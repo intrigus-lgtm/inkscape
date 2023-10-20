@@ -85,7 +85,7 @@ LayerSelector::LayerSelector(SPDesktop *desktop)
     get_style_context()->add_class(getThisCssClass());
 
     _layer_name.signal_clicked().connect(sigc::mem_fun(*this, &LayerSelector::_layerChoose));
-    _layer_name.set_relief(Gtk::RELIEF_NONE);
+    _layer_name.set_has_frame(false);
     _layer_name.set_tooltip_text(_("Current layer"));
     UI::pack_start(*this, _layer_name, UI::PackOptions::expand_widget);
 
@@ -94,7 +94,7 @@ LayerSelector::LayerSelector(SPDesktop *desktop)
     _eye_toggle.add(*_eye_label);
     _hide_layer_connection = _eye_toggle.signal_toggled().connect(sigc::mem_fun(*this, &LayerSelector::_hideLayer));
 
-    _eye_toggle.set_relief(Gtk::RELIEF_NONE);
+    _eye_toggle.set_has_frame(false);
     _eye_toggle.set_tooltip_text(_("Toggle current layer visibility"));
     UI::pack_start(*this, _eye_toggle, UI::PackOptions::expand_padding);
 
@@ -103,7 +103,7 @@ LayerSelector::LayerSelector(SPDesktop *desktop)
     _lock_toggle.add(*_lock_label);
     _lock_layer_connection = _lock_toggle.signal_toggled().connect(sigc::mem_fun(*this, &LayerSelector::_lockLayer));
 
-    _lock_toggle.set_relief(Gtk::RELIEF_NONE);
+    _lock_toggle.set_has_frame(false);
     _lock_toggle.set_tooltip_text(_("Lock or unlock current layer"));
     UI::pack_start(*this, _lock_toggle, UI::PackOptions::expand_padding);
 

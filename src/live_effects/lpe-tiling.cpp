@@ -802,7 +802,7 @@ Gtk::Widget * LPETiling::newWidget()
             button->remove();
             button->add(*box);
             button->set_tooltip_markup(_("Randomization seed for random mode for scaling, rotation and gaps"));
-            button->set_relief(Gtk::RELIEF_NORMAL);
+            button->set_has_frame(true);
             button->set_valign(Gtk::Align::START);
 
             widgrand->set_vexpand(false);

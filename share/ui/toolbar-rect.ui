@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="3.22"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="_height_adj">
     <property name="upper">1000000</property>
     <property name="step-increment">0.10</property>
@@ -26,20 +26,17 @@
     <property name="modal">True</property>
     <child>
       <object class="GtkBox" id="popover_box1">
-        <property name="visible">True</property>
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
     </child>
   </object>
   <object class="GtkBox" id="rect-toolbar">
-    <property name="visible">True</property>
     <property name="halign">start</property>
     <property name="valign">center</property>
     <property name="spacing">3</property>
     <child>
       <object class="GtkLabel" id="_mode_item">
-        <property name="visible">True</property>
         <property name="margin-start">3</property>
         <property name="label" translatable="yes">&lt;b&gt;New:&lt;/b&gt;</property>
         <property name="use-markup">True</property>
@@ -47,18 +44,15 @@
     </child>
     <child>
       <object class="GtkBox" id="width_box">
-        <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Width of rectangle</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
             <property name="label" translatable="yes">W:</property>
           </object>
         </child>
         <child>
           <object class="GtkSpinButton" id="_width_item">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="width-chars">10</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_width_adj</property>
@@ -76,18 +70,15 @@
     </child>
     <child>
       <object class="GtkBox" id="height_box">
-        <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Height of rectangle</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
             <property name="label" translatable="yes" context="Abbreviation of Height">H:</property>
           </object>
         </child>
         <child>
           <object class="GtkSpinButton" id="_height_item">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="width-chars">10</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_height_adj</property>
@@ -105,15 +96,13 @@
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn1">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <property name="popover">popover1</property>
         <child>
           <object class="GtkImage" id="image18">
-            <property name="visible">True</property>
             <property name="icon-name">go-down</property>
           </object>
         </child>
@@ -124,18 +113,15 @@
     </child>
     <child>
       <object class="GtkBox" id="rx_box">
-        <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Horizontal radius of rounded corners</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
             <property name="label" translatable="yes">Rx:</property>
           </object>
         </child>
         <child>
           <object class="GtkSpinButton" id="_rx_item">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="width-chars">10</property>
             <property name="adjustment">_rx_adj</property>
             <property name="climb-rate">0.10</property>
@@ -155,18 +141,15 @@
     </child>
     <child>
       <object class="GtkBox" id="ry_box">
-        <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Vertical radius of rounded corners</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
             <property name="label" translatable="yes">Ry:</property>
           </object>
         </child>
         <child>
           <object class="GtkSpinButton" id="_ry_item">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="width-chars">10</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_ry_adj</property>
@@ -187,7 +170,6 @@
     </child>
     <child>
       <object class="GtkBox" id="unit_menu_box">
-        <property name="visible">True</property>
         <style>
           <class name="tag2"/>
         </style>
@@ -198,7 +180,6 @@
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="visible">True</property>
       </object>
       <packing>
         <property name="position">8</property>
@@ -206,14 +187,12 @@
     </child>
     <child>
       <object class="GtkButton" id="_not_rounded">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <child>
           <object class="GtkImage" id="image2">
-            <property name="visible">True</property>
             <property name="icon-name">rectangle-make-corners-sharp</property>
           </object>
         </child>

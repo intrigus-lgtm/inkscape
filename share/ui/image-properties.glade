@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="3.24"/>
+  <requires lib="gtk" version="4.0"/>
   <!-- n-columns=3 n-rows=7 -->
   <object class="GtkGrid" id="main">
-    <property name="visible">True</property>
     <property name="row-spacing">4</property>
     <property name="column-spacing">4</property>
     <child>
@@ -22,22 +21,18 @@
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
         <property name="spacing">5</property>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkDrawingArea" id="preview">
                 <property name="width-request">120</property>
                 <property name="height-request">80</property>
-                <property name="visible">True</property>
               </object>
             </child>
             <child>
               <object class="GtkLabel" id="name">
-                <property name="visible">True</property>
                 <property name="margin-top">1</property>
                 <property name="label" translatable="no">&lt;small&gt;#label&lt;/small&gt;</property>
                 <property name="use-markup">True</property>
@@ -51,7 +46,6 @@
         </child>
         <child>
           <object class="GtkLabel" id="info">
-            <property name="visible">True</property>
             <property name="label" translatable="yes">&lt;small&gt;123 x 345 px
 RGBA
 Linked&lt;/small&gt;</property>
@@ -72,7 +66,6 @@ Linked&lt;/small&gt;</property>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">URL:</property>
       </object>
@@ -83,8 +76,7 @@ Linked&lt;/small&gt;</property>
     </child>
     <child>
       <object class="GtkEntry" id="href">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="hexpand">True</property>
       </object>
       <packing>
@@ -94,13 +86,11 @@ Linked&lt;/small&gt;</property>
     </child>
     <child>
       <object class="GtkButton" id="change-img">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Change image...</property>
         <child>
           <object class="GtkImage" id="image1">
-            <property name="visible">True</property>
             <property name="icon-name">document-open</property>
           </object>
         </child>
@@ -112,27 +102,22 @@ Linked&lt;/small&gt;</property>
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
         <property name="spacing">5</property>
         <child>
           <object class="GtkButton" id="embed">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Embed image in the document</property>
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
                 <child>
                   <object class="GtkImage" id="image2">
-                    <property name="visible">True</property>
                     <property name="icon-name">shape-image</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
                     <property name="label" translatable="yes">Embed</property>
-                    <property name="visible">True</property>
                   </object>
                 </child>
               </object>
@@ -141,23 +126,19 @@ Linked&lt;/small&gt;</property>
         </child>
         <child>
           <object class="GtkButton" id="export">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Save a copy of this image to a file</property>
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
                 <child>
                   <object class="GtkImage" id="image3">
-                    <property name="visible">True</property>
                     <property name="icon-name">document-export</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
                     <property name="label" translatable="yes">Save copy...</property>
-                    <property name="visible">True</property>
                   </object>
                 </child>
               </object>
@@ -176,7 +157,6 @@ Linked&lt;/small&gt;</property>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Aspect ratio:</property>
       </object>
@@ -187,15 +167,13 @@ Linked&lt;/small&gt;</property>
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
         <property name="margin-top">3</property>
         <property name="margin-bottom">3</property>
         <property name="spacing">4</property>
         <child>
           <object class="GtkRadioButton" id="preserve">
             <property name="label" translatable="yes">Preserve</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="active">True</property>
             <property name="draw-indicator">True</property>
           </object>
@@ -203,8 +181,7 @@ Linked&lt;/small&gt;</property>
         <child>
           <object class="GtkRadioButton" id="stretch">
             <property name="label" translatable="yes">Stretch image</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="active">True</property>
             <property name="draw-indicator">True</property>
             <property name="group">preserve</property>
@@ -222,7 +199,6 @@ Linked&lt;/small&gt;</property>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Rendering:</property>
       </object>
@@ -233,7 +209,6 @@ Linked&lt;/small&gt;</property>
     </child>
     <child>
       <object class="GtkComboBoxText" id="rendering">
-        <property name="visible">True</property>
         <property name="active">0</property>
         <items>
           <item id="0" translatable="yes">Automatic</item>

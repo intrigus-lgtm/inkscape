@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.22.1 -->
 <interface>
-  <requires lib="gtk+" version="3.20"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkBox" id="CSSSelectorContainer">
-    <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <property name="baseline-position">top</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
         <child>
           <object class="GtkButton" id="CSSSelectorAddButton">
-            <property name="visible">True</property>
-            <property name="relief">none</property>
+            <property name="has-frame">false</property>
             <child>
               <object class="GtkImage">
-                <property name="visible">True</property>
                 <property name="margin-right">5</property>
                 <property name="icon-name">list-add</property>
               </object>
@@ -24,19 +20,16 @@
         </child>
         <child>
           <object class="GtkLabel" id="CSSSelector">
-            <property name="visible">True</property>
             <property name="label" translatable="yes">Selector</property>
           </object>
         </child>
         <child>
           <object class="GtkEntry" id="CSSEditSelector">
-            <property name="can-focus">True</property>
-            <property name="no-show-all">True</property>
+            <property name="focusable">True</property>
           </object>
         </child>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
             <property name="label"> {</property>
           </object>
         </child>
@@ -44,8 +37,6 @@
     </child>
     <child>
       <object class="GtkTreeView" id="CSSTree">
-        <property name="visible">True</property>
-        <property name="no-show-all">True</property>
         <property name="has-tooltip">True</property>
         <property name="hscroll-policy">natural</property>
         <property name="vscroll-policy">natural</property>
@@ -62,8 +53,6 @@
     </child>
     <child>
       <object class="GtkLabel" id="CSSSelectorFilled">
-        <property name="visible">True</property>
-        <property name="no-show-all">True</property>
         <property name="halign">start</property>
         <property name="valign">start</property>
         <property name="label">}</property>
@@ -71,7 +60,6 @@
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="visible">True</property>
         <property name="margin-top">6</property>
         <property name="margin-bottom">6</property>
       </object>

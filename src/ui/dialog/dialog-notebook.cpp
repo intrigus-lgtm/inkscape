@@ -61,7 +61,7 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
 {
     set_name("DialogNotebook");
     set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::NEVER);
-    set_shadow_type(Gtk::SHADOW_NONE);
+    set_has_frame(false);
     set_vexpand(true);
     set_hexpand(true);
 
@@ -172,10 +172,10 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
     menubtn->set_popover(_menu);
     _notebook.set_action_widget(menubtn, Gtk::PACK_END);
     menubtn->set_visible(true);
-    menubtn->set_relief(Gtk::RELIEF_NORMAL);
+    menubtn->set_has_frame(true);
     menubtn->set_valign(Gtk::Align::CENTER);
     menubtn->set_halign(Gtk::Align::CENTER);
-    menubtn->set_can_focus(false);
+    menubtn->set_focusable(false);
     menubtn->set_name("DialogMenuButton");
 
     // =============== Signals ==================

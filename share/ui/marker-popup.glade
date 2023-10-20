@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.38.2 -->
 <interface>
-  <requires lib="gtk+" version="3.24"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="adjustment-angle">
     <property name="lower">-360</property>
     <property name="upper">360.00999999999999</property>
@@ -33,44 +33,36 @@
     <property name="page-increment">2</property>
   </object>
   <object class="GtkImage" id="image-linked">
-    <property name="visible">True</property>
     <property name="icon-name">entries-linked-symbolic</property>
     <property name="icon-size">3</property>
   </object>
   <object class="GtkImage" id="image-unlinked">
-    <property name="visible">True</property>
     <property name="icon-name">entries-unlinked-symbolic</property>
     <property name="icon-size">3</property>
   </object>
   <object class="GtkRadioButton" id="radio-orient">
     <property name="label">radiobutton</property>
-    <property name="visible">True</property>
-    <property name="can-focus">True</property>
+    <property name="focusable">True</property>
     <property name="active">True</property>
     <property name="draw-indicator">True</property>
   </object>
   <object class="GtkPopover" id="popover">
-    <property name="constrain-to">none</property>
     <child>
       <object class="GtkBox">
         <property name="width-request">378</property>
         <property name="height-request">500</property>
-        <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkScrolledWindow">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="vexpand">True</property>
             <property name="hscrollbar-policy">never</property>
             <child>
               <object class="GtkViewport">
-                <property name="visible">True</property>
                 <property name="vscroll-policy">natural</property>
                 <child>
                   <object class="GtkFlowBox" id="flowbox">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
+                    <property name="focusable">True</property>
                     <property name="halign">start</property>
                     <property name="valign">start</property>
                     <property name="min-children-per-line">8</property>
@@ -83,7 +75,6 @@
         </child>
         <child>
           <object class="GtkSeparator">
-            <property name="visible">True</property>
             <property name="valign">center</property>
           </object>
           <packing>
@@ -93,13 +84,11 @@
         <!-- n-columns=4 n-rows=8 -->
         <child>
           <object class="GtkGrid" id="input-grid">
-            <property name="visible">True</property>
             <property name="margin-end">4</property>
             <property name="margin-bottom">4</property>
             <property name="row-spacing">4</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="halign">start</property>
                 <property name="label" translatable="yes">Size X:</property>
               </object>
@@ -110,8 +99,7 @@
             </child>
             <child>
               <object class="GtkSpinButton" id="scale-x">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
                 <property name="adjustment">adjustment-scale</property>
                 <property name="digits">3</property>
                 <property name="numeric">True</property>
@@ -124,7 +112,6 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="halign">start</property>
                 <property name="label" translatable="yes">Size Y:</property>
               </object>
@@ -135,8 +122,7 @@
             </child>
             <child>
               <object class="GtkSpinButton" id="scale-y">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
                 <property name="adjustment">adjustment-scale-2</property>
                 <property name="digits">3</property>
                 <property name="numeric">True</property>
@@ -150,8 +136,7 @@
             <child>
               <object class="GtkCheckButton" id="scale-with-stroke">
                 <property name="label" translatable="yes">Scale with stroke</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
                 <property name="halign">end</property>
                 <property name="draw-indicator">True</property>
               </object>
@@ -163,7 +148,6 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="halign">start</property>
                 <property name="margin-end">4</property>
                 <property name="label" translatable="yes">Orientation:</property>
@@ -176,12 +160,10 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
                 <property name="spacing">4</property>
                 <child>
                   <object class="GtkRadioButton" id="orient-auto-rev">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
+                    <property name="focusable">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Orient along the path, reversing at the start</property>
                     <property name="draw-indicator">False</property>
@@ -191,7 +173,6 @@
                     </style>
                     <child>
                       <object class="GtkImage" id="image1">
-                        <property name="visible">True</property>
                         <property name="icon-name">orient-auto-reverse</property>
                       </object>
                     </child>
@@ -199,8 +180,7 @@
                 </child>
                 <child>
                   <object class="GtkRadioButton" id="orient-auto">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
+                    <property name="focusable">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Orient along the path</property>
                     <property name="draw-indicator">False</property>
@@ -210,7 +190,6 @@
                     </style>
                     <child>
                       <object class="GtkImage" id="image2">
-                        <property name="visible">True</property>
                         <property name="icon-name">orient-auto</property>
                       </object>
                     </child>
@@ -221,8 +200,7 @@
                 </child>
                 <child>
                   <object class="GtkRadioButton" id="orient-angle">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
+                    <property name="focusable">True</property>
                     <property name="tooltip-text" translatable="yes">Fixed specified angle</property>
                     <property name="active">True</property>
                     <property name="draw-indicator">False</property>
@@ -232,7 +210,6 @@
                     </style>
                     <child>
                       <object class="GtkImage" id="image3">
-                        <property name="visible">True</property>
                         <property name="icon-name">orient-angle</property>
                       </object>
                     </child>
@@ -243,7 +220,6 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="btn-horz-flip">
-                    <property name="visible">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Flip marker horizontally</property>
                     <property name="margin-start">8</property>
@@ -252,7 +228,6 @@
                     </style>
                     <child>
                       <object class="GtkImage" id="image4">
-                        <property name="visible">True</property>
                         <property name="icon-name">object-flip-horizontal-symbolic</property>
                       </object>
                     </child>
@@ -269,7 +244,6 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="halign">start</property>
                 <property name="margin-end">4</property>
                 <property name="label" translatable="yes">Fixed angle:</property>
@@ -282,8 +256,7 @@
             </child>
             <child>
               <object class="GtkSpinButton" id="angle">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
                 <property name="adjustment">adjustment-angle</property>
                 <property name="digits">2</property>
               </object>
@@ -294,7 +267,6 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="halign">start</property>
                 <property name="margin-end">4</property>
                 <property name="label" translatable="yes">Offset X:</property>
@@ -307,7 +279,6 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="halign">start</property>
                 <property name="margin-end">4</property>
                 <property name="label" translatable="yes">Offset Y:</property>
@@ -320,8 +291,7 @@
             </child>
             <child>
               <object class="GtkSpinButton" id="offset-x">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
                 <property name="adjustment">adjustment-offset</property>
                 <property name="digits">3</property>
                 <property name="numeric">True</property>
@@ -333,8 +303,7 @@
             </child>
             <child>
               <object class="GtkSpinButton" id="offset-y">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
                 <property name="adjustment">adjustment-offset-2</property>
                 <property name="digits">3</property>
                 <property name="numeric">True</property>
@@ -347,7 +316,6 @@
             <child>
               <object class="GtkButton" id="edit-marker">
                 <property name="label" translatable="yes">Edit on canvas</property>
-                <property name="visible">True</property>
                 <property name="focus-on-click">False</property>
                 <property name="receives-default">True</property>
                 <property name="halign">center</property>
@@ -359,13 +327,11 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
                 <property name="margin-top">4</property>
                 <property name="hexpand">True</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkImage" id="preview">
-                    <property name="visible">True</property>
                     <property name="margin-end">4</property>
                     <property name="hexpand">True</property>
                   </object>
@@ -376,7 +342,6 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="marker-id">
-                    <property name="visible">True</property>
                     <property name="margin-left">4</property>
                     <property name="margin-right">4</property>
                     <property name="margin-start">4</property>
@@ -399,14 +364,13 @@
             <child>
               <object class="GtkButton" id="link-scale">
                 <property name="name">LockGuides</property>
-                <property name="visible">True</property>
                 <property name="focus-on-click">False</property>
                 <property name="receives-default">True</property>
                 <property name="halign">end</property>
                 <property name="margin-end">1</property>
                 <property name="margin-top">5</property>
                 <property name="margin-bottom">5</property>
-                <property name="relief">none</property>
+                <property name="has-frame">false</property>
               </object>
               <packing>
                 <property name="left-attach">2</property>
@@ -416,7 +380,6 @@
             </child>
             <child>
               <object class="GtkImage" id="spacer">
-                <property name="visible">True</property>
                 <property name="pixel-size">5</property>
               </object>
               <packing>
@@ -433,24 +396,20 @@
     </child>
   </object>
   <object class="GtkMenuButton" id="menu-btn">
-    <property name="visible">True</property>
-    <property name="can-focus">True</property>
+    <property name="focusable">True</property>
     <property name="focus-on-click">False</property>
     <property name="receives-default">True</property>
     <property name="popover">popover</property>
     <child>
       <object class="GtkBox" id="btn-box">
-        <property name="visible">True</property>
         <child>
           <object class="GtkImage" id="current-img">
-            <property name="visible">True</property>
             <property name="hexpand">True</property>
             <property name="icon-name">image-missing</property>
           </object>
         </child>
         <child>
           <object class="GtkImage">
-            <property name="visible">True</property>
             <property name="icon-name">pan-down-symbolic</property>
             <style>
               <class name="arrow"/>

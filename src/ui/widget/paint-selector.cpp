@@ -180,7 +180,7 @@ PaintSelector::PaintSelector(FillOrStroke kind)
         UI::pack_end(*_style, *_fillrulebox, false, false);
 
         _evenodd = Gtk::make_managed<FillRuleRadioButton>();
-        _evenodd->set_relief(Gtk::RELIEF_NONE);
+        _evenodd->set_has_frame(false);
         _evenodd->set_mode(false);
         // TRANSLATORS: for info, see http://www.w3.org/TR/2000/CR-SVG-20000802/painting.html#FillRuleProperty
         _evenodd->set_tooltip_text(
@@ -194,7 +194,7 @@ PaintSelector::PaintSelector(FillOrStroke kind)
 
         auto grp = _evenodd->get_group();
         _nonzero = Gtk::make_managed<FillRuleRadioButton>(grp);
-        _nonzero->set_relief(Gtk::RELIEF_NONE);
+        _nonzero->set_has_frame(false);
         _nonzero->set_mode(false);
         // TRANSLATORS: for info, see http://www.w3.org/TR/2000/CR-SVG-20000802/painting.html#FillRuleProperty
         _nonzero->set_tooltip_text(_("Fill is solid unless a subpath is counterdirectional (fill-rule: nonzero)"));
@@ -247,7 +247,7 @@ StyleToggleButton *PaintSelector::style_button_add(gchar const *pixmap, PaintSel
     auto const b = Gtk::make_managed<StyleToggleButton>();
     b->set_tooltip_text(tip);
     b->set_visible(true);
-    b->set_relief(Gtk::RELIEF_NONE);
+    b->set_has_frame(false);
     b->set_mode(false);
     b->set_style(mode);
 

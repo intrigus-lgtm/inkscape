@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="3.22"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="_offset_adj">
     <property name="upper">1</property>
     <property name="step-increment">0.01</property>
     <property name="page-increment">0.10</property>
   </object>
   <object class="GtkRadioButton" id="new_fillstroke_buttons_group">
-    <property name="visible">True</property>
-    <property name="can-focus">True</property>
+    <property name="focusable">True</property>
     <property name="always-show-image">True</property>
     <property name="active">True</property>
     <property name="draw-indicator">False</property>
   </object>
   <object class="GtkRadioButton" id="new_type_buttons_group">
-    <property name="visible">True</property>
-    <property name="can-focus">True</property>
+    <property name="focusable">True</property>
     <property name="always-show-image">True</property>
     <property name="active">True</property>
     <property name="draw-indicator">False</property>
@@ -25,20 +23,17 @@
     <property name="modal">True</property>
     <child>
       <object class="GtkBox" id="popover_box1">
-        <property name="visible">True</property>
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
     </child>
   </object>
   <object class="GtkBox" id="gradient-toolbar">
-    <property name="visible">True</property>
     <property name="halign">start</property>
     <property name="valign">center</property>
     <property name="spacing">3</property>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
         <property name="margin-start">3</property>
         <property name="label" translatable="yes">&lt;b&gt;New:&lt;/b&gt;</property>
         <property name="use-markup">True</property>
@@ -46,19 +41,16 @@
     </child>
     <child>
       <object class="GtkBox" id="new_type_buttons_box">
-        <property name="visible">True</property>
         <property name="spacing">3</property>
         <child>
           <object class="GtkRadioButton">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Create linear gradient</property>
-            <property name="relief">none</property>
+            <property name="has-frame">false</property>
             <property name="draw-indicator">False</property>
             <property name="group">new_type_buttons_group</property>
             <child>
               <object class="GtkImage" id="image1">
-                <property name="visible">True</property>
                 <property name="icon-name">paint-gradient-linear</property>
               </object>
             </child>
@@ -69,15 +61,13 @@
         </child>
         <child>
           <object class="GtkRadioButton">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Create radial (elliptic or circular) gradient</property>
-            <property name="relief">none</property>
+            <property name="has-frame">false</property>
             <property name="draw-indicator">False</property>
             <property name="group">new_type_buttons_group</property>
             <child>
               <object class="GtkImage" id="image2">
-                <property name="visible">True</property>
                 <property name="icon-name">paint-gradient-radial</property>
               </object>
             </child>
@@ -93,19 +83,16 @@
     </child>
     <child>
       <object class="GtkBox" id="new_fillstroke_buttons_box">
-        <property name="visible">True</property>
         <property name="spacing">3</property>
         <child>
           <object class="GtkRadioButton">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Create gradient in the fill</property>
-            <property name="relief">none</property>
+            <property name="has-frame">false</property>
             <property name="draw-indicator">False</property>
             <property name="group">new_fillstroke_buttons_group</property>
             <child>
               <object class="GtkImage" id="image3">
-                <property name="visible">True</property>
                 <property name="icon-name">object-fill</property>
               </object>
             </child>
@@ -116,15 +103,13 @@
         </child>
         <child>
           <object class="GtkRadioButton">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Create gradient in the stroke</property>
-            <property name="relief">none</property>
+            <property name="has-frame">false</property>
             <property name="draw-indicator">False</property>
             <property name="group">new_fillstroke_buttons_group</property>
             <child>
               <object class="GtkImage" id="image4">
-                <property name="visible">True</property>
                 <property name="icon-name">object-stroke</property>
               </object>
             </child>
@@ -140,7 +125,6 @@
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="visible">True</property>
       </object>
       <packing>
         <property name="position">3</property>
@@ -148,15 +132,13 @@
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn1">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <property name="popover">popover1</property>
         <child>
           <object class="GtkImage" id="image9">
-            <property name="visible">True</property>
             <property name="icon-name">go-down</property>
           </object>
         </child>
@@ -167,7 +149,6 @@
     </child>
     <child>
       <object class="GtkBox" id="select_box">
-        <property name="visible">True</property>
         <style>
           <class name="tag1"/>
         </style>
@@ -178,17 +159,15 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_linked_btn">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Link gradients to change all related gradients</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <style>
           <class name="tag1"/>
         </style>
         <child>
           <object class="GtkImage" id="image5">
-            <property name="visible">True</property>
             <property name="icon-name">object-unlocked</property>
           </object>
         </child>
@@ -199,17 +178,15 @@
     </child>
     <child>
       <object class="GtkButton" id="_stops_reverse_btn">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Reverse the direction of the gradient</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <style>
           <class name="tag1"/>
         </style>
         <child>
           <object class="GtkImage" id="image6">
-            <property name="visible">True</property>
             <property name="icon-name">object-flip-horizontal</property>
           </object>
         </child>
@@ -220,7 +197,6 @@
     </child>
     <child>
       <object class="GtkBox" id="spread_box">
-        <property name="visible">True</property>
         <style>
           <class name="tag1"/>
         </style>
@@ -231,7 +207,6 @@
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="visible">True</property>
       </object>
       <packing>
         <property name="position">9</property>
@@ -239,7 +214,6 @@
     </child>
     <child>
       <object class="GtkBox" id="stop_box">
-        <property name="visible">True</property>
       </object>
       <packing>
         <property name="position">10</property>
@@ -247,18 +221,15 @@
     </child>
     <child>
       <object class="GtkBox" id="offset_box">
-        <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Offset of selected stop</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
             <property name="label" translatable="yes">Offset:</property>
           </object>
         </child>
         <child>
           <object class="GtkSpinButton" id="_offset_item">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Width of selection</property>
             <property name="width-chars">5</property>
             <property name="text" translatable="yes">0.000</property>
@@ -277,14 +248,12 @@
     </child>
     <child>
       <object class="GtkButton" id="_stops_add_btn">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Insert new stop</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <child>
           <object class="GtkImage" id="image7">
-            <property name="visible">True</property>
             <property name="icon-name">node-add</property>
           </object>
         </child>
@@ -295,14 +264,12 @@
     </child>
     <child>
       <object class="GtkButton" id="_stops_delete_btn">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Delete stop</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <child>
           <object class="GtkImage" id="image8">
-            <property name="visible">True</property>
             <property name="icon-name">node-delete</property>
           </object>
         </child>

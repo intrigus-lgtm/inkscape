@@ -46,7 +46,7 @@ Gtk::Widget *OriginalSatelliteParam::param_newWidget()
     { // Paste item to link button
         Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("edit-paste", Gtk::IconSize::NORMAL));
         auto const pButton = Gtk::make_managed<Gtk::Button>();
-        pButton->set_relief(Gtk::RELIEF_NONE);
+        pButton->set_has_frame(false);
         pIcon->set_visible(true);
         pButton->add(*pIcon);
         pButton->set_visible(true);
@@ -58,7 +58,7 @@ Gtk::Widget *OriginalSatelliteParam::param_newWidget()
     { // Select original button
         Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("edit-select-original", Gtk::IconSize::NORMAL));
         auto const pButton = Gtk::make_managed<Gtk::Button>();
-        pButton->set_relief(Gtk::RELIEF_NONE);
+        pButton->set_has_frame(false);
         pIcon->set_visible(true);
         pButton->add(*pIcon);
         pButton->set_visible(true);

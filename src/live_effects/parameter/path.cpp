@@ -229,7 +229,7 @@ PathParam::param_newWidget()
     if (_edit_button) {
         pIcon = Gtk::manage(sp_get_icon_image("tool-node-editor", Gtk::IconSize::NORMAL));
         pButton = Gtk::make_managed<Gtk::Button>();
-        pButton->set_relief(Gtk::RELIEF_NONE);
+        pButton->set_has_frame(false);
         pIcon->set_visible(true);
         pButton->add(*pIcon);
         pButton->set_visible(true);
@@ -241,7 +241,7 @@ PathParam::param_newWidget()
     if (_copy_button) {
         pIcon = Gtk::manage(sp_get_icon_image("edit-copy", Gtk::IconSize::NORMAL));
         pButton = Gtk::make_managed<Gtk::Button>();
-        pButton->set_relief(Gtk::RELIEF_NONE);
+        pButton->set_has_frame(false);
         pIcon->set_visible(true);
         pButton->add(*pIcon);
         pButton->set_visible(true);
@@ -253,7 +253,7 @@ PathParam::param_newWidget()
     if (_paste_button) {
         pIcon = Gtk::manage(sp_get_icon_image("edit-paste", Gtk::IconSize::NORMAL));
         pButton = Gtk::make_managed<Gtk::Button>();
-        pButton->set_relief(Gtk::RELIEF_NONE);
+        pButton->set_has_frame(false);
         pIcon->set_visible(true);
         pButton->add(*pIcon);
         pButton->set_visible(true);
@@ -264,7 +264,7 @@ PathParam::param_newWidget()
     if (_link_button) {
         pIcon = Gtk::manage(sp_get_icon_image("edit-clone", Gtk::IconSize::NORMAL));
         pButton = Gtk::make_managed<Gtk::Button>();
-        pButton->set_relief(Gtk::RELIEF_NONE);
+        pButton->set_has_frame(false);
         pIcon->set_visible(true);
         pButton->add(*pIcon);
         pButton->set_visible(true);

@@ -43,7 +43,7 @@ static int run_dialog(Gtk::Window &window, char const * const save_text,
     auto const ma = dialog.get_message_area();
     g_assert(ma);
     auto const ma_labels = Inkscape::UI::get_children(*ma);
-    ma_labels.at(0)->set_can_focus(false);
+    ma_labels.at(0)->set_focusable(false);
 
     dialog.add_button(_("Close _without saving"), Gtk::ResponseType::NO);
     dialog.add_button(_("_Cancel"),               Gtk::ResponseType::CANCEL);

@@ -137,10 +137,10 @@ MarkerComboBox::MarkerComboBox(Glib::ustring id, int l) :
         box->add(*image);
         if (item->separator) {
             image->set_sensitive(false);
-            image->set_can_focus(false);
+            image->set_focusable(false);
             image->set_size_request(-1, 10);
             box->set_sensitive(false);
-            box->set_can_focus(false);
+            box->set_focusable(false);
             box->get_style_context()->add_class("marker-separator");
         }
         else {

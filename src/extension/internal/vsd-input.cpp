@@ -122,7 +122,7 @@ VsdImportDialog::VsdImportDialog(const std::vector<RVNGString> &vec)
     // Adjustment + spinner
     auto _pageNumberSpin_adj = Gtk::Adjustment::create(1, 1, _vec.size(), 1, 10, 0);
     _pageNumberSpin = Gtk::make_managed<Gtk::SpinButton>(_pageNumberSpin_adj, 1, 0);
-    _pageNumberSpin->set_can_focus();
+    _pageNumberSpin->set_focusable();
     _pageNumberSpin->set_update_policy(Gtk::UPDATE_ALWAYS);
     _pageNumberSpin->set_numeric(true);
     _pageNumberSpin->set_wrap(false);

@@ -190,7 +190,7 @@ public:
 
         create_template_menu();
 
-        _preview->property_expand().set_value(true);
+        _preview->set_expand(true);
         _preview_box.add(*_preview);
 
         for (auto check : {Check::Border, Check::Shadow, Check::Checkerboard, Check::BorderOnTop, Check::AntiAlias, Check::ClipToPage, Check::PageLabelStyle}) {

@@ -43,8 +43,8 @@ ColorSlider::ColorSlider(Glib::RefPtr<Gtk::Adjustment> adjustment)
 
     _drawing_area->set_visible(true);
     _drawing_area->signal_draw().connect(sigc::mem_fun(*this, &ColorSlider::on_drawing_area_draw));
-    _drawing_area->property_expand() = true; // DrawingArea fills self Box,
-    property_expand() = false;               // but the Box doesnʼt expand.
+    _drawing_area->set_expand(true); // DrawingArea fills self Box,
+    set_expand(false);               // but the Box doesnʼt expand.
     add(*_drawing_area);
 
     _c0[0] = 0x00;

@@ -129,9 +129,9 @@ DualSpinScale::DualSpinScale(Glib::ustring label1, Glib::ustring label2,
     _s2.get_adjustment()->signal_value_changed().connect(_signal_value_changed.make_slot());
     _s1.get_adjustment()->signal_value_changed().connect(sigc::mem_fun(*this, &DualSpinScale::update_linked));
 
-    _link.set_relief(Gtk::RELIEF_NONE);
+    _link.set_has_frame(false);
     _link.set_focus_on_click(false);
-    _link.set_can_focus(false);
+    _link.set_focusable(false);
     _link.get_style_context()->add_class("link-edit-button");
     _link.set_valign(Gtk::Align::CENTER);
     _link.signal_clicked().connect(sigc::mem_fun(*this, &DualSpinScale::link_toggled));

@@ -141,7 +141,7 @@ EntityMultiLineEntry::EntityMultiLineEntry (rdf_work_entity_t* ent, Registry& wr
 {
     Gtk::ScrolledWindow *s = new Gtk::ScrolledWindow;
     s->set_policy (Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
-    s->set_shadow_type (Gtk::SHADOW_IN);
+    s->set_has_frame(true);
     _packable = s;
     _v.set_size_request (-1, 35);
     _v.set_wrap_mode (Gtk::WrapMode::WORD);

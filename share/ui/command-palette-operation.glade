@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="3.24"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkBox" id="CPOperation">
     <property name="name">CPOperation</property>
-    <property name="visible">True</property>
     <child>
       <object class="GtkBox" id="CPNameAndDescription">
-        <property name="visible">True</property>
         <property name="valign">center</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel" id="CPName">
-            <property name="visible">True</property>
             <property name="margin-start">6</property>
             <property name="margin-end">6</property>
             <property name="margin-top">6</property>
@@ -25,7 +22,6 @@
         </child>
         <child>
           <object class="GtkLabel" id="CPDescription">
-            <property name="visible">True</property>
             <property name="margin-start">6</property>
             <property name="margin-end">6</property>
             <property name="margin-bottom">3</property>
@@ -42,13 +38,11 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Click to Copy</property>
         <property name="valign">center</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
             <child>
               <object class="GtkImage" id="copy-icon">
-                <property name="visible">True</property>
                 <property name="margin-right">5</property>
                 <property name="margin-end">5</property>
                 <property name="icon-name">edit-copy</property>
@@ -56,7 +50,6 @@
             </child>
             <child>
               <object class="GtkLabel" id="CPActionFullLabel">
-                <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="width-chars">20</property>
@@ -73,13 +66,11 @@
     </child>
     <child>
       <object class="GtkBox" id="CPGroupAndShortcut">
-        <property name="visible">True</property>
         <property name="valign">center</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel" id="CPGroup">
             <property name="name">CPGroup</property>
-            <property name="visible">True</property>
             <property name="wrap">True</property>
             <property name="wrap-mode">word-char</property>
             <property name="width-chars">20</property>
@@ -88,7 +79,6 @@
         </child>
         <child>
           <object class="GtkLabel" id="CPShortcut">
-            <property name="visible">True</property>
             <property name="tooltip-text" translatable="yes">Shortcut</property>
             <property name="valign">start</property>
             <property name="margin-top">3</property>

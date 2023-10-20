@@ -112,7 +112,7 @@ void ColorNotebook::_initUI(bool no_alpha)
 
     // combo mode selection is compact and only shows one entry (active)
     _combo = Gtk::make_managed<IconComboBox>();
-    _combo->set_can_focus(false);
+    _combo->set_focusable(false);
     _combo->set_visible();
     _combo->set_tooltip_text(_("Choose style of color selection"));
 

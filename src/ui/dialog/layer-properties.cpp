@@ -309,7 +309,7 @@ void LayerPropertiesDialog::_setup_layers_controls()
 
     _scroller.add(_tree);
     _scroller.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
-    _scroller.set_shadow_type(Gtk::SHADOW_IN);
+    _scroller.set_has_frame(true);
     _scroller.set_size_request(220, 180);
 
     SPDocument* document = _desktop->doc();

@@ -64,7 +64,7 @@ CanvasGrid::CanvasGrid(SPDesktopWidget *dtw)
     _canvas = std::make_unique<Inkscape::UI::Widget::Canvas>();
     _canvas->set_hexpand(true);
     _canvas->set_vexpand(true);
-    _canvas->set_can_focus(true);
+    _canvas->set_focusable(true);
 
     // Command palette
     _command_palette = std::make_unique<Inkscape::UI::Dialog::CommandPalette>();

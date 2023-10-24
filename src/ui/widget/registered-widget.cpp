@@ -17,7 +17,6 @@
 #include "registered-widget.h"
 
 #include <glibmm/i18n.h>
-#include <gtkmm/radiobutton.h>
 
 #include "object/sp-root.h"
 #include "svg/svg-color.h"

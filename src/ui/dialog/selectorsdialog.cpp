@@ -26,8 +26,7 @@
 #include <gtkmm/entry.h>
 #include <gtkmm/gestureclick.h>
 #include <gtkmm/label.h>
-#include <gtkmm/radiobutton.h>
-#include <gtkmm/selectiondata.h>
+#include <gtkmm/togglebutton.h>
 #include <gtkmm/treemodelfilter.h>
 
 #include "attribute-rel-svg.h"
@@ -176,7 +175,7 @@ bool SelectorsDialog::TreeStore::row_draggable_vfunc(const Gtk::TreeModel::Path 
  * Allow dropping only in between other selectors.
  */
 bool SelectorsDialog::TreeStore::row_drop_possible_vfunc(const Gtk::TreeModel::Path &dest,
-                                                         const Gtk::SelectionData &selection_data) const
+                                                         const Glib::ValueBase &) const
 {
     g_debug("SelectorsDialog::TreeStore::row_drop_possible_vfunc");
 
@@ -282,7 +281,7 @@ void SelectorsDialog::_showWidgets()
     _selectors_box.set_orientation(Gtk::Orientation::VERTICAL);
     _selectors_box.set_name("SelectorsDialog");
 
-    _scrolled_window_selectors.add(_treeView);
+    _scrolled_window_selectors.set_child(_treeView);
     _scrolled_window_selectors.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     _scrolled_window_selectors.set_overlay_scrolling(false);
 
@@ -297,18 +296,14 @@ void SelectorsDialog::_showWidgets()
     UI::pack_start(_button_box, _create, UI::PackOptions::shrink);
     UI::pack_start(_button_box, _del, UI::PackOptions::shrink);
 
-    Gtk::RadioButton::Group group;
-    auto const _horizontal = Gtk::make_managed<Gtk::RadioButton>();
-    auto const _vertical = Gtk::make_managed<Gtk::RadioButton>();
+    auto const _horizontal = Gtk::make_managed<Gtk::ToggleButton>();
+    auto const _vertical = Gtk::make_managed<Gtk::ToggleButton>();
     _horizontal->set_image_from_icon_name(INKSCAPE_ICON("horizontal"));
     _vertical->set_image_from_icon_name(INKSCAPE_ICON("vertical"));
-    _horizontal->set_group(group);
-    _vertical->set_group(group);
+    _vertical->set_group(*_horizontal);
     _vertical->set_active(dir);
     _vertical->signal_toggled().connect(
         sigc::bind(sigc::mem_fun(*this, &SelectorsDialog::_toggleDirection), _vertical));
-    _horizontal->property_draw_indicator() = false;
-    _vertical->property_draw_indicator() = false;
     UI::pack_end(_button_box, *_horizontal, false, false);
     UI::pack_end(_button_box, *_vertical, false, false);
 
@@ -318,8 +313,11 @@ void SelectorsDialog::_showWidgets()
     _style_dialog = Gtk::make_managed<StyleDialog>();
     _style_dialog->set_name("StyleDialog");
 
-    _paned.pack1(*_style_dialog, Gtk::SHRINK);
-    _paned.pack2(_selectors_box, true, true);
+    _paned.set_start_child(*_style_dialog);
+    _paned.set_shrink_start_child();
+    _paned.set_end_child(_selectors_box);
+    _paned.set_shrink_end_child();
+    _paned.set_resize_end_child();
     _paned.set_wide_handle(true);
 
     auto const contents = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
@@ -336,14 +334,14 @@ void SelectorsDialog::_showWidgets()
     set_name("SelectorsAndStyleDialog");
 }
 
-void SelectorsDialog::_toggleDirection(Gtk::RadioButton *vertical)
+void SelectorsDialog::_toggleDirection(Gtk::ToggleButton *vertical)
 {
     g_debug("SelectorsDialog::_toggleDirection");
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     bool dir = vertical->get_active();
     prefs->setBool("/dialogs/selectors/vertical", dir);
     _paned.set_orientation(dir ? Gtk::Orientation::VERTICAL : Gtk::Orientation::HORIZONTAL);
-    _paned.check_resize();
+    // _paned.check_resize(); // No longer needed?
     int widthpos = _paned.property_max_position() - _paned.property_min_position();
     prefs->setInt("/dialogs/selectors/panedpos", widthpos / 2);
     _paned.property_position() = widthpos / 2;
@@ -493,7 +491,7 @@ void SelectorsDialog::_readStyleElement()
             if (!id)
                 continue;
 
-            auto childrow = *(_store->append(row.children()));
+            auto childrow = *_store->append(row.children());
             childrow[_mColumns._colSelector] = "#" + Glib::ustring(id);
             childrow[_mColumns._colExpand] = false;
             childrow[_mColumns._colType] = colType == OBJECT;
@@ -705,7 +703,7 @@ void SelectorsDialog::_addToSelector(Gtk::TreeModel::Row row)
             multiselector = multiselector + ",#" + id;
         }
 
-        auto childrow = *(_store->prepend(row.children()));
+        auto childrow = *_store->prepend(row.children());
         childrow[_mColumns._colSelector] = "#" + Glib::ustring(id);
         childrow[_mColumns._colExpand] = false;
         childrow[_mColumns._colType] = OBJECT;
@@ -791,9 +789,9 @@ void SelectorsDialog::_removeFromSelector(Gtk::TreeModel::Row row)
         Util::trim(selector);
 
         if (selector.empty()) {
-            _store->erase(parent);
+            _store->erase(parent.get_iter());
         } else {
-            _store->erase(row);
+            _store->erase(row.get_iter());
             parent[_mColumns._colSelector] = selector;
             parent[_mColumns._colExpand] = true;
             parent[_mColumns._colObj] = nullptr;
@@ -1016,7 +1014,6 @@ void SelectorsDialog::_addSelector()
     auto textDialogPtr = std::make_unique<Gtk::Dialog>();
     textDialogPtr->property_modal() = true;
     textDialogPtr->property_title() = _("CSS selector");
-    textDialogPtr->property_window_position() = Gtk::WIN_POS_CENTER_ON_PARENT;
     textDialogPtr->add_button(_("Cancel"), Gtk::ResponseType::CANCEL);
     textDialogPtr->add_button(_("Add"),    Gtk::ResponseType::OK);
 
@@ -1041,8 +1038,8 @@ void SelectorsDialog::_addSelector()
 
     Gtk::Requisition sreq1, sreq2;
     textDialogPtr->get_preferred_size(sreq1, sreq2);
-    int const minWidth  = std::max(200, sreq2.width );
-    int const minHeight = std::max(100, sreq2.height);
+    int const minWidth  = std::max(200, sreq2.get_width());
+    int const minHeight = std::max(100, sreq2.get_height());
     textDialogPtr->set_size_request(minWidth, minHeight);
 
     textEditPtr->set_visible(true);
@@ -1079,7 +1076,7 @@ void SelectorsDialog::_addSelector()
     // If class selector, add selector name to class attribute for each object
     Util::trim(selectorValue, ",");
     if (originalValue.find("@import ") != std::string::npos) {
-        Gtk::TreeModel::Row row = *(_store->prepend());
+        Gtk::TreeModel::Row row = *_store->prepend();
         row[_mColumns._colSelector] = originalValue;
         row[_mColumns._colExpand] = false;
         row[_mColumns._colType] = OTHER;
@@ -1342,7 +1339,7 @@ void SelectorsDialog::_selectRow()
         }
 
         if (row[_mColumns._colExpand]) {
-            _treeView.expand_to_path(Gtk::TreePath(row));
+            _treeView.expand_to_path(_treeView.get_model()->get_path(row.get_iter()));
         }
     }
 
@@ -1359,9 +1356,7 @@ void SelectorsDialog::_styleButton(Gtk::Button &btn, char const *iconName, char 
 {
     g_debug("SelectorsDialog::_styleButton");
 
-    GtkWidget *child = sp_get_icon_image(iconName, GTK_ICON_SIZE_SMALL_TOOLBAR);
-    gtk_widget_set_visible(child, true);
-    btn.add(*manage(Glib::wrap(child)));
+    btn.set_image_from_icon_name(iconName, Gtk::IconSize::NORMAL); // Previously GTK_ICON_SIZE_SMALL_TOOLBAR
     btn.set_has_frame(false);
     btn.set_tooltip_text (tooltip);
 }

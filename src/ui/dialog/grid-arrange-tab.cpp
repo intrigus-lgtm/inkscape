@@ -574,13 +574,12 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
         SpaceByBBoxRadioButton.set_label(_("_Fit into selection box"));
         SpaceByBBoxRadioButton.set_use_underline (true);
         SpaceByBBoxRadioButton.signal_toggled().connect(sigc::mem_fun(*this, &GridArrangeTab::Spacing_button_changed));
-        SpacingGroup = SpaceByBBoxRadioButton.get_group();
 
         UI::pack_start(SpacingVBox, SpaceByBBoxRadioButton, false, false, MARGIN);
 
         SpaceManualRadioButton.set_label(_("_Set spacing:"));
         SpaceManualRadioButton.set_use_underline (true);
-        SpaceManualRadioButton.set_group(SpacingGroup);
+        SpaceManualRadioButton.set_group(SpaceByBBoxRadioButton);
         SpaceManualRadioButton.signal_toggled().connect(sigc::mem_fun(*this, &GridArrangeTab::Spacing_button_changed));
         UI::pack_start(SpacingVBox, SpaceManualRadioButton, false, false, MARGIN);
 

@@ -142,7 +142,7 @@ static Gtk::Box *spw_hbox(Gtk::Grid *table, int width, int col, int row)
  * \param[in] button_type  The type of stroke-style radio button (join/cap)
  * \param[in] stroke_style The style attribute to associate with the button
  */
-StrokeStyle::StrokeStyleButton::StrokeStyleButton(Gtk::CheckButton      &grp,
+StrokeStyle::StrokeStyleButton::StrokeStyleButton(Gtk::ToggleButton    *&grp,
                                                   char const            *icon,
                                                   StrokeStyleButtonType  button_type,
                                                   gchar const           *stroke_style)
@@ -150,14 +150,17 @@ StrokeStyle::StrokeStyleButton::StrokeStyleButton(Gtk::CheckButton      &grp,
         button_type(button_type),
         stroke_style(stroke_style)
 {
-    set_group(grp);
+    if (!grp) {
+        grp = this;
+    } else {
+        set_group(*grp);
+    }
     set_visible(true);
-    set_mode(false);
 
     auto px = Gtk::manage(sp_get_icon_image(icon, Gtk::IconSize::LARGE));
     g_assert(px != nullptr);
     px->set_visible(true);
-    add(*px);
+    set_child(*px);
 }
 
 std::vector<double> parse_pattern(const Glib::ustring& input) {
@@ -202,7 +205,7 @@ StrokeStyle::StrokeStyle() :
     table->set_hexpand(false);
     table->set_halign(Gtk::Align::CENTER);
     table->set_visible(true);
-    add(*table);
+    append(*table);
 
     Gtk::Box *hb;
     gint i = 0;
@@ -323,7 +326,7 @@ StrokeStyle::StrokeStyle() :
 
     hb = spw_hbox(table, 3, 1, i);
 
-    Gtk::RadioButtonGroup joinGrp;
+    Gtk::ToggleButton *joinGrp = nullptr;
 
     joinBevel = makeRadioButton(joinGrp, INKSCAPE_ICON("stroke-join-bevel"),
                                 hb, STROKE_STYLE_BUTTON_JOIN, "bevel");
@@ -376,7 +379,7 @@ StrokeStyle::StrokeStyle() :
 
     hb = spw_hbox(table, 3, 1, i);
 
-    Gtk::RadioButtonGroup capGrp;
+    Gtk::ToggleButton *capGrp = nullptr;
 
     capButt = makeRadioButton(capGrp, INKSCAPE_ICON("stroke-cap-butt"),
                                 hb, STROKE_STYLE_BUTTON_CAP, "butt");
@@ -407,7 +410,7 @@ StrokeStyle::StrokeStyle() :
 
     hb = spw_hbox(table, 4, 1, i);
 
-    Gtk::RadioButtonGroup paintOrderGrp;
+    Gtk::ToggleButton *paintOrderGrp = nullptr;
 
     paintOrderFSM = makeRadioButton(paintOrderGrp, INKSCAPE_ICON("paint-order-fsm"),
                                     hb, STROKE_STYLE_BUTTON_ORDER, "normal");
@@ -488,7 +491,7 @@ void StrokeStyle::_handleDocumentReplaced(SPDesktop *, SPDocument *document)
  *          a handler for the toggle event is connected.
  */
 StrokeStyle::StrokeStyleButton *
-StrokeStyle::makeRadioButton(Gtk::CheckButton      &grp,
+StrokeStyle::makeRadioButton(Gtk::ToggleButton    *&grp,
                              char const            *icon,
                              Gtk::Box              *hb,
                              StrokeStyleButtonType  button_type,
@@ -718,7 +721,7 @@ void StrokeStyle::update_pattern(int ndash, const double* pattern) {
 void
 StrokeStyle::setJoinType (unsigned const jointype)
 {
-    Gtk::RadioButton *tb = nullptr;
+    Gtk::ToggleButton *tb = nullptr;
     switch (jointype) {
         case SP_STROKE_LINEJOIN_MITER:
             tb = joinMiter;
@@ -744,7 +747,7 @@ StrokeStyle::setJoinType (unsigned const jointype)
 void
 StrokeStyle::setCapType (unsigned const captype)
 {
-    Gtk::RadioButton *tb = nullptr;
+    Gtk::ToggleButton *tb = nullptr;
     switch (captype) {
         case SP_STROKE_LINECAP_BUTT:
             tb = capButt;
@@ -770,7 +773,7 @@ StrokeStyle::setCapType (unsigned const captype)
 void
 StrokeStyle::setPaintOrder (gchar const *paint_order)
 {
-    Gtk::RadioButton *tb = paintOrderFSM;
+    Gtk::ToggleButton *tb = paintOrderFSM;
 
     SPIPaintOrder temp;
     temp.read( paint_order );

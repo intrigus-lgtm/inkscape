@@ -148,7 +148,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkRadioButton" id="page-landscape">
+              <object class="GtkCheckButton" id="page-landscape">
                 <property name="focusable">True</property>
                 <property name="margin-end">5</property>
                 <property name="active">True</property>
@@ -167,7 +167,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkRadioButton" id="page-portrait">
+              <object class="GtkCheckButton" id="page-portrait">
                 <property name="focusable">True</property>
                 <property name="margin-end">5</property>
                 <property name="active">True</property>

@@ -20,7 +20,7 @@
 #include <gtkmm/flowboxchild.h>
 #include <gtkmm/menubutton.h>
 #include <gtkmm/popover.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/checkbutton.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/scrollbar.h>
@@ -660,20 +660,25 @@ void ColorPalette::rebuild_widgets()
 
 class ColorPaletteMenuItem : public PopoverMenuItem {
 public:
-    ColorPaletteMenuItem(Gtk::RadioButton::Group &group,
+    ColorPaletteMenuItem(Gtk::CheckButton *&group,
                          Glib::ustring const &label,
                          Glib::ustring id,
                          std::vector<rgb_t> colors)
         : Glib::ObjectBase{"ColorPaletteMenuItem"}
         , PopoverMenuItem{}
-        , _radio_button{Gtk::make_managed<Gtk::RadioButton>(group, label)}
+        , _radio_button{Gtk::make_managed<Gtk::CheckButton>(label)}
         , _preview{Gtk::make_managed<ColorPalettePreview>(std::move(colors))}
         , id{std::move(id)}
     {
+        if (group) {
+            _radio_button->set_group(*group);
+        } else {
+            group = _radio_button;
+        }
         auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 1);
-        box->add(*_radio_button);
-        box->add(*_preview     );
-        add(*box);
+        box->append(*_radio_button);
+        box->append(*_preview);
+        set_child(*box);
     }
 
     void set_active(bool const active) { _radio_button->set_active(active); }
@@ -681,7 +686,7 @@ public:
     Glib::ustring const id;
 
 private:
-    Gtk::RadioButton    *_radio_button = nullptr;
+    Gtk::CheckButton    *_radio_button = nullptr;
     ColorPalettePreview *_preview      = nullptr;
 
     bool on_draw(Cairo::RefPtr<Cairo::Context> const &cr) final
@@ -703,7 +708,7 @@ void ColorPalette::set_palettes(std::vector<palette_t> const &palettes)
     _palette_menu_items.clear();
     _palette_menu_items.reserve(palettes.size());
 
-    Gtk::RadioButton::Group group;
+    Gtk::CheckButton *group = nullptr;
     // We prepend in reverse so we add the palettes above the constant separator & Configure items.
     for (auto it = palettes.crbegin(); it != palettes.crend(); ++it) {
         auto& name = it->name;

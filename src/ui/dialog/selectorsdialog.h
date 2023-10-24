@@ -35,7 +35,7 @@ namespace Gtk {
 class Adjustment;
 class Dialog;
 class GestureClick;
-class RadioButton;
+class ToggleButton;
 class SelectionData;
 class TreeModelFilter;
 } // namespace Gtk
@@ -114,7 +114,7 @@ public:
         TreeStore();
         bool row_draggable_vfunc(const Gtk::TreeModel::Path& path) const final;
         bool row_drop_possible_vfunc(const Gtk::TreeModel::Path& path,
-                                     const Gtk::SelectionData& selection_data) const final;
+                                     const Glib::ValueBase& selection_data) const final;
         void on_row_deleted(const TreeModel::Path& path) final;
 
     public:
@@ -158,7 +158,7 @@ public:
     void _insertClass(SPObject *obj, const Glib::ustring &className);
     void _removeClass(const std::vector<SPObject *> &objVec, const Glib::ustring &className, bool all = false);
     void _removeClass(SPObject *obj, const Glib::ustring &className, bool all = false);
-    void _toggleDirection(Gtk::RadioButton *vertical);
+    void _toggleDirection(Gtk::ToggleButton *vertical);
     void _showWidgets();
 
     void _selectObjects(int, int);

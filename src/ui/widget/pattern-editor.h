@@ -73,9 +73,9 @@ public:
     Glib::ustring get_label();
 
 private:
-    sigc::signal<void> _signal_changed;
-    sigc::signal<void, unsigned int> _signal_color_changed;
-    sigc::signal<void> _signal_edit;
+    sigc::signal<void ()> _signal_changed;
+    sigc::signal<void (unsigned)> _signal_color_changed;
+    sigc::signal<void ()> _signal_edit;
 
 public:
     decltype(_signal_changed) signal_changed() const { return _signal_changed; }

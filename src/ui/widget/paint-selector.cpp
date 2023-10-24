@@ -31,7 +31,6 @@
 #include <glibmm/i18n.h>
 #include <gtkmm/combobox.h>
 #include <gtkmm/label.h>
-#include <gtkmm/radiobutton.h>
 #include <gtkmm/togglebutton.h>
 
 #include "desktop-style.h"
@@ -101,18 +100,13 @@ namespace Inkscape {
 namespace UI {
 namespace Widget {
 
-class FillRuleRadioButton : public Gtk::RadioButton {
+class FillRuleRadioButton : public Gtk::ToggleButton {
   private:
     PaintSelector::FillRule _fillrule;
 
   public:
-    FillRuleRadioButton()
-        : Gtk::RadioButton()
-    {}
-
-    FillRuleRadioButton(Gtk::RadioButton::Group &group)
-        : Gtk::RadioButton(group)
-    {}
+    FillRuleRadioButton() = default;
+    FillRuleRadioButton(Gtk::ToggleButton &group) { set_group(group); }
 
     inline void set_fillrule(PaintSelector::FillRule fillrule) { _fillrule = fillrule; }
     inline PaintSelector::FillRule get_fillrule() const { return _fillrule; }
@@ -181,26 +175,22 @@ PaintSelector::PaintSelector(FillOrStroke kind)
 
         _evenodd = Gtk::make_managed<FillRuleRadioButton>();
         _evenodd->set_has_frame(false);
-        _evenodd->set_mode(false);
         // TRANSLATORS: for info, see http://www.w3.org/TR/2000/CR-SVG-20000802/painting.html#FillRuleProperty
         _evenodd->set_tooltip_text(
             _("Any path self-intersections or subpaths create holes in the fill (fill-rule: evenodd)"));
         _evenodd->set_fillrule(PaintSelector::FILLRULE_EVENODD);
-        auto w = sp_get_icon_image("fill-rule-even-odd", GTK_ICON_SIZE_MENU);
-        gtk_container_add(GTK_CONTAINER(_evenodd->gobj()), w);
+        _evenodd->set_image_from_icon_name("fill-rule-even-odd", Gtk::IconSize::NORMAL); // Previously GTK_ICON_SIZE_MENU
         UI::pack_start(*_fillrulebox, *_evenodd, false, false);
         _evenodd->signal_toggled().connect(
             sigc::bind(sigc::mem_fun(*this, &PaintSelector::fillrule_toggled), _evenodd));
 
-        auto grp = _evenodd->get_group();
-        _nonzero = Gtk::make_managed<FillRuleRadioButton>(grp);
+        _nonzero = Gtk::make_managed<FillRuleRadioButton>();
+        _nonzero->set_group(*_evenodd);
         _nonzero->set_has_frame(false);
-        _nonzero->set_mode(false);
         // TRANSLATORS: for info, see http://www.w3.org/TR/2000/CR-SVG-20000802/painting.html#FillRuleProperty
         _nonzero->set_tooltip_text(_("Fill is solid unless a subpath is counterdirectional (fill-rule: nonzero)"));
         _nonzero->set_fillrule(PaintSelector::FILLRULE_NONZERO);
-        w = sp_get_icon_image("fill-rule-nonzero", GTK_ICON_SIZE_MENU);
-        gtk_container_add(GTK_CONTAINER(_nonzero->gobj()), w);
+        _nonzero->set_image_from_icon_name("fill-rule-nonzero", Gtk::IconSize::NORMAL); // Previously GTK_ICON_SIZE_MENU
         UI::pack_start(*_fillrulebox, *_nonzero, false, false);
         _nonzero->signal_toggled().connect(
             sigc::bind(sigc::mem_fun(*this, &PaintSelector::fillrule_toggled), _nonzero));
@@ -229,22 +219,18 @@ PaintSelector::PaintSelector(FillOrStroke kind)
     // from _new function
     setMode(PaintSelector::MODE_MULTIPLE);
 
-    _fillrullbox.set_visible(kind == FILL);
+    _fillrulebox->set_visible(kind == FILL);
 }
 
 StyleToggleButton *PaintSelector::style_button_add(gchar const *pixmap, PaintSelector::Mode mode, gchar const *tip)
 {
-    GtkWidget *w;
-
     auto const b = Gtk::make_managed<StyleToggleButton>();
     b->set_tooltip_text(tip);
     b->set_visible(true);
     b->set_has_frame(false);
-    b->set_mode(false);
     b->set_style(mode);
 
-    w = sp_get_icon_image(pixmap, GTK_ICON_SIZE_BUTTON);
-    gtk_container_add(GTK_CONTAINER(b->gobj()), w);
+    b->set_image_from_icon_name(pixmap, Gtk::IconSize::NORMAL); // Previously GTK_ICON_SIZE_BUTTON
 
     UI::pack_start(*_style, *b, false, false);
     b->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &PaintSelector::style_button_toggled), b));
@@ -571,7 +557,7 @@ void PaintSelector::set_mode_color(PaintSelector::Mode /*mode*/)
             color_selector->set_visible(true);
             UI::pack_start(*_selector_solid_color, *color_selector, true, true);
             /* Pack everything to frame */
-            _frame->add(*_selector_solid_color);
+            _frame->append(*_selector_solid_color);
             color_selector->set_label(_("<b>Flat color</b>"));
         }
 
@@ -620,7 +606,7 @@ void PaintSelector::set_mode_gradient(PaintSelector::Mode mode)
                 _selector_gradient->signal_changed().connect(sigc::mem_fun(*this, &PaintSelector::gradient_changed));
                 _selector_gradient->signal_stop_selected().connect([=](SPStop* stop) { _signal_stop_selected.emit(stop); });
                 /* Pack everything to frame */
-                _frame->add(*_selector_gradient);
+                _frame->append(*_selector_gradient);
             }
             catch (std::exception& ex) {
                 g_error("Creation of GradientEditor widget failed: %s.", ex.what());
@@ -875,7 +861,7 @@ void PaintSelector::set_mode_mesh(PaintSelector::Mode mode)
             _meshmenu = combo;
             g_object_ref(G_OBJECT(combo));
 
-            gtk_container_add(GTK_CONTAINER(hb->gobj()), combo);
+            gtk_box_append(hb->gobj(), combo);
             UI::pack_start(*_selector_mesh, *hb, false, false, AUX_BETWEEN_BUTTON_GROUPS);
 
             g_object_unref(G_OBJECT(store));
@@ -889,7 +875,7 @@ void PaintSelector::set_mode_mesh(PaintSelector::Mode mode)
             UI::pack_start(*hb2, *l, true, true, AUX_BETWEEN_BUTTON_GROUPS);
             UI::pack_start(*_selector_mesh, *hb2, false, false, AUX_BETWEEN_BUTTON_GROUPS);
 
-            _frame->add(*_selector_mesh);
+            _frame->append(*_selector_mesh);
         }
 
         _selector_mesh->set_visible(true);
@@ -1006,7 +992,7 @@ void PaintSelector::set_mode_pattern(PaintSelector::Mode mode)
             _selector_pattern->signal_changed().connect([=](){ _signal_changed.emit(); });
             _selector_pattern->signal_color_changed().connect([=](unsigned){ _signal_changed.emit(); });
             _selector_pattern->signal_edit().connect([=](){ _signal_edit_pattern.emit(); });
-            _frame->add(*_selector_pattern);
+            _frame->append(*_selector_pattern);
         }
 
         SPDocument* document = SP_ACTIVE_DOCUMENT;
@@ -1134,7 +1120,7 @@ void PaintSelector::set_mode_swatch(PaintSelector::Mode mode)
             gsel->signal_changed().connect(sigc::mem_fun(*this, &PaintSelector::gradient_changed));
 
             // Pack everything to frame
-            _frame->add(*_selector_swatch);
+            _frame->append(*_selector_swatch);
         } else {
             // Necessary when creating new swatches via the Fill and Stroke dialog
             _selector_swatch->setVector(nullptr, nullptr);

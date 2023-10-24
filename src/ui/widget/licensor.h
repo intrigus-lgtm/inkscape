@@ -28,7 +28,7 @@ class SPDocument;
 struct rdf_license_t;
 
 namespace Gtk {
-class RadioButtonGroup;
+class CheckButton;
 } // namespace Gtk
 
 namespace Inkscape::UI::Widget {
@@ -48,7 +48,7 @@ public:
 
     void init (Registry&);
     LicenseItem *add_item(Registry &wr, rdf_license_t const &license,
-                          Gtk::RadioButtonGroup *group);
+                          Gtk::CheckButton *group);
     void update (SPDocument *doc);
 
 private:

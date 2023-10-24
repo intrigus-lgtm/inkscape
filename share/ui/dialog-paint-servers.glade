@@ -42,7 +42,7 @@
       <object class="GtkBox" id="TargetRadioContainer">
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkRadioButton" id="TargetRadioFill">
+          <object class="GtkCheckButton" id="TargetRadioFill">
             <property name="label" translatable="yes">Fill</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Apply the paint to the fill of objects</property>
@@ -54,7 +54,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkRadioButton" id="TargetRadioStroke">
+          <object class="GtkCheckButton" id="TargetRadioStroke">
             <property name="label" translatable="yes">Stroke</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Apply the paint to the stroke of objects</property>

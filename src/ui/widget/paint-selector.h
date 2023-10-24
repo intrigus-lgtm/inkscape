@@ -42,7 +42,6 @@ class SPStyle;
 
 namespace Gtk {
 class Label;
-class RadioButton;
 class ToggleButton;
 } // namespace Gtk
 
@@ -128,7 +127,7 @@ class PaintSelector : public Gtk::Box {
     sigc::signal<void ()> _signal_released;
     sigc::signal<void ()> _signal_changed;
     sigc::signal<void (SPStop*)> _signal_stop_selected;
-    sigc::signal<void> _signal_edit_pattern;
+    sigc::signal<void ()> _signal_edit_pattern;
 
     StyleToggleButton *style_button_add(gchar const *px, PaintSelector::Mode mode, gchar const *tip);
     void style_button_toggled(StyleToggleButton *tb);

@@ -12,7 +12,7 @@
 #define INKSCAPE_UI_ROTATEABLE_H
 
 #include <gtk/gtk.h> // GtkEventController*
-#include <gtkmm/eventbox.h>
+#include <gtkmm/box.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 
 namespace Gtk {
@@ -24,7 +24,7 @@ namespace Inkscape::UI::Widget {
 /**
  * Widget adjustable by dragging it to rotate away from a zero-change axis.
  */
-class Rotateable: public Gtk::EventBox
+class Rotateable: public Gtk::Box
 {
 public:
     Rotateable();

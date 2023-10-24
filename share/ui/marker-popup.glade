@@ -40,7 +40,7 @@
     <property name="icon-name">entries-unlinked-symbolic</property>
     <property name="icon-size">3</property>
   </object>
-  <object class="GtkRadioButton" id="radio-orient">
+  <object class="GtkToggleButton" id="radio-orient">
     <property name="label">radiobutton</property>
     <property name="focusable">True</property>
     <property name="active">True</property>
@@ -162,7 +162,7 @@
               <object class="GtkBox">
                 <property name="spacing">4</property>
                 <child>
-                  <object class="GtkRadioButton" id="orient-auto-rev">
+                  <object class="GtkToggleButton" id="orient-auto-rev">
                     <property name="focusable">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Orient along the path, reversing at the start</property>
@@ -179,7 +179,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkRadioButton" id="orient-auto">
+                  <object class="GtkToggleButton" id="orient-auto">
                     <property name="focusable">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Orient along the path</property>
@@ -199,7 +199,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkRadioButton" id="orient-angle">
+                  <object class="GtkToggleButton" id="orient-angle">
                     <property name="focusable">True</property>
                     <property name="tooltip-text" translatable="yes">Fixed specified angle</property>
                     <property name="active">True</property>

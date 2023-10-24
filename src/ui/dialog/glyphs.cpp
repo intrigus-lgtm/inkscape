@@ -494,7 +494,7 @@ GlyphsPanel::GlyphsPanel()
 
     auto const scroller = Gtk::make_managed<Gtk::ScrolledWindow>();
     scroller->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::ALWAYS);
-    scroller->add(*iconView);
+    scroller->set_child(*iconView);
     scroller->set_hexpand();
     scroller->set_vexpand();
     table->attach(*scroller, 0, row, 3, 1);
@@ -523,7 +523,7 @@ GlyphsPanel::GlyphsPanel()
     insertBtn = Gtk::make_managed<Gtk::Button>(_("Append"));
     instanceConns.emplace_back(
         insertBtn->signal_clicked().connect(sigc::mem_fun(*this, &GlyphsPanel::insertText)));
-    insertBtn->set_can_default();
+    insertBtn->property_receives_default().set_value(true);
     insertBtn->set_sensitive(false);
 
     UI::pack_end(*box, *insertBtn, UI::PackOptions::shrink);

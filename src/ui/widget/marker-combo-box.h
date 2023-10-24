@@ -32,6 +32,7 @@
 #include "document.h"
 #include "helper/auto-connection.h"
 #include "ui/operation-blocker.h"
+#include "ui/widget/widget-vfuncs-class-init.h"
 
 namespace Gtk {
 class Builder;
@@ -41,8 +42,8 @@ class FlowBox;
 class Image;
 class Label;
 class MenuButton;
-class RadioButton;
 class SpinButton;
+class ToggleButton;
 } // namespace Gtk
 
 class SPDocument;
@@ -54,7 +55,10 @@ namespace Inkscape::UI::Widget {
 /**
  * ComboBox-like class for selecting stroke markers.
  */
-class MarkerComboBox final : public Gtk::Box {
+class MarkerComboBox final
+    : public UI::Widget::WidgetVfuncsClassInit
+    , public Gtk::Box
+{
     using parent_type = Gtk::Box;
 
 public:
@@ -110,9 +114,9 @@ private:
     Gtk::SpinButton& _offset_x;
     Gtk::SpinButton& _offset_y;
     Gtk::Widget& _input_grid;
-    Gtk::RadioButton& _orient_auto_rev;
-    Gtk::RadioButton& _orient_auto;
-    Gtk::RadioButton& _orient_angle;
+    Gtk::ToggleButton& _orient_auto_rev;
+    Gtk::ToggleButton& _orient_auto;
+    Gtk::ToggleButton& _orient_angle;
     Gtk::Button& _orient_flip_horz;
     Gtk::Image& _current_img;
     Gtk::Button& _edit_marker;
@@ -148,7 +152,7 @@ private:
     void update_scale_link();
     Glib::RefPtr<MarkerItem> get_active();
     Glib::RefPtr<MarkerItem> find_marker_item(SPMarker* marker);
-    void on_style_updated() override;
+    void css_changed(GtkCssStyleChange *change) override;
     void update_preview(Glib::RefPtr<MarkerItem> marker_item);
     void update_menu_btn(Glib::RefPtr<MarkerItem> marker_item);
     void set_active(Glib::RefPtr<MarkerItem> item);

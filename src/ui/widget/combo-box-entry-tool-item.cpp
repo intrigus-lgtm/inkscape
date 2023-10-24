@@ -66,7 +66,7 @@ ComboBoxEntryToolItem::ComboBoxEntryToolItem(Glib::ustring name,
     _combobox.set_halign(Gtk::Align::START);
     _combobox.set_hexpand(false);
     _combobox.set_vexpand(false);
-    add(_combobox);
+    append(_combobox);
     _combobox.set_active(false); // ink_comboboxentry_action->active
     _combobox.signal_changed().connect([this] { combo_box_changed_cb(); });
 

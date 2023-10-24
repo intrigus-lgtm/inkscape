@@ -19,8 +19,7 @@
 #include <glibmm/ustring.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/gestureclick.h>
-#include <gtkmm/radiobutton.h>
-#include <gtkmm/radiobuttongroup.h>
+#include <gtkmm/checkbutton.h>
 
 #include "selected-style.h"
 
@@ -162,17 +161,14 @@ SelectedStyle::SelectedStyle(bool /*layout*/)
         color_preview[i]->set_visible(false);
 
         // Shows one or two children at a time.
-        type_box[i] = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
-        type_box[i]->set_hexpand(false);
-        type_box[i]->add(*type_label[i]);
-        type_box[i]->add(*gradient_preview[i]);
-        type_box[i]->add(*color_preview[i]);
-
-        // Wraps "type_box". Gtk4 change EventBox to Box and remove type_box.
         swatch[i] = Gtk::make_managed<RotateableSwatch>(this, i);
+        swatch[i]->set_orientation(Gtk::Orientation::HORIZONTAL);
+        swatch[i]->set_hexpand(false);
+        swatch[i]->append(*type_label[i]);
+        swatch[i]->append(*gradient_preview[i]);
+        swatch[i]->append(*color_preview[i]);
         swatch[i]->set_tooltip_text(type_strings[0][i][1]);
         swatch[i]->set_size_request(SELECTED_STYLE_PLACE_WIDTH, -1);
-        swatch[i]->add(*type_box[i]);
 
         // To do: Gtk4 update to C++ controller
         // Drag color from color palette, for example.
@@ -202,7 +198,7 @@ SelectedStyle::SelectedStyle(bool /*layout*/)
     // Stroke width
     stroke_width = Gtk::make_managed<Gtk::Label>("1");
     stroke_width_rotateable = Gtk::make_managed<RotateableStrokeWidth>(this);
-    stroke_width_rotateable->add(*stroke_width);
+    stroke_width_rotateable->append(*stroke_width);
     stroke_width_rotateable->set_size_request(SELECTED_STYLE_STROKE_WIDTH, -1);
     Controller::add_click(*stroke_width_rotateable, {},
                           sigc::mem_fun(*this, &SelectedStyle::on_sw_click));
@@ -226,7 +222,7 @@ SelectedStyle::SelectedStyle(bool /*layout*/)
     grid->attach(*opacity_sb,       5, 0, 1, 2);
 
     grid->set_column_spacing(4);
-    add(*grid);
+    append(*grid);
 
     make_popup_units();
 }
@@ -640,7 +636,7 @@ static UI::Widget::PopoverMenuItem *make_menu_item(Glib::ustring const &label, S
                                             Args &&...args)
 {
     auto const item = Gtk::make_managed<UI::Widget::PopoverMenuItem>(std::forward<Args>(args)...);
-    item->add(*Gtk::make_managed<Gtk::Label>(label, Gtk::Align::START, Gtk::Align::START));
+    item->set_child(*Gtk::make_managed<Gtk::Label>(label, Gtk::Align::START, Gtk::Align::START));
     item->signal_activate().connect(std::move(slot));
     return item;
 };
@@ -715,12 +711,17 @@ void SelectedStyle::make_popup_units()
     _popup_sw->append_separator();
 
     _popup_sw->append_section_label(_("Unit"));
-    auto group = Gtk::RadioButtonGroup{};
+    Gtk::CheckButton *group = nullptr;
     auto const &unit_table = Util::UnitTable::get();
     for (auto const &[key, value] : unit_table.units(Inkscape::Util::UNIT_TYPE_LINEAR)) {
         auto const item = Gtk::make_managed<UI::Widget::PopoverMenuItem>();
-        auto const radio = Gtk::make_managed<Gtk::RadioButton>(group, key);
-        item->add(*radio);
+        auto const radio = Gtk::make_managed<Gtk::CheckButton>(key);
+        if (!group) {
+            group = radio;
+        } else {
+            radio->set_group(*group);
+        }
+        item->set_child(*radio);
         _unit_mis.push_back(radio);
         auto const u = unit_table.getUnit(key);
         item->signal_activate().connect(
@@ -1201,7 +1202,9 @@ RotateableSwatch::do_release(double by, guint modifier) {
     color_adjust(hsla, by, startcolor, modifier);
 
     if (cursor_state != -1) {
-        get_window()->set_cursor(); // Use parent window cursor.
+        if (auto window = dynamic_cast<Gtk::Window *>(get_root())) {
+            window->set_cursor(); // Use parent window cursor.
+        }
         cursor_state = -1;
     }
 

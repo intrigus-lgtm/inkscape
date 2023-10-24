@@ -41,7 +41,7 @@ Gtk::EventSequenceState Rotateable::on_click(Gtk::GestureClick const &click,
     drag_started_x = x;
     drag_started_y = y;
     auto const state = click.get_current_event_state();
-    modifier = get_single_modifier(modifier, state);
+    modifier = get_single_modifier(modifier, unsigned(state));
     dragging = true;
     working = false;
     current_axis = axis;

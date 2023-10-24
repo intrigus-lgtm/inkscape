@@ -21,7 +21,7 @@
 #include <gtkmm/box.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/label.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/checkbutton.h>
 
 #include "ui/dialog/arrange-tab.h"
 #include "ui/widget/anchor-selector.h"
@@ -111,9 +111,8 @@ private:
 
     // BBox or manual spacing
     Gtk::Box              SpacingVBox;
-    Gtk::RadioButtonGroup SpacingGroup;
-    Gtk::RadioButton      SpaceByBBoxRadioButton;
-    Gtk::RadioButton      SpaceManualRadioButton;
+    Gtk::CheckButton      SpaceByBBoxRadioButton;
+    Gtk::CheckButton      SpaceManualRadioButton;
     bool ManualSpacing;
 
     // Row height

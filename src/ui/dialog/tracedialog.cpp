@@ -84,6 +84,7 @@ protected:
     void selectionModified(Selection *selection, unsigned flags) final;
     void selectionChanged(Selection *selection) final;
 
+    // Fixme: Won't get called; overriden by box layout manager.
     void size_allocate_vfunc(int width, int height, int baseline) override;
 
 private:

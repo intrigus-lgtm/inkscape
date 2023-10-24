@@ -35,7 +35,7 @@
 #include <gtkmm/label.h>
 #include <gtkmm/menubutton.h>
 #include <gtkmm/popover.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/checkbutton.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/togglebutton.h>
 
@@ -130,8 +130,8 @@ public:
       , _left_grid            (get_widget<Gtk::Grid>             (_builder, "left-grid"))
       , _page_width           (get_derived_widget<MathSpinButton>(_builder, "page-width"))
       , _page_height          (get_derived_widget<MathSpinButton>(_builder, "page-height"))
-      , _portrait             (get_widget<Gtk::RadioButton>      (_builder, "page-portrait"))
-      , _landscape            (get_widget<Gtk::RadioButton>      (_builder, "page-landscape"))
+      , _portrait             (get_widget<Gtk::CheckButton>      (_builder, "page-portrait"))
+      , _landscape            (get_widget<Gtk::CheckButton>      (_builder, "page-landscape"))
       , _scale_x              (get_derived_widget<MathSpinButton>(_builder, "scale-x"))
       , _link_scale_content   (get_widget<Gtk::Button>           (_builder, "link-scale-content"))
       , _unsupported_size     (get_widget<Gtk::Label>            (_builder, "unsupported"))
@@ -191,7 +191,7 @@ public:
         create_template_menu();
 
         _preview->set_expand(true);
-        _preview_box.add(*_preview);
+        _preview_box.append(*_preview);
 
         for (auto check : {Check::Border, Check::Shadow, Check::Checkerboard, Check::BorderOnTop, Check::AntiAlias, Check::ClipToPage, Check::PageLabelStyle}) {
             auto checkbutton = &get_checkbutton(check);
@@ -260,7 +260,7 @@ public:
         auto& page_resize = get_widget<Gtk::Button>(_builder, "page-resize");
         page_resize.signal_clicked().connect([=](){ _signal_resize_to_fit.emit(); });
 
-        add(_main_grid);
+        append(_main_grid);
         set_visible(true);
     }
 
@@ -555,8 +555,8 @@ private:
     Gtk::Grid &_left_grid;
     MathSpinButton &_page_width;
     MathSpinButton &_page_height;
-    Gtk::RadioButton &_portrait;
-    Gtk::RadioButton &_landscape;
+    Gtk::CheckButton &_portrait;
+    Gtk::CheckButton &_landscape;
     MathSpinButton &_scale_x;
     Gtk::Button &_link_scale_content;
     Gtk::Label &_unsupported_size;

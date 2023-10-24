@@ -29,7 +29,7 @@
 namespace Gtk {
 class Adjustment;
 class GestureClick;
-class RadioButton;
+class CheckButton;
 } // namespace Gtk
 
 class SPDesktop;
@@ -143,8 +143,7 @@ protected:
     std::unique_ptr<Gtk::Label> type_label[2]; // 'L', 'R', 'M', or empty.
     std::unique_ptr<GradientImage> gradient_preview[2];
     std::unique_ptr<ColorPreview> color_preview[2];
-    Gtk::Box   *type_box[2]; // Wraps one or two of: "type_label", "gradient_preview", "color_preview"
-    RotateableSwatch *swatch[2]; // Wraps "type_box".
+    RotateableSwatch *swatch[2]; // // Wraps one or two of: "type_label", "gradient_preview", "color_preview"
 
     Gtk::Label *stroke_width; // Stroke width
     RotateableStrokeWidth *stroke_width_rotateable;
@@ -218,7 +217,7 @@ protected:
     void make_popup(FillOrStroke i);
 
     std::unique_ptr<UI::Widget::PopoverMenu> _popup_sw;
-    std::vector<Gtk::RadioButton *> _unit_mis;
+    std::vector<Gtk::CheckButton *> _unit_mis;
     void make_popup_units();
     void on_popup_units(Inkscape::Util::Unit const *u);
     void on_popup_preset(int i);

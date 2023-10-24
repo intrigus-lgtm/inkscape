@@ -53,7 +53,6 @@ class ComboBoxText;
 class DrawingArea;
 class Frame;
 class Scale;
-class RadioButton;
 class Box;
 class Label;
 class Entry;

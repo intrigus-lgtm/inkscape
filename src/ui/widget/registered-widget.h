@@ -44,10 +44,6 @@
 
 class SPDocument;
 
-namespace Gtk {
-class RadioButton;
-} // namespace Gtk
-
 namespace Inkscape::UI::Widget {
 
 class Registry;
@@ -309,7 +305,7 @@ public:
                                Inkscape::XML::Node *repr_in = nullptr,
                                SPDocument *doc_in = nullptr);
 
-    // redefine setValue, because transform must be applied
+           // redefine setValue, because transform must be applied
     void setValue(Geom::Point const & p);
 
     void setTransform(Geom::Affine const & canvas_to_svg);

@@ -5,7 +5,7 @@
 /** \file
  * extension parameter for options with multiple predefined value choices
  *
- * Currently implemented as either Gtk::RadioButton or Gtk::ComboBoxText
+ * Currently implemented as either Gtk::CheckButton or Gtk::ComboBoxText
  */
 
 /*

@@ -210,7 +210,7 @@ Glib::RefPtr<PatternItem> create_pattern_item(std::shared_ptr<SPDocument>& sandb
 }
 
 Cairo::RefPtr<Cairo::Surface> PatternManager::get_image(SPPattern* pattern, int width, int height, double device_scale) {
-    if (!pattern) return Cairo::RefPtr<Cairo::Surface>();
+    if (!pattern) return {};
 
     _preview_doc->setWidth(Inkscape::Util::Quantity(width, "px"));
     _preview_doc->setHeight(Inkscape::Util::Quantity(height, "px"));
@@ -218,7 +218,7 @@ Cairo::RefPtr<Cairo::Surface> PatternManager::get_image(SPPattern* pattern, int 
 }
 
 Cairo::RefPtr<Cairo::Surface> PatternManager::get_preview(SPPattern* pattern, int width, int height, unsigned int rgba_background, double device_scale) {
-    if (!pattern) return Cairo::RefPtr<Cairo::Surface>();
+    if (!pattern) return {};
 
     _big_preview_doc->setWidth(Inkscape::Util::Quantity(width, "px"));
     _big_preview_doc->setHeight(Inkscape::Util::Quantity(height, "px"));

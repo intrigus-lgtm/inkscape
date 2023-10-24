@@ -24,7 +24,7 @@
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/iconview.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/checkbutton.h>
 
 #include "document.h"
 #include "selection.h"
@@ -128,7 +128,7 @@ void PaintServersDialog::_buildDialogWindow(char const *const glade_file)
         onPaintClicked(p);
     });
 
-    auto fill_radio = &get_widget<Gtk::RadioButton>(builder, "TargetRadioFill");
+    auto fill_radio = &get_widget<Gtk::CheckButton>(builder, "TargetRadioFill");
     fill_radio->signal_toggled().connect([=]() {
         _targetting_fill = fill_radio->get_active();
         _updateActiveItem();
@@ -491,7 +491,7 @@ void PaintServersDialog::onPaintClicked(Gtk::TreeModel::Path const &path)
 
     bool paint_server_exists = false;
     for (auto const &server : store[CURRENTDOC]->children()) {
-        if (server[columns.id] == id) {
+        if (server[columns.id].operator Glib::ustring() == id) {
             paint_server_exists = true;
             break;
         }
@@ -587,7 +587,7 @@ void PaintServersDialog::_updateActiveItem()
         bool found = false;
         store[current_store]->foreach(
             [&](Gtk::ListStore::Path const &path, Gtk::ListStore::iterator const &icon) -> bool {
-                if ((*icon)[columns.paint] == *common) {
+                if ((*icon)[columns.paint].operator Glib::ustring() == *common) {
                     icon_view->select_path(path);
                     found = true;
                     return true; // Finish iterating

@@ -19,7 +19,7 @@
 #include <vector>
 #include <glibmm/refptr.h>
 #include <gtkmm/box.h>
-#include <gtkmm/checkbutton.h>
+#include <gtkmm/togglebutton.h>
 
 #include "style.h"
 #include "ui/widget/spinbutton.h"
@@ -29,7 +29,6 @@ class Adjustment;
 class Entry;
 class Grid;
 class Label;
-class ToggleButton;
 } // namespace Gtk
 
 class SPDocument;
@@ -71,9 +70,9 @@ private:
      * A custom radio check-button for setting the stroke style.  It can be configured
      * to set either the join or cap style by setting the button_type field.
      */
-    class StrokeStyleButton : public Gtk::CheckButton {
+    class StrokeStyleButton : public Gtk::ToggleButton {
         public:
-            StrokeStyleButton(Gtk::CheckButton      &grp,
+            StrokeStyleButton(Gtk::ToggleButton    *&grp,
                               char const            *icon,
                               StrokeStyleButtonType  button_type,
                               gchar const           *stroke_style);
@@ -105,7 +104,7 @@ private:
     void setScaledDash(SPCSSAttr *css, int ndash, const double *dash, double offset, double scale);
     bool isHairlineSelected() const;
 
-    StrokeStyleButton * makeRadioButton(Gtk::CheckButton      &grp,
+    StrokeStyleButton * makeRadioButton(Gtk::ToggleButton    *&grp,
                                         char const            *icon,
                                         Gtk::Box              *hb,
                                         StrokeStyleButtonType  button_type,

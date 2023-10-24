@@ -31,6 +31,7 @@
 #include <gtkmm/label.h>
 #include <gtkmm/menubutton.h>
 #include <gtkmm/spinbutton.h>
+#include <gtkmm/togglebutton.h>
 #include <gtkmm/window.h>
 
 #include "helper/stock-items.h"
@@ -101,9 +102,9 @@ MarkerComboBox::MarkerComboBox(Glib::ustring id, int l) :
     _offset_x(get_widget<Gtk::SpinButton>(_builder, "offset-x")),
     _offset_y(get_widget<Gtk::SpinButton>(_builder, "offset-y")),
     _input_grid(get_widget<Gtk::Grid>(_builder, "input-grid")),
-    _orient_auto_rev(get_widget<Gtk::RadioButton>(_builder, "orient-auto-rev")),
-    _orient_auto(get_widget<Gtk::RadioButton>(_builder, "orient-auto")),
-    _orient_angle(get_widget<Gtk::RadioButton>(_builder, "orient-angle")),
+    _orient_auto_rev(get_widget<Gtk::ToggleButton>(_builder, "orient-auto-rev")),
+    _orient_auto(get_widget<Gtk::ToggleButton>(_builder, "orient-auto")),
+    _orient_angle(get_widget<Gtk::ToggleButton>(_builder, "orient-angle")),
     _orient_flip_horz(get_widget<Gtk::Button>(_builder, "btn-horz-flip")),
     _current_img(get_widget<Gtk::Image>(_builder, "current-img")),
     _edit_marker(get_widget<Gtk::Button>(_builder, "edit-marker"))
@@ -134,7 +135,7 @@ MarkerComboBox::MarkerComboBox(Glib::ustring id, int l) :
         auto const image = Gtk::make_managed<Gtk::Image>(item->pix);
         image->set_visible(true);
         auto const box = Gtk::make_managed<Gtk::FlowBoxChild>();
-        box->add(*image);
+        box->set_child(*image);
         if (item->separator) {
             image->set_sensitive(false);
             image->set_focusable(false);
@@ -290,8 +291,7 @@ void MarkerComboBox::update_widgets_from_marker(SPMarker* marker) {
 }
 
 void MarkerComboBox::update_scale_link() {
-    _link_scale.remove();
-    _link_scale.add(get_widget<Gtk::Image>(_builder, _scale_linked ? "image-linked" : "image-unlinked"));
+    _link_scale.set_child(get_widget<Gtk::Image>(_builder, _scale_linked ? "image-linked" : "image-unlinked"));
 }
 
 // update marker image inside the menu button
@@ -375,7 +375,7 @@ SPMarker* MarkerComboBox::get_current() const {
 void MarkerComboBox::set_active(Glib::RefPtr<MarkerItem> item) {
     bool selected = false;
     if (item) {
-        _marker_list.foreach([=,&selected](Gtk::Widget& widget){
+        UI::for_each_child(_marker_list, [=, &selected] (Gtk::Widget &widget) {
             if (auto box = dynamic_cast<Gtk::FlowBoxChild*>(&widget)) {
                 if (auto marker = _widgets_to_markers[box->get_child()]) {
                     if (*marker.get() == *item.get()) {
@@ -384,6 +384,7 @@ void MarkerComboBox::set_active(Glib::RefPtr<MarkerItem> item) {
                     }
                 }
             }
+            return UI::ForEachResult::_continue;
         });
     }
 
@@ -762,7 +763,7 @@ MarkerComboBox::create_marker_image(Geom::IntPoint pixel_size, gchar const *mnam
 }
 
 // capture background color when styles change
-void MarkerComboBox::on_style_updated() {
+void MarkerComboBox::css_changed(GtkCssStyleChange *) {
     auto background = _background_color;
     if (auto wnd = dynamic_cast<Gtk::Window*>(this->get_root())) {
         auto const color = get_color_with_class(*wnd, "theme_bg_color");

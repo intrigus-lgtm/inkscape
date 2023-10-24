@@ -244,14 +244,13 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
             Inkscape::Preferences::get()->setBool(_prefs + _pref_wheel_visibility, visible);
         });
 
-        wheel_frame->add(*_wheel);
-        add(*wheel_frame);
+        wheel_frame->set_child(*_wheel);
+        append(*wheel_frame);
     }
 
     /* Create sliders */
     auto const grid = Gtk::make_managed<Gtk::Grid>();
-    grid->set_visible(true);
-    add(*grid);
+    append(*grid);
 
     for (gint i = 0; i < 5; i++) {
         /* Label */

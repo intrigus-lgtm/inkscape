@@ -16,6 +16,7 @@
 #include <memory>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
+#include <gtkmm/label.h>
 #include <gtkmm/switch.h>
 #include <gtkmm/widget.h>
 

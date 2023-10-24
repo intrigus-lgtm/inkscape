@@ -77,7 +77,7 @@ SimpleFilterModifier::SimpleFilterModifier(int flags)
     _flags = flags;
 
     if (flags & BLEND) {
-        add(_hb_blend);
+        append(_hb_blend);
         _lb_blend.set_use_underline();
         _hb_blend.set_halign(Gtk::Align::END);
         _hb_blend.set_valign(Gtk::Align::CENTER);
@@ -105,11 +105,11 @@ SimpleFilterModifier::SimpleFilterModifier(int flags)
     }
 
     if (flags & BLUR) {
-       add(_blur);
+       append(_blur);
     }
 
     if (flags & OPACITY) {
-        add(_opacity);
+        append(_opacity);
     }
 
     _blend.signal_changed().connect(signal_blend_changed());

@@ -30,6 +30,7 @@ class ustring;
 namespace Gtk {
 class Adjustment;
 class Box;
+class CheckButton;
 class ComboBox;
 class Grid;
 class Notebook;
@@ -101,7 +102,7 @@ protected:
 
     void apply();
     void change_selection(Inkscape::Selection *selection);
-    void checkbox_toggled(Gtk::ToggleButton   *tb,
+    void checkbox_toggled(Gtk::CheckButton    *tb,
                           Glib::ustring const &attr);
     void do_pick_toggled();
     void external_change();
@@ -110,7 +111,7 @@ protected:
     void keep_bbox_toggled();
     void on_remove_button_clicked() {remove();}
     void pick_switched(PickType);
-    void pick_to(Gtk::ToggleButton   *tb,
+    void pick_to(Gtk::CheckButton   *tb,
                  Glib::ustring const &pref);
     void remove(bool do_undo = true);
     void reset();

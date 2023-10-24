@@ -300,13 +300,23 @@ void GuidelinePropertiesDialog::_setup() {
     _locked_toggle.set_active(_guide->getLocked());
 
     // This results in the dialog closing when entering a value in one of the spinbuttons and pressing enter (see LP bug 484187)
-    auto sbx = dynamic_cast<UI::Widget::SpinButton *>(_spin_button_x.getWidget());
-    auto sby = dynamic_cast<UI::Widget::SpinButton *>(_spin_button_y.getWidget());
-    auto sba = dynamic_cast<UI::Widget::SpinButton *>(_spin_button_y.getWidget());
+    auto register_enter_handler = [this] (Gtk::Widget *widget) {
+        auto sb = dynamic_cast<UI::Widget::SpinButton *>(widget);
+        if (!sb) {
+            return;
+        }
+        auto controller = Gtk::EventControllerKey::create();
+        controller->signal_key_pressed().connect([this] (unsigned, unsigned, Gdk::ModifierType) {
+            on_sb_activate();
+            return true;
+        }, true);
+        controller->set_propagation_phase(Gtk::PropagationPhase::BUBBLE);
+        sb->add_controller(controller);
+    };
 
-    if(sbx) sbx->signal_activate().connect(sigc::mem_fun(*this, &GuidelinePropertiesDialog::on_sb_activate));
-    if(sby) sby->signal_activate().connect(sigc::mem_fun(*this, &GuidelinePropertiesDialog::on_sb_activate));
-    if(sba) sba->signal_activate().connect(sigc::mem_fun(*this, &GuidelinePropertiesDialog::on_sb_activate));
+    register_enter_handler(_spin_button_x.getWidget());
+    register_enter_handler(_spin_button_y.getWidget());
+    register_enter_handler(_spin_button_y.getWidget());
 
     // dialog
     set_default_response(Gtk::ResponseType::OK);
@@ -352,7 +362,8 @@ void GuidelinePropertiesDialog::_setup() {
         _spin_angle.grabFocusAndSelectEntry();
     }
 
-    set_position(Gtk::WIN_POS_MOUSE);
+    // Ability seems removed in gtk4?
+    // set_position(Gtk::WIN_POS_MOUSE);
 
     set_modal(true);
     _desktop->setWindowTransient (gobj());

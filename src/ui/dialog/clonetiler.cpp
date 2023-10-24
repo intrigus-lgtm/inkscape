@@ -2516,7 +2516,7 @@ Gtk::Box * CloneTiler::new_tab(Gtk::Notebook *nb, const gchar *label)
     return vb;
 }
 
-void CloneTiler::checkbox_toggled(Gtk::ToggleButton   *tb,
+void CloneTiler::checkbox_toggled(Gtk::CheckButton    *tb,
                                   const Glib::ustring &attr)
 {
     auto prefs = Inkscape::Preferences::get();
@@ -2621,7 +2621,7 @@ void CloneTiler::keep_bbox_toggled()
     prefs->setBool(prefs_path + "keepbbox", _cb_keep_bbox->get_active());
 }
 
-void CloneTiler::pick_to(Gtk::ToggleButton *tb, Glib::ustring const &pref)
+void CloneTiler::pick_to(Gtk::CheckButton *tb, Glib::ustring const &pref)
 {
     auto prefs = Inkscape::Preferences::get();
     prefs->setBool(prefs_path + pref, tb->get_active());
@@ -2681,7 +2681,7 @@ Gtk::Grid * CloneTiler::table_x_y_rand(int values)
     {
 	auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 0);
 
-        auto i = Glib::wrap(sp_get_icon_image("object-rows", GTK_ICON_SIZE_MENU));
+        auto i = sp_get_icon_image("object-rows", Gtk::IconSize::NORMAL); // Previously GTK_ICON_SIZE_MENU
         UI::pack_start(*hb, *i, false, false, 2);
 
         auto const l = Gtk::make_managed<Gtk::Label>("");
@@ -2694,7 +2694,7 @@ Gtk::Grid * CloneTiler::table_x_y_rand(int values)
     {
 	auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 0);
 
-        auto i = Glib::wrap(sp_get_icon_image("object-columns", GTK_ICON_SIZE_MENU));
+        auto i = sp_get_icon_image("object-columns", Gtk::IconSize::NORMAL); // Previously GTK_ICON_SIZE_MENU
         UI::pack_start(*hb, *i, false, false, 2);
 
         auto const l = Gtk::make_managed<Gtk::Label>("");

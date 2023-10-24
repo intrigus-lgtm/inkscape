@@ -163,9 +163,10 @@ void show_about()
         license->set_markup(str.c_str());
 
         // Connect the key event to the on_key_pressed function
-        auto const controller = gtk_event_controller_key_new(GTK_WIDGET(window->gobj()));
+        auto const controller = gtk_event_controller_key_new();
+        gtk_widget_add_controller(GTK_WIDGET(window->gobj()), controller);
         g_signal_connect(controller, "key-pressed", G_CALLBACK(on_key_pressed), window);
-     }
+    }
 
     if (window) {
         window->set_visible(true);

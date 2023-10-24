@@ -13,7 +13,7 @@
  *   Abhishek Sharma
  *   Mike Kowalski
  *
- * Copyright (C) 1999-2006 Authors
+ * Copyright (C) l99-2006 Authors
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  *
  */
@@ -69,15 +69,15 @@ namespace {
  */
 void paned_set_vertical(Gtk::Paned &paned, bool vertical)
 {
-    auto& first = *paned.get_child1();
-    auto& second = *paned.get_child2();
+    auto& first = *paned.get_start_child();
+    auto& second = *paned.get_end_child();
     const int space = 1;
-    paned.child_property_resize(first) = vertical;
+    paned.set_resize_start_child(vertical);
     first.set_margin_bottom(vertical ? space : 0);
     first.set_margin_end(vertical ? 0 : space);
     second.set_margin_top(vertical ? space : 0);
     second.set_margin_start(vertical ? 0 : space);
-    assert(paned.child_property_resize(second));
+    paned.set_resize_end_child(!vertical);
     paned.set_orientation(vertical ? Gtk::Orientation::VERTICAL : Gtk::Orientation::HORIZONTAL);
 }
 
@@ -106,7 +106,7 @@ XmlTree::XmlTree()
 
     Gtk::ScrolledWindow& tree_scroller = get_widget<Gtk::ScrolledWindow>(_builder, "tree-wnd");
     _treemm = Gtk::manage(Glib::wrap(GTK_TREE_VIEW(tree)));
-    tree_scroller.add(*Gtk::manage(Glib::wrap(GTK_WIDGET(tree))));
+    tree_scroller.set_child(*Gtk::manage(Glib::wrap(GTK_WIDGET(tree))));
     fix_inner_scroll(&tree_scroller);
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
@@ -120,7 +120,8 @@ XmlTree::XmlTree()
     attributes->get_scrolled_window().set_has_frame(true);
     attributes->set_visible(true);
     attributes->get_status_box().set_visible(false);
-    _paned.pack2(*attributes, true, false);
+    _paned.set_end_child(*attributes);
+    _paned.set_resize_end_child(true);
 
     /* Signal handlers */
     _treemm->get_selection()->signal_changed().connect([=]() {
@@ -157,7 +158,7 @@ XmlTree::XmlTree()
     UI::pack_start(*this, get_widget<Gtk::Box>(_builder, "main"), true, true);
 
     int min_width = 0, dummy;
-    get_preferred_width(min_width, dummy);
+    measure(Gtk::Orientation::HORIZONTAL, -1, min_width, dummy, dummy, dummy);
 
     auto auto_arrange_panels = [=](Gtk::Allocation const &alloc) {
         // skip bogus sizes
@@ -201,7 +202,7 @@ XmlTree::XmlTree()
         }
         tooltip->set_text(tip);
         return true;
-    });
+    }, true);
     UI::menuize_popover(*popup.get_popover());
 
     auto set_layout = [=](DialogLayout layout){

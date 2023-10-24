@@ -104,7 +104,7 @@ SpellCheck::SpellCheck()
 {
     _prefs = Inkscape::Preferences::get();
 
-    banner_hbox.add(banner_label);
+    banner_hbox.set_child(banner_label);
 
     if (_langs.empty()) {
         _langs = get_available_langs();
@@ -117,7 +117,7 @@ SpellCheck::SpellCheck()
     scrolled_window.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     scrolled_window.set_has_frame(true);
     scrolled_window.set_size_request(120, 96);
-    scrolled_window.add(tree_view);
+    scrolled_window.set_child(tree_view);
 
     model = Gtk::ListStore::create(tree_columns);
     tree_view.set_model(model);
@@ -150,8 +150,8 @@ SpellCheck::SpellCheck()
     UI::pack_start(changebutton_vbox, ignore_button, false, false);
     UI::pack_start(changebutton_vbox, add_button, false, false);
 
-    suggestion_hbox.pack_start (scrolled_window, true, true, 4);
-    suggestion_hbox.pack_end (changebutton_vbox, false, false, 0);
+    UI::pack_start(suggestion_hbox, scrolled_window, true, true, 4);
+    UI::pack_end(suggestion_hbox, changebutton_vbox, false, false, 0);
 
     stop_button.set_tooltip_text(_("Stop the check"));
     start_button.set_tooltip_text(_("Start the check"));
@@ -159,8 +159,8 @@ SpellCheck::SpellCheck()
     actionbutton_hbox.set_halign(Gtk::Align::END);
     actionbutton_hbox.set_homogeneous(true);
     actionbutton_hbox.set_spacing(4);
-    actionbutton_hbox.add(stop_button);
-    actionbutton_hbox.add(start_button);
+    actionbutton_hbox.append(stop_button);
+    actionbutton_hbox.append(start_button);
 
     /*
      * Main dialog

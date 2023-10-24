@@ -184,7 +184,7 @@ FillAndStroke::_createPageTabLabel(const Glib::ustring& label, const char *label
     auto const _tab_label_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
 
     auto img = Gtk::manage(sp_get_icon_image(label_image, Gtk::IconSize::NORMAL));
-    _tab_label_box->add(*img);
+    _tab_label_box->append(*img);
 
     auto const _tab_label = Gtk::make_managed<Gtk::Label>(label, true);
     _tab_label_box->append(*_tab_label);

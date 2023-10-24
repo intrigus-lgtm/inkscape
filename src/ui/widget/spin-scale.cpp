@@ -134,9 +134,9 @@ DualSpinScale::DualSpinScale(Glib::ustring label1, Glib::ustring label2,
     _link.signal_clicked().connect(sigc::mem_fun(*this, &DualSpinScale::link_toggled));
 
     auto const vb = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
-    vb->add(_s1);
+    vb->append(_s1);
     _s1.set_margin_bottom(3);
-    vb->add(_s2);
+    vb->append(_s2);
     UI::pack_start(*this, *vb);
     UI::pack_start(*this, _link, false, false);
     set_link_active(true);

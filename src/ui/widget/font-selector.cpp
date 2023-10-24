@@ -32,15 +32,6 @@
 
 namespace Inkscape::UI::Widget {
 
-[[nodiscard]] static auto const &get_target_entries()
-{
-    static std::vector<Gtk::TargetEntry> const target_entries{
-        Gtk::TargetEntry{"STRING"    , {}, 0},
-        Gtk::TargetEntry{"text/plain", {}, 0},
-    };
-    return target_entries;
-}
-
 FontSelector::FontSelector (bool with_size, bool with_variations)
     : Gtk::Grid ()
     , family_frame (_("Font family"))

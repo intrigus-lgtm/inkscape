@@ -192,6 +192,12 @@ auto const_wrap(T const *p, bool take_copy = false)
     return std::shared_ptr<wrapped_T const>(std::move(unconst_wrapped));
 }
 
+/**
+ * Convert an image surface in ARGB32 format to a texture.
+ * The texture shares data with the surface, so the surface shouldn't modified afterwards.
+ */
+Glib::RefPtr<Gdk::Texture> to_texture(Cairo::RefPtr<Cairo::Surface> const &surface);
+
 #endif // UI_UTIL_SEEN
 
 /*

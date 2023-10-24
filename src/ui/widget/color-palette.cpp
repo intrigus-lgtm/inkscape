@@ -18,6 +18,7 @@
 #include <gtkmm/button.h>
 #include <gtkmm/flowbox.h>
 #include <gtkmm/flowboxchild.h>
+#include <gtkmm/label.h>
 #include <gtkmm/menubutton.h>
 #include <gtkmm/popover.h>
 #include <gtkmm/checkbutton.h>
@@ -69,7 +70,7 @@ ColorPalette::ColorPalette():
     _normal_box.set_filter_func([](Gtk::FlowBoxChild*){ return true; });
 
     auto& box = get_widget<Gtk::Box>(_builder, "palette-box");
-    this->add(box);
+    append(box);
 
     auto [menu, config] = make_menu(*this);
     _menu = std::move(menu);
@@ -601,10 +602,11 @@ void ColorPalette::set_colors(std::vector<Dialog::ColorItem*> const &swatches)
             _normal_items.emplace_back(item);
         }
         item->signal_modified().connect([=] {
-            item->get_parent()->foreach([=](Gtk::Widget& w) {
+            UI::for_each_child(*item->get_parent(), [=](Gtk::Widget& w) {
                 if (auto label = dynamic_cast<Gtk::Label *>(&w)) {
                     label->set_text(item->get_description());
                 }
+                return UI::ForEachResult::_continue;
             });
         });
     }
@@ -620,8 +622,8 @@ Gtk::Widget *ColorPalette::_get_widget(Dialog::ColorItem *item) {
         item->set_valign(Gtk::Align::CENTER);
         auto const box = Gtk::make_managed<Gtk::Box>();
         auto const label = Gtk::make_managed<Gtk::Label>(item->get_description());
-        box->add(*item);
-        box->add(*label);
+        box->append(*item);
+        box->append(*label);
         return box;
     }
     return Gtk::manage(item);
@@ -644,10 +646,10 @@ void ColorPalette::rebuild_widgets()
         // in a list mode with labels, do not show fillers:
         if (_show_labels && item->is_filler()) continue;
 
-        _normal_box.add(*_get_widget(item));
+        _normal_box.append(*_get_widget(item));
     }
     for (auto item : _pinned_items) {
-        _pinned_box.add(*_get_widget(item));
+        _pinned_box.append(*_get_widget(item));
     }
 
     set_up_scrolling();

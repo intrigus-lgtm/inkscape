@@ -25,6 +25,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <sigc++/bind.h>
 #include <glibmm/regex.h>
 
 #include "style-internal.h"

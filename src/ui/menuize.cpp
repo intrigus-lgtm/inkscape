@@ -19,7 +19,6 @@
 #include <giomm/menumodel.h>
 #include <gdkmm/display.h>
 #include <gdkmm/seat.h>
-#include <gdkmm/window.h>
 #include <gtkmm/eventcontroller.h>
 #include <gtkmm/popovermenu.h>
 #include <gtkmm/widget.h>
@@ -36,8 +35,8 @@ namespace Inkscape::UI {
 [[nodiscard]] static bool pointer_has_moved(Gtk::Widget const &widget)
 {
     static std::optional<double> old_x, old_y;
-    auto &window = dynamic_cast<Gtk::Window const &>(*widget.get_toplevel());
-    auto const surface = window.get_window();
+    auto &window = dynamic_cast<Gtk::Window const &>(*widget.get_root());
+    auto const surface = window.get_surface();
     auto const device = surface->get_display()->get_default_seat()->get_pointer();
     double new_x{}, new_y{}; Gdk::ModifierType state{};
     surface->get_device_position(device, new_x, new_y, state);

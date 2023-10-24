@@ -26,6 +26,7 @@ namespace Gtk {
 class Builder;
 class Button;
 class FlowBox;
+class Popover;
 class ScrolledWindow;
 } // namespace Gtk
 

@@ -22,6 +22,8 @@
 #include "helper/auto-connection.h"
 #include "ui/selected-color.h"
 
+namespace Gtk { class Label; }
+
 namespace Inkscape::UI::Widget {
 
 class ColorSlider;

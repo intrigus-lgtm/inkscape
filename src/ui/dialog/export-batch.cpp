@@ -47,6 +47,7 @@
 #include "ui/widget/color-picker.h"
 #include "ui/widget/export-lists.h"
 #include "ui/widget/export-preview.h"
+#include "util/units.h"
 
 namespace Inkscape::UI::Dialog {
 

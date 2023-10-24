@@ -170,7 +170,7 @@ void PopoverMenu::check_child_invariants()
 void PopoverMenu::set_scrolled_window_size()
 {
     static constexpr int padding = 16; // Spare some window size for border etc.
-    auto &window = dynamic_cast<Gtk::Window const &>(*get_toplevel());
+    auto &window = dynamic_cast<Gtk::Window const &>(*get_root());
     _scrolled_window.set_max_content_width (window.get_width () - 2 * padding);
     _scrolled_window.set_max_content_height(window.get_height() - 2 * padding);
 }

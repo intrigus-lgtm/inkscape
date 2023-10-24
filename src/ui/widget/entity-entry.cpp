@@ -146,7 +146,7 @@ EntityMultiLineEntry::EntityMultiLineEntry (rdf_work_entity_t* ent, Registry& wr
     _v.set_size_request (-1, 35);
     _v.set_wrap_mode (Gtk::WrapMode::WORD);
     _v.set_accepts_tab (false);
-    s->add (_v);
+    s->set_child(_v);
     _v.set_tooltip_text (_(ent->tip));
     _changed_connection = _v.get_buffer()->signal_changed().connect (sigc::mem_fun (*this, &EntityMultiLineEntry::on_changed));
 }

@@ -220,7 +220,7 @@ AttrDialog::AttrDialog()
         _popover->popdown();
     });
 
-    _popover->set_relative_to(*this);
+    _popover->set_parent(*this);
     _popover->signal_closed().connect([this]{ popClosed(); });
     Controller::add_key<&AttrDialog::onPopoverKeyPressed>(*_popover, *this, Gtk::PropagationPhase::CAPTURE);
 

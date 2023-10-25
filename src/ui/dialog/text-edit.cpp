@@ -123,9 +123,9 @@ TextEdit::TextEdit()
     g_assert(text_buffer);
 
     UI::pack_start(*font_box, font_selector, true, true);
-    font_box->reorder_child(font_selector, 2);
+    font_box->reorder_child_after(font_selector, *font_box->get_first_child()->get_next_sibling());
     UI::pack_start(*feat_box, font_features, true, true);
-    feat_box->reorder_child(font_features, 1);
+    feat_box->reorder_child_after(font_features, *feat_box->get_first_child());
 
     // filter_popover->set_modal(false); // Stay open until button clicked again.
     filter_popover.signal_show().connect([=](){
@@ -133,8 +133,7 @@ TextEdit::TextEdit()
         display_font_collections();
     }, false);
 
-    filter_menu_button.set_image_from_icon_name(INKSCAPE_ICON("font_collections"));
-    filter_menu_button.set_always_show_image(true);
+    filter_menu_button.set_icon_name(INKSCAPE_ICON("font_collections"));
     filter_menu_button.set_label(_("Collections"));
 
 #ifdef WITH_GSPELL
@@ -148,7 +147,7 @@ TextEdit::TextEdit()
     gspell_text_view_basic_setup(gspell_view);
 #endif
 
-    add(*contents);
+    append(*contents);
 
     /* Signal handlers */
     Controller::add_key<&TextEdit::captureUndo, nullptr>(text_view, *this);
@@ -510,7 +509,7 @@ void TextEdit::display_font_collections()
         });
         auto const row = Gtk::make_managed<Gtk::ListBoxRow>();
         row->set_focusable(false);
-        row->add(*btn);
+        row->set_child(*btn);
         collections_list.append(*row);
     }
 
@@ -519,7 +518,7 @@ void TextEdit::display_font_collections()
     sep->set_margin_bottom(2);
     auto const sep_row = Gtk::make_managed<Gtk::ListBoxRow>();
     sep_row->set_focusable(false);
-    sep_row->add(*sep);
+    sep_row->set_child(*sep);
     collections_list.append(*sep_row);
 
     // Insert user collections.
@@ -533,7 +532,7 @@ void TextEdit::display_font_collections()
         });
         auto const row = Gtk::make_managed<Gtk::ListBoxRow>();
         row->set_focusable(false);
-        row->add(*btn);
+        row->set_child(*btn);
         collections_list.append(*row);
     }
 }

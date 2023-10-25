@@ -74,10 +74,10 @@ FilletChamferPropertiesDialog::FilletChamferPropertiesDialog()
     UI::pack_start(*mainVBox, _fillet_chamfer_type_inverse_chamfer, true, true, 4);
 
 
-    _close_button.set_can_default();
+    _close_button.set_receives_default();
 
     _apply_button.set_use_underline(true);
-    _apply_button.set_can_default();
+    _apply_button.set_receives_default();
 
     _close_button.signal_clicked()
         .connect(sigc::mem_fun(*this, &FilletChamferPropertiesDialog::_close));
@@ -85,14 +85,12 @@ FilletChamferPropertiesDialog::FilletChamferPropertiesDialog()
     _apply_button.signal_clicked()
         .connect(sigc::mem_fun(*this, &FilletChamferPropertiesDialog::_apply));
 
-    signal_delete_event().connect(sigc::bind_return(
-                                      sigc::hide(sigc::mem_fun(*this, &FilletChamferPropertiesDialog::_close)),
-                                      true));
+    signal_close_request().connect([this] { _close(); return true; }, true);
 
     add_action_widget(_close_button, Gtk::ResponseType::CLOSE);
     add_action_widget(_apply_button, Gtk::ResponseType::APPLY);
 
-    _apply_button.grab_default();
+    set_default_widget(_apply_button);
 
     set_focus(_fillet_chamfer_position_numeric);
 }

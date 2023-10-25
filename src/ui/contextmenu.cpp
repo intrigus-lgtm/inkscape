@@ -93,7 +93,7 @@ void show_all_images(Gtk::Widget &parent)
     Inkscape::UI::for_each_descendant(parent, [=](Gtk::Widget &child)
     {
         if (auto const image = dynamic_cast<Gtk::Image *>(&child);
-            image && image->get_storage_type() != Gtk::IMAGE_EMPTY)
+            image && image->get_storage_type() != Gtk::Image::Type::EMPTY)
         {
             image->set_visible(true);
         }
@@ -337,8 +337,8 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
 
     auto const widget = desktop->getDesktopWidget();
     g_assert(widget);
-    set_relative_to(*widget);
-    bind_model(gmenu);
+    set_parent(*widget);
+    set_menu_model(gmenu);
     set_position(Gtk::PositionType::BOTTOM);
     show_all_images(*this);
     Inkscape::UI::menuize_popover(*this);

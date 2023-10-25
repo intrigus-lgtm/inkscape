@@ -113,9 +113,7 @@ static void add(Gtk::Box &box, PackType const pack_type, Gtk::Widget &child)
                                              { starts.erase(removed_child); });
     }
 
-    box.add(child);
-    auto const position = starts.size();
-    box.reorder_child(child, position);
+    box.append(child);
     if (pack_type == PackType::start) starts.insert(&child);
 }
 

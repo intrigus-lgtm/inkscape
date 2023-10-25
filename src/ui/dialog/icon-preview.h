@@ -35,6 +35,7 @@ class Timer;
 } // namespace Glib
 
 namespace Gtk {
+class CheckButton;
 class ToggleButton;
 } // namespace Gtk
 
@@ -43,6 +44,24 @@ namespace Inkscape {
 class Drawing;
 
 namespace UI::Dialog {
+
+/**
+ * A widget that draws a pixelated magnified view of an image.
+ */
+class Magnifier : public Gtk::Widget
+{
+public:
+    void set(Glib::RefPtr<Gdk::Texture> const &texture)
+    {
+        _texture = texture;
+        queue_draw();
+    }
+
+    void snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &snapshot) override;
+
+private:
+    Glib::RefPtr<Gdk::Texture> _texture;
+};
 
 /**
  * A panel that displays an icon preview
@@ -74,12 +93,12 @@ private:
     int hot;
     std::vector<int> sizes;
 
-    Gtk::Image      magnified;
+    Magnifier       magnified;
     Gtk::Label      magLabel;
 
-    Gtk::ToggleButton     *selectionButton;
+    Gtk::CheckButton     *selectionButton;
 
-    std::vector<std::vector<unsigned char>> pixMem;
+    std::vector<Glib::RefPtr<Gdk::Texture>> textures;
     std::vector<Gtk::Image *> images;
     std::vector<Glib::ustring> labels;
     std::vector<Gtk::ToggleButton *> buttons;

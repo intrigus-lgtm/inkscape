@@ -22,6 +22,7 @@
 #include <glibmm/main.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/frame.h>
+#include <gtkmm/snapshot.h>
 #include <gtkmm/togglebutton.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
@@ -35,14 +36,8 @@
 #include "display/drawing.h"
 #include "object/sp-root.h"
 #include "ui/pack.h"
+#include "ui/util.h"
 #include "ui/widget/frame.h"
-
-extern "C" {
-// takes doc, drawing, icon, and icon name to produce pixels
-guchar *
-sp_icon_doc_icon( SPDocument *doc, Inkscape::Drawing &drawing,
-                  const gchar *name, unsigned int psize, unsigned &stride);
-} // extern "C"
 
 #define noICON_VERBOSE 1
 
@@ -105,8 +100,6 @@ IconPreviewPanel::IconPreviewPanel()
         sizes[3] = 48;
         sizes[4] = 128;
     }
-
-    pixMem .resize(sizes.size());
     images .resize(sizes.size());
     labels .resize(sizes.size());
     buttons.resize(sizes.size());
@@ -131,11 +124,8 @@ IconPreviewPanel::IconPreviewPanel()
     int previous = 0;
     int avail = 0;
     for (auto i = sizes.size(); i-- > 0;) {
-        int stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, sizes[i]);
-        pixMem[i].resize(sizes[i] * stride);
-        auto const pb = Gdk::Pixbuf::create_from_data(pixMem[i].data(),
-            Gdk::Colorspace::RGB, true, 8, sizes[i], sizes[i], stride);
-        images[i] = Gtk::make_managed<Gtk::Image>(pb);
+        images[i] = Gtk::make_managed<Gtk::Image>();
+        images[i]->set_size_request(sizes[i], sizes[i]);
 
         auto const &label = labels[i];
 
@@ -146,10 +136,10 @@ IconPreviewPanel::IconPreviewPanel()
 
         if ( prefs->getBool("/iconpreview/showFrames", true) ) {
             auto const frame = Gtk::make_managed<Gtk::Frame>();
-            frame->add(*images[i]);
-            buttons[i]->add(*frame);
+            frame->set_child(*images[i]);
+            buttons[i]->set_child(*frame);
         } else {
-            buttons[i]->add(*images[i]);
+            buttons[i]->set_child(*images[i]);
         }
 
         buttons[i]->set_tooltip_text(label);
@@ -193,16 +183,20 @@ IconPreviewPanel::IconPreviewPanel()
     }
 
     UI::pack_start(iconBox, splitter);
-    splitter.pack1( *magBox, true, false );
+    splitter.set_start_child(*magBox);
+    splitter.set_resize_start_child();
+    splitter.set_shrink_start_child(false);
     auto const actuals = Gtk::make_managed<UI::Widget::Frame>(_("Actual Size:"));
     actuals->set_margin(4);
     actuals->add(*verts);
-    splitter.pack2( *actuals, false, false );
+    splitter.set_end_child(*actuals);
+    splitter.set_resize_start_child(false);
+    splitter.set_shrink_start_child(false);
 
     selectionButton = Gtk::make_managed<Gtk::CheckButton>(C_("Icon preview window", "Sele_ction"), true);
     UI::pack_start(*magBox,  *selectionButton, UI::PackOptions::shrink );
     selectionButton->set_tooltip_text(_("Selection only or whole document"));
-    selectionButton->signal_clicked().connect( sigc::mem_fun(*this, &IconPreviewPanel::modeToggled) );
+    selectionButton->signal_toggled().connect( sigc::mem_fun(*this, &IconPreviewPanel::modeToggled) );
 
     int const val = prefs->getBool("/iconpreview/selectionOnly");
     selectionButton->set_active( val != 0 );
@@ -374,18 +368,17 @@ void IconPreviewPanel::modeToggled()
     refreshPreview();
 }
 
-void overlayPixels(guchar *px, int width, int height, int stride,
-                            unsigned r, unsigned g, unsigned b)
+static void overlayPixels(unsigned char *px, int width, int height, int stride, unsigned r, unsigned g, unsigned b)
 {
     int bytesPerPixel = 4;
     int spacing = 4;
     for ( int y = 0; y < height; y += spacing ) {
-        guchar *ptr = px + y * stride;
+        auto ptr = px + y * stride;
         for ( int x = 0; x < width; x += spacing ) {
+            *(ptr++) = 0xff;
             *(ptr++) = r;
             *(ptr++) = g;
             *(ptr++) = b;
-            *(ptr++) = 0xff;
 
             ptr += bytesPerPixel * (spacing - 1);
         }
@@ -393,164 +386,148 @@ void overlayPixels(guchar *px, int width, int height, int stride,
 
     if ( width > 1 && height > 1 ) {
         // point at the last pixel
-        guchar *ptr = px + ((height-1) * stride) + ((width - 1) * bytesPerPixel);
+        auto ptr = px + ((height-1) * stride) + ((width - 1) * bytesPerPixel);
 
         if ( width > 2 ) {
-            px[4] = r;
-            px[5] = g;
-            px[6] = b;
-            px[7] = 0xff;
+            px[4] = 0xff;
+            px[5] = r;
+            px[6] = g;
+            px[7] = b;
 
-            ptr[-12] = r;
-            ptr[-11] = g;
-            ptr[-10] = b;
-            ptr[-9] = 0xff;
+            ptr[-12] = 0xff;
+            ptr[-11] = r;
+            ptr[-10] = g;
+            ptr[-9]  = b;
         }
 
-        ptr[-4] = r;
-        ptr[-3] = g;
-        ptr[-2] = b;
-        ptr[-1] = 0xff;
+        ptr[-4] = 0xff;
+        ptr[-3] = r;
+        ptr[-2] = g;
+        ptr[-1] = b;
 
-        px[0 + stride] = r;
-        px[1 + stride] = g;
-        px[2 + stride] = b;
-        px[3 + stride] = 0xff;
+        px[0 + stride] = 0xff;
+        px[1 + stride] = r;
+        px[2 + stride] = g;
+        px[3 + stride] = b;
 
-        ptr[0 - stride] = r;
-        ptr[1 - stride] = g;
-        ptr[2 - stride] = b;
-        ptr[3 - stride] = 0xff;
+        ptr[0 - stride] = 0xff;
+        ptr[1 - stride] = r;
+        ptr[2 - stride] = g;
+        ptr[3 - stride] = b;
 
         if ( height > 2 ) {
-            ptr[0 - stride * 3] = r;
-            ptr[1 - stride * 3] = g;
-            ptr[2 - stride * 3] = b;
-            ptr[3 - stride * 3] = 0xff;
+            ptr[0 - stride * 3] = 0xff;
+            ptr[1 - stride * 3] = r;
+            ptr[2 - stride * 3] = g;
+            ptr[3 - stride * 3] = b;
         }
     }
 }
 
 // takes doc, drawing, icon, and icon name to produce pixels
-extern "C" guchar *
-sp_icon_doc_icon( SPDocument *doc, Inkscape::Drawing &drawing,
-                  gchar const *name, unsigned psize,
-                  unsigned &stride)
+static Cairo::RefPtr<Cairo::ImageSurface> sp_icon_doc_icon(SPDocument *doc, Drawing &drawing, char const *name, unsigned psize)
 {
+    if (!doc) {
+        return nullptr;
+    }
+
+    auto const item = cast<SPItem>(doc->getObjectById(name));
+    if (!item) {
+        return nullptr;
+    }
+
+    // Find bbox in document. This is in document coordinates, i.e. pixels.
+    auto const dbox = item->parent
+                    ? item->documentVisualBounds()
+                    : *doc->preferredBounds();
+    if (!dbox) {
+        return nullptr;
+    }
+
     bool const dump = Inkscape::Preferences::get()->getBool("/debug/icons/dumpSvg");
-    guchar *px = nullptr;
 
-    if (doc) {
-        SPObject *object = doc->getObjectById(name);
-        if (object && is<SPItem>(object)) {
-            auto item = cast<SPItem>(object);
-            // Find bbox in document
-            Geom::OptRect dbox = item->documentVisualBounds();
+    // Update to renderable state.
+    double sf = 1.0;
+    drawing.root()->setTransform(Geom::Scale(sf));
+    drawing.update();
+    // Item integer bbox in points.
+    // NOTE: previously, each rect coordinate was rounded using floor(c + 0.5)
+    Geom::IntRect ibox = dbox->roundOutwards();
 
-            if ( object->parent == nullptr )
-            {
-                dbox = *(doc->preferredBounds());
-            }
+    if (dump) {
+        g_message("   box    --'%s'  (%f,%f)-(%f,%f)", name, (double)ibox.left(), (double)ibox.top(), (double)ibox.right(), (double)ibox.bottom());
+    }
 
-            /* This is in document coordinates, i.e. pixels */
-            if ( dbox ) {
-                /* Update to renderable state */
-                double sf = 1.0;
-                drawing.root()->setTransform(Geom::Scale(sf));
-                drawing.update();
-                /* Item integer bbox in points */
-                // NOTE: previously, each rect coordinate was rounded using floor(c + 0.5)
-                Geom::IntRect ibox = dbox->roundOutwards();
+    // Find button visible area.
+    int width = ibox.width();
+    int height = ibox.height();
 
-                if ( dump ) {
-                    g_message( "   box    --'%s'  (%f,%f)-(%f,%f)", name, (double)ibox.left(), (double)ibox.top(), (double)ibox.right(), (double)ibox.bottom() );
-                }
+    if (dump) {
+        g_message("   vis    --'%s'  (%d,%d)", name, width, height);
+    }
 
-                /* Find button visible area */
-                int width = ibox.width();
-                int height = ibox.height();
+    if (int block = std::max(width, height); block != static_cast<int>(psize)) {
+        if (dump) {
+            g_message("      resizing");
+        }
+        sf = (double)psize / (double)block;
 
-                if ( dump ) {
-                    g_message( "   vis    --'%s'  (%d,%d)", name, width, height );
-                }
+        drawing.root()->setTransform(Geom::Scale(sf));
+        drawing.update();
 
-                {
-                    int block = std::max(width, height);
-                    if (block != static_cast<int>(psize) ) {
-                        if ( dump ) {
-                            g_message("      resizing" );
-                        }
-                        sf = (double)psize / (double)block;
+        auto scaled_box = *dbox * Geom::Scale(sf);
+        ibox = scaled_box.roundOutwards();
+        if (dump) {
+            g_message("   box2   --'%s'  (%f,%f)-(%f,%f)", name, (double)ibox.left(), (double)ibox.top(), (double)ibox.right(), (double)ibox.bottom());
+        }
 
-                        drawing.root()->setTransform(Geom::Scale(sf));
-                        drawing.update();
-
-                        auto scaled_box = *dbox * Geom::Scale(sf);
-                        ibox = scaled_box.roundOutwards();
-                        if ( dump ) {
-                            g_message( "   box2   --'%s'  (%f,%f)-(%f,%f)", name, (double)ibox.left(), (double)ibox.top(), (double)ibox.right(), (double)ibox.bottom() );
-                        }
-
-                        /* Find button visible area */
-                        width = ibox.width();
-                        height = ibox.height();
-                        if ( dump ) {
-                            g_message( "   vis2   --'%s'  (%d,%d)", name, width, height );
-                        }
-                    }
-                }
-
-                Geom::IntPoint pdim(psize, psize);
-                int dx, dy;
-                //dx = (psize - width) / 2;
-                //dy = (psize - height) / 2;
-                dx=dy=psize;
-                dx=(dx-width)/2; // watch out for psize, since 'unsigned'-'signed' can cause problems if the result is negative
-                dy=(dy-height)/2;
-                Geom::IntRect area = Geom::IntRect::from_xywh(ibox.min() - Geom::IntPoint(dx,dy), pdim);
-                /* Actual renderable area */
-                Geom::IntRect ua = *Geom::intersect(ibox, area);
-
-                if ( dump ) {
-                    g_message( "   area   --'%s'  (%f,%f)-(%f,%f)", name, (double)area.left(), (double)area.top(), (double)area.right(), (double)area.bottom() );
-                    g_message( "   ua     --'%s'  (%f,%f)-(%f,%f)", name, (double)ua.left(), (double)ua.top(), (double)ua.right(), (double)ua.bottom() );
-                }
-
-                stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, psize);
-
-                /* Set up pixblock */
-                px = g_new(guchar, stride * psize);
-                memset(px, 0x00, stride * psize);
-
-                /* Render */
-                cairo_surface_t *s = cairo_image_surface_create_for_data(px,
-                    CAIRO_FORMAT_ARGB32, psize, psize, stride);
-                Inkscape::DrawingContext dc(s, ua.min());
-
-                auto bg = doc->getPageManager().getDefaultBackgroundColor();
-
-                cairo_t *cr = cairo_create(s);
-                cairo_set_source_rgba(cr, bg[0], bg[1], bg[2], bg[3]);
-                cairo_rectangle(cr, 0, 0, psize, psize);
-                cairo_fill(cr);
-                cairo_save(cr);
-                cairo_destroy(cr);
-
-                drawing.render(dc, ua);
-                cairo_surface_destroy(s);
-
-                // convert to GdkPixbuf format
-                convert_pixels_argb32_to_pixbuf(px, psize, psize, stride);
-
-                if ( Inkscape::Preferences::get()->getBool("/debug/icons/overlaySvg") ) {
-                    overlayPixels( px, psize, psize, stride, 0x00, 0x00, 0xff );
-                }
-            }
+        // Find button visible area.
+        width = ibox.width();
+        height = ibox.height();
+        if (dump) {
+            g_message("   vis2   --'%s'  (%d,%d)", name, width, height);
         }
     }
 
-    return px;
-} // end of sp_icon_doc_icon()
+    auto pdim = Geom::IntPoint(psize, psize);
+    int dx, dy;
+    //dx = (psize - width) / 2;
+    //dy = (psize - height) / 2;
+    dx=dy=psize;
+    dx=(dx-width)/2; // watch out for psize, since 'unsigned'-'signed' can cause problems if the result is negative
+    dy=(dy-height)/2;
+    Geom::IntRect area = Geom::IntRect::from_xywh(ibox.min() - Geom::IntPoint(dx,dy), pdim);
+    // Actual renderable area.
+    Geom::IntRect ua = *Geom::intersect(ibox, area);
+
+    if (dump) {
+        g_message("   area   --'%s'  (%f,%f)-(%f,%f)", name, (double)area.left(), (double)area.top(), (double)area.right(), (double)area.bottom());
+        g_message("   ua     --'%s'  (%f,%f)-(%f,%f)", name, (double)ua.left(), (double)ua.top(), (double)ua.right(), (double)ua.bottom());
+    }
+
+    // Render.
+    auto s = Cairo::ImageSurface::create(Cairo::ImageSurface::Format::ARGB32, psize, psize);
+    auto dc = DrawingContext(s->cobj(), ua.min());
+
+    auto bg = doc->getPageManager().getDefaultBackgroundColor();
+
+    auto cr = Cairo::Context::create(s);
+    cr->set_source_rgba(bg[0], bg[1], bg[2], bg[3]);
+    cr->rectangle(0, 0, psize, psize);
+    cr->fill();
+    cr->save();
+    cr.reset();
+
+    drawing.render(dc, ua);
+
+    if (Preferences::get()->getBool("/debug/icons/overlaySvg")) {
+        s->flush();
+        overlayPixels(s->get_data(), psize, psize, s->get_stride(), 0x00, 0x00, 0xff);
+        s->mark_dirty();
+    }
+
+    return s;
+}
 
 void IconPreviewPanel::renderPreview( SPObject* obj )
 {
@@ -566,16 +543,8 @@ void IconPreviewPanel::renderPreview( SPObject* obj )
 #endif // ICON_VERBOSE
 
     for (std::size_t i = 0; i < sizes.size(); ++i) {
-        unsigned unused;
-        int stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, sizes[i]);
-        guchar *px = sp_icon_doc_icon(doc, *drawing, id, sizes[i], unused);
-        if ( px ) {
-            memcpy( pixMem[i].data(), px, sizes[i] * stride );
-            g_free( px );
-        } else {
-            memset( pixMem[i].data(), 0, sizes[i] * stride );
-        }
-        images[i]->set(images[i]->get_pixbuf());
+        textures[i] = to_texture(sp_icon_doc_icon(doc, *drawing, id, sizes[i]));
+        images[i]->set(textures[i]);
     }
     updateMagnify();
 
@@ -588,9 +557,19 @@ void IconPreviewPanel::renderPreview( SPObject* obj )
 
 void IconPreviewPanel::updateMagnify()
 {
-    Glib::RefPtr<Gdk::Pixbuf> buf = images[hot]->get_pixbuf()->scale_simple( 128, 128, Gdk::InterpType::NEAREST );
+    magnified.set(textures[hot]);
     magLabel.set_label(labels[hot]);
-    magnified.set( buf );
+}
+
+void Magnifier::snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &snapshot)
+{
+    if (!_texture) {
+        snapshot->append_color(Gdk::RGBA{0, 0, 0}, Gdk::Rectangle{0, 0, get_width(), get_height()});
+        return;
+    }
+    auto node = gsk_texture_scale_node_new(_texture->gobj(), Gdk::Graphene::Rect{0, 0, 128, 128}.gobj(), GSK_SCALING_FILTER_NEAREST);
+    gtk_snapshot_append_node(snapshot->gobj(), node);
+    gsk_render_node_unref(node);
 }
 
 } // namespace Inkscape::UI::Dialog

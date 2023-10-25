@@ -40,7 +40,7 @@ KnotPropertiesDialog::KnotPropertiesDialog()
     _unit_name = "";
 
     // Layer name widgets
-    _knot_x_entry.set_activates_default(true);
+    // _knot_x_entry.set_activates_default(true); // Gone; SpinButton is no longer an Entry
     _knot_x_entry.set_digits(4);
     _knot_x_entry.set_increments(1,1);
     _knot_x_entry.set_range(-G_MAXDOUBLE, G_MAXDOUBLE);
@@ -49,7 +49,7 @@ KnotPropertiesDialog::KnotPropertiesDialog()
     _knot_x_label.set_halign(Gtk::Align::END);
     _knot_x_label.set_valign(Gtk::Align::CENTER);
 
-    _knot_y_entry.set_activates_default(true);
+    // _knot_y_entry.set_activates_default(true); // Gone; SpinButton is no longer an Entry
     _knot_y_entry.set_digits(4);
     _knot_y_entry.set_increments(1,1);
     _knot_y_entry.set_range(-G_MAXDOUBLE, G_MAXDOUBLE);
@@ -67,26 +67,21 @@ KnotPropertiesDialog::KnotPropertiesDialog()
     UI::pack_start(*mainVBox, _layout_table, true, true, 4);
 
     // Buttons
-    _close_button.set_can_default();
+    _close_button.set_receives_default(true);
 
     _apply_button.set_use_underline(true);
-    _apply_button.set_can_default();
+    _apply_button.set_receives_default();
 
     _close_button.signal_clicked()
         .connect(sigc::mem_fun(*this, &KnotPropertiesDialog::_close));
     _apply_button.signal_clicked()
         .connect(sigc::mem_fun(*this, &KnotPropertiesDialog::_apply));
 
-    signal_delete_event().connect(
-        sigc::bind_return(
-            sigc::hide(sigc::mem_fun(*this, &KnotPropertiesDialog::_close)),
-            true
-        )
-    );
+    signal_close_request().connect([this] { _close(); return true; }, true);
     add_action_widget(_close_button, Gtk::ResponseType::CLOSE);
     add_action_widget(_apply_button, Gtk::ResponseType::APPLY);
 
-    _apply_button.grab_default();
+    set_default_widget(_apply_button);
 
     set_focus(_knot_y_entry);
 }
@@ -122,12 +117,7 @@ void
 KnotPropertiesDialog::_close()
 {
     destroy_();
-    Glib::signal_idle().connect(
-        sigc::bind_return(
-            sigc::bind(sigc::ptr_fun<void*, void>(&::operator delete), this),
-            false 
-        )
-    );
+    Glib::signal_idle().connect([this] { delete this; return false; });
 }
 
 void KnotPropertiesDialog::_setKnotPoint(Geom::Point knotpoint, Glib::ustring const unit_name)

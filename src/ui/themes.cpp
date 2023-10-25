@@ -325,8 +325,9 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
         if (cached && !cssstringcached.empty()) {
             cssstring = cssstringcached;    
         } else {
-            GtkCssProvider *current_themeprovider = gtk_css_provider_get_named(current_theme.c_str(), variant);
-            cssstring = gtk_css_provider_to_string(current_themeprovider);
+            auto current_themeprovider = Gtk::CssProvider::create();
+            current_themeprovider->load_named(current_theme, variant);
+            cssstring = current_themeprovider->to_string();
         }
         if (contrast) {
             std::string cssdefined = ""; 
@@ -375,8 +376,7 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
             cssstring = cssdefined;
         }
         if (!cssstring.empty()) {
-            // Use c format allow parse with errors or warnings
-            gtk_css_provider_load_from_data (_contrastthemeprovider->gobj(), cssstring.c_str(), -1, nullptr);
+            _contrastthemeprovider->load_from_data(cssstring);
             Gtk::StyleProvider::add_provider_for_display(display, _contrastthemeprovider, GTK_STYLE_PROVIDER_PRIORITY_SETTINGS);
         }
     } else {
@@ -395,9 +395,9 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
         }
         try {
             _styleprovider->load_from_path(style);
-        } catch (const Gtk::CssProviderError &ex) {
+        } catch (const Gtk::CssParserError &ex) {
             g_critical("CSSProviderError::load_from_path(): failed to load '%s'\n(%s)", style.c_str(),
-                       ex.what().c_str());
+                       ex.what());
         }
         Gtk::StyleProvider::add_provider_for_display(display, _styleprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
@@ -408,8 +408,8 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
         if (!style.empty()) {
             try {
                 _spinbuttonprovider->load_from_path(style);
-            } catch (const Gtk::CssProviderError &ex) {
-                g_critical("CSSProviderError::load_from_path(): failed to load '%s'\n(%s)", style.c_str(), ex.what().c_str());
+            } catch (const Gtk::CssParserError &ex) {
+                g_critical("CSSProviderError::load_from_path(): failed to load '%s'\n(%s)", style.c_str(), ex.what());
             }
         }
     }
@@ -434,9 +434,9 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
         }
         try {
             _themeprovider->load_from_path(style);
-        } catch (const Gtk::CssProviderError &ex) {
+        } catch (const Gtk::CssParserError &ex) {
             g_critical("CSSProviderError::load_from_path(): failed to load '%s'\n(%s)", style.c_str(),
-                       ex.what().c_str());
+                       ex.what());
         }
         Gtk::StyleProvider::add_provider_for_display(display, _themeprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
@@ -450,8 +450,8 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
     }
     try {
         _colorizeprovider->load_from_data(css_str);
-    } catch (const Gtk::CssProviderError &ex) {
-        g_critical("CSSProviderError::load_from_data(): failed to load '%s'\n(%s)", css_str.c_str(), ex.what().c_str());
+    } catch (const Gtk::CssParserError &ex) {
+        g_critical("CSSProviderError::load_from_data(): failed to load '%s'\n(%s)", css_str.c_str(), ex.what());
     }
     Gtk::StyleProvider::add_provider_for_display(display, _colorizeprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
@@ -484,9 +484,9 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
         }
         try {
             _userprovider->load_from_path(style);
-        } catch (const Gtk::CssProviderError &ex) {
+        } catch (const Gtk::CssParserError &ex) {
             g_critical("CSSProviderError::load_from_path(): failed to load '%s'\n(%s)", style.c_str(),
-                       ex.what().c_str());
+                       ex.what());
         }
         Gtk::StyleProvider::add_provider_for_display(display, _userprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
@@ -545,7 +545,7 @@ ThemeContext::themechangecallback() {
         }
     }
     for (auto wnd : winds) {
-        if (Glib::RefPtr<Gdk::Window> w = wnd->get_window()) {
+        if (auto w = wnd->get_surface()) {
             set_dark_titlebar(w, dark);
         }
         if (dark) {

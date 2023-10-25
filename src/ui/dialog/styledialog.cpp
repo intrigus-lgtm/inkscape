@@ -32,6 +32,7 @@
 #include <gtkmm/cellrenderertoggle.h>
 #include <gtkmm/dialog.h>
 #include <gtkmm/entry.h>
+#include <gtkmm/eventcontrollerfocus.h>
 #include <gtkmm/label.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/treemodel.h>
@@ -246,7 +247,7 @@ StyleDialog::StyleDialog()
     _styleBox.set_orientation(Gtk::Orientation::VERTICAL);
     _styleBox.set_valign(Gtk::Align::START);
 
-    _scrolledWindow.add(_styleBox);
+    _scrolledWindow.set_child(_styleBox);
     _scrolledWindow.set_overlay_scrolling(false);
     _vadj = _scrolledWindow.get_vadjustment();
     _vadj->signal_value_changed().connect(sigc::mem_fun(*this, &StyleDialog::_vscroll));
@@ -921,12 +922,13 @@ void StyleDialog::_onLinkObj(Glib::ustring const &path, Glib::RefPtr<Gtk::TreeSt
 void StyleDialog::_onPropDelete(Glib::ustring const &path, Glib::RefPtr<Gtk::TreeStore> const &store)
 {
     g_debug("StyleDialog::_onPropDelete");
-    Gtk::TreeModel::Row row = *store->get_iter(path);
+    auto iter = store->get_iter(path);
+    auto row = *iter;
     if (row) {
         Glib::ustring selector = row[_mColumns._colSelector];
         row[_mColumns._colName] = Glib::ustring{};
         _deleted_pos = row[_mColumns._colSelectorPos];
-        store->erase(row);
+        store->erase(iter);
         _deletion = true;
         _writeStyleElement(store, selector);
         _deletion = false;
@@ -1252,7 +1254,7 @@ gboolean sp_styledialog_store_move_to_next(gpointer data)
 {
     StyleDialog *styledialog = reinterpret_cast<StyleDialog *>(data);
     auto selection = styledialog->_current_css_tree->get_selection();
-    Gtk::TreeModel::iterator iter = *(selection->get_selected());
+    Gtk::TreeModel::iterator iter = selection->get_selected();
     if (!iter) {
         return false;
     }
@@ -1276,8 +1278,9 @@ void StyleDialog::_nameEdited(const Glib::ustring &path, const Glib::ustring &na
 
     _scrollock = true;
 
-    Gtk::TreeModel::Row row = *store->get_iter(path);
-    _current_path = row;
+    auto iter = store->get_iter(path);
+    auto row = *iter;
+    _current_path = store->get_path(iter);
 
     if (!row) return;
 
@@ -1302,7 +1305,7 @@ void StyleDialog::_nameEdited(const Glib::ustring &path, const Glib::ustring &na
 
     if (finalname.empty() && value.empty()) {
         _deleted_pos = row[_mColumns._colSelectorPos];
-        store->erase(row);
+        store->erase(iter);
     }
 
     auto const col = pos < 1 || is_attr ? 2 : 3;
@@ -1329,7 +1332,8 @@ void StyleDialog::_valueEdited(const Glib::ustring &path, const Glib::ustring &v
 
     _scrollock = true;
 
-    Gtk::TreeModel::Row row = *store->get_iter(path);
+    auto iter = store->get_iter(path);
+    auto row = *iter;
     if (row) {
         Glib::ustring finalvalue = value;
         auto i = std::min(finalvalue.find(";"), finalvalue.find(":"));
@@ -1345,7 +1349,7 @@ void StyleDialog::_valueEdited(const Glib::ustring &path, const Glib::ustring &v
         Glib::ustring name = row[_mColumns._colName];
         if (name.empty() && finalvalue.empty()) {
             _deleted_pos = row[_mColumns._colSelectorPos];
-            store->erase(row);
+            store->erase(iter);
         }
         _writeStyleElement(store, selector);
         if (selector != "style_properties" && selector != "attributes") {
@@ -1383,7 +1387,10 @@ void StyleDialog::_addTreeViewHandlers(Gtk::TreeView &treeview)
     Controller::add_key<nullptr, &StyleDialog::_onTreeViewKeyReleased>(treeview, *this);
 
     // and since the above somehow doesnʼt fire on focus-out of final cell, we have to do this too…
-    treeview.signal_focus().connect(sigc::mem_fun(*this, &StyleDialog::_onTreeViewFocus));
+    auto focus = Gtk::EventControllerFocus::create();
+    focus->set_propagation_phase(Gtk::PropagationPhase::BUBBLE);
+    treeview.add_controller(focus);
+    focus->signal_leave().connect([this] { _onTreeViewFocusLeave(); });
 
     // If TreeView can-focus, above arenʼt needed, BUT it causes CRITICALs… so just be Good Enough™
     // Doing that also means we need 2 presses of Tab, the 1st to dismiss the completion: not ideal
@@ -1431,18 +1438,16 @@ bool StyleDialog::_onTreeViewKeyReleased(GtkEventControllerKey const * /*control
     return false;
 }
 
-bool StyleDialog::_onTreeViewFocus(Gtk::DirectionType const direction)
+void StyleDialog::_onTreeViewFocusLeave()
 {
-    g_debug("StyleDialog::_onTreeViewFocus");
+    g_debug("StyleDialog::_onTreeViewFocusLeave");
 
-    if (_editingEntry != nullptr && direction == Gtk::DirectionType::TAB_FORWARD) {
-        g_debug("StyleDialog::_onTreeViewFocus: _editingEntry != nullptr && Tab");
+    if (_editingEntry) {
+        g_debug("StyleDialog::_onTreeViewFocus: _editingEntry != nullptr");
 
         // If !change, entry stays visible after Tab, but remove_widget() crashes so… Donʼt Do That
         _editingEntry->editing_done();
     }
-
-    return false;
 }
 
 /**

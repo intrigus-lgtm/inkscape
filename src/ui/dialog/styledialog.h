@@ -162,7 +162,7 @@ public:
     void _setEditingEntry(Gtk::Entry *entry, Glib::ustring endChars);
     bool _onTreeViewKeyReleased(GtkEventControllerKey const *controller,
                                 unsigned keyval, unsigned keycode, GdkModifierType state);
-    bool _onTreeViewFocus(Gtk::DirectionType const direction);
+    void _onTreeViewFocusLeave();
 
     void _onLinkObj(Glib::ustring const &path, Glib::RefPtr<Gtk::TreeStore> const &store);
 

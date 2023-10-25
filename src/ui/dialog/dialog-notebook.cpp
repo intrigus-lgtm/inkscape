@@ -17,9 +17,7 @@
 #include <tuple>
 #include <utility>
 #include <glibmm/i18n.h>
-#include <gdkmm/dragcontext.h>
 #include <gtkmm/button.h>
-#include <gtkmm/eventbox.h>
 #include <gtkmm/menubutton.h>
 #include <gtkmm/gestureclick.h>
 #include <gtkmm/scrollbar.h>
@@ -168,7 +166,7 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
     auto const menubtn = Gtk::make_managed<Gtk::MenuButton>();
     menubtn->set_image_from_icon_name("go-down-symbolic");
     menubtn->set_popover(_menu);
-    _notebook.set_action_widget(menubtn, Gtk::PACK_END);
+    _notebook.set_action_widget(menubtn, Gtk::PackType::END);
     menubtn->set_visible(true);
     menubtn->set_has_frame(true);
     menubtn->set_valign(Gtk::Align::CENTER);
@@ -186,7 +184,7 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
 
     // ============= Finish setup ===============
     _reload_context = true;
-    add(_notebook);
+    set_child(_notebook);
     set_visible(true);
 
     _instances.push_back(this);
@@ -285,12 +283,12 @@ void DialogNotebook::add_page(Gtk::Widget &page, Gtk::Widget &tab, Glib::ustring
         // This used to transfer pack-type and child properties, but now those are set on children.
         for_each_child(*box, [=](Gtk::Widget &child) {
             box       ->remove(child);
-            wrapperbox->add   (child);
+            wrapperbox->append(child);
             return ForEachResult::_continue;
         });
 
-        wrapper->add(*wrapperbox);
-        box    ->add(*wrapper);
+        wrapper->set_child(*wrapperbox);
+        box    ->append(*wrapper);
 
         if (provide_scroll(page)) {
             wrapper->set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::EXTERNAL);
@@ -464,8 +462,6 @@ void DialogNotebook::on_drag_end(const Glib::RefPtr<Gdk::DragContext> &context)
                 device->get_position(x, y);
                 window->move(std::max(0, x - 50), std::max(0, y - 50));
             }
-
-            window->show_all();
         }
     }
 
@@ -629,14 +625,15 @@ void DialogNotebook::on_size_allocate_notebook(Gtk::Allocation &a)
     int nat_width = 0;
     int initial_width = 0;
     int total_width = 0;
-    _notebook.get_preferred_width(initial_width, nat_width); // get current notebook allocation
+    int ignore;
+    _notebook.measure(Gtk::Orientation::HORIZONTAL, -1, initial_width, nat_width, ignore, ignore); // get current notebook allocation
 
     for_each_child(_notebook, [this](Gtk::Widget &page){
         auto const cover = dynamic_cast<Gtk::EventBox *>(_notebook.get_tab_label(page));
         if (cover) cover->set_visible(true);
         return ForEachResult::_continue;
     });
-    _notebook.get_preferred_width(total_width, nat_width); // get full notebook allocation (all open)
+    _notebook.measure(Gtk::Orientation::HORIZONTAL, -1, total_width, nat_width, ignore, ignore); // get full notebook allocation (all open)
 
     prev_tabstatus = tabstatus;
     if (_single_tab_width != _none_tab_width && 
@@ -776,7 +773,7 @@ void DialogNotebook::reload_tab_menu()
             boxmenu->set_halign(Gtk::Align::START);
 
             auto const menuitem = Gtk::make_managed<UI::Widget::PopoverMenuItem>();
-            menuitem->add(*boxmenu);
+            menuitem->set_child(*boxmenu);
 
             auto const &[icon, label, close] = *children;
 
@@ -787,13 +784,13 @@ void DialogNotebook::reload_tab_menu()
                         name += Glib::ustring("-symbolic");
                     }
                     Gtk::Image *iconend  = sp_get_icon_image(name, Gtk::IconSize::NORMAL);
-                    boxmenu->add(*iconend);
+                    boxmenu->append(*iconend);
                 }
             }
 
             auto const labelto = Gtk::make_managed<Gtk::Label>(label->get_text());
             labelto->set_hexpand(true);
-            boxmenu->add(*labelto);
+            boxmenu->append(*labelto);
 
             size_t const pagenum = _notebook.page_num(page);
             _connmenu.emplace_back(
@@ -906,7 +903,7 @@ void DialogNotebook::on_page_switch(Gtk::Widget *curr_page, guint)
 
     if (_prev_alloc_width) {
         if (!_label_visible) {
-            queue_allocate(); 
+            queue_allocate();
         }
         auto window = dynamic_cast<DialogWindow*>(_container->get_root());
         if (window) {
@@ -942,7 +939,8 @@ void DialogNotebook::add_tab_connections(Gtk::Widget * const page)
             sigc::bind(sigc::mem_fun(*this, &DialogNotebook::on_close_button_click_event), page), true);
     _tab_connections.emplace(page, std::move(close_connection));
 
-    auto click = Gtk::GestureClick::create(*tab);
+    auto click = Gtk::GestureClick::create();
+    tab->add_controller(click);
     click->set_button(0); // all
     click->signal_pressed().connect([this, page, &click = *click.get()](int const n_press, double const x, double const y)
     {
@@ -961,23 +959,12 @@ void DialogNotebook::remove_tab_connections(Gtk::Widget *page)
     _tab_connections.erase(first, last);
 }
 
-void DialogNotebook::get_preferred_height_for_width_vfunc(int width, int& minimum_height, int& natural_height) const {
-    Gtk::ScrolledWindow::get_preferred_height_for_width_vfunc(width, minimum_height, natural_height);
-    if (_natural_height > 0) {
-        natural_height = _natural_height;
-        if (minimum_height > _natural_height) {
-            minimum_height = _natural_height;
-        }
-    }
-}
-
-void DialogNotebook::get_preferred_height_vfunc(int& minimum_height, int& natural_height) const {
-    Gtk::ScrolledWindow::get_preferred_height_vfunc(minimum_height, natural_height);
-    if (_natural_height > 0) {
-        natural_height = _natural_height;
-        if (minimum_height > _natural_height) {
-            minimum_height = _natural_height;
-        }
+void DialogNotebook::measure_vfunc(Gtk::Orientation orientation, int for_size, int &min, int &nat, int &min_baseline, int &nat_baseline) const
+{
+    Gtk::ScrolledWindow::measure_vfunc(orientation, for_size, min, nat, min_baseline, nat_baseline);
+    if (orientation == Gtk::Orientation::VERTICAL && _natural_height > 0) {
+        nat = _natural_height;
+        min = std::min(min, _natural_height);
     }
 }
 

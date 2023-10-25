@@ -24,7 +24,6 @@
 #include <gtkmm/cssprovider.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
-#include <gtkmm/menu.h>
 #include <gtkmm/menuitem.h>
 
 #include "inkscape-application.h"  // Action extra data
@@ -126,8 +125,8 @@ set_tooltips_and_shift_icons(Gtk::Widget &menu, bool const shift_icons)
                                                     margin_side, width);
         Glib::RefPtr<Gtk::CssProvider> provider = Gtk::CssProvider::create();
         provider->load_from_data(css_str);
-        auto const screen = Gdk::Screen::get_default();
-        Gtk::StyleContext::add_provider_for_screen(screen, provider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        auto const display = Gdk::Display::get_default();
+        Gtk::StyleContext::add_provider_for_display(display, provider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
         shifted = true;
         return Inkscape::UI::ForEachResult::_continue;
     });

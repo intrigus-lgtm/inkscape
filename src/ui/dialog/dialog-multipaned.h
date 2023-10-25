@@ -16,7 +16,6 @@
 
 #include <vector>
 #include <glibmm/refptr.h>
-#include <gtkmm/container.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <gtkmm/orientable.h>
 

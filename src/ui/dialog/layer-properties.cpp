@@ -62,23 +62,23 @@ LayerPropertiesDialog::LayerPropertiesDialog(LayerPropertiesDialogType type)
     UI::pack_start(*mainVBox, _layout_table, true, true, 8);
 
     // Buttons
-    _close_button.set_can_default();
+    _close_button.set_receives_default(true);
 
     _apply_button.set_use_underline(true);
-    _apply_button.set_can_default();
+    _apply_button.set_receives_default();
 
     _close_button.signal_clicked().connect([=]() {_close();});
     _apply_button.signal_clicked().connect([=]() {_apply();});
 
-    signal_delete_event().connect([=](GdkEventAny*) -> bool {
+    signal_close_request().connect([this] {
         _close();
         return true;
-    });
+    }, true);
 
     add_action_widget(_close_button, Gtk::ResponseType::CLOSE);
     add_action_widget(_apply_button, Gtk::ResponseType::APPLY);
 
-    _apply_button.grab_default();
+    set_default_widget(_apply_button);
 }
 
 LayerPropertiesDialog::~LayerPropertiesDialog() = default;
@@ -303,7 +303,7 @@ void LayerPropertiesDialog::_setup_layers_controls()
     Controller::add_click(_tree, sigc::mem_fun(*this, &LayerPropertiesDialog::on_click_pressed),
                           {}, Controller::Button::left);
 
-    _scroller.add(_tree);
+    _scroller.set_child(_tree);
     _scroller.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     _scroller.set_has_frame(true);
     _scroller.set_size_request(220, 180);

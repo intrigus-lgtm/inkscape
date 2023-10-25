@@ -43,7 +43,7 @@ PowerstrokePropertiesDialog::PowerstrokePropertiesDialog()
     _layout_table.set_column_spacing(4);
 
     // Layer name widgets
-    _powerstroke_position_entry.set_activates_default(true);
+    // _powerstroke_position_entry.set_activates_default(true); // Gone; SpinButton is no longer an Entry.
     _powerstroke_position_entry.set_digits(4);
     _powerstroke_position_entry.set_increments(1,1);
     _powerstroke_position_entry.set_range(-SCALARPARAM_G_MAXDOUBLE, SCALARPARAM_G_MAXDOUBLE);
@@ -52,7 +52,7 @@ PowerstrokePropertiesDialog::PowerstrokePropertiesDialog()
     _powerstroke_position_label.set_halign(Gtk::Align::END);
     _powerstroke_position_label.set_valign(Gtk::Align::CENTER);
 
-    _powerstroke_width_entry.set_activates_default(true);
+    // _powerstroke_width_entry.set_activates_default(true); // Gone; SpinButton is no longer an Entry.
     _powerstroke_width_entry.set_digits(4);
     _powerstroke_width_entry.set_increments(1,1);
     _powerstroke_width_entry.set_range(-SCALARPARAM_G_MAXDOUBLE, SCALARPARAM_G_MAXDOUBLE);
@@ -69,27 +69,22 @@ PowerstrokePropertiesDialog::PowerstrokePropertiesDialog()
     UI::pack_start(*mainVBox, _layout_table, true, true, 4);
 
     // Buttons
-    _close_button.set_can_default();
+    _close_button.set_receives_default();
 
     _apply_button.set_use_underline(true);
-    _apply_button.set_can_default();
+    _apply_button.set_receives_default();
 
     _close_button.signal_clicked()
         .connect(sigc::mem_fun(*this, &PowerstrokePropertiesDialog::_close));
     _apply_button.signal_clicked()
         .connect(sigc::mem_fun(*this, &PowerstrokePropertiesDialog::_apply));
 
-    signal_delete_event().connect(
-        sigc::bind_return(
-            sigc::hide(sigc::mem_fun(*this, &PowerstrokePropertiesDialog::_close)),
-            true
-        )
-    );
+    signal_close_request().connect([this] { _close(); return true; }, true);
 
     add_action_widget(_close_button, Gtk::ResponseType::CLOSE);
     add_action_widget(_apply_button, Gtk::ResponseType::APPLY);
 
-    _apply_button.grab_default();
+    set_default_widget(_apply_button);
 
     set_focus(_powerstroke_width_entry);
 }

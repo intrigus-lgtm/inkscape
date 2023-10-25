@@ -29,6 +29,7 @@
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
+#include <gtkmm/eventcontrollerfocus.h>
 #include <gtkmm/label.h>
 #include <gtkmm/listbox.h>
 #include <gtkmm/listboxrow.h>
@@ -88,7 +89,11 @@ CommandPalette::CommandPalette()
     Controller::add_focus_on_window(_CPBase, sigc::mem_fun(*this, &CommandPalette::on_window_focus));
 
     _CPFilter.signal_activate().connect(sigc::mem_fun(*this, &CommandPalette::on_activate_cpfilter));
-    _CPFilter.signal_focus   ().connect(sigc::mem_fun(*this, &CommandPalette::on_focus_cpfilter   ));
+
+    auto focus = Gtk::EventControllerFocus::create();
+    focus->set_propagation_phase(Gtk::PropagationPhase::BUBBLE);
+    _CPFilter.add_controller(focus);
+    focus->signal_enter().connect([this] { on_activate_cpfilter(); });
 
     set_mode(CPMode::SEARCH);
 
@@ -407,6 +412,7 @@ void CommandPalette::on_activate_cpfilter()
     }
 }
 
+// Fixme: Why is this unused?
 bool CommandPalette::on_focus_cpfilter(Gtk::DirectionType const direction)
 {
     if (_mode != CPMode::SEARCH) return false;
@@ -472,7 +478,7 @@ bool CommandPalette::operate_recent_file(Glib::ustring const &uri, bool const im
     // if the last element in CPHistory is already this, don't update history file
     if (not UI::get_children(_CPHistory).empty()) {
         if (const auto last_operation = _history_xml.get_last_operation(); last_operation.has_value()) {
-            if (uri == last_operation->data) {
+            if (uri.raw() == last_operation->data) {
                 bool last_operation_was_import = last_operation->history_type == HistoryType::IMPORT_FILE;
                 // As previous uri is verfied to be the same as current uri we can write to history if current and
                 // previous operation are not the same.
@@ -532,7 +538,7 @@ bool CommandPalette::ask_action_parameter(const ActionPtrName &action_ptr_name)
     if (const auto last_of_history = _history_xml.get_last_operation(); last_of_history.has_value()) {
         // operation history is not empty
         const auto last_full_action_name = last_of_history->data;
-        if (last_full_action_name != action_ptr_name.second) {
+        if (last_full_action_name != action_ptr_name.second.raw()) {
             // last action is not the same so write this one
             _history_xml.add_action(action_ptr_name.second);   // to history file
             generate_action_operation(action_ptr_name, false); // to _CPHistory

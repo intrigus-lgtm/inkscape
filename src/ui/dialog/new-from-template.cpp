@@ -30,7 +30,7 @@ NewFromTemplate::NewFromTemplate()
     : _create_template_button(_("Create from template"))
 {
     set_title(_("New From Template"));
-    resize(750, 500);
+    set_default_size(750, 500);
 
     templates = Gtk::make_managed<Inkscape::UI::Widget::TemplateList>();
     UI::pack_start(*get_content_area(), *templates);

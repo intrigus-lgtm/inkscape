@@ -15,7 +15,7 @@
 
 #include <vector>
 #include <glibmm/refptr.h>
-#include <gtkmm/popover.h>
+#include <gtkmm/popovermenu.h>
 
 namespace Gio {
 class SimpleActionGroup;
@@ -29,7 +29,7 @@ class SPItem;
 /**
  * Implements the Inkscape context menu.
  */
-class ContextMenu final : public Gtk::Popover
+class ContextMenu final : public Gtk::PopoverMenu
 {
 public:
     ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_and_objects_menu_item = false);

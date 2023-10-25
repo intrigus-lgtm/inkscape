@@ -107,7 +107,7 @@ bool DialogBase::on_window_key_pressed(GtkEventControllerKey const * const contr
                                        GdkModifierType const state)
 {
     // We listen for key on window, so must ensure WE have focus, to not break Esc from canvas etc.
-    auto const &window = dynamic_cast<Gtk::Window const &>(*get_toplevel());
+    auto const &window = dynamic_cast<Gtk::Window const &>(*get_root());
     auto const focus = window.get_focus();
     if (!focus || !is_descendant_of(*focus, *this)) {
         return false;

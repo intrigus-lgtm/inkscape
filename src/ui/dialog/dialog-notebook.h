@@ -123,8 +123,7 @@ private:
     void toggle_tab_labels_callback(bool show);
     void add_tab_connections(Gtk::Widget *page);
     void remove_tab_connections(Gtk::Widget *page);
-    void get_preferred_height_for_width_vfunc(int width, int& minimum_height, int& natural_height) const override;
-    void get_preferred_height_vfunc(int& minimum_height, int& natural_height) const override;
+    void measure_vfunc(Gtk::Orientation orientation, int for_size, int &min, int &nat, int &min_baseline, int &nat_baseline) const override;
     int _natural_height = 0;
 };
 

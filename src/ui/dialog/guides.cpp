@@ -306,9 +306,13 @@ void GuidelinePropertiesDialog::_setup() {
             return;
         }
         auto controller = Gtk::EventControllerKey::create();
-        controller->signal_key_pressed().connect([this] (unsigned, unsigned, Gdk::ModifierType) {
-            on_sb_activate();
-            return true;
+        controller->signal_key_pressed().connect([this] (unsigned keyval, unsigned, Gdk::ModifierType) {
+            if (keyval == GDK_KEY_Return) {
+                on_sb_activate();
+                return true;
+            } else {
+                return false;
+            }
         }, true);
         controller->set_propagation_phase(Gtk::PropagationPhase::BUBBLE);
         sb->add_controller(controller);

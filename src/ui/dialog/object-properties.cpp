@@ -31,6 +31,7 @@
 
 #include <glibmm/i18n.h>
 #include <gtkmm/grid.h>
+#include <gtkmm/eventcontrollerkey.h>
 
 #include "document-undo.h"
 #include "document.h"
@@ -169,7 +170,7 @@ void ObjectProperties::_init()
 
     _tv_description.set_wrap_mode(Gtk::WrapMode::WORD);
     _tv_description.get_buffer()->set_text("");
-    _ft_description.add(_tv_description);
+    _ft_description.set_child(_tv_description);
     _tv_description.add_mnemonic_label(*label_desc);
 
     /* Create the label for the object title */
@@ -182,8 +183,19 @@ void ObjectProperties::_init()
     _spin_dpi.set_range(1, 1200);
 
     _label_dpi.set_mnemonic_widget(_spin_dpi);
+
     // pressing enter in the label field is the same as clicking Set:
-    _spin_dpi.signal_activate().connect(sigc::mem_fun(*this, &ObjectProperties::_labelChanged));
+    auto controller = Gtk::EventControllerKey::create();
+    controller->signal_key_pressed().connect([this] (unsigned keyval, unsigned, Gdk::ModifierType) {
+        if (keyval == GDK_KEY_Return) {
+            _labelChanged();
+            return true;
+        } else {
+            return false;
+        }
+    }, true);
+    controller->set_propagation_phase(Gtk::PropagationPhase::BUBBLE);
+    _spin_dpi.add_controller(controller);
 
     /* Image rendering */
     /* Create the label for the object ImageRendering */

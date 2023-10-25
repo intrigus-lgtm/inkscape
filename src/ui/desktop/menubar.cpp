@@ -146,7 +146,7 @@ build_menu()
         // sort by "last modified" time, which puts the most recently opened files first
         std::sort(begin(recent_files), end(recent_files),
             [](auto const &a, auto const &b) -> bool {
-                return a->get_modified() > b->get_modified();
+                return a->get_modified().compare(b->get_modified()) < 0;
             }
         );
 

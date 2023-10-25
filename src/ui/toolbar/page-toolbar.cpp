@@ -415,7 +415,7 @@ void PageToolbar::setSizeText(SPPage *page, bool display_only)
 
     // If this is a known size in our list, add the size paren to it.
     for (auto &row : _sizes_search->children()) {
-        if (label == row[cols.name]) {
+        if (label == row[cols.name].operator Glib::ustring().raw()) {
             label = label + " (" + row[cols.label] + ")";
             break;
         }
@@ -426,9 +426,9 @@ void PageToolbar::setSizeText(SPPage *page, bool display_only)
     auto box = page ? page->getDesktopRect() : *_document->preferredBounds();
     auto const icon = box.width() > box.height() ? "page-landscape" : "page-portrait";
     if (box.width() == box.height()) {
-        _entry_page_sizes->unset_icon(Gtk::ENTRY_ICON_SECONDARY);
+        _entry_page_sizes->unset_icon(Gtk::Entry::IconPosition::SECONDARY);
     } else {
-        _entry_page_sizes->set_icon_from_icon_name(INKSCAPE_ICON(icon), Gtk::ENTRY_ICON_SECONDARY);
+        _entry_page_sizes->set_icon_from_icon_name(INKSCAPE_ICON(icon), Gtk::Entry::IconPosition::SECONDARY);
     }
 
     if (!display_only) {

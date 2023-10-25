@@ -203,17 +203,17 @@ parse_modifier_string(char const * const modifiers_string)
   
         for (auto const &mod : mod_vector) {
             if (mod == "Control" || mod == "Ctrl") {
-                modifiers |= Gdk::CONTROL_MASK;
+                modifiers |= Gdk::ModifierType::CONTROL_MASK;
             } else if (mod == "Shift") {
-                modifiers |= Gdk::SHIFT_MASK;
+                modifiers |= Gdk::ModifierType::SHIFT_MASK;
             } else if (mod == "Alt") {
-                modifiers |= Gdk::ALT_MASK;
+                modifiers |= Gdk::ModifierType::ALT_MASK;
             } else if (mod == "Super") {
-                modifiers |= Gdk::SUPER_MASK; // Not used
+                modifiers |= Gdk::ModifierType::SUPER_MASK; // Not used
             } else if (mod == "Hyper") {
-                modifiers |= Gdk::HYPER_MASK; // Not used
+                modifiers |= Gdk::ModifierType::HYPER_MASK; // Not used
             } else if (mod == "Meta") {
-                modifiers |= Gdk::META_MASK;
+                modifiers |= Gdk::ModifierType::META_MASK;
             } else if (mod == "Primary") {
                 // System dependent key to invoke menus. (Needed for OSX in particular.)
                 // We only read "Primary" and never write it.
@@ -224,15 +224,15 @@ parse_modifier_string(char const * const modifiers_string)
                         gdk_keymap_get_modifier_mask (keymap, GDK_MODIFIER_INTENT_PRIMARY_ACCELERATOR);
                     gdk_keymap_add_virtual_modifiers(keymap, &type);
                     if (type & GDK_CONTROL_MASK)
-                        modifiers |= Gdk::CONTROL_MASK;
+                        modifiers |= Gdk::ModifierType::CONTROL_MASK;
                     else if (type & GDK_META_MASK)
-                        modifiers |= Gdk::META_MASK;
+                        modifiers |= Gdk::ModifierType::META_MASK;
                     else {
                         std::cerr << "Shortcut::read: Unknown primary accelerator!" << std::endl;
-                        modifiers |= Gdk::CONTROL_MASK;
+                        modifiers |= Gdk::ModifierType::CONTROL_MASK;
                     }
                 } else {
-                    modifiers |= Gdk::CONTROL_MASK;
+                    modifiers |= Gdk::ModifierType::CONTROL_MASK;
                 }
             } else {
                 std::cerr << "Shortcut::read: Unknown GDK modifier: " << mod.c_str() << std::endl;
@@ -688,7 +688,7 @@ get_from_event_impl(unsigned const event_keyval, unsigned const event_keycode,
 {
     // MOD2 corresponds to the NumLock key. Masking it out allows
     // shortcuts to work regardless of its state.
-    auto const initial_modifiers = static_cast<Gdk::ModifierType>(event_state & ~GDK_MOD2_MASK);
+    auto const initial_modifiers = static_cast<Gdk::ModifierType>(event_state & ~GDK_CONTROL_MASK);
 
     unsigned int consumed_modifiers = 0;
     auto keyval = Inkscape::UI::Tools::get_latin_keyval_impl(
@@ -699,7 +699,7 @@ get_from_event_impl(unsigned const event_keyval, unsigned const event_keycode,
     bool is_case_convertible = !(gdk_keyval_is_upper(keyval) && gdk_keyval_is_lower(keyval));
     if (is_case_convertible) {
         keyval = gdk_keyval_to_lower(keyval);
-        consumed_modifiers &= ~ Gdk::SHIFT_MASK;
+        consumed_modifiers &= ~(unsigned)Gdk::ModifierType::SHIFT_MASK;
     }
 
     // The InkscapePreferences dialog returns an event structure where the Shift modifier is not
@@ -710,7 +710,7 @@ get_from_event_impl(unsigned const event_keyval, unsigned const event_keycode,
         keyval = event_keyval;
     }
 
-    auto unused_modifiers = Gdk::ModifierType((initial_modifiers &~ consumed_modifiers)
+    auto unused_modifiers = Gdk::ModifierType(((unsigned)initial_modifiers &~ consumed_modifiers)
                                                                  & GDK_MODIFIER_MASK
                                                                  &~ GDK_LOCK_MASK);
 
@@ -771,7 +771,7 @@ Shortcuts::get_file_names()
     // Check file exists and extract out label if it does.
     std::vector<std::pair<Glib::ustring, std::string>> names_and_paths;
     for (auto const &filename : filenames) {
-        Glib::ustring label = Glib::path_get_basename(filename.raw());
+        Glib::ustring label = Glib::path_get_basename(filename);
         auto filename_relative = sp_relative_path_from_path(filename, get_path_string(SYSTEM, KEYS));
 
         XML::Document *document = sp_repr_read_file(filename.c_str(), nullptr, true);
@@ -952,13 +952,13 @@ Shortcuts::dump() {
     // What shortcuts are being used?
     static std::vector<Gdk::ModifierType> const modifiers{
         Gdk::ModifierType(0),
-        Gdk::SHIFT_MASK,
-        Gdk::CONTROL_MASK,
-        Gdk::ALT_MASK,
-        Gdk::SHIFT_MASK   |  Gdk::CONTROL_MASK,
-        Gdk::SHIFT_MASK   |  Gdk::ALT_MASK,
-        Gdk::CONTROL_MASK |  Gdk::ALT_MASK,
-        Gdk::SHIFT_MASK   |  Gdk::CONTROL_MASK   | Gdk::ALT_MASK
+        Gdk::ModifierType::SHIFT_MASK,
+        Gdk::ModifierType::CONTROL_MASK,
+        Gdk::ModifierType::ALT_MASK,
+        Gdk::ModifierType::SHIFT_MASK   |  Gdk::ModifierType::CONTROL_MASK,
+        Gdk::ModifierType::SHIFT_MASK   |  Gdk::ModifierType::ALT_MASK,
+        Gdk::ModifierType::CONTROL_MASK |  Gdk::ModifierType::ALT_MASK,
+        Gdk::ModifierType::SHIFT_MASK   |  Gdk::ModifierType::CONTROL_MASK   | Gdk::ModifierType::ALT_MASK
     };
     for (auto mod : modifiers) {
         for (char key = '!'; key <= '~'; ++key) {

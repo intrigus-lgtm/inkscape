@@ -165,11 +165,11 @@ StartScreen::StartScreen()
     set_title(Inkscape::inkscape_version());
     set_focusable(true);
     grab_focus();
-    set_can_default(true);
-    grab_default();
-    set_urgency_hint(true);  // Draw user's attention to this window!
+    set_receives_default(true);
+    set_default_widget(*this);
+    // set_urgency_hint(true);  // Draw user's attention to this window! // Gone.
     set_modal(true);
-    set_position(Gtk::WIN_POS_CENTER_ALWAYS);
+    // set_position(Gtk::WIN_POS_CENTER_ALWAYS); // Gmone.
     set_default_size(700, 360);
 
     // Populate with template extensions
@@ -186,9 +186,8 @@ StartScreen::StartScreen()
     auto dark_toggle = &get_widget<Gtk::Switch>  (builder, "dark_toggle");
 
     // Unparent to move to our dialog window.
-    auto parent = banners.get_parent();
-    parent->remove(banners);
-    parent->remove(tabs);
+    banners.unparent();
+    tabs.unparent();
 
     // Add signals and setup things.
     auto prefs = Inkscape::Preferences::get();
@@ -235,7 +234,7 @@ StartScreen::StartScreen()
     // Reparent to our dialog window
     set_titlebar(banners);
     Gtk::Box* box = get_content_area();
-    box->add(tabs);
+    box->append(tabs);
 
     // Show the first tab ONLY on the first run for this version
     std::string opt_shown = "/options/boot/shown/ver";
@@ -250,7 +249,7 @@ StartScreen::StartScreen()
     }
 
     set_modal(true);
-    set_position(Gtk::WIN_POS_CENTER_ALWAYS);
+    // set_position(Gtk::WIN_POS_CENTER_ALWAYS); // Gone.
     property_resizable() = false;
     set_default_size(700, 360);
     set_visible(true);
@@ -259,8 +258,8 @@ StartScreen::StartScreen()
 StartScreen::~StartScreen()
 {
     // These are "owned" by builder... don't delete them!
-    banners.get_parent()->remove(banners);
-    tabs.get_parent()->remove(tabs);
+    banners.unparent();
+    tabs.unparent();
 }
 
 /**
@@ -326,7 +325,7 @@ StartScreen::enlist_recent_files()
     first_row[cols.col_name] = _("Browse for other files...");
     first_row[cols.col_id] = "";
     first_row[cols.col_dt] = std::numeric_limits<gint64>::max();
-    recent_treeview.get_selection()->select(store->get_path(first_row));
+    recent_treeview.get_selection()->select(store->get_path(first_row.get_iter()));
 
     Glib::RefPtr<Gtk::RecentManager> manager = Gtk::RecentManager::get_default();
     for (auto item : manager->get_items()) {
@@ -343,7 +342,7 @@ StartScreen::enlist_recent_files()
                 Gtk::TreeModel::Row row = *(store->append());
                 row[cols.col_name] = item->get_display_name();
                 row[cols.col_id] = item->get_uri();
-                row[cols.col_dt] = item->get_modified();
+                row[cols.col_dt] = item->get_modified().to_unix();
                 row[cols.col_crash] = item->has_group("Crash");
             }
         }
@@ -514,7 +513,7 @@ StartScreen::show_toggle()
 void
 StartScreen::refresh_theme(Glib::ustring theme_name)
 {
-    auto const screen = Gdk::Screen::get_default();
+    auto const display = Gdk::Display::get_default();
 
     if (INKSCAPE.themecontext->getContrastThemeProvider()) {
         Gtk::StyleProvider::remove_provider_for_display(display, INKSCAPE.themecontext->getContrastThemeProvider());
@@ -543,9 +542,9 @@ StartScreen::refresh_theme(Glib::ustring theme_name)
         Gtk::CssProvider::create();
         Glib::ustring css_str = INKSCAPE.themecontext->get_symbolic_colors();
         try {
-            INKSCAPE.themecontext->getColorizeProvider()->load_from_data(css_str);
-        } catch (const Gtk::CssProviderError &ex) {
-            g_critical("CSSProviderError::load_from_data(): failed to load '%s'\n(%s)", css_str.c_str(), ex.what().c_str());
+            INKSCAPE.themecontext->getColorizeProvider()->load_from_string(css_str);
+        } catch (Gtk::CssParserError const &ex) {
+            g_critical("CSSProviderError::load_from_data(): failed to load '%s'\n(%s)", css_str.c_str(), ex.what());
         }
         Gtk::StyleProvider::add_provider_for_display(display, INKSCAPE.themecontext->getColorizeProvider(),
                                                      GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);

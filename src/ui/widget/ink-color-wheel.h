@@ -114,7 +114,7 @@ private:
 
     Gtk::DrawingArea *_drawing_area;
     virtual void on_drawing_area_size (Gtk::Allocation const &allocation) {}
-    virtual bool on_drawing_area_draw (Cairo::RefPtr<Cairo::Context> const &cr) = 0;
+    virtual void on_drawing_area_draw (Cairo::RefPtr<Cairo::Context> const &cr, int, int) = 0;
     virtual bool on_drawing_area_focus(Gtk::DirectionType /*direction*/) { return false; }
     /// All event controllers are connected to the DrawingArea.
     virtual Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
@@ -147,7 +147,7 @@ public:
 
 private:
     void on_drawing_area_size (Gtk::Allocation const &allocation      ) final;
-    bool on_drawing_area_draw (Cairo::RefPtr<Cairo::Context> const &cr) final;
+    void on_drawing_area_draw (Cairo::RefPtr<Cairo::Context> const &cr, int, int) final;
     bool on_drawing_area_focus(Gtk::DirectionType direction) final;
 
     bool _set_from_xy(double x, double y);
@@ -212,7 +212,7 @@ public:
     void updateGeometry();
 
 private:
-    bool on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr) final;
+    void on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int) final;
 
     bool _set_from_xy(double const x, double const y);
     void _setFromPoint(Geom::Point const &pt) { _set_from_xy(pt[Geom::X], pt[Geom::Y]); }

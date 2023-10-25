@@ -49,7 +49,7 @@ public:
     sigc::signal<void ()> signal_value_changed;
 
 private:
-    bool on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr);
+    void on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int);
 
     Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
                                               int n_press, double x, double y);

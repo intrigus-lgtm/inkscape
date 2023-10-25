@@ -42,10 +42,10 @@ ColorSlider::ColorSlider(Glib::RefPtr<Gtk::Adjustment> adjustment)
     set_name("ColorSlider");
 
     _drawing_area->set_visible(true);
-    _drawing_area->signal_draw().connect(sigc::mem_fun(*this, &ColorSlider::on_drawing_area_draw));
+    _drawing_area->set_draw_func(sigc::mem_fun(*this, &ColorSlider::on_drawing_area_draw));
     _drawing_area->set_expand(true); // DrawingArea fills self Box,
     set_expand(false);               // but the Box doesnʼt expand.
-    add(*_drawing_area);
+    append(*_drawing_area);
 
     _c0[0] = 0x00;
     _c0[1] = 0x00;
@@ -87,7 +87,7 @@ ColorSlider::~ColorSlider()
 
 static bool get_constrained(Gdk::ModifierType const state)
 {
-    return Controller::has_flag(state, Gdk::CONTROL_MASK);
+    return Controller::has_flag(state, Gdk::ModifierType::CONTROL_MASK);
 }
 
 static double get_value_at(Gtk::Widget const &self, double const x, double const y)
@@ -129,7 +129,7 @@ void ColorSlider::on_motion(GtkEventControllerMotion const * const motion,
     if (_dragging) {
         auto const value = get_value_at(*_drawing_area, x, y);
         auto const state = gtk_event_controller_get_current_event_state(GTK_EVENT_CONTROLLER(motion));
-        auto const constrained = get_constrained(state);
+        auto const constrained = get_constrained((Gdk::ModifierType)state);
         ColorScales<>::setScaled(_adjustment, value, constrained);
         signal_dragged.emit();
     }
@@ -178,10 +178,10 @@ void ColorSlider::_onAdjustmentValueChanged()
             _value = ColorScales<>::getScaled(_adjustment);
             ax = (int)(cx + value * cw - ARROW_SIZE / 2 - 2);
             ay = cy;
-            _drawing_area->queue_draw_area(ax, ay, ARROW_SIZE + 4, ch);
+            _drawing_area->queue_draw(); //_area(ax, ay, ARROW_SIZE + 4, ch);
             ax = (int)(cx + _value * cw - ARROW_SIZE / 2 - 2);
             ay = cy;
-            _drawing_area->queue_draw_area(ax, ay, ARROW_SIZE + 4, ch);
+            _drawing_area->queue_draw() ;//_area(ax, ay, ARROW_SIZE + 4, ch);
         }
         else {
             _value = ColorScales<>::getScaled(_adjustment);
@@ -228,7 +228,7 @@ void ColorSlider::setBackground(guint dark, guint light, guint size)
     _drawing_area->queue_draw();
 }
 
-bool ColorSlider::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr)
+void ColorSlider::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int)
 {
     // padding/carea are no longer used/useful, just kept to minimise code diff
     static Gtk::Border const padding{};
@@ -326,8 +326,6 @@ bool ColorSlider::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr)
     cr->stroke_preserve();
     cr->set_source_rgb(1.0, 1.0, 1.0);
     cr->fill();
-
-    return false;
 }
 
 } // namespace Inkscape::UI::Widget

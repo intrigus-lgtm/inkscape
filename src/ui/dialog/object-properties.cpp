@@ -399,7 +399,7 @@ void ObjectProperties::update_entries()
         _ft_description.set_sensitive(TRUE);
 
         if (_current_item == nullptr) {
-            _attr_table->set_object(obj, _int_labels, _int_attrs, (GtkWidget*) _exp_interactivity.gobj());
+            _exp_interactivity.set_child(*_attr_table->set_object(obj, _int_labels, _int_attrs));
         } else {
             _attr_table->change_object(obj);
         }

@@ -84,19 +84,19 @@ static void draw_vertical_padding(ColorPoint p0, ColorPoint p1, int padding, boo
 /* Base Color Wheel */
 
 ColorWheel::ColorWheel()
-    : _drawing_area{Gtk::make_managed<Gtk::DrawingArea>()}
+    : Gtk::AspectFrame(0.5, 0.5, 1.0, false)
+    , _drawing_area{Gtk::make_managed<Gtk::DrawingArea>()}
 {
     set_name("ColorWheel");
-    set(0.5, 0.5, 1.0, false);
     add_css_class("flat");
 
     _drawing_area->set_visible(true);
     _drawing_area->set_focusable(true);
     _drawing_area->set_expand(true);
     _drawing_area->signal_size_allocate().connect(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_size ));
-    _drawing_area->signal_draw         ().connect(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_draw ));
-    _drawing_area->signal_focus        ().connect(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_focus));
-    add(*_drawing_area);
+    _drawing_area->set_draw_func(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_draw ));
+    _drawing_area->signal_focus().connect(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_focus));
+    set_child(*_drawing_area);
 
     Controller::add_click(*_drawing_area, sigc::mem_fun(*this, &ColorWheel::on_click_pressed ),
                                           sigc::mem_fun(*this, &ColorWheel::on_click_released));
@@ -422,7 +422,7 @@ void ColorWheelHSL::on_drawing_area_size(Gtk::Allocation const &allocation)
     _radii.reset();
 }
 
-bool ColorWheelHSL::on_drawing_area_draw(::Cairo::RefPtr<::Cairo::Context> const &cr)
+void ColorWheelHSL::on_drawing_area_draw(::Cairo::RefPtr<::Cairo::Context> const &cr, int, int)
 {
     auto const &width = _cache_width.value(), &height = _cache_height.value();
     auto const cx = width  / 2.0;
@@ -495,8 +495,6 @@ bool ColorWheelHSL::on_drawing_area_draw(::Cairo::RefPtr<::Cairo::Context> const
 
         cr->stroke();
     }
-
-    return true;
 }
 
 bool ColorWheelHSL::on_drawing_area_focus(Gtk::DirectionType const direction)
@@ -954,7 +952,7 @@ bool ColorWheelHSLuv::_vertex() const
     return _values[2] < VERTEX_EPSILON || _values[2] > MAX_LIGHTNESS - VERTEX_EPSILON;
 }
 
-bool ColorWheelHSLuv::on_drawing_area_draw(::Cairo::RefPtr<::Cairo::Context> const &cr)
+void ColorWheelHSLuv::on_drawing_area_draw(::Cairo::RefPtr<::Cairo::Context> const &cr, int, int)
 {
     auto const &allocation = get_drawing_area_allocation();
     auto dimensions = _getAllocationDimensions(allocation);

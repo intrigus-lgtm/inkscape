@@ -62,7 +62,7 @@ ComboToolItem::ComboToolItem(Glib::ustring group_label,
     _combobox (nullptr),
     _container(Gtk::make_managed<Gtk::Box>())
 {
-    add(*_container);
+    append(*_container);
     _container->set_spacing(3);
 
     // ": " is added to the group label later

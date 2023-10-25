@@ -26,6 +26,7 @@
 
 #include <glibmm.h>
 #include <glibmm/i18n.h>
+#include <gdkmm/pixbuf.h>
 
 #include "document.h"
 #include "gradient-chemistry.h"

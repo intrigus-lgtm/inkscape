@@ -30,7 +30,7 @@ CompletionPopup::CompletionPopup() :
     _list = std::dynamic_pointer_cast<Gtk::ListStore>(_builder->get_object("list"));
     assert(_list);
 
-    add(get_widget<Gtk::Box>(_builder, "main-box"));
+    append(get_widget<Gtk::Box>(_builder, "main-box"));
 
     _completion->set_match_func([=](const Glib::ustring& text, const Gtk::TreeModel::const_iterator& it){
         Glib::ustring str;

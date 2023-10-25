@@ -64,7 +64,7 @@ FillNStroke::FillNStroke(FillOrStroke k)
     // Add and connect up the paint selector widget:
     _psel = Gtk::make_managed<UI::Widget::PaintSelector>(kind);
     _psel->set_visible(true);
-    add(*_psel);
+    append(*_psel);
     _psel->signal_mode_changed().connect(sigc::mem_fun(*this, &FillNStroke::paintModeChangeCB));
     _psel->signal_dragged().connect(sigc::mem_fun(*this, &FillNStroke::dragFromPaint));
     _psel->signal_changed().connect(sigc::mem_fun(*this, &FillNStroke::paintChangedCB));
@@ -326,7 +326,7 @@ void FillNStroke::dragFromPaint()
         return;
     }
 
-    guint32 when = gtk_get_current_event_time();
+    guint32 when = g_get_monotonic_time() / 1000; // ms
 
     // Don't attempt too many updates per second.
     // Assume a base 15.625ms resolution on the timer.

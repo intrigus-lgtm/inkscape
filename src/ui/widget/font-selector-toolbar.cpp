@@ -78,7 +78,7 @@ FontSelectorToolbar::FontSelectorToolbar ()
     family_combo.pack_start (family_cell);
 
     Gtk::Entry* entry = family_combo.get_entry();
-    entry->signal_icon_press().connect (sigc::mem_fun(*this, &FontSelectorToolbar::on_icon_pressed));
+    entry->signal_icon_press().connect(sigc::mem_fun(*this, &FontSelectorToolbar::on_icon_pressed));
     Controller::add_key<&FontSelectorToolbar::on_key_pressed>(*entry, *this);
 
     Glib::RefPtr<Gtk::EntryCompletion> completion = Gtk::EntryCompletion::create();
@@ -122,8 +122,8 @@ FontSelectorToolbar::update_font ()
 
     // Set font family.
     try {
-        row = font_lister->get_row_for_font ();
-        family_combo.set_active (row);
+        row = font_lister->get_row_for_font();
+        family_combo.set_active(row.get_iter());
     } catch (FontLister::Exception) {
         std::cerr << "FontSelectorToolbar::update_font: Couldn't find row for family: "
                   << font_lister->get_font_family().raw() << std::endl;
@@ -131,8 +131,8 @@ FontSelectorToolbar::update_font ()
 
     // Set style.
     try {
-        row = font_lister->get_row_for_style ();
-        style_combo.set_active (row);
+        row = font_lister->get_row_for_style();
+        style_combo.set_active(row.get_iter());
     } catch (FontLister::Exception) {
         std::cerr << "FontSelectorToolbar::update_font: Couldn't find row for style: "
                   << font_lister->get_font_style().raw() << std::endl;
@@ -145,13 +145,13 @@ FontSelectorToolbar::update_font ()
     Gtk::Entry* entry = family_combo.get_entry();
     if (missing_fonts.empty()) {
         // If no missing fonts, add icon for selecting all objects with this font-family.
-        entry->set_icon_from_icon_name (INKSCAPE_ICON("edit-select-all"), Gtk::ENTRY_ICON_SECONDARY);
-        entry->set_icon_tooltip_text (_("Select all text with this text family"), Gtk::ENTRY_ICON_SECONDARY);
+        entry->set_icon_from_icon_name(INKSCAPE_ICON("edit-select-all"), Gtk::Entry::IconPosition::SECONDARY);
+        entry->set_icon_tooltip_text(_("Select all text with this text family"), Gtk::Entry::IconPosition::SECONDARY);
     } else {
         // If missing fonts, add warning icon.
         Glib::ustring warning = _("Font not found on system: ") + missing_fonts; 
-        entry->set_icon_from_icon_name (INKSCAPE_ICON("dialog-warning"), Gtk::ENTRY_ICON_SECONDARY);
-        entry->set_icon_tooltip_text (warning, Gtk::ENTRY_ICON_SECONDARY);
+        entry->set_icon_from_icon_name(INKSCAPE_ICON("dialog-warning"), Gtk::Entry::IconPosition::SECONDARY);
+        entry->set_icon_tooltip_text(warning, Gtk::Entry::IconPosition::SECONDARY);
     }
 
     signal_block = false;
@@ -172,8 +172,7 @@ FontSelectorToolbar::get_missing_fonts ()
     for (auto token: tokens) {
         bool found = false;
         Gtk::TreeModel::Children children = font_lister->get_font_list()->children();
-        for (auto iter2: children) {
-            Gtk::TreeModel::Row row2 = *iter2;
+        for (auto row2 : children) {
             Glib::ustring family2 = row2[font_lister->font_list.family];
             bool onSystem2        = row2[font_lister->font_list.onSystem];
             // CSS dictates that font family names are case insensitive.
@@ -235,8 +234,8 @@ FontSelectorToolbar::on_style_changed() {
     changed_emit();
 }
 
-void
-FontSelectorToolbar::on_icon_pressed (Gtk::EntryIconPosition icon_position, const GdkEventButton* event) {
+void FontSelectorToolbar::on_icon_pressed(Gtk::Entry::IconPosition icon_position)
+{
     std::cerr << "FontSelectorToolbar::on_entry_icon_pressed" << std::endl;
     std::cerr << "    .... Should select all items with same font-family. FIXME" << std::endl;
     // Call equivalent of sp_text_toolbox_select_cb() in text-toolbar.cpp

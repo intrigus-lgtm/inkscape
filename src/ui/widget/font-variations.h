@@ -12,7 +12,7 @@
 #ifndef INKSCAPE_UI_WIDGET_FONT_VARIATIONS_H
 #define INKSCAPE_UI_WIDGET_FONT_VARIATIONS_H
 
-#include <gtkmm/grid.h>
+#include <gtkmm/box.h>
 #include <gtkmm/sizegroup.h>
 #include <gtkmm/label.h>
 #include <gtkmm/scale.h>
@@ -29,7 +29,7 @@ namespace Widget {
 /**
  * A widget for a single axis: Label and Slider
  */
-class FontVariationAxis : public Gtk::Grid
+class FontVariationAxis : public Gtk::Box
 {
 public:
     FontVariationAxis(Glib::ustring name, OTVarAxis const &axis);
@@ -57,7 +57,7 @@ private:
 /**
  * A widget for selecting font variations (OpenType Variations).
  */
-class FontVariations : public Gtk::Grid
+class FontVariations : public Gtk::Box
 {
 
 public:

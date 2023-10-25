@@ -40,9 +40,7 @@ namespace Inkscape::UI::Widget {
 
 void GradientSelector::style_button(Gtk::Button *btn, char const *iconName)
 {
-    GtkWidget *child = sp_get_icon_image(iconName, GTK_ICON_SIZE_SMALL_TOOLBAR);
-    gtk_widget_set_visible(child, true);
-    btn->add(*manage(Glib::wrap(child)));
+    btn->set_image_from_icon_name(iconName, Gtk::IconSize::NORMAL); // Previously GTK_ICON_SIZE_SMALL_TOOLBAR
     btn->set_has_frame(false);
 }
 
@@ -99,7 +97,7 @@ GradientSelector::GradientSelector()
     _text_renderer->signal_edited().connect(sigc::mem_fun(*this, &GradientSelector::onGradientRename));
 
     _scrolled_window = Gtk::make_managed<Gtk::ScrolledWindow>();
-    _scrolled_window->add(*_treeview);
+    _scrolled_window->set_child(*_treeview);
     _scrolled_window->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
     _scrolled_window->set_has_frame(true);
     _scrolled_window->set_size_request(0, 180);

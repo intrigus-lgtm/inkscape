@@ -46,7 +46,7 @@ ScalarUnit::ScalarUnit(Glib::ustring const &label, Glib::ustring const &tooltip,
     g_assert(_unit_menu);
 
     _unit_menu->signal_changed()
-            .connect_notify(sigc::mem_fun(*this, &ScalarUnit::on_unit_changed));
+            .connect(sigc::mem_fun(*this, &ScalarUnit::on_unit_changed));
 
     get_spin_button().setUnitMenu(_unit_menu);
 

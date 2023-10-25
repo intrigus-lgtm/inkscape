@@ -47,7 +47,7 @@ private:
     auto_connection _release_connection;
     auto_connection _modified_connection;
 
-    bool on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr);
+    void on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int);
     void gradient_release (SPObject const *obj);
     void gradient_modified(SPObject const *obj, guint flags);
 };

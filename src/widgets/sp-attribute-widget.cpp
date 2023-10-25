@@ -61,14 +61,6 @@ static void sp_attribute_table_object_release (SPObject */*object*/, SPAttribute
 static constexpr int XPAD = 4;
 static constexpr int YPAD = 2;
 
-SPAttributeTable::SPAttributeTable(SPObject * const object,
-                                   std::vector<Glib::ustring> const &labels,
-                                   std::vector<Glib::ustring> const &attributes,
-                                   GtkWidget * const parent)
-{
-    set_object(object, labels, attributes, parent);
-}
-
 void SPAttributeTable::clear()
 {
     if (table)
@@ -82,19 +74,18 @@ void SPAttributeTable::clear()
     change_object(nullptr);
 }
 
-void SPAttributeTable::set_object(SPObject * const object,
-                                  std::vector<Glib::ustring> const &labels,
-                                  std::vector<Glib::ustring> const &attributes,
-                                  GtkWidget * const parent)
+Gtk::Widget *SPAttributeTable::set_object(SPObject * const object,
+                                          std::vector<Glib::ustring> const &labels,
+                                          std::vector<Glib::ustring> const &attributes)
 {
-    g_return_if_fail (!object || !labels.empty() || !attributes.empty());
-    g_return_if_fail (labels.size() == attributes.size());
+    if (!(!object || !labels.empty() || !attributes.empty())) return nullptr;
+    if (labels.size() != attributes.size()) return nullptr;
 
     clear();
 
     _object = object;
 
-    if (!object) return;
+    if (!object) return nullptr;
 
     blocked = true;
 
@@ -102,10 +93,6 @@ void SPAttributeTable::set_object(SPObject * const object,
     release_connection  = object->connectRelease (sigc::bind<1>(&sp_attribute_table_object_release , this));
 
     table = std::make_unique<Gtk::Grid>();
-
-    if (parent) {
-        gtk_container_add(GTK_CONTAINER(parent), table->Gtk::Widget::gobj());
-    }
     
     // Fill rows
     _attributes = attributes;
@@ -137,6 +124,8 @@ void SPAttributeTable::set_object(SPObject * const object,
     }
 
     blocked = false;
+
+    return table.get();
 }
 
 void SPAttributeTable::change_object(SPObject *object)
@@ -226,7 +215,7 @@ static void sp_attribute_table_object_release (SPObject */*object*/, SPAttribute
 {
     std::vector<Glib::ustring> labels;
     std::vector<Glib::ustring> attributes;
-    spat->set_object (nullptr, labels, attributes, nullptr);
+    spat->set_object(nullptr, labels, attributes);
 }
 
 /*

@@ -132,7 +132,7 @@ MarkerComboBox::MarkerComboBox(Glib::ustring id, int l) :
 
     _marker_store = Gio::ListStore<MarkerItem>::create();
     _marker_list.bind_list_store(_marker_store, [=](const Glib::RefPtr<MarkerItem>& item){
-        auto const image = Gtk::make_managed<Gtk::Image>(item->pix);
+        auto const image = Gtk::make_managed<Gtk::Image>(to_texture(item->pix));
         image->set_visible(true);
         auto const box = Gtk::make_managed<Gtk::FlowBoxChild>();
         box->set_child(*image);
@@ -253,7 +253,7 @@ MarkerComboBox::MarkerComboBox(Glib::ustring id, int l) :
     _menu_btn.get_popover()->signal_show().connect([=](){ update_ui(get_current(), false); }, false);
 
     update_scale_link();
-    _current_img.set(g_image_none);
+    _current_img.set(to_texture(g_image_none));
     set_visible(true);
 }
 
@@ -296,7 +296,7 @@ void MarkerComboBox::update_scale_link() {
 
 // update marker image inside the menu button
 void MarkerComboBox::update_menu_btn(Glib::RefPtr<MarkerItem> marker) {
-    _current_img.set(marker ? marker->pix : g_image_none);
+    _current_img.set(to_texture(marker ? marker->pix : g_image_none));
 }
 
 // update marker preview image in the popover panel
@@ -327,7 +327,7 @@ void MarkerComboBox::update_preview(Glib::RefPtr<MarkerItem> item) {
         label = _(item->label.c_str());
     }
 
-    _preview.set(surface);
+    _preview.set(to_texture(surface));
     std::ostringstream ost;
     ost << "<small>" << label.raw() << "</small>";
     _marker_name.set_markup(ost.str().c_str());

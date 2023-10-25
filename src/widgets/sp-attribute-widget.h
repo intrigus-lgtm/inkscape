@@ -50,24 +50,6 @@ public:
     SPAttributeTable() = default;
     
     /**
-     * Constructor referring to a specific object.
-     *
-     * This constructor initializes all data fields and creates the necessary widgets.
-     * set_object is called for this purpose.
-     * 
-     * @param object the SPObject to which this instance is referring to. It should be the object that is currently selected and whose properties are being shown by this SPAttributeTable instance.
-     * @param labels list of labels to be shown for the different attributes.
-     * @param attributes list of attributes whose value can be edited.
-     * @param parent the parent object owning the SPAttributeTable instance.
-     * 
-     * @see set_object
-     */
-    SPAttributeTable(SPObject *object,
-                     std::vector<Glib::ustring> const &labels,
-                     std::vector<Glib::ustring> const &attributes,
-                     GtkWidget* parent);
-    
-    /**
      * Sets class properties and creates child widgets
      *
      * set_object initializes all data fields, creates links to the
@@ -77,12 +59,10 @@ public:
      * @param object the SPObject to which this instance is referring to. It should be the object that is currently selected and whose properties are being shown by this SPAttribuTable instance.
      * @param labels list of labels to be shown for the different attributes.
      * @param attributes list of attributes whose value can be edited.
-     * @param parent the parent object owning the SPAttributeTable instance.
      */
-    void set_object(SPObject *object,
-                    std::vector<Glib::ustring> const &labels,
-                    std::vector<Glib::ustring> const &attributes,
-                    GtkWidget *parent);
+    Gtk::Widget *set_object(SPObject *object,
+                            std::vector<Glib::ustring> const &labels,
+                            std::vector<Glib::ustring> const &attributes);
     
     /**
      * Update values in entry boxes on change of object.

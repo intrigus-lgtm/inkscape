@@ -27,10 +27,10 @@ ColorPreview::ColorPreview(std::uint32_t const rgba)
     set_name("ColorPreview");
 
     _drawing_area->set_visible(true);
-    _drawing_area->signal_draw().connect(sigc::mem_fun(*this, &ColorPreview::on_drawing_area_draw));
+    _drawing_area->set_draw_func(sigc::mem_fun(*this, &ColorPreview::on_drawing_area_draw));
     _drawing_area->set_expand(true); // DrawingArea fills self Box,
     set_expand(false);               // but the Box doesnʼt expand.
-    add(*_drawing_area);
+    append(*_drawing_area);
 }
 
 void
@@ -42,8 +42,7 @@ ColorPreview::setRgba32(std::uint32_t const rgba)
     _drawing_area->queue_draw();
 }
 
-bool
-ColorPreview::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr)
+void ColorPreview::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int)
 {
     auto const width  = _drawing_area->get_width () / 2.0;
     auto const height = _drawing_area->get_height() - 1.0;
@@ -79,8 +78,6 @@ ColorPreview::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr)
     cairo_close_path (cr->cobj());
     ink_cairo_set_source_rgba32(cr->cobj(), _rgba | 0xff);
     cr->fill();
-    
-    return true;
 }
 
 } // namespace Inkscape::UI::Widget

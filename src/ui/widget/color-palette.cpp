@@ -86,28 +86,28 @@ ColorPalette::ColorPalette():
         _set_tile_size(static_cast<int>(size.get_value()));
         _signal_settings_changed.emit();
         return true;
-    });
+    }, true);
 
     auto& aspect = get_widget<Gtk::Scale>(_builder, "aspect-slider");
     aspect.signal_change_value().connect([=,&aspect](Gtk::ScrollType, double val) {
         _set_aspect(aspect.get_value());
         _signal_settings_changed.emit();
         return true;
-    });
+    }, true);
 
     auto& border = get_widget<Gtk::Scale>(_builder, "border-slider");
     border.signal_change_value().connect([=,&border](Gtk::ScrollType, double val) {
         _set_tile_border(static_cast<int>(border.get_value()));
         _signal_settings_changed.emit();
         return true;
-    });
+    }, true);
 
     auto& rows = get_widget<Gtk::Scale>(_builder, "row-slider");
     rows.signal_change_value().connect([=,&rows](Gtk::ScrollType, double val) {
         _set_rows(static_cast<int>(rows.get_value()));
         _signal_settings_changed.emit();
         return true;
-    });
+    }, true);
 
     auto& sb = get_widget<Gtk::CheckButton>(_builder, "use-sb");
     sb.set_active(_force_scrollbar);

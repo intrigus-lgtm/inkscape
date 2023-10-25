@@ -71,10 +71,9 @@ private:
     bool& _flag;
 };
 
-void set_icon(Gtk::Button& btn, gchar const* pixmap) {
-    if (Gtk::Image* img = sp_get_icon_image(pixmap, Gtk::IconSize::NORMAL)) {
-        btn.set_image(*img);
-    }
+void set_icon(Gtk::Button &btn, char const *pixmap)
+{
+    btn.set_image_from_icon_name(pixmap, Gtk::IconSize::NORMAL);
 }
 
 // draw solid color circle with black outline; right side is to show checkerboard if color's alpha is > 0
@@ -209,16 +208,16 @@ GradientEditor::GradientEditor(const char* prefs) :
     _gradient_image.signal_delete_stop().connect([=](size_t index) {
         delete_stop(index);
     });
-    gradBox.add(_gradient_image);
+    gradBox.append(_gradient_image);
 
     // add color selector
     auto const color_selector = Gtk::make_managed<ColorNotebook>(_selected_color);
     color_selector->set_label(_("Stop color"));
     color_selector->set_visible(true);
-    _colors_box.add(*color_selector);
+    _colors_box.append(*color_selector);
 
     // gradient library in a popup
-    get_widget<Gtk::Popover>(_builder, "libraryPopover").add(*_selector);
+    get_widget<Gtk::Popover>(_builder, "libraryPopover").set_child(*_selector);
     const int h = 5;
     const int v = 3;
     _selector->set_margin_start(h);
@@ -287,7 +286,6 @@ GradientEditor::GradientEditor(const char* prefs) :
                                             *this, &GradientEditor::set_repeat_mode), mode));
         _repeat_popover->append(*item);
     }
-    _repeat_popover->show_all_children();
     get_widget<Gtk::MenuButton>(_builder, "repeatMode").set_popover(*_repeat_popover);
     set_repeat_icon(SP_GRADIENT_SPREAD_PAD);
     
@@ -306,7 +304,7 @@ GradientEditor::GradientEditor(const char* prefs) :
         }
     });
 
-    add(_main_grid);
+    append(_main_grid);
 
     // restore visibility of the stop list view
     _stops_list_visible = Inkscape::Preferences::get()->getBool(_prefs + "/stoplist", true);
@@ -557,7 +555,7 @@ void GradientEditor::selectStop(SPStop* selected) {
     // request from the outside to sync stop selection
     const auto& items = _stop_tree.get_model()->children();
     auto it = std::find_if(items.begin(), items.end(), [=](const auto& row) {
-        SPStop* stop = row->get_value(_stopObj);
+        SPStop* stop = row.get_value(_stopObj);
         return stop == selected; 
     });
     if (it != items.end()) {

@@ -71,7 +71,7 @@ private:
     // Signal handlers
     void on_family_changed();
     void on_style_changed();
-    void on_icon_pressed (Gtk::EntryIconPosition icon_position, const GdkEventButton* event);
+    void on_icon_pressed(Gtk::Entry::IconPosition icon_position);
     bool on_key_pressed(GtkEventControllerKey const * controller,
                         unsigned keyval, unsigned keycode, GdkModifierType state);
 

@@ -13,6 +13,7 @@
 #include <glibmm/convert.h>   // filename_from_utf8
 #include <glibmm/ustring.h>
 #include <gtkmm/builder.h>
+#include <gtkmm/label.h>
 #include <gtkmm/menubutton.h>
 #include <gtkmm/popover.h>
 #include <gtkmm/spinbutton.h>
@@ -52,10 +53,10 @@ void ExtensionList::init()
     _pref_holder  = &get_widget<Gtk::Viewport>  (_builder, "pref_holder");
 
     _popover_signal = _pref_popover->signal_show().connect([=, this]() {
-        _pref_holder->remove();
+        _pref_holder->unset_child();
         if (auto ext = getExtension()) {
             if (auto gui = ext->autogui(nullptr, nullptr)) {
-                _pref_holder->add(*gui);
+                _pref_holder->set_child(*gui);
                 _pref_popover->grab_focus();
             }
         }
@@ -229,7 +230,7 @@ void ExportList::append_row()
     auto const pIcon = Gtk::manage(sp_get_icon_image("window-close", Gtk::IconSize::NORMAL));
     auto const delete_btn = Gtk::make_managed<Gtk::Button>();
     delete_btn->set_has_frame(false);
-    delete_btn->add(*pIcon);
+    delete_btn->set_child(*pIcon);
     this->attach(*delete_btn, _delete_col, current_row, 1, 1);
     delete_btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &ExportList::delete_row), delete_btn));
 
@@ -244,8 +245,9 @@ void ExportList::delete_row(Gtk::Widget *widget)
     if (_num_rows <= 1) {
         return;
     }
-    int row = this->child_property_top_attach(*widget);
-    this->remove_row(row);
+    int row, ignore;
+    query_child(*widget, ignore, row, ignore, ignore);
+    remove_row(row);
     _num_rows--;
     if (_num_rows <= 1) {
         auto const d_button_0 = this->get_child_at(_delete_col, 1);

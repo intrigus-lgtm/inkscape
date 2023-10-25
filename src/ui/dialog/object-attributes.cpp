@@ -372,14 +372,13 @@ public:
             }
             if (_first_time_update) {
                 _first_time_update = false;
-                _table->set_object(anchor, labels, attrs, (GtkWidget*)_table->gobj());
+                _table->append(*_table->set_object(anchor, labels, attrs));
             }
             else {
                 _table->change_object(anchor);
             }
-            if (auto grid = dynamic_cast<Gtk::Grid*>(get_first_child(*_table))) {
+            if (auto grid = dynamic_cast<Gtk::Grid*>(_table->get_first_child())) {
                 auto button = Gtk::make_managed<Gtk::Button>();
-                button->show();
                 button->set_margin_start(4);
                 button->set_image_from_icon_name("object-pick");
                 button->signal_clicked().connect([=](){

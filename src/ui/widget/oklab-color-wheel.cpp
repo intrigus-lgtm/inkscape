@@ -170,7 +170,7 @@ Geom::Point OKWheel::_curColorWheelCoords() const
 }
 
 /** @brief Draw the widget into the Cairo context. */
-bool OKWheel::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr)
+void OKWheel::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int)
 {
     if(_updateDimensions()) {
         _redrawDisc();
@@ -212,7 +212,6 @@ bool OKWheel::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr)
         cr->stroke();
     }
     cr->restore();
-    return true;
 }
 
 /** @brief Recreate the pixel buffer containing the colourful disc. */

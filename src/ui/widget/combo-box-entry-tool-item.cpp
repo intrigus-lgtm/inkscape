@@ -34,10 +34,12 @@
 #include <glibmm/regex.h>
 #include <gdkmm/display.h>
 #include <gtkmm/combobox.h>
+#include <gtkmm/entry.h>
+#include <gtkmm/eventcontrollerkey.h>
 
 #include "libnrtype/font-lister.h"
+#include "ui/controller.h"
 #include "ui/icon-names.h"
-#include "ui/util.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -93,9 +95,9 @@ ComboBoxEntryToolItem::ComboBoxEntryToolItem(Glib::ustring name,
 
     // Optionally widen the combobox width... which widens the drop-down list in list mode.
     if (_extra_width > 0) {
-        GtkRequisition req, ignore;
+        Gtk::Requisition req, ignore;
         _combobox.get_preferred_size(req, ignore);
-        _combobox.set_size_request(req.width + _extra_width, -1);
+        _combobox.set_size_request(req.get_width() + _extra_width, -1);
     }
 
     _entry = dynamic_cast<Gtk::Entry *>(_combobox.get_first_child());
@@ -114,7 +116,7 @@ ComboBoxEntryToolItem::ComboBoxEntryToolItem(Glib::ustring name,
 
         // Add signal for GtkEntry to check if finished typing.
         _entry->signal_activate().connect(sigc::mem_fun(*this, &ComboBoxEntryToolItem::entry_activate_cb));
-        _entry->signal_key_press_event().connect([this] (GdkEventKey *ev) { return keypress_cb(ev->keyval); });
+        Controller::add_key<&ComboBoxEntryToolItem::keypress_cb>(*_entry, *this);
     }
 
     set_tooltip(_tooltip.c_str());
@@ -163,15 +165,15 @@ bool ComboBoxEntryToolItem::set_active_text(Glib::ustring text, int row)
         if (!_warning.empty()) {
             Glib::ustring missing = check_comma_separated_text();
             if (!missing.empty()) {
-                _entry->set_icon_from_icon_name(INKSCAPE_ICON("dialog-warning"), Gtk::ENTRY_ICON_SECONDARY);
+                _entry->set_icon_from_icon_name(INKSCAPE_ICON("dialog-warning"), Gtk::Entry::IconPosition::SECONDARY);
                 // Can't add tooltip until icon set
                 auto const warning = _warning + ": " + missing;
-                _entry->set_icon_tooltip_text(_warning + ": " + missing, Gtk::ENTRY_ICON_SECONDARY);
+                _entry->set_icon_tooltip_text(_warning + ": " + missing, Gtk::Entry::IconPosition::SECONDARY);
 
                 if (_warning_cb) {
                     // Add callback if we haven't already
                     if (!_warning_cb_id) {
-                        _warning_cb_id = _entry->signal_icon_press().connect([this] (auto, auto) { _warning_cb(*_entry); });
+                        _warning_cb_id = _entry->signal_icon_press().connect([this] (auto) { _warning_cb(*_entry); });
                     }
                     // Unblock signal
                     if (_warning_cb_blocked) {
@@ -184,13 +186,13 @@ bool ComboBoxEntryToolItem::set_active_text(Glib::ustring text, int row)
         }
 
         if (!set && !_info.empty()) {
-            _entry->set_icon_from_icon_name(INKSCAPE_ICON("edit-select-all"), Gtk::ENTRY_ICON_SECONDARY);
-            _entry->set_icon_tooltip_text(_info, Gtk::ENTRY_ICON_SECONDARY);
+            _entry->set_icon_from_icon_name(INKSCAPE_ICON("edit-select-all"), Gtk::Entry::IconPosition::SECONDARY);
+            _entry->set_icon_tooltip_text(_info, Gtk::Entry::IconPosition::SECONDARY);
 
             if (_info_cb) {
                 // Add callback if we haven't already
                 if (!_info_cb_id) {
-                    _info_cb_id = _entry->signal_icon_press().connect([this] (auto, auto) { _info_cb(*_entry); });
+                    _info_cb_id = _entry->signal_icon_press().connect([this] (auto) { _info_cb(*_entry); });
                 }
                 // Unblock signal
                 if (_info_cb_blocked) {
@@ -202,7 +204,7 @@ bool ComboBoxEntryToolItem::set_active_text(Glib::ustring text, int row)
         }
 
         if (!set) {
-            _entry->unset_icon(Gtk::ENTRY_ICON_SECONDARY);
+            _entry->unset_icon(Gtk::Entry::IconPosition::SECONDARY);
         }
     }
 
@@ -226,9 +228,9 @@ void ComboBoxEntryToolItem::set_extra_width(int extra_width)
     // Clamp to limits
     _extra_width = std::clamp(extra_width, -1, 500);
 
-    GtkRequisition req, ignore;
+    Gtk::Requisition req, ignore;
     _combobox.get_preferred_size(req, ignore);
-    _combobox.set_size_request(req.width + _extra_width, -1);
+    _combobox.set_size_request(req.get_width() + _extra_width, -1);
 }
 
 void ComboBoxEntryToolItem::focus_on_click(bool focus_on_click)
@@ -259,7 +261,7 @@ void ComboBoxEntryToolItem::popup_enable()
     _entry_completion->set_inline_completion(false);
     _entry_completion->set_inline_selection(true);
 
-    _entry_completion->signal_match_selected().connect(sigc::mem_fun(*this, &ComboBoxEntryToolItem::match_selected_cb));
+    _entry_completion->signal_match_selected().connect(sigc::mem_fun(*this, &ComboBoxEntryToolItem::match_selected_cb), true);
 }
 
 void ComboBoxEntryToolItem::popup_disable()
@@ -285,7 +287,7 @@ void ComboBoxEntryToolItem::set_info(Glib::ustring info)
 
     // Widget may not have been created....
     if (_entry) {
-        _entry->set_icon_tooltip_text(_info, Gtk::ENTRY_ICON_SECONDARY);
+        _entry->set_icon_tooltip_text(_info, Gtk::Entry::IconPosition::SECONDARY);
     }
 }
 
@@ -300,7 +302,7 @@ void ComboBoxEntryToolItem::set_warning(Glib::ustring warning)
 
     // Widget may not have been created....
     if (_entry) {
-        _entry->set_icon_tooltip_text(_warning, Gtk::ENTRY_ICON_SECONDARY);
+        _entry->set_icon_tooltip_text(_warning, Gtk::Entry::IconPosition::SECONDARY);
     }
 }
 
@@ -324,13 +326,13 @@ int ComboBoxEntryToolItem::get_active_row_from_text(Glib::ustring const &target_
     int row = 0;
     for (auto iter : _model->children()) {
         // See if we should exclude a row
-        if (exclude && is_font_list && !iter->get_value(fontlister->font_list.onSystem)) {
+        if (exclude && is_font_list && !iter.get_value(fontlister->font_list.onSystem)) {
             continue;
         }
 
         // Get text from list entry
         Glib::ustring text;
-        iter->get_value(0, text);
+        iter.get_value(0, text);
 
         if (!ignore_case) {
             // Case sensitive compare
@@ -462,7 +464,7 @@ void ComboBoxEntryToolItem::defocus()
     }
 }
 
-bool ComboBoxEntryToolItem::keypress_cb(unsigned keyval)
+bool ComboBoxEntryToolItem::keypress_cb(GtkEventControllerKey const *, unsigned keyval, unsigned, GdkModifierType)
 {
     switch (keyval) {
         case GDK_KEY_Escape:

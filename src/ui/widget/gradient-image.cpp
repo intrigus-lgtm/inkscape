@@ -31,21 +31,19 @@ GradientImage::GradientImage(SPGradient *gradient)
     set_name("GradientImage");
 
     _drawing_area->set_visible(true);
-    _drawing_area->signal_draw().connect(sigc::mem_fun(*this, &GradientImage::on_drawing_area_draw));
+    _drawing_area->set_draw_func(sigc::mem_fun(*this, &GradientImage::on_drawing_area_draw));
     _drawing_area->set_expand(true); // DrawingArea fills self Box,
     set_expand(false);               // but the Box doesnʼt expand.
-    add(*_drawing_area);
+    append(*_drawing_area);
 
     set_gradient(gradient);
 }
 
-bool
-GradientImage::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr)
+void GradientImage::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int)
 {
     auto const width = _drawing_area->get_width(), height = _drawing_area->get_height();
     auto ct = cr->cobj();
     sp_gradient_draw(_gradient, width, height, ct);
-    return true;
 }
 
 void

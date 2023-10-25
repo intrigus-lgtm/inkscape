@@ -38,7 +38,7 @@ public:
     guint32 getRgb() const override;
 
 private:
-    bool on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr) final;
+    void on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int) override;
 
     static unsigned constexpr H = 0, S = 1, L = 2; ///< Indices into _values
 

@@ -19,12 +19,12 @@ FontButton::FontButton(Glib::ustring const &label, Glib::ustring const &tooltip,
 
 Glib::ustring FontButton::getValue() const
 {
-    return getFontButton().get_font_name();
+    return getFontButton().get_font();
 }
 
 void FontButton::setValue(Glib::ustring const &fontspec)
 {
-    getFontButton().set_font_name(fontspec);
+    getFontButton().set_font(fontspec);
 }
 
 Glib::SignalProxy<void()> FontButton::signal_font_value_changed()

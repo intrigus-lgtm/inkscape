@@ -41,7 +41,7 @@ private:
     Gtk::DrawingArea * const _drawing_area;
     std::uint32_t _rgba;
 
-    bool on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr);
+    void on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int);
 };
 
 } // namespace Inkscape::UI::Widget

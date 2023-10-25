@@ -40,7 +40,7 @@ ColorPicker::ColorPicker(Glib::ustring const &title,
     _color_selector = nullptr;
     setupDialog(title);
     _preview->set_visible(true);
-    button->add(*_preview);
+    button->set_child(*_preview);
     // set tooltip if given, otherwise leave original tooltip in place (from external button)
     if (!tip.empty()) {
         button->set_tooltip_text(tip);
@@ -66,7 +66,7 @@ void ColorPicker::setupDialog(const Glib::ustring &title)
 
     _colorSelectorDialog.set_visible(false);
     _colorSelectorDialog.set_title (title);
-    _colorSelectorDialog.set_border_width (4);
+    _colorSelectorDialog.set_margin(4);
 }
 
 void ColorPicker::setSensitive(bool sensitive) { set_sensitive(sensitive); }
@@ -110,9 +110,8 @@ void ColorPicker::on_clicked()
     _updating = false;
 
     _colorSelectorDialog.set_visible(true);
-    Glib::RefPtr<Gdk::Window> window = _colorSelectorDialog.get_parent_window();
-    if (window) {
-        window->focus(1);
+    if (auto const window = dynamic_cast<Gtk::Window *>(_colorSelectorDialog.get_parent()->get_root())) {
+        window->present();
     }
 }
 

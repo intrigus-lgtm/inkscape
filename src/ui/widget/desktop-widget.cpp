@@ -119,10 +119,13 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     _top_toolbars->attach(*tool_toolbars, 0, 1);
 
     tool_toolbox = Gtk::make_managed<Inkscape::UI::Toolbar::ToolToolbar>(inkscape_window);
-    _tbbox->pack1(*tool_toolbox, false, false);
+    _tbbox->set_start_child(*tool_toolbox);
+    _tbbox->set_resize_start_child(false);
+    _tbbox->set_shrink_start_child(false);
     auto adjust_pos = [=, this](){
         int minimum_width, natural_width;
-        tool_toolbox->get_preferred_width(minimum_width, natural_width);
+        int ignore;
+        tool_toolbox->measure(Gtk::Orientation::HORIZONTAL, -1, minimum_width, natural_width, ignore, ignore);
         if (minimum_width > 0) {
             int pos = _tbbox->get_position();
             int new_pos = pos + minimum_width / 2;
@@ -173,7 +176,9 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     _container = std::make_unique<DialogContainer>(inkscape_window);
     _columns = _container->get_columns();
     _columns->set_dropzone_sizes(2, -1);
-    _tbbox->pack2(*_container, true, true);
+    _tbbox->set_end_child(*_container);
+    _tbbox->set_resize_end_child(true);
+    _tbbox->set_shrink_end_child(true);
 
     _canvas_grid->set_hexpand(true);
     _canvas_grid->set_vexpand(true);
@@ -468,7 +473,7 @@ SPDesktopWidget::setWindowSize (gint w, gint h)
 {
     if (_window) {
         _window->set_default_size(w, h);
-        _window->resize(w, h);
+        _window->set_default_size(w, h);
     }
 }
 
@@ -633,8 +638,7 @@ void SPDesktopWidget::layoutWidgets()
 
     // Unlink command toolbar.
     command_toolbar->reference(); // So toolbox is not deleted.
-    auto parent = command_toolbar->get_parent();
-    parent->remove(*command_toolbar);
+    command_toolbar->unparent();
 
     // Link command toolbar back.
     auto orientation_c = GTK_ORIENTATION_HORIZONTAL;
@@ -643,15 +647,16 @@ void SPDesktopWidget::layoutWidgets()
         command_toolbar->set_hexpand(true);
         orientation_c = GTK_ORIENTATION_HORIZONTAL;
     } else {
-        _hbox->add(*command_toolbar);
+        _hbox->append(*command_toolbar);
         orientation_c = GTK_ORIENTATION_VERTICAL;
         command_toolbar->set_hexpand(false);
     }
     // Toolbar is actually child:
-    command_toolbar->foreach ([=, this](Gtk::Widget &widget) {
+    Inkscape::UI::for_each_child(*command_toolbar, [=, this](Gtk::Widget &widget) {
         if (auto toolbar = dynamic_cast<Gtk::Box *>(&widget)) {
             gtk_orientable_set_orientation(GTK_ORIENTABLE(toolbar->gobj()), orientation_c); // Missing in C++interface!
         }
+        return Inkscape::UI::ForEachResult::_continue;
     });
     command_toolbar->unreference();
 
@@ -737,7 +742,7 @@ void SPDesktopWidget::repack_snaptoolbar()
     // Only remove from the parent if the status has changed
     auto parent = snap.get_parent();
     if (parent && ((is_perm && parent != _hbox) || (!is_perm && parent != _top_toolbars))) {
-        parent->remove(snap);
+        snap.unparent();
     }
 
     // Only repack if there's no parent widget now.

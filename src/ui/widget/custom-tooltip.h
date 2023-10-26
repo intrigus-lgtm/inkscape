@@ -6,12 +6,16 @@
 #include <glibmm/refptr.h>
 #include <gtkmm/enums.h>
 
-namespace Gtk { class Tooltip; }
+namespace Gtk {
+class Tooltip;
+class Widget;
+} // namespace Gtk
 
 void sp_clear_custom_tooltip();
 
 bool
 sp_query_custom_tooltip(
+    Gtk::Widget *widg,
     int x, 
     int y, 
     bool keyboard_tooltip, 

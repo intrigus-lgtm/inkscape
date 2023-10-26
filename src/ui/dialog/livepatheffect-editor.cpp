@@ -347,7 +347,7 @@ void LivePathEffectEditor::add_lpes(Inkscape::UI::Widget::CompletionPopup &popup
         auto const menuitem = builder.add_item(lpe.label, lpe.category, lpe.tooltip, lpe.icon_name,
                                                lpe.sensitive, true, [=, this]{ onAdd(type); });
         menuitem->signal_query_tooltip().connect([=](int x, int y, bool kbd, const Glib::RefPtr<Gtk::Tooltip>& tooltipw){
-            return sp_query_custom_tooltip(x, y, kbd, tooltipw, id, lpe.tooltip, lpe.icon_name);
+            return sp_query_custom_tooltip(this, x, y, kbd, tooltipw, id, lpe.tooltip, lpe.icon_name);
         }, false); // before
         if (builder.new_section()) {
             builder.set_section(get_category_name(lpe.category));
@@ -790,7 +790,7 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
         LPEDrag->set_name(Glib::ustring::compose("drag_%1", counter));
 
         LPEExpanderBox->signal_query_tooltip().connect([=](int x, int y, bool kbd, const Glib::RefPtr<Gtk::Tooltip>& tooltipw){
-            return sp_query_custom_tooltip(x, y, kbd, tooltipw, id, tooltip, icon);
+            return sp_query_custom_tooltip(this, x, y, kbd, tooltipw, id, tooltip, icon);
         }, false); // before
 
         // Add actions used by LPEEffectMenuButton

@@ -9,6 +9,7 @@
 #include <gtkmm/label.h>
 #include <gtkmm/image.h>
 #include <gtkmm/tooltip.h>
+#include <giomm/themedicon.h>
 
 #include "ui/pack.h"
 
@@ -17,8 +18,8 @@ static gint timeoutid = -1;
 static gboolean
 delaytooltip (gpointer data)
 {
-    GdkDisplay *display = reinterpret_cast<GdkDisplay *>(data); 
-    gtk_tooltip_trigger_tooltip_query(display);
+    GtkWidget *widg = reinterpret_cast<GtkWidget *>(data);
+    gtk_widget_trigger_tooltip_query(widg);
     return true;
 }
 
@@ -31,7 +32,7 @@ void sp_clear_custom_tooltip()
 }
 
 bool
-sp_query_custom_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltipw, gint id, Glib::ustring tooltip, Glib::ustring icon, Gtk::IconSize iconsize, int delaytime)
+sp_query_custom_tooltip(Gtk::Widget *widg, int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltipw, gint id, Glib::ustring tooltip, Glib::ustring icon, Gtk::IconSize iconsize, int delaytime)
 {
     sp_clear_custom_tooltip();
 
@@ -48,7 +49,7 @@ sp_query_custom_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<
     label->set_markup(tooltip);
     label->set_max_width_chars(40);
     if (icon != "") {
-	    Inkscape::UI::pack_start(*box, *Gtk::make_managed<Gtk::Image>(icon, iconsize), true, true, 2);
+	    Inkscape::UI::pack_start(*box, *Gtk::make_managed<Gtk::Image>(Gio::ThemedIcon::create(icon)), true, true, 2);
     }
     Inkscape::UI::pack_start(*box, *label, true, true, 2);
     tooltipw->set_custom(*box);
@@ -58,7 +59,7 @@ sp_query_custom_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<
     if (elapsed.count() / delaytime < 0.5) {
         GdkDisplay *display = gdk_display_get_default();
         if (display) {
-            timeoutid = g_timeout_add(501-elapsed.count(), delaytooltip, display);
+            timeoutid = g_timeout_add(501-elapsed.count(), delaytooltip, widg);
         }
     }
     return elapsed.count() / delaytime > 0.5;

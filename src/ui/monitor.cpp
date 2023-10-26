@@ -12,23 +12,56 @@
 
 #include "monitor.h"
 
+#include <limits>
+#include <gdkmm/display.h>
 #include <gdkmm/monitor.h>
 #include <gdkmm/surface.h>
+#include <2geom/point.h>
+#include <2geom/rect.h>
 
-#include "include/gtkmm_version.h"
+#ifdef GDK_WINDOWING_X11
+#include <gdk/x11/gdkx.h>
+#endif
+#if GDK_WINDOWING_WIN32
+#include <gdk/win32/gdkwin32.h>
+#endif
 
 namespace Inkscape::UI {
+namespace {
+
+// Removed from Gtk in commit a46f9af1, so we have to reimplement it here.
+Glib::RefPtr<Gdk::Monitor> get_primary_monitor(Glib::RefPtr<Gdk::Display> const &display)
+{
+    auto display_c = display->gobj();
+
+    GdkMonitor *monitor = nullptr;
+#ifdef GDK_WINDOWING_X11
+    if (GDK_IS_X11_DISPLAY(display_c)) {
+        monitor = gdk_x11_display_get_primary_monitor(display_c);
+    }
+#endif
+#ifdef GDK_WINDOWING_WIN32
+    if (GDK_IS_WIN32_DISPLAY(display_c)) {
+        monitor = gdk_win32_display_get_primary_monitor(display_c);
+    }
+#endif
+
+    if (monitor) {
+        return Glib::wrap(monitor, true);
+    }
+
+    // Fallback to monitor number 0 if the user hasn't configured a primary monitor,
+    // or if the backend doesn't support it.
+    return display->get_monitors()->get_typed_object<Gdk::Monitor>(0);
+}
+
+} // namespace
 
 /** get monitor geometry of primary monitor */
 Gdk::Rectangle get_monitor_geometry_primary() {
     Gdk::Rectangle monitor_geometry;
     auto const display = Gdk::Display::get_default();
-    auto monitor = display->get_primary_monitor();
-
-    // Fallback to monitor number 0 if the user hasn't configured a primary monitor
-    if (!monitor) {
-        monitor = display->get_monitor(0);
-    }
+    auto monitor = get_primary_monitor(display);
 
     monitor->get_geometry(monitor_geometry);
     return monitor_geometry;
@@ -46,9 +79,21 @@ Gdk::Rectangle get_monitor_geometry_at_surface(Glib::RefPtr<Gdk::Surface> const 
 /** get monitor geometry of monitor at (or closest to) point on combined screen area */
 Gdk::Rectangle get_monitor_geometry_at_point(int x, int y) {
     Gdk::Rectangle monitor_geometry;
+    double dist = std::numeric_limits<double>::max();
     auto const display = Gdk::Display::get_default();
-    auto const monitor = display->get_monitor_at_point(x ,y);
-    monitor->get_geometry(monitor_geometry);
+    for (unsigned i = 0; i < display->get_monitors()->get_n_items(); ++i) {
+        auto monitor = display->get_monitors()->get_typed_object<Gdk::Monitor>(i);
+        Gdk::Rectangle tmp_monitor_geometry;
+        monitor->get_geometry(tmp_monitor_geometry);
+        double cdist = Geom::distance(Geom::Point(x, y),
+            Geom::Rect(tmp_monitor_geometry.get_x(),
+                       tmp_monitor_geometry.get_y(),
+                       tmp_monitor_geometry.get_width(),
+                       tmp_monitor_geometry.get_height()));
+        if (cdist < dist) {
+            monitor_geometry = tmp_monitor_geometry;
+        }
+    }
     return monitor_geometry;
 }
 

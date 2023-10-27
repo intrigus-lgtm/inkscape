@@ -45,9 +45,6 @@ Point::Point(Glib::ustring const &label, Glib::ustring const &tooltip,
       xwidget("X:", {}, adjust, digits),
       ywidget("Y:", {}, adjust, digits)
 {
-    xwidget.drag_dest_unset();
-    ywidget.drag_dest_unset();
-
     auto &box = dynamic_cast<Gtk::Box &>(*getWidget());
     UI::pack_start(box, xwidget, true, true);
     UI::pack_start(box, ywidget, true, true);

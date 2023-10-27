@@ -36,7 +36,6 @@ SpinScale::SpinScale(Glib::ustring label, double value,
 {
     set_name("SpinScale");
 
-    _inkspinscale.drag_dest_unset();
     _inkspinscale.set_label(std::move(label));
     _inkspinscale.set_digits (digits);
     _inkspinscale.set_tooltip_text (tip_text);

@@ -56,13 +56,13 @@ CompletionPopup::CompletionPopup() :
         clear();
     });
 
-    _button.signal_toggled().connect([&]{
+    _button.property_active().signal_changed().connect([this] {
         if (!_button.get_active()) {
             return;
         }
         _button_press.emit();
         clear();
-    }, false);
+    });
 
     _search.signal_stop_search().connect([this](){
         clear();

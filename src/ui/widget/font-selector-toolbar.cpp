@@ -250,9 +250,14 @@ FontSelectorToolbar::on_key_pressed(GtkEventControllerKey const * /*controller*/
                                     GdkModifierType const state)
 {
     unsigned int key = 0;
-    gdk_keymap_translate_keyboard_state(Gdk::Display::get_default()->get_keymap(),
-                                        keycode, state,
-                                        0, &key, nullptr, nullptr, nullptr);
+    gdk_display_translate_key(gdk_display_get_default(),
+                            keycode,
+                            state,
+                            0,
+                            &key,
+                            nullptr,
+                            nullptr,
+                            nullptr);
     switch ( key ) {
         case GDK_KEY_Escape:
         case GDK_KEY_Return:

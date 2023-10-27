@@ -273,10 +273,15 @@ bool GradientSelector::onKeyPressed(GtkEventControllerKey const * controller,
                                     GdkModifierType const state)
 {
     auto display = Gdk::Display::get_default();
-    auto keymap = display->get_keymap();
     auto key = 0u;
-    gdk_keymap_translate_keyboard_state(keymap, keycode, state, 0,
-                                        &key, 0, 0, 0);
+    gdk_display_translate_key(gdk_display_get_default(),
+                              keycode,
+                              state,
+                              0,
+                              &key,
+                              nullptr,
+                              nullptr,
+                              nullptr);
     switch (key) {
         case GDK_KEY_Up:
         case GDK_KEY_KP_Up:

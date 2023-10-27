@@ -168,9 +168,14 @@ bool ColorWheel::on_key_released(GtkEventControllerKey const * /*controller*/,
                                  GdkModifierType const state)
 {
     unsigned int key = 0;
-    gdk_keymap_translate_keyboard_state(Gdk::Display::get_default()->get_keymap(),
-                                        keycode, state,
-                                        0, &key, nullptr, nullptr, nullptr);
+    gdk_display_translate_key(gdk_display_get_default(),
+                              keycode,
+                              state,
+                              0,
+                              &key,
+                              nullptr,
+                              nullptr,
+                              nullptr);
 
     switch (key) {
         case GDK_KEY_Up:
@@ -671,9 +676,14 @@ bool ColorWheelHSL::on_key_pressed(GtkEventControllerKey const * /*controller*/,
                                    GdkModifierType const state)
 {
     unsigned int key = 0;
-    gdk_keymap_translate_keyboard_state(Gdk::Display::get_default()->get_keymap(),
-                                        keycode, state,
-                                        0, &key, nullptr, nullptr, nullptr);
+    gdk_display_translate_key(gdk_display_get_default(),
+                              keycode,
+                              state,
+                              0,
+                              &key,
+                              nullptr,
+                              nullptr,
+                              nullptr);
 
     static constexpr double delta_hue = 2.0 / MAX_HUE;
     auto const old_hue = _values[0];
@@ -1170,9 +1180,14 @@ bool ColorWheelHSLuv::on_key_pressed(GtkEventControllerKey const * /*controller*
     bool consumed = false;
 
     unsigned int key = 0;
-    gdk_keymap_translate_keyboard_state(Gdk::Display::get_default()->get_keymap(),
-                                        keycode, state,
-                                        0, &key, nullptr, nullptr, nullptr);
+    gdk_display_translate_key(gdk_display_get_default(),
+                              keycode,
+                              state,
+                              0,
+                              &key,
+                              nullptr,
+                              nullptr,
+                              nullptr);
 
     // Get current point
     auto luv = Hsluv::hsluv_to_luv(_values.data());

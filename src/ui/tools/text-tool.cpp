@@ -1209,12 +1209,10 @@ bool TextTool::root_handler(CanvasEvent const &event)
 /**
  * Attempts to paste system clipboard into the currently edited text, returns true on success
  */
-bool TextTool::pasteInline()
+bool TextTool::pasteInline(Glib::ustring const clip_text)
 {
     if (text || nascent_object) {
         // There is an active text object, or a new object was just created.
-
-        auto const clip_text = Gdk::Clipboard::get()->wait_for_text();
 
         if (!clip_text.empty()) {
 

@@ -55,7 +55,7 @@ public:
     void zoom_grab_focus();
 
 private:
-    int zoom_input(double *new_value);
+    int zoom_input(double &new_value);
     bool zoom_output();
     void zoom_value_changed();
     void zoom_menu_handler();

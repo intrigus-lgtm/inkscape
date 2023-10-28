@@ -159,14 +159,6 @@ protected:
     auto_connection selection_modified_connection;
     auto_connection subselection_changed_connection;
 
-    static void dragDataReceived( GtkWidget *widget,
-                                  GdkDragContext *drag_context,
-                                  gint x, gint y,
-                                  GtkSelectionData *data,
-                                  guint info,
-                                  guint event_time,
-                                  gpointer user_data );
-
     Gtk::EventSequenceState on_fill_click   (Gtk::GestureClick const &click,
                                              int n_press, double x, double y);
     Gtk::EventSequenceState on_stroke_click (Gtk::GestureClick const &click,
@@ -211,6 +203,7 @@ protected:
     void on_stroke_paste();
     void on_fill_opaque();
     void on_stroke_opaque();
+    void _on_paste_callback(Glib::RefPtr<Gio::AsyncResult> &result, Glib::ustring typepaste);
 
     std::unique_ptr<UI::Widget::PopoverMenu> _popup[2];
     UI::Widget::PopoverMenuItem *_popup_copy[2]{};

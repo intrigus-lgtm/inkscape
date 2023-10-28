@@ -49,6 +49,7 @@
 #include <gtkmm/treemodelfilter.h>
 #include <gtkmm/treemodelsort.h>
 #include <gtkmm/treepath.h>
+#include <gtkmm/treeiter.h>
 #include <pangomm/layout.h>
 #include <2geom/point.h>
 
@@ -190,7 +191,9 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
         return title.lowercase().find(text) != Glib::ustring::npos;
     });
     _sets._sorted = Gtk::TreeModelSort::create(_sets._filtered);
-    _sets._sorted->set_sort_func(g_set_columns.translated_title, [=](const Gtk::TreeModel::iterator& a, const Gtk::TreeModel::iterator& b){
+    _sets._sorted->set_sort_func(g_set_columns.translated_title, [this](const Gtk::TreeModel::const_iterator& a, 
+        const Gtk::TreeModel::const_iterator& b) -> int
+    {
         Glib::ustring ida = (*a)[g_set_columns.set_id];
         Glib::ustring idb = (*b)[g_set_columns.set_id];
         // current doc and all docs up front
@@ -290,11 +293,24 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
         prefs->setBool(path + "show-names", show);
     });
 
-    std::vector<Gtk::TargetEntry> targets;
-    targets.emplace_back("application/x-inkscape-paste");
 
-    icon_view->enable_model_drag_source(targets, Gdk::ModifierType::BUTTON1_MASK, Gdk::DragAction::COPY);
-    icon_view->signal_drag_data_get().connect(sigc::mem_fun(*this, &SymbolsDialog::iconDragDataGet));
+    auto source = Gtk::DragSource::create();
+    source->set_actions(Gdk::DragAction::COPY);
+    source->signal_prepare().connect([this, source] ( double x, double y) {
+        Glib::Value<Glib::ustring> ustring_value;
+        ustring_value.init(ustring_value.value_type());
+        ustring_value.set("");
+        if (source->get_current_button() == 1) {
+            auto selected = get_selected_symbol();
+            if (selected) {
+                Glib::ustring symbol_id = (**selected)[g_columns.symbol_id];
+                ustring_value.set(symbol_id);
+                return Gdk::ContentProvider::create(ustring_value);
+            }
+        }
+        return Gdk::ContentProvider::create(ustring_value);
+    }, false);
+    icon_view->add_controller(source);
     icon_view->signal_selection_changed().connect(sigc::mem_fun(*this, &SymbolsDialog::iconChanged));
 
     scroller = &get_widget<Gtk::ScrolledWindow>(_builder, "scroller");
@@ -369,9 +385,11 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     icon_view->set_columns(-1);
     icon_view->pack_start(_renderer);
     icon_view->add_attribute(_renderer, "surface", g_columns.symbol_image);
-    icon_view->set_cell_data_func(_renderer, [=, this](const Gtk::TreeModel::const_iterator& it){
+    icon_view->set_cell_data_func(_renderer, [=, this](Gtk::TreeModel::const_iterator const &const_it){
         Gdk::Rectangle rect;
-        Gtk::TreeModel::Path path(it);
+        // https://gitlab.gnome.org/GNOME/gtkmm/-/issues/145
+        auto it = const_cast<Gtk::TreeIter<Gtk::TreeConstRow> *>(&const_it);
+        auto const path = icon_view->get_model()->get_path(*it);
         if (icon_view->get_cell_rect(path, rect)) {
             auto height = icon_view->get_allocated_height();
             bool visible = !(rect.get_x() < 0 && rect.get_y() < 0);
@@ -379,7 +397,8 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
             if (visible && (rect.get_y() + rect.get_height() < 0 || rect.get_y() > 0 + height)) {
                 visible = false;
             }
-            get_cell_data_func(&_renderer, *it, visible);
+            Gtk::TreeModel::Row row = *(icon_view->get_model()->get_iter(path.to_string()));
+            get_cell_data_func(&_renderer, row, visible);
         }
     });
 
@@ -387,7 +406,7 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     fit_symbol = &get_widget<Gtk::CheckButton>(_builder, "zoom-to-fit");
     auto fit = prefs->getBool(path + "zoom-to-fit", true);
     fit_symbol->set_active(fit);
-    fit_symbol->signal_clicked().connect([=, this](){
+    fit_symbol->signal_toggled().connect([=, this](){
         rebuild();
         prefs->setBool(path + "zoom-to-fit", fit_symbol->get_active());
     });
@@ -414,7 +433,8 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     // restore set selection; check if it is still available first
     _sets._sorted->foreach_path([&](const Gtk::TreeModel::Path& path){
         auto it = _sets.path_to_child_iter(path);
-        if (current == (*it)[g_set_columns.set_id]) {
+        Glib::ustring id = (*it)[g_set_columns.set_id];
+        if (current == id) {
             select_set(path);
             return true;
         }
@@ -659,17 +679,6 @@ void SymbolsDialog::revertSymbol() {
     }
 }
 
-void SymbolsDialog::iconDragDataGet(const Glib::RefPtr<Gdk::DragContext>& /*context*/, Gtk::SelectionData& data, guint /*info*/, guint /*time*/)
-{
-    auto selected = get_selected_symbol();
-    if (!selected) {
-        return;
-    }
-    Glib::ustring symbol_id = (**selected)[g_columns.symbol_id];
-    GdkAtom dataAtom = gdk_atom_intern("application/x-inkscape-paste", false);
-    gtk_selection_data_set(data.gobj(), dataAtom, 9, (guchar*)symbol_id.c_str(), symbol_id.length());
-}
-
 void SymbolsDialog::selectionChanged(Inkscape::Selection *selection) {
     // what are we trying to do here? this code doesn't seem to accomplish anything in v1.2
 /*
@@ -894,7 +903,7 @@ SPDocument* read_vss(std::string filename, std::string name) {
   Glib::ustring title = Glib::Markup::escape_text(name);
   // prepare a valid id prefix for symbols libvisio doesn't give us a name for
   Glib::RefPtr<Glib::Regex> regex1 = Glib::Regex::create("[^a-zA-Z0-9_-]");
-  Glib::ustring id = regex1->replace(name, 0, "_", Glib::Regex::MatchFlags::PARTIAL);
+  Glib::ustring id = regex1->replace(name.c_str(), 0, "_", Glib::Regex::MatchFlags::PARTIAL);
 
   Glib::ustring tmpSVGOutput;
   tmpSVGOutput += "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n";

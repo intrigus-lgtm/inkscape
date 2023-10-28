@@ -18,6 +18,7 @@
 #include <sigc++/functors/mem_fun.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/adjustment.h>
+#include <gtkmm/droptarget.h>
 #include <gtkmm/gestureclick.h>
 #include <gtkmm/checkbutton.h>
 
@@ -39,6 +40,7 @@
 #include "svg/css-ostringstream.h"
 #include "svg/svg-color.h"
 #include "ui/controller.h"
+#include "ui/clipboard.h"
 #include "ui/cursor-utils.h"
 #include "ui/dialog/dialog-container.h"
 #include "ui/dialog/dialog-base.h"
@@ -121,10 +123,6 @@ enum ui_drop_target_info {
     APP_OSWB_COLOR
 };
 
-static const std::vector<Gtk::TargetEntry> ui_drop_target_entries = {
-    Gtk::TargetEntry("application/x-oswb-color", Gtk::TargetFlags(0), APP_OSWB_COLOR)
-};
-
 /* convenience function */
 static Dialog::FillAndStroke *get_fill_and_stroke_panel(SPDesktop *desktop);
 
@@ -175,13 +173,41 @@ SelectedStyle::SelectedStyle(bool /*layout*/)
         drop[i] = std::make_unique<SelectedStyleDropTracker>();
         drop[i]->parent = this;
         drop[i]->item = i;
+        Glib::RefPtr<Gtk::DropTarget> target = Gtk::DropTarget::create((GType)APP_OSWB_COLOR, Gdk::DragAction::COPY | Gdk::DragAction::MOVE);
+        target->signal_drop().connect([this, i] (const Glib::ValueBase& value, double x, double y){
+            if (!dropEnabled[i]) {
+                return false;
+            }
+            auto const tracker = static_cast<SelectedStyleDropTracker*>(drop[i].get());
 
-        g_signal_connect(swatch[i]->gobj(),
-                         "drag-data-received",
-                         G_CALLBACK(dragDataReceived),
-                         drop[i].get());
-        // swatch[i]->signal_drag_data_received().connect(sigc::bind(sigc::mem_fun(*this, &SelectedStyle::dragDataReceived), drop[i].get());
+            // copied from drag-and-drop.cpp, case APP_OSWB_COLOR
+            bool worked = false;
+            Glib::ustring colorspec;
+            PaintDef color;
+            Glib::ustring const data = static_cast<Glib::Value<Glib::ustring> const &>(value).get();
+            worked = color.fromMIMEData("application/x-oswb-color", data.c_str(), data.length());
+            if (worked) {
+                if (color.get_type() == PaintDef::NONE) {
+                    colorspec = "none";
+                } else {
+                    auto [r, g, b] = color.get_rgb();
+                    gchar* tmp = g_strdup_printf("#%02x%02x%02x", r, g, b);
+                    colorspec = tmp;
+                    g_free(tmp);
+                }
+            }
+            if (worked) {
+                SPCSSAttr *css = sp_repr_css_attr_new();
+                sp_repr_css_set_property(css, (tracker->item == SS_FILL) ? "fill":"stroke", colorspec.c_str());
 
+                sp_desktop_set_style(tracker->parent->_desktop, css);
+                sp_repr_css_attr_unref(css);
+                DocumentUndo::done(tracker->parent->_desktop->getDocument(), _("Drop color"), "");
+                return true;
+            }
+            return false;
+        }, true);
+        swatch[i]->add_controller(target);
         Controller::add_click(*swatch[i], {}, sigc::mem_fun(*this,
                                                             i == 0 ?
                                                             &SelectedStyle::on_fill_click :
@@ -247,52 +273,7 @@ SelectedStyle::setDesktop(SPDesktop *desktop)
     _sw_unit = desktop->getNamedView()->display_units;
 }
 
-// Todo: use C++ interface
-// void SelectedStyle::drag_data_received(const Glib::RefPtr<Gdk::DragContext>& context,
-//                                        int x, int y, const SelectionData& selection_data,
-//                                        uint info, uint time, SelectedStyleDropTracker *tracker)
-// {
-//     std::cout << "SelectedStyle::drag_data_recieved" << std::endl;
-// }
 
-void SelectedStyle::dragDataReceived( GtkWidget */*widget*/,
-                                      GdkDragContext */*drag_context*/,
-                                      gint /*x*/, gint /*y*/,
-                                      GtkSelectionData *data,
-                                      guint /*info*/,
-                                      guint /*event_time*/,
-                                      gpointer user_data )
-{
-    auto const tracker = static_cast<SelectedStyleDropTracker*>(user_data);
-
-    // copied from drag-and-drop.cpp, case APP_OSWB_COLOR
-    bool worked = false;
-    Glib::ustring colorspec;
-    if (gtk_selection_data_get_format(data) == 8) {
-        PaintDef color;
-        worked = color.fromMIMEData("application/x-oswb-color",
-                                    reinterpret_cast<char const*>(gtk_selection_data_get_data(data)),
-                                    gtk_selection_data_get_length(data));
-        if (worked) {
-            if (color.get_type() == PaintDef::NONE) {
-                colorspec = "none";
-            } else {
-                auto [r, g, b] = color.get_rgb();
-                gchar* tmp = g_strdup_printf("#%02x%02x%02x", r, g, b);
-                colorspec = tmp;
-                g_free(tmp);
-            }
-        }
-    }
-    if (worked) {
-        SPCSSAttr *css = sp_repr_css_attr_new();
-        sp_repr_css_set_property(css, (tracker->item == SS_FILL) ? "fill":"stroke", colorspec.c_str());
-
-        sp_desktop_set_style(tracker->parent->_desktop, css);
-        sp_repr_css_attr_unref(css);
-        DocumentUndo::done(tracker->parent->_desktop->getDocument(), _("Drop color"), "");
-    }
-}
 
 void SelectedStyle::on_fill_remove() {
     SPCSSAttr *css = sp_repr_css_attr_new ();
@@ -491,8 +472,8 @@ void SelectedStyle::on_fill_copy() {
         Glib::ustring text;
         text += c;
         if (!text.empty()) {
-            Glib::RefPtr<Gtk::Clipboard> refClipboard = Gtk::Clipboard::get();
-            refClipboard->set_text(text);
+            auto const display = Gdk::Display::get_default();
+            display->get_primary_clipboard()->set_text(text);
         }
     }
 }
@@ -504,44 +485,47 @@ void SelectedStyle::on_stroke_copy() {
         Glib::ustring text;
         text += c;
         if (!text.empty()) {
-            Glib::RefPtr<Gtk::Clipboard> refClipboard = Gtk::Clipboard::get();
-            refClipboard->set_text(text);
+            auto const display = Gdk::Display::get_default();
+            display->get_primary_clipboard()->set_text(text);
         }
     }
 }
 
-void SelectedStyle::on_fill_paste() {
-    Glib::RefPtr<Gtk::Clipboard> refClipboard = Gtk::Clipboard::get();
-    Glib::ustring const text = refClipboard->wait_for_text();
-
+void SelectedStyle::_on_paste_callback(Glib::RefPtr<Gio::AsyncResult>& result, Glib::ustring typepaste)
+{
+    auto const display = Gdk::Display::get_default();
+    Glib::RefPtr<Gdk::Clipboard> refClipboard = display->get_primary_clipboard();
+    // Parse the clipboard text as if it was a color string.
+    Glib::ustring text;
+    try {
+        text = refClipboard->read_text_finish(result);
+    } catch (Glib::Error const &err) {
+        std::cout << "Pasting text failed: " << err.what() << std::endl;
+        return;
+    }
     if (!text.empty()) {
         guint32 color = sp_svg_read_color(text.c_str(), 0x000000ff); // impossible value, as SVG color cannot have opacity
         if (color == 0x000000ff) // failed to parse color string
             return;
 
         SPCSSAttr *css = sp_repr_css_attr_new ();
-        sp_repr_css_set_property (css, "fill", text.c_str());
+        sp_repr_css_set_property (css, typepaste.c_str(), text.c_str());
         sp_desktop_set_style (_desktop, css);
         sp_repr_css_attr_unref (css);
-        DocumentUndo::done(_desktop->getDocument(), _("Paste fill"), INKSCAPE_ICON("dialog-fill-and-stroke"));
+        DocumentUndo::done(_desktop->getDocument(), typepaste.c_str() == "fill" ? _("Paste fill") : _("Paste stroke"), INKSCAPE_ICON("dialog-fill-and-stroke"));
     }
 }
 
+void SelectedStyle::on_fill_paste() {
+    auto const display = Gdk::Display::get_default();
+    Glib::RefPtr<Gdk::Clipboard> refClipboard = display->get_primary_clipboard();
+    refClipboard->read_text_async(sigc::bind(sigc::mem_fun(*this, &SelectedStyle::_on_paste_callback), "fill"));
+}
+
 void SelectedStyle::on_stroke_paste() {
-    Glib::RefPtr<Gtk::Clipboard> refClipboard = Gtk::Clipboard::get();
-    Glib::ustring const text = refClipboard->wait_for_text();
-
-    if (!text.empty()) {
-        guint32 color = sp_svg_read_color(text.c_str(), 0x000000ff); // impossible value, as SVG color cannot have opacity
-        if (color == 0x000000ff) // failed to parse color string
-            return;
-
-        SPCSSAttr *css = sp_repr_css_attr_new ();
-        sp_repr_css_set_property (css, "stroke", text.c_str());
-        sp_desktop_set_style (_desktop, css);
-        sp_repr_css_attr_unref (css);
-        DocumentUndo::done(_desktop->getDocument(), _("Paste stroke"), INKSCAPE_ICON("dialog-fill-and-stroke"));
-    }
+    auto const display = Gdk::Display::get_default();
+    Glib::RefPtr<Gdk::Clipboard> refClipboard = display->get_primary_clipboard();
+    refClipboard->read_text_async(sigc::bind(sigc::mem_fun(*this, &SelectedStyle::_on_paste_callback), "stroke"));
 }
 
 void SelectedStyle::on_fillstroke_swap() {
@@ -801,19 +785,13 @@ SelectedStyle::update()
             swatch[i]->set_tooltip_text(type_strings[SS_NA][i][1]);
 
             if (dropEnabled[i]) {
-                swatch[i]->drag_dest_unset();
                 dropEnabled[i] = false;
             }
             break;
         case QUERY_STYLE_SINGLE:
         case QUERY_STYLE_MULTIPLE_AVERAGED:
         case QUERY_STYLE_MULTIPLE_SAME: {
-            if (!dropEnabled[i]) {
-                swatch[i]->drag_dest_set(ui_drop_target_entries,
-                                         Gtk::DestDefaults::DEST_DEFAULT_ALL,
-                                         Gdk::DragAction::COPY | Gdk::DragAction::MOVE);
-                dropEnabled[i] = true;
-            }
+            dropEnabled[i] = true;
 
             auto paint = i == SS_FILL ? query.fill.upcast() : query.stroke.upcast();
             if (paint->set && paint->isPaintserver()) {

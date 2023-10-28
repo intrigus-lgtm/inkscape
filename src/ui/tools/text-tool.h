@@ -45,7 +45,7 @@ public:
     TextTool(SPDesktop *desktop);
     ~TextTool() override;
 
-    bool pasteInline();
+    bool pasteInline(Glib::ustring const clip_text);
     void placeCursorAt(SPObject *text, Geom::Point const &p);
     void placeCursor(SPObject *text, Text::Layout::iterator where);
     bool deleteSelection();

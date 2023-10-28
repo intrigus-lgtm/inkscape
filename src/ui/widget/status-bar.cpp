@@ -32,6 +32,7 @@
 #include "ui/widget/desktop-widget.h"
 #include "ui/widget/layer-selector.h"
 #include "ui/widget/page-selector.h"
+#include "ui/widget/spinbutton.h"
 #include "ui/widget/selected-style.h"
 
 namespace Inkscape::UI::Widget {
@@ -78,8 +79,8 @@ StatusBar::StatusBar()
 
     zoom_popover = make_menuized_popover(zoom_menu, *zoom);
 
-    zoom_value->signal_input().connect(sigc::mem_fun(*this, &StatusBar::zoom_input));
-    zoom_value->signal_output().connect(sigc::mem_fun(*this, &StatusBar::zoom_output));
+    zoom_value->signal_input().connect(sigc::mem_fun(*this, &StatusBar::zoom_input), true);
+    zoom_value->signal_output().connect(sigc::mem_fun(*this, &StatusBar::zoom_output), true);
     zoom_value->signal_value_changed().connect(sigc::mem_fun(*this, &StatusBar::zoom_value_changed));
     on_popup_menu(*zoom_value, sigc::mem_fun(*this, &StatusBar::zoom_popup));
 
@@ -114,7 +115,7 @@ StatusBar::StatusBar()
 
     rotate_popover = make_menuized_popover(rotate_menu, *rotate);
 
-    rotate_value->signal_output().connect(sigc::mem_fun(*this, &StatusBar::rotate_output));
+    rotate_value->signal_output().connect(sigc::mem_fun(*this, &StatusBar::rotate_output), true);
     rotate_value->signal_value_changed().connect(sigc::mem_fun(*this, &StatusBar::rotate_value_changed));
     on_popup_menu(*rotate_value, sigc::mem_fun(*this, &StatusBar::rotate_popup));
 
@@ -123,18 +124,18 @@ StatusBar::StatusBar()
     // Selected Style
     selected_style = Gtk::make_managed<Inkscape::UI::Widget::SelectedStyle>();
     UI::pack_start(statusbar, *selected_style, false, false);
-    statusbar.reorder_child(*selected_style, 0);
+    statusbar.reorder_child_at_start(*selected_style);
 
     // Layer Selector
     layer_selector = Gtk::make_managed<Inkscape::UI::Widget::LayerSelector>(nullptr);
     UI::pack_start(statusbar, *layer_selector, false, false, 1);  // Expand Fill Padding
-    statusbar.reorder_child(*layer_selector, 1);
+    statusbar.reorder_child_after(*layer_selector, *selected_style);
 
     // Selector status
     UI::pack_start(*this, statusbar);
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    preference_observer = prefs->createObserver("/statusbar/visibility", [=]() {
+    preference_observer = prefs->createObserver("/statusbar/visibility", [this]{
         update_visibility();
     });
     update_visibility();
@@ -162,7 +163,7 @@ StatusBar::set_desktop(SPDesktop* desktop_in)
     auto &box = dynamic_cast<Gtk::Box &>(*UI::get_children(*this).at(0));
     auto const page_selector = Gtk::make_managed<PageSelector>(desktop);
     UI::pack_start(box, *page_selector, false, false);
-    box.reorder_child(*page_selector, 5);
+    box.reorder_child_after(*page_selector, *UI::get_children(box).at(4));
 }
 
 void
@@ -176,7 +177,7 @@ StatusBar::set_message(const Inkscape::MessageType type, const char* message)
 #endif
 
     // Display important messages immediately!
-    if (type == Inkscape::IMMEDIATE_MESSAGE && selection->get_is_drawable()) {
+    if (type == Inkscape::IMMEDIATE_MESSAGE && selection->is_drawable()) {
         selection->queue_draw();
     }
 
@@ -211,10 +212,10 @@ StatusBar::zoom_grab_focus()
 // ******** Zoom ********
 
 int
-StatusBar::zoom_input(double *new_value)
+StatusBar::zoom_input(double &new_value)
 {
     double value = g_strtod(zoom_value->get_text().c_str(), nullptr);
-    *new_value = log(value / 100.0) / log(2);
+    new_value = log(value / 100.0) / log(2);
     return true;
 }
 

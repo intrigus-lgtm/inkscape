@@ -443,10 +443,10 @@ int FontLister::add_document_fonts_at_top(SPDocument *document)
         auto const fam = data_family.substr(0, i);
 
         // Return the system font matching the given family name.
-        auto find_matching_system_font = [this] (Glib::ustring const &fam) -> Gtk::TreeRow {
+        auto find_matching_system_font = [this] (Glib::ustring const &fam) -> Gtk::TreeIter<Gtk::TreeRow> {
             for (auto &row : font_list_store->children()) {
                 if (row[font_list.onSystem] && familyNamesAreEqual(fam, row[font_list.family])) {
-                    return row;
+                    return row.get_iter();
                 }
             }
             return {};
@@ -456,8 +456,9 @@ int FontLister::add_document_fonts_at_top(SPDocument *document)
         Styles data_styles;
 
         // Populate with the styles of the matching system font, if any.
-        if (auto const row = find_matching_system_font(fam)) {
-            ensureRowStyles(row);
+        if (auto const iter = find_matching_system_font(fam)) {
+            auto const row = *iter;
+            ensureRowStyles(iter);
             data_styles = *row.get_value(font_list.styles);
         }
 
@@ -1249,7 +1250,7 @@ bool font_lister_separator_func(Glib::RefPtr<Gtk::TreeModel> const &/*model*/,
 
     // Of what use is 'model', can we avoid using font_lister?
     Inkscape::FontLister* font_lister = Inkscape::FontLister::get_instance();
-    Gtk::TreeModel::Row row = *iter;
+    auto row = *iter;
     Glib::ustring entry = row[font_lister->font_list.family];
     return entry == "#";
 }

@@ -23,7 +23,8 @@
 namespace Inkscape::UI::Widget {
 
 /// A Gtk::DrawingArea to preview color palette menu items by showing a small example of the colors
-class ColorPalettePreview : public Gtk::DrawingArea {
+class ColorPalettePreview : public Gtk::DrawingArea
+{
 public:
     /// Construct with colors that we will preview.
     ColorPalettePreview(std::vector<rgb_t> colors);
@@ -31,7 +32,7 @@ public:
 private:
     std::vector<rgb_t> _colors;
 
-    bool draw_func(Cairo::RefPtr<Cairo::Context> const &cr);
+    void draw_func(Cairo::RefPtr<Cairo::Context> const &cr, int, int);
 };
 
 } // namespace Inkscape::UI::Widget

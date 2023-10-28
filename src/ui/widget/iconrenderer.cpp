@@ -22,7 +22,7 @@ IconRenderer::IconRenderer() :
     _property_icon(*this, "icon", 0)
 {
     property_mode() = Gtk::CellRendererMode::ACTIVATABLE;
-    property_stock_size().set_value(Gtk::ICON_SIZE_BUTTON);
+    property_icon_size().set_value(Gtk::IconSize::NORMAL); // Previously ICON_SIZE_BUTTON
 
     set_icon_name();
     property_icon().signal_changed().connect(sigc::mem_fun(*this, &IconRenderer::set_icon_name));

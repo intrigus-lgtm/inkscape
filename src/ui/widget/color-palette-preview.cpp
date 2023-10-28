@@ -29,15 +29,13 @@ ColorPalettePreview::ColorPalettePreview(std::vector<rgb_t> colors)
     , _colors{std::move(colors)}
 {
     set_size_request(-1, height);
-    signal_draw().connect(sigc::mem_fun(*this, &ColorPalettePreview::draw_func));
+    set_draw_func(sigc::mem_fun(*this, &ColorPalettePreview::draw_func));
 }
 
-bool ColorPalettePreview::draw_func(Cairo::RefPtr<Cairo::Context> const &cr)
+void ColorPalettePreview::draw_func(Cairo::RefPtr<Cairo::Context> const &cr, int width, int height)
 {
-    if (_colors.empty()) return true;
-
-    auto const width = get_width(), height = get_height();
-    if (width <= 0) return true;
+    if (_colors.empty()) return;
+    if (width <= 0) return;
 
     for (int i = 0, px = 0; i < width && px < width; ++i, px += dx) {
         int const index = i * _colors.size() / width;
@@ -46,8 +44,6 @@ bool ColorPalettePreview::draw_func(Cairo::RefPtr<Cairo::Context> const &cr)
         cr->rectangle(px, 0, dx, height);
         cr->fill();
     }
-
-    return true;
 }
 
 } // namespace Inkscape::UI::Widget

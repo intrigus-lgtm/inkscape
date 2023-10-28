@@ -27,7 +27,7 @@ ImageToggler::ImageToggler(char const *on, char const *off) :
     _property_active_icon(*this, "active_icon", "")
 {
     property_mode() = Gtk::CellRendererMode::ACTIVATABLE;
-    property_stock_size().set_value(Gtk::ICON_SIZE_MENU);
+    property_icon_size().set_value(Gtk::IconSize::NORMAL); // Previously ICON_SIZE_MENU
     set_padding(6, 3);
 
     auto const set_icon = sigc::mem_fun(*this, &ImageToggler::set_icon_name);

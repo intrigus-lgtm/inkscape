@@ -63,10 +63,17 @@ public:
     void setSyntaxStyle(Inkscape::UI::Syntax::XMLStyles const &new_style);
 
 private:
+    // Keep these options in sync with menu/actions @ share/ui/dialog-xml.glade!
+    enum DialogLayout : int { Auto = 0, Horizontal, Vertical };
+
     void unsetDocument();
     void documentReplaced() final;
     void selectionChanged(Selection *selection) final;
     void desktopReplaced() final;
+
+    void size_allocate_vfunc(int width, int height, int baseline) override;
+    void auto_arrange_panels(Gtk::Allocation const &alloc);
+    void arrange_panels(DialogLayout layout);
 
     /**
      * Select a node in the xml tree
@@ -176,12 +183,11 @@ private:
     Gtk::Button& raise_node_button;
     Gtk::Button& lower_node_button;
 
-    // Keep these options in sync with menu/actions @ share/ui/dialog-xml.glade!
-    enum DialogLayout: int { Auto = 0, Horizontal, Vertical };
     DialogLayout _layout = Auto;
 
     Pref<Glib::ustring> _syntax_theme;
     Pref<bool> _mono_font;
+    int _min_width;
     Inkscape::XML::Node* _dummy = nullptr;
     Inkscape::XML::Node* _node_parent = nullptr;
 };

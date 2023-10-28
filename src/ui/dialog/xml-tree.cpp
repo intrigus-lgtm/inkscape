@@ -157,36 +157,8 @@ XmlTree::XmlTree()
 
     UI::pack_start(*this, get_widget<Gtk::Box>(_builder, "main"), true, true);
 
-    int min_width = 0, dummy;
-    measure(Gtk::Orientation::HORIZONTAL, -1, min_width, dummy, dummy, dummy);
-
-    auto auto_arrange_panels = [=](Gtk::Allocation const &alloc) {
-        // skip bogus sizes
-        if (alloc.get_width() < 10 || alloc.get_height() < 10) return;
-
-        // minimal width times fudge factor to arrive at "narrow" dialog with automatic vertical layout:
-        const bool narrow = alloc.get_width() < min_width * 1.5;
-        paned_set_vertical(_paned, narrow);
-    };
-
-    auto arrange_panels = [=](DialogLayout layout){
-        switch (layout) {
-            case Auto:
-                auto_arrange_panels(get_allocation());
-                break;
-            case Horizontal:
-                paned_set_vertical(_paned, false);
-                break;
-            case Vertical:
-                paned_set_vertical(_paned, true);
-                break;
-        }
-        // ensure_size();
-    };
-
-    signal_size_allocate().connect([=] (Gtk::Allocation const &alloc) {
-        arrange_panels(_layout);
-    });
+    int dummy;
+    measure(Gtk::Orientation::HORIZONTAL, -1, _min_width, dummy, dummy, dummy);
 
     auto& popup = get_widget<Gtk::MenuButton>(_builder, "layout-btn");
     popup.set_has_tooltip();
@@ -265,6 +237,38 @@ XmlTree::XmlTree()
 XmlTree::~XmlTree()
 {
     unsetDocument();
+}
+
+void XmlTree::auto_arrange_panels(Gtk::Allocation const &alloc)
+{
+    // skip bogus sizes
+    if (alloc.get_width() < 10 || alloc.get_height() < 10) return;
+
+    // minimal width times fudge factor to arrive at "narrow" dialog with automatic vertical layout:
+    bool const narrow = alloc.get_width() < _min_width * 1.5;
+    paned_set_vertical(_paned, narrow);
+}
+
+void XmlTree::arrange_panels(DialogLayout layout)
+{
+    switch (layout) {
+        case Auto:
+            auto_arrange_panels(get_allocation());
+            break;
+        case Horizontal:
+            paned_set_vertical(_paned, false);
+            break;
+        case Vertical:
+            paned_set_vertical(_paned, true);
+            break;
+    }
+}
+
+// Fixme: May not get called due to box layout manager.
+void XmlTree::size_allocate_vfunc(int width, int height, int baseline)
+{
+    arrange_panels(_layout);
+    DialogBase::size_allocate_vfunc(width, height, baseline);
 }
 
 void XmlTree::rebuildTree()

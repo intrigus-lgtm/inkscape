@@ -27,20 +27,16 @@
 #include <algorithm>
 #include <cstdlib>
 #include <unordered_map>
-#include <unordered_set>
 #include <gtkmm/box.h>
 
 #include "helper/auto-connection.h"
+#include "ui/util.h"
 
 namespace Inkscape::UI {
 
 enum class PackType {start, end};
 
-struct BoxChildren final {
-    std::unordered_set<Gtk::Widget *> starts;
-    auto_connection remove;
-};
-
+using BoxChildren = std::unordered_map<Gtk::Widget *, auto_connection>;
 static auto s_box_children = std::unordered_map<Gtk::Box *, BoxChildren>{};
 
 static void set_expand(Gtk::Widget &widget, Gtk::Orientation const orientation,
@@ -99,22 +95,27 @@ static void add(Gtk::Box &box, PackType const pack_type, Gtk::Widget &child)
 {
     auto const [it, inserted] = s_box_children.emplace(&box, BoxChildren{});
     // macOS runner errors if lambda captures structured binding. C++ Defect Report says this is OK
-    auto &starts = it->second.starts;
-    auto &remove = it->second.remove;
+    auto &starts = it->second;
 
     if (inserted) {
-        box.signal_delete_event().connect([&](GdkEventAny *)
-                                          { s_box_children.erase(&box);
-                                            return false; });
+        box.signal_destroy().connect([&]{ s_box_children.erase(&box); });
     }
 
-    if (!remove) {
-        remove = box.signal_remove().connect([&](auto const removed_child)
-                                             { starts.erase(removed_child); });
+    if (starts.empty()) {
+        box.prepend(child); // Prepend so PackType::end arranges children from end-to-start as GTK3
+    } else {
+        auto const position = starts.size();
+        auto &previous = get_nth_child(box, position - 1);
+        box.append(child);
+        box.reorder_child_after(child, previous);
     }
 
-    box.append(child);
-    if (pack_type == PackType::start) starts.insert(&child);
+    if (pack_type != PackType::start) return;
+
+    // Add the child to our list of start ones, and! connect ::parent changed to remove that later.
+    auto const erase_child = [&]{ starts.erase(&child); };
+    auto connection = child.property_parent().signal_changed().connect(erase_child);
+    starts.emplace(&child, std::move(connection));
 }
 
 static void pack(PackType const pack_type,

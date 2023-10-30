@@ -50,7 +50,7 @@ class Label;
 class Widget;
 } // namespace Gtk
 
-Glib::ustring ink_ellipsize_text (Glib::ustring const &src, size_t maxlen);
+Glib::ustring ink_ellipsize_text(Glib::ustring const &src, std::size_t maxlen);
 
 void reveal_widget(Gtk::Widget *widget, bool show);
 
@@ -72,6 +72,8 @@ enum class ForEachResult {_continue, _break};
 
 /// Get a vector of the widgetʼs children, from get_first_child() through each get_next_sibling().
 std::vector<Gtk::Widget *> get_children(Gtk::Widget &widget);
+/// Get the widgetʼs child at the given position. Throws std::out_of_range if the index is invalid.
+Gtk::Widget &get_nth_child(Gtk::Widget &widget, std::size_t index);
 /// For each child in get_children(widget), call widget.remove(*child). May not cause delete child!
 void remove_all_children(Gtk::Widget &widget);
 /// For each child in get_children(widget), call widget.remove(*child) then also do `delete child`.

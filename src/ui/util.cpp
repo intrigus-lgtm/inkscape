@@ -51,9 +51,10 @@
  * Ellipse text if longer than maxlen, "50% start text + ... + ~50% end text"
  * Text should be > length 8 or just return the original text
  */
-Glib::ustring ink_ellipsize_text(Glib::ustring const &src, size_t maxlen)
+Glib::ustring ink_ellipsize_text(Glib::ustring const &src, std::size_t maxlen)
 {
     if (src.length() > maxlen && maxlen > 8) {
+        using std::size_t;
         size_t p1 = (size_t) maxlen / 2;
         size_t p2 = (size_t) src.length() - (maxlen - p1 - 1);
         return src.substr(0, p1) + "…" + src.substr(p2);
@@ -140,6 +141,17 @@ std::vector<Gtk::Widget *> get_children(Gtk::Widget &widget)
         children.push_back(child);
     }
     return children;
+}
+
+Gtk::Widget &get_nth_child(Gtk::Widget &widget, std::size_t const index)
+{
+    auto child = widget.get_first_child();
+    for (std::size_t i = 0; true; ++i) {
+        if (!child) throw std::out_of_range{"get_nth_child()"};
+        if (i == index) break;
+        child = child->get_next_sibling();
+    }
+    return *child;
 }
 
 void remove_all_children(Gtk::Widget &widget)

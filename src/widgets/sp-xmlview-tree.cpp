@@ -63,9 +63,6 @@ static gboolean search_equal_func(GtkTreeModel *, gint column, const gchar *key,
 static gboolean foreach_func(GtkTreeModel *, GtkTreePath *, GtkTreeIter *, gpointer user_data);
 
 static void on_row_changed(GtkTreeModel *, GtkTreePath *, GtkTreeIter *, gpointer user_data);
-static void on_drag_begin(GtkWidget *, GdkDragContext *, gpointer userdata);
-static void on_drag_end(GtkWidget *, GdkDragContext *, gpointer userdata);
-static gboolean do_drag_motion(GtkWidget *, GdkDragContext *, gint x, gint y, guint time, gpointer user_data);
 
 static bool get_first_child(NodeData *data, GtkTreeIter *child_iter);
 static void remove_dummy_rows(GtkTreeStore *store, GtkTreeIter *iter);
@@ -402,9 +399,6 @@ GtkWidget *sp_xmlview_tree_new(Inkscape::XML::Node * repr, void * /*factory*/, v
 
     sp_xmlview_tree_set_repr (tree, repr);
 
-    g_signal_connect(GTK_TREE_VIEW(tree), "drag-begin", G_CALLBACK(on_drag_begin), tree);
-    g_signal_connect(GTK_TREE_VIEW(tree), "drag-end", G_CALLBACK(on_drag_end), tree);
-    g_signal_connect(GTK_TREE_VIEW(tree), "drag-motion",  G_CALLBACK(do_drag_motion), tree);
     g_signal_connect(GTK_TREE_VIEW(tree), "test-expand-row", G_CALLBACK(on_test_expand_row), nullptr);
 
     tree->formatter = new Inkscape::UI::Syntax::XMLFormatter();
@@ -553,67 +547,6 @@ static void sp_remove_newlines_and_tabs(std::string &val, size_t const maxlen)
 }
 
 /*
- * Save the source path on drag start, will need it in on_row_changed() when moving a row
- */
-void on_drag_begin(GtkWidget *, GdkDragContext *, gpointer userdata)
-{
-    SPXMLViewTree *tree = static_cast<SPXMLViewTree *>(userdata);
-    if (!tree) {
-        return;
-    }
-
-    GtkTreeModel *model = nullptr;
-    GtkTreeIter iter;
-    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
-    if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
-        NodeData *data = sp_xmlview_tree_node_get_data(model, &iter);
-        if (data) {
-            data->dragging = true;
-            dragging_repr = data->repr;
-        }
-    }
-}
-
-/**
- * Finalize what happened in `on_row_changed` and clean up what was set up in `on_drag_begin`
- */
-void on_drag_end(GtkWidget *, GdkDragContext *, gpointer userdata)
-{
-    if (!dragging_repr)
-        return;
-
-    auto tree = static_cast<SPXMLViewTree *>(userdata);
-    auto selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
-    bool failed = false;
-
-    GtkTreeIter iter;
-    if (sp_xmlview_tree_get_repr_node(tree, dragging_repr, &iter)) {
-        NodeData *data = sp_xmlview_tree_node_get_data(GTK_TREE_MODEL(tree->store), &iter);
-
-        if (data && data->dragging) {
-            // dragging flag was not cleared in `on_row_changed`, this indicates a failed drag
-            data->dragging = false;
-            failed = true;
-        } else {
-            // Reselect the dragged row
-            gtk_tree_selection_select_iter(selection, &iter);
-        }
-    } else {
-#ifndef GTK_ISSUE_2510_IS_FIXED
-        // https://gitlab.gnome.org/GNOME/gtk/issues/2510
-        gtk_tree_selection_unselect_all(selection);
-#endif
-    }
-
-    dragging_repr = nullptr;
-
-    if (!failed) {
-        // Signal that a drag and drop has completed successfully
-        tree->_tree_move->emit();
-    }
-}
-
-/*
  * Main drag & drop function
  * Get the old and new paths, and change the Inkscape::XML::Node repr's
  */
@@ -754,74 +687,6 @@ gboolean tree_ref_to_iter (SPXMLViewTree * tree, GtkTreeIter* iter, GtkTreeRowRe
     gtk_tree_path_free(path);
 
     return valid;
-}
-
-/*
- * Disable drag and drop target on : root node and non-element nodes
- */
-gboolean do_drag_motion(GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint time, gpointer user_data)
-{
-    GtkTreePath *path = nullptr;
-    GtkTreeViewDropPosition pos;
-    gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW(widget), x, y, &path, &pos);
-
-    int action = 0;
-
-    if (!dragging_repr) {
-        goto finally;
-    }
-
-    if (path) {
-        SPXMLViewTree *tree = SP_XMLVIEW_TREE(user_data);
-        GtkTreeIter iter;
-        gtk_tree_model_get_iter(GTK_TREE_MODEL(tree->store), &iter, path);
-        auto repr = sp_xmlview_tree_node_get_repr(GTK_TREE_MODEL(tree->store), &iter);
-
-        bool const drop_into = pos != GTK_TREE_VIEW_DROP_BEFORE && //
-                               pos != GTK_TREE_VIEW_DROP_AFTER;
-
-        // 0. don't drop on self (also handled by on_row_changed but nice to not have drop highlight for it)
-        if (repr == dragging_repr) {
-            goto finally;
-        }
-
-        // 1. only xml elements can have children
-        if (drop_into && repr->type() != Inkscape::XML::NodeType::ELEMENT_NODE) {
-            goto finally;
-        }
-
-        // 3. elements must be at least children of the root <svg:svg> element
-        if (gtk_tree_path_get_depth(path) < 2) {
-            goto finally;
-        }
-
-        // 4. drag node specific limitations
-        {
-            // nodes which can't be re-parented (because the document holds pointers to them which must stay valid)
-            static GQuark const CODE_sodipodi_namedview = g_quark_from_static_string("sodipodi:namedview");
-            static GQuark const CODE_svg_defs = g_quark_from_static_string("svg:defs");
-
-            bool const no_reparenting = dragging_repr->code() == CODE_sodipodi_namedview || //
-                                        dragging_repr->code() == CODE_svg_defs;
-
-            if (no_reparenting && (drop_into || dragging_repr->parent() != repr->parent())) {
-                goto finally;
-            }
-        }
-
-        action = GDK_ACTION_MOVE;
-    }
-
-finally:
-    if (action == 0) {
-        // remove drop highlight
-        gtk_tree_view_set_drag_dest_row(GTK_TREE_VIEW(widget), nullptr, pos /* ignored */);
-    }
-
-    gtk_tree_path_free(path);
-    gdk_drag_status (context, (GdkDragAction)action, time);
-
-    return (action == 0);
 }
 
 /*

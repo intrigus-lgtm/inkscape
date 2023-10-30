@@ -223,34 +223,6 @@ void DialogBase::setDesktop(SPDesktop *new_desktop)
 
 void DialogBase::fix_inner_scroll(Gtk::Widget * const widget)
 {
-    auto const scrollwin = dynamic_cast<Gtk::ScrolledWindow *>(widget);
-    if (!scrollwin) return;
-
-    Gtk::Widget *child = nullptr;
-    if (auto const viewport = dynamic_cast<Gtk::Viewport *>(scrollwin->get_child())) {
-        child = viewport->get_child();
-    } else {
-        child = scrollwin->get_child();
-    }
-    if (!child) return;
-
-    child->signal_scroll_event().connect([this, adj = scrollwin->get_vadjustment()]
-                                         (GdkEventScroll * const event)
-    {
-        auto const children = UI::get_children(*this);
-        if (children.empty()) return false;
-
-        auto const parentscroll = dynamic_cast<Gtk::ScrolledWindow *>(children.at(0));
-        if (!parentscroll) return false;
-
-        if (event->delta_y > 0 && adj->get_value() + adj->get_page_size() == adj->get_upper() ||
-            event->delta_y < 0 && adj->get_value() == adj->get_lower())
-        {
-            parentscroll->event(reinterpret_cast<GdkEvent *>(event));
-            return true;
-        }
-        return false;
-    });
 }
 
 /**

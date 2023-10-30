@@ -164,7 +164,6 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
     }
 
     auto const menubtn = Gtk::make_managed<Gtk::MenuButton>();
-    menubtn->set_image_from_icon_name("go-down-symbolic");
     menubtn->set_popover(_menu);
     _notebook.set_action_widget(menubtn, Gtk::PackType::END);
     menubtn->set_visible(true);
@@ -175,9 +174,6 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
     menubtn->set_name("DialogMenuButton");
 
     // =============== Signals ==================
-    _conn.emplace_back(signal_size_allocate().connect(sigc::mem_fun(*this, &DialogNotebook::on_size_allocate_scroll)));
-    _conn.emplace_back(_notebook.signal_drag_begin().connect(sigc::mem_fun(*this, &DialogNotebook::on_drag_begin)));
-    _conn.emplace_back(_notebook.signal_drag_end().connect(sigc::mem_fun(*this, &DialogNotebook::on_drag_end)));
     _conn.emplace_back(_notebook.signal_page_added().connect(sigc::mem_fun(*this, &DialogNotebook::on_page_added)));
     _conn.emplace_back(_notebook.signal_page_removed().connect(sigc::mem_fun(*this, &DialogNotebook::on_page_removed)));
     _conn.emplace_back(_notebook.signal_switch_page().connect(sigc::mem_fun(*this, &DialogNotebook::on_page_switch)));
@@ -384,7 +380,7 @@ void DialogNotebook::close_notebook_callback()
         multipaned->remove(*this);
     } else if (get_parent()) {
         std::cerr << "DialogNotebook::close_notebook_callback: Unexpected parent!" << std::endl;
-        get_parent()->remove(*this);
+        unparent();
     }
     delete this;
 }
@@ -428,63 +424,7 @@ DialogWindow* DialogNotebook::pop_tab_callback()
 
 [[nodiscard]] static bool should_set_floating(Glib::RefPtr<Gdk::DragContext> const &context)
 {
-    auto const window = context->get_dest_window();
-    return !window || window->get_window_type() == Gdk::WINDOW_FOREIGN;
-}
-
-/**
- * Signal handler to pop a dragged tab into its own DialogWindow.
- *
- * A failed drag means that the page was not dropped on an existing notebook.
- * Thus create a new window with notebook to move page to.
- *
- * BUG: this has inconsistent behavior on Wayland.
- */
-void DialogNotebook::on_drag_end(const Glib::RefPtr<Gdk::DragContext> &context)
-{
-    // Remove dropzone highlights
-    DialogMultipaned::remove_drop_zone_highlight_instances();
-    for (auto instance : _instances) {
-        instance->remove_highlight_header();
-    }
-
-    bool const set_floating = should_set_floating(context);
-    if (set_floating) {
-        // Find page
-        if (auto const page = _notebook.get_nth_page(_notebook.get_current_page())) {
-            // Move page to notebook in new dialog window
-            auto inkscape_window = _container->get_inkscape_window();
-            auto window = new DialogWindow(inkscape_window, page);
-
-            // Move window to mouse pointer
-            if (auto device = context->get_device()) {
-                int x = 0, y = 0;
-                device->get_position(x, y);
-                window->move(std::max(0, x - 50), std::max(0, y - 50));
-            }
-        }
-    }
-
-    // Reload the context menu next time it is shown, to reflect new tabs/order.
-    _reload_context = true;
-
-    // Closes the notebook if empty.
-    if (_notebook.get_n_pages() == 0) {
-        close_notebook_callback();
-        return;
-    }
-
-    // Update tab labels by comparing the sum of their widths to the allocation
-    Gtk::Allocation allocation = get_allocation();
-    on_size_allocate_scroll(allocation);
-}
-
-void DialogNotebook::on_drag_begin(const Glib::RefPtr<Gdk::DragContext> &context)
-{
-    DialogMultipaned::add_drop_zone_highlight_instances();
-    for (auto instance : _instances) {
-        instance->add_highlight_header();
-    }
+    return false;
 }
 
 /**
@@ -593,7 +533,6 @@ void DialogNotebook::on_size_allocate_scroll(Gtk::Allocation &a)
         return ForEachResult::_continue;
     });
 
-    set_allocation(a);
     // only update notebook tabs on horizontal changes
     if (a.get_width() != _prev_alloc_width) {
         on_size_allocate_notebook(a);
@@ -627,13 +566,6 @@ void DialogNotebook::on_size_allocate_notebook(Gtk::Allocation &a)
     int total_width = 0;
     int ignore;
     _notebook.measure(Gtk::Orientation::HORIZONTAL, -1, initial_width, nat_width, ignore, ignore); // get current notebook allocation
-
-    for_each_child(_notebook, [this](Gtk::Widget &page){
-        auto const cover = dynamic_cast<Gtk::EventBox *>(_notebook.get_tab_label(page));
-        if (cover) cover->set_visible(true);
-        return ForEachResult::_continue;
-    });
-    _notebook.measure(Gtk::Orientation::HORIZONTAL, -1, total_width, nat_width, ignore, ignore); // get full notebook allocation (all open)
 
     prev_tabstatus = tabstatus;
     if (_single_tab_width != _none_tab_width && 

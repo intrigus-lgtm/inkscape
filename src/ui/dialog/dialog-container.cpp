@@ -70,12 +70,6 @@
 
 namespace Inkscape::UI::Dialog {
 
-[[nodiscard]] static auto const &get_target_entries()
-{
-    static auto const target_entries = std::vector{Gtk::TargetEntry{"GTK_NOTEBOOK_TAB"}};
-    return target_entries;
-}
-
 // Clear dialogs a bit early, to not do ~MultiPaned → ~Notebook → our unlink_dialog()→erase()→crash
 DialogContainer::~DialogContainer()
 {
@@ -1029,29 +1023,7 @@ void DialogContainer::on_unrealize() {
 // Create a new notebook and move page.
 DialogNotebook *DialogContainer::prepare_drop(Gtk::SelectionData const &selection_data)
 {
-    if (selection_data.get_target() != "GTK_NOTEBOOK_TAB") {
-        std::cerr << "DialogContainer::prepare_drop: tab not found!" << std::endl;
-        return nullptr;
-    }
-
-    // Find page
-    auto const cpage = reinterpret_cast<GtkWidget **>(const_cast<unsigned char *>(selection_data.get_data()));
-    g_assert(cpage);
-    g_assert(GTK_IS_WIDGET(*cpage));
-    auto const page = Glib::wrap(*cpage);
-    if (!page) {
-        std::cerr << "DialogContainer::prepare_drop: page not found!" << std::endl;
-        return nullptr;
-    }
-
-    // Create new notebook and move page.
-    auto const new_notebook = Gtk::make_managed<DialogNotebook>(this);
-    new_notebook->move_page(*page);
-
-    // move_page() takes care of updating dialog lists.
-    INKSCAPE.themecontext->getChangeThemeSignal().emit();
-    INKSCAPE.themecontext->add_gtk_css(true);
-    return new_notebook;
+    return nullptr;
 }
 
 void DialogContainer::take_drop(PrependOrAppend const prepend_or_append,

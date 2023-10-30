@@ -215,25 +215,6 @@ parse_modifier_string(char const * const modifiers_string)
             } else if (mod == "Meta") {
                 modifiers |= Gdk::ModifierType::META_MASK;
             } else if (mod == "Primary") {
-                // System dependent key to invoke menus. (Needed for OSX in particular.)
-                // We only read "Primary" and never write it.
-                auto display = Gdk::Display::get_default();
-                if (display) {
-                    GdkKeymap* keymap = display->get_keymap();
-                    GdkModifierType type = 
-                        gdk_keymap_get_modifier_mask (keymap, GDK_MODIFIER_INTENT_PRIMARY_ACCELERATOR);
-                    gdk_keymap_add_virtual_modifiers(keymap, &type);
-                    if (type & GDK_CONTROL_MASK)
-                        modifiers |= Gdk::ModifierType::CONTROL_MASK;
-                    else if (type & GDK_META_MASK)
-                        modifiers |= Gdk::ModifierType::META_MASK;
-                    else {
-                        std::cerr << "Shortcut::read: Unknown primary accelerator!" << std::endl;
-                        modifiers |= Gdk::ModifierType::CONTROL_MASK;
-                    }
-                } else {
-                    modifiers |= Gdk::ModifierType::CONTROL_MASK;
-                }
             } else {
                 std::cerr << "Shortcut::read: Unknown GDK modifier: " << mod.c_str() << std::endl;
             }

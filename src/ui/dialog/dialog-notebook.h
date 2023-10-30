@@ -104,8 +104,8 @@ private:
     void remove_highlight_header();
 
     // Signal handlers - notebook
-    void on_drag_begin(const Glib::RefPtr<Gdk::DragContext> &context) override;
-    void on_drag_end(const Glib::RefPtr<Gdk::DragContext> &context) override;
+    //void on_drag_begin(const Glib::RefPtr<Gdk::DragContext> &context) override;
+    //void on_drag_end(const Glib::RefPtr<Gdk::DragContext> &context) override;
     void on_page_added(Gtk::Widget *page, int page_num);
     void on_page_removed(Gtk::Widget *page, int page_num);
     void on_size_allocate_scroll(Gtk::Allocation &allocation);

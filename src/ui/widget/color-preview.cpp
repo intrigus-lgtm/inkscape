@@ -21,16 +21,10 @@
 namespace Inkscape::UI::Widget {
 
 ColorPreview::ColorPreview(std::uint32_t const rgba)
-    : _drawing_area{Gtk::make_managed<Gtk::DrawingArea>()}
-    , _rgba{rgba}
+    : _rgba{rgba}
 {
     set_name("ColorPreview");
-
-    _drawing_area->set_visible(true);
-    _drawing_area->set_draw_func(sigc::mem_fun(*this, &ColorPreview::on_drawing_area_draw));
-    _drawing_area->set_expand(true); // DrawingArea fills self Box,
-    set_expand(false);               // but the Box doesnʼt expand.
-    append(*_drawing_area);
+    set_draw_func(sigc::mem_fun(*this, &ColorPreview::draw_func));
 }
 
 void
@@ -39,17 +33,15 @@ ColorPreview::setRgba32(std::uint32_t const rgba)
     if (_rgba == rgba) return;
 
     _rgba = rgba;
-    _drawing_area->queue_draw();
+    queue_draw();
 }
 
-void ColorPreview::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int)
+void ColorPreview::draw_func(Cairo::RefPtr<Cairo::Context> const &cr,
+                             int const widget_width, int const widget_height)
 {
-    auto const width  = _drawing_area->get_width () / 2.0;
-    auto const height = _drawing_area->get_height() - 1.0;
-
+    auto const width = widget_width / 2.0, height = widget_height - 1.0;
     auto x = 0.0;
     auto y = 0.0;
-
     double radius = height / 7.5;
     double degrees = M_PI / 180.0;
 

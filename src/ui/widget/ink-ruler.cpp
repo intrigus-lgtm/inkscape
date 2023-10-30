@@ -56,9 +56,8 @@ namespace Inkscape::UI::Widget {
 Ruler::Ruler(Gtk::Orientation orientation)
     : Glib::ObjectBase{"InkRuler"}
     , WidgetVfuncsClassInit{}
-    , Gtk::Box{orientation}
+    , Gtk::DrawingArea{}
     , _orientation(orientation)
-    , _drawing_area(Gtk::make_managed<Gtk::DrawingArea>())
     , _popover{create_context_menu()}
     , _backing_store(nullptr)
     , _lower(0)
@@ -72,13 +71,10 @@ Ruler::Ruler(Gtk::Orientation orientation)
     set_name("InkRuler");
     add_css_class(_orientation == Gtk::Orientation::HORIZONTAL ? "horz" : "vert");
 
-    _drawing_area->set_draw_func(sigc::mem_fun(*this, &Ruler::draw_func));
-    _drawing_area->set_expand(true); // DrawingArea fills self Box,
-    set_expand(false);               // but the Box doesnʼt expand.
-    append(*_drawing_area);
+    set_draw_func(sigc::mem_fun(*this, &Ruler::draw_func));
 
-    Controller::add_motion<nullptr, &Ruler::on_motion, nullptr>(*_drawing_area, *this);
-    Controller::add_click(*_drawing_area, sigc::mem_fun(*this, &Ruler::on_click_pressed), {}, Controller::Button::right);
+    Controller::add_motion<nullptr, &Ruler::on_motion, nullptr>(*this, *this);
+    Controller::add_click(*this, sigc::mem_fun(*this, &Ruler::on_click_pressed), {}, Controller::Button::right);
 
     set_visible(false);
 
@@ -95,7 +91,7 @@ void Ruler::on_prefs_changed()
     _sel_visible = prefs->getBool("/options/ruler/show_bbox", true);
 
     _backing_store_valid = false;
-    _drawing_area->queue_draw();
+    queue_draw();
 }
 
 // Set display unit for ruler.
@@ -106,7 +102,7 @@ Ruler::set_unit(Inkscape::Util::Unit const *unit)
         _unit = unit;
 
         _backing_store_valid = false;
-        _drawing_area->queue_draw();
+        queue_draw();
     }
 }
 
@@ -124,7 +120,7 @@ Ruler::set_range(double lower, double upper)
         }
 
         _backing_store_valid = false;
-        _drawing_area->queue_draw();
+        queue_draw();
     }
 }
 
@@ -138,7 +134,7 @@ void Ruler::set_page(double lower, double upper)
         _page_upper = upper;
 
         _backing_store_valid = false;
-        _drawing_area->queue_draw();
+        queue_draw();
     }
 }
 
@@ -152,7 +148,7 @@ void Ruler::set_selection(double lower, double upper)
         _sel_upper = upper;
 
         _backing_store_valid = false;
-        _drawing_area->queue_draw();
+        queue_draw();
     }
 }
 
@@ -177,10 +173,10 @@ Ruler::size_allocate_vfunc(int const width, int const height, int const baseline
 void
 Ruler::on_motion(GtkEventControllerMotion const * motion, double const x, double const y)
 {
-    // This may come from a widget other than _drawing_area, so translate to accommodate border etc
+    // This may come from a widget other than `this`, so translate to accommodate border, etc.
     auto const widget = Glib::wrap(gtk_event_controller_get_widget(GTK_EVENT_CONTROLLER(motion)));
     double drawing_x{}, drawing_y{};
-    widget->translate_coordinates(*_drawing_area, std::lround(x), std::lround(y), drawing_x, drawing_y);
+    widget->translate_coordinates(*this, std::lround(x), std::lround(y), drawing_x, drawing_y);
 
     double const position = _orientation == Gtk::Orientation::HORIZONTAL ? drawing_x : drawing_y;
     if (position == _position) return;
@@ -192,7 +188,7 @@ Ruler::on_motion(GtkEventControllerMotion const * motion, double const x, double
     region->do_union(_rect);
     _rect = new_rect;
     // Queue repaint
-    _drawing_area->queue_draw();
+    queue_draw();
 }
 
 Gtk::EventSequenceState
@@ -206,7 +202,7 @@ Ruler::on_click_pressed(Gtk::GestureClick const & /*click*/,
 std::pair<int, int>
 Ruler::get_drawing_size()
 {
-    return {_drawing_area->get_width(), _drawing_area->get_height()};
+    return {get_width(), get_height()};
 }
 
 // Update backing store when scale changes.
@@ -531,7 +527,7 @@ Ruler::css_changed(GtkCssStyleChange * const change)
     _backing_store_valid = false;
 
     queue_resize();
-    _drawing_area->queue_draw();
+    queue_draw();
 }
 
 /**

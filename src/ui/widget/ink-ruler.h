@@ -21,7 +21,7 @@
 #include <pangomm/fontdescription.h>
 #include <gdkmm/rgba.h>
 #include <gtk/gtk.h> // GtkEventControllerMotion
-#include <gtkmm/box.h>
+#include <gtkmm/drawingarea.h>
 #include <gtkmm/enums.h> // Gtk::Orientation
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 
@@ -33,7 +33,6 @@ class Context;
 } // namespace Cairo
 
 namespace Gtk {
-class DrawingArea;
 class GestureClick;
 class Popover;
 } // namespace Gtk
@@ -44,11 +43,9 @@ class Unit;
 
 namespace Inkscape::UI::Widget {
   
-// Box because GTK3 does not bother applying CSS bits like border-*|min-width|height on DrawingArea
-// TODO: GTK4: Revisit whether that is still the case; hopefully it isnʼt, then just be DrawingArea
 class Ruler
     : public WidgetVfuncsClassInit
-    , public Gtk::Box
+    , public Gtk::DrawingArea
 {
 public:
     Ruler(Gtk::Orientation orientation);
@@ -78,7 +75,6 @@ private:
     [[nodiscard]] std::unique_ptr<Gtk::Popover> create_context_menu();
     Cairo::RefPtr<Cairo::Surface> draw_label(Cairo::RefPtr<Cairo::Surface> const &surface_in, int label_value);
 
-    Gtk::DrawingArea *_drawing_area;
     Inkscape::PrefObserver _watch_prefs;
     std::unique_ptr<Gtk::Popover> _popover;
     Gtk::Orientation    _orientation;

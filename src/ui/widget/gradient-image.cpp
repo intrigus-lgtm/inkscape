@@ -26,22 +26,15 @@
 namespace Inkscape::UI::Widget {
 
 GradientImage::GradientImage(SPGradient *gradient)
-    : _drawing_area{Gtk::make_managed<Gtk::DrawingArea>()}
 {
     set_name("GradientImage");
-
-    _drawing_area->set_visible(true);
-    _drawing_area->set_draw_func(sigc::mem_fun(*this, &GradientImage::on_drawing_area_draw));
-    _drawing_area->set_expand(true); // DrawingArea fills self Box,
-    set_expand(false);               // but the Box doesnʼt expand.
-    append(*_drawing_area);
-
+    set_draw_func(sigc::mem_fun(*this, &GradientImage::draw_func));
     set_gradient(gradient);
 }
 
-void GradientImage::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int)
+void GradientImage::draw_func(Cairo::RefPtr<Cairo::Context> const &cr,
+                              int const width, int const height)
 {
-    auto const width = _drawing_area->get_width(), height = _drawing_area->get_height();
     auto ct = cr->cobj();
     sp_gradient_draw(_gradient, width, height, ct);
 }
@@ -63,7 +56,7 @@ GradientImage::set_gradient(SPGradient *gradient)
         _modified_connection = gradient->connectModified(sigc::mem_fun(*this, &GradientImage::gradient_modified));
     }
 
-    _drawing_area->queue_draw();
+    queue_draw();
 }
 
 void
@@ -75,7 +68,7 @@ GradientImage::gradient_release(SPObject const * /*object*/)
 void
 GradientImage::gradient_modified(SPObject const * /*object*/, guint /*flags*/)
 {
-    _drawing_area->queue_draw();
+    queue_draw();
 }
 
 } // namespace Inkscape::UI::Widget

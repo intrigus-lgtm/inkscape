@@ -15,33 +15,26 @@
 
 #include <cstdint>
 #include <cairomm/refptr.h>
-#include <gtkmm/box.h>
+#include <gtkmm/drawingarea.h>
 
 namespace Cairo {
 class Context;
 } // namespace Cairo
-
-namespace Gtk {
-class DrawingArea;
-} // namespace Gtk
 
 namespace Inkscape::UI::Widget {
 
 /**
  * A simple color preview widget, mainly used within a picker button.
  */
-// Box because GTK3 does not bother applying CSS bits like min-width|height on DrawingArea
-// TODO: GTK4: Revisit whether that is still the case; hopefully it isnʼt, then just be DrawingArea
-class ColorPreview final : public Gtk::Box {
+class ColorPreview final : public Gtk::DrawingArea {
 public:
     ColorPreview  (std::uint32_t rgba);
     void setRgba32(std::uint32_t rgba);
 
 private:
-    Gtk::DrawingArea * const _drawing_area;
     std::uint32_t _rgba;
 
-    void on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int);
+    void draw_func(Cairo::RefPtr<Cairo::Context> const &cr, int width, int height);
 };
 
 } // namespace Inkscape::UI::Widget

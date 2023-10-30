@@ -16,13 +16,12 @@
 
 #include <gtk/gtk.h> // GtkEventController*
 #include <glibmm/refptr.h>
-#include <gtkmm/box.h>
+#include <gtkmm/drawingarea.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <sigc++/signal.h>
 
 namespace Gtk {
 class Adjustment;
-class DrawingArea;
 class GestureClick;
 } // namespace Gtk
 
@@ -31,9 +30,7 @@ namespace Inkscape::UI::Widget {
 /*
  * A slider with colored background
  */
-// Box because GTK3 does not bother applying CSS bits like padding*|min-width|height on DrawingArea
-// TODO: GTK4: Revisit whether that is still the case; hopefully it isnʼt, then just be DrawingArea
-class ColorSlider : public Gtk::Box {
+class ColorSlider : public Gtk::DrawingArea {
 public:
     ColorSlider(Glib::RefPtr<Gtk::Adjustment> adjustment);
     ~ColorSlider() override;
@@ -49,7 +46,7 @@ public:
     sigc::signal<void ()> signal_value_changed;
 
 private:
-    void on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int);
+    void draw_func(Cairo::RefPtr<Cairo::Context> const &cr, int width, int height);
 
     Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
                                               int n_press, double x, double y);
@@ -61,8 +58,6 @@ private:
     void _onAdjustmentValueChanged();
 
     bool _dragging;
-
-    Gtk::DrawingArea *_drawing_area;
 
     Glib::RefPtr<Gtk::Adjustment> _adjustment;
     sigc::connection _adjustment_changed_connection;

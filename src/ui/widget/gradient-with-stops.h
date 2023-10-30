@@ -17,7 +17,7 @@
 #include <glibmm/refptr.h>
 #include <gdkmm/rgba.h>
 #include <gtk/gtk.h> // GtkEventControllerKey|Motion
-#include <gtkmm/box.h>
+#include <gtkmm/drawingarea.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <sigc++/signal.h>
 
@@ -30,7 +30,6 @@ class Cursor;
 } // namespace Gdk
 
 namespace Gtk {
-class DrawingArea;
 class GestureClick;
 } // namespace Gtk
 
@@ -38,11 +37,9 @@ class SPGradient;
 
 namespace Inkscape::UI::Widget {
 
-// Box because GTK3 does not bother applying CSS bits like min-width|height on DrawingArea
-// TODO: GTK4: Revisit whether that is still the case; hopefully it isnʼt, then just be DrawingArea
 class GradientWithStops
     : public WidgetVfuncsClassInit
-    , public Gtk::Box
+    , public Gtk::DrawingArea
 {
 public:
     GradientWithStops();
@@ -115,7 +112,6 @@ private:
     Glib::RefPtr<Gdk::Cursor> const *get_cursor(double x, double y) const;
     void set_stop_cursor(Glib::RefPtr<Gdk::Cursor> const *cursor);
 
-    Gtk::DrawingArea *_drawing_area;
     SPGradient* _gradient = nullptr;
 
     struct stop_t {

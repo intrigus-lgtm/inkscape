@@ -16,7 +16,7 @@
 
 #include <cairomm/refptr.h>
 #include <glibmm/refptr.h>
-#include <gtkmm/box.h>
+#include <gtkmm/drawingarea.h>
 
 #include "helper/auto-connection.h"
 
@@ -28,26 +28,19 @@ namespace Gdk {
 class Pixbuf;
 } // namespace Gdk
 
-namespace Gtk {
-class DrawingArea;
-} // namespace Gtk
-
 namespace Inkscape::UI::Widget {
 
-// Box because GTK3 does not bother applying CSS bits like min-width|height on DrawingArea
-// TODO: GTK4: Revisit whether that is still the case; hopefully it isnʼt, then just be DrawingArea
-class GradientImage : public Gtk::Box {
+class GradientImage : public Gtk::DrawingArea {
 public:
     GradientImage(SPGradient *gradient);
     void set_gradient(SPGradient *gr);
 
 private:
-    Gtk::DrawingArea *_drawing_area;
     SPGradient *_gradient = nullptr;
     auto_connection _release_connection;
     auto_connection _modified_connection;
 
-    void on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int);
+    void draw_func(Cairo::RefPtr<Cairo::Context> const &cr, int width, int height);
     void gradient_release (SPObject const *obj);
     void gradient_modified(SPObject const *obj, guint flags);
 };

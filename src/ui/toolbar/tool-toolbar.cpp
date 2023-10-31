@@ -55,21 +55,21 @@ ToolToolbar::ToolToolbar(InkscapeWindow *window)
 
     // Hide/show buttons based on preferences.
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    buttons_pref_observer = prefs->createObserver(tools_button_path, [=]() { set_visible_buttons(); });
-    set_visible_buttons(); // Must come after pack_start()
+    buttons_pref_observer = prefs->createObserver(tools_button_path, [&]{ set_visible_buttons(tool_toolbar); });
+    set_visible_buttons(tool_toolbar); // Must come after pack_start()
 }
 
 ToolToolbar::~ToolToolbar() = default;
 
-void ToolToolbar::set_visible_buttons()
+void ToolToolbar::set_visible_buttons(Gtk::ScrolledWindow &tool_toolbar)
 {
     int buttons_before_separator = 0;
     Gtk::Widget* last_sep = nullptr;
     Gtk::FlowBox* last_box = nullptr;
-
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
-    for_each_descendant(*this, [&](Gtk::Widget &widget) {
+    // We recurse from the ScrolledWindow, not this, to skip context PopoverMenu
+    for_each_descendant(tool_toolbar, [&](Gtk::Widget &widget) {
         if (auto const flowbox = dynamic_cast<Gtk::FlowBox *>(&widget)) {
             flowbox->set_visible(true);
             flowbox->set_max_children_per_line(1);
@@ -116,7 +116,7 @@ std::unique_ptr<UI::Widget::PopoverMenu> ToolToolbar::makeContextMenu(InkscapeWi
 
     auto &item = *Gtk::make_managed<UI::Widget::PopoverMenuItem>(_("Open tool preferences"), false,
                                                                  icon_name);
-    item.signal_activate().connect([=]
+    item.signal_activate().connect([=, this]
     {
         tool_preferences(_context_menu_tool_name, window);
         _context_menu_tool_name.clear();
@@ -138,7 +138,7 @@ void ToolToolbar::showContextMenu(InkscapeWindow * const window,
  * @brief Attach handlers to all tool buttons, so that double-clicking on a tool
  *        in the toolbar opens up that tool's preferences, and a right click opens a
  *        context menu with the same functionality.
- * @param builder The builder that contains a loaded UI structure containing RadioButton's.
+ * @param builder The builder that contains a loaded UI structure containing ToggleButtons.
  * @param window The Inkscape window which will display the preferences dialog.
  */
 void ToolToolbar::attachHandlers(Glib::RefPtr<Gtk::Builder> builder, InkscapeWindow *window)
@@ -156,7 +156,7 @@ void ToolToolbar::attachHandlers(Glib::RefPtr<Gtk::Builder> builder, InkscapeWin
         }
 
         auto tool_name = Glib::ustring((gchar const *)action_target.get_data());
-        auto on_click_pressed = [=, tool_name = std::move(tool_name)]
+        auto on_click_pressed = [=, this, tool_name = std::move(tool_name)]
                                 (Gtk::GestureClick const &click,
                                  int const n_press, double /*x*/, double /*y*/)
         {

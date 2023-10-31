@@ -19,8 +19,9 @@
 #include "preferences.h"
 
 namespace Gtk {
-class Button;
 class Builder;
+class Button;
+class ScrolledWindow;
 } // namespace Gtk
 
 class InkscapeWindow;
@@ -40,10 +41,10 @@ public:
     ToolToolbar(InkscapeWindow *window);
     ~ToolToolbar() override;
 
-    void set_visible_buttons();
     static Glib::ustring get_tool_visible_button_path(const Glib::ustring& button_action_name);
 
 private:
+    void set_visible_buttons(Gtk::ScrolledWindow &tool_toolbar);
     std::unique_ptr<UI::Widget::PopoverMenu> makeContextMenu(InkscapeWindow *window);
     void showContextMenu(InkscapeWindow *window,
                          Gtk::Button &button, Glib::ustring const &tool_name);

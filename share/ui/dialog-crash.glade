@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkTextBuffer" id="stacktrace"/>
@@ -10,7 +9,7 @@
     <property name="text" translatable="yes">Inkscape has crashed and will now close.</property>
     <property name="secondary-text" translatable="yes">If you can reproduce this crash, please &lt;a href="https://inkscape.org/report"&gt;file a bug&lt;/a&gt; and include the backtrace from the area below.</property>
     <property name="secondary-use-markup">True</property>
-    <child internal-child="vbox">
+    <child>
       <object class="GtkBox">
         <property name="margin-start">10</property>
         <property name="margin-end">10</property>
@@ -18,12 +17,10 @@
         <property name="spacing">2</property>
         <child internal-child="action_area">
           <object class="GtkBox">
+            <property name="valign">center</property>
             <property name="homogeneous">True</property>
             <property name="halign">end</property>
           </object>
-          <packing>
-            <property name="fill">False</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel" id="message">
@@ -34,27 +31,21 @@
             <property name="label">(this text will be replaced) autosave file has been created</property>
             <property name="use-markup">True</property>
           </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkScrolledWindow" id="stacktrace_area">
             <property name="name">stacktrace_area</property>
             <property name="focusable">True</property>
             <property name="has-frame">true</property>
-            <child>
+            <property name="child">
               <object class="GtkTextView">
                 <property name="focusable">True</property>
                 <property name="vexpand">True</property>
                 <property name="editable">False</property>
                 <property name="buffer">stacktrace</property>
               </object>
-            </child>
+            </property>
           </object>
-          <packing>
-            <property name="position">3</property>
-          </packing>
         </child>
       </object>
     </child>

@@ -161,9 +161,8 @@ std::vector<Gtk::Widget *> const &PopoverMenu::get_items()
 void PopoverMenu::check_child_invariants()
 {
     // Check no one (accidentally?) removes our Grid or ScrolledWindow.
-    g_assert(_scrolled_window.get_parent() ==  this);
-    // ScrolledWindow will have interposed a Gtk::Viewport between, so:
-    g_assert(_grid.get_parent());
+    // GtkPopover interposes a content widget and ScrolledWindow a Viewport, so:
+    g_assert(is_descendant_of(_scrolled_window, *this));
     g_assert(is_descendant_of(_grid, _scrolled_window));
 }
 

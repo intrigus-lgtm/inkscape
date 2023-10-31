@@ -20,7 +20,9 @@
 #include <set>
 #include <utility>
 #include <gdk/gdkkeysyms.h>
+#include <gdkmm/device.h>
 #include <gdkmm/display.h>
+#include <gdkmm/seat.h>
 #include <gtkmm/window.h>
 #include <glibmm/i18n.h>
 
@@ -1374,7 +1376,9 @@ static void update_latin_keys_group()
  */
 void init_latin_keys_group()
 {
-    g_signal_connect(G_OBJECT(gdk_display_get_default()), "keys-changed", G_CALLBACK(update_latin_keys_group), nullptr);
+    auto const keyboard = Gdk::Display::get_default()->get_default_seat()->get_keyboard();
+    g_assert(keyboard);
+    keyboard->signal_changed().connect(&update_latin_keys_group);
     update_latin_keys_group();
 }
 

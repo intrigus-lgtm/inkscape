@@ -22,6 +22,7 @@
 #include <glibmm/main.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/frame.h>
+#include <gtkmm/image.h>
 #include <gtkmm/snapshot.h>
 #include <gtkmm/togglebutton.h>
 #include <sigc++/adaptors/bind.h>

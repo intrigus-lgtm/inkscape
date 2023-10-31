@@ -18,10 +18,9 @@
 
 #include <memory>
 #include <vector>
+#include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/box.h>
-#include <gtkmm/button.h>
-#include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/paned.h>
 
@@ -34,8 +33,13 @@ namespace Glib {
 class Timer;
 } // namespace Glib
 
+namespace Gdk {
+class Texture;
+} // namespace Gdk
+
 namespace Gtk {
 class CheckButton;
+class Image;
 class ToggleButton;
 } // namespace Gtk
 

@@ -45,7 +45,7 @@ SVGViewWidget::SVGViewWidget(SPDocument* document)
 
     _canvas->set_expand(true);
     set_expand(false);
-    append(*_canvas);
+    set_child(*_canvas);
 
     _parent = new Inkscape::CanvasItemGroup(_canvas->get_canvas_item_root());
     _drawing = new Inkscape::CanvasItemDrawing(_parent);
@@ -108,21 +108,19 @@ void SVGViewWidget::setResize(int width, int height)
 void SVGViewWidget::size_allocate_vfunc(int const width, int const height, int const baseline)
 {
     if (!(_width == width && _height == height)) {
-        if (width < 0.0 || height < 0.0) {
+        if (width < 0 || height < 0) {
             std::cerr << "SVGViewWidget::size_allocate: negative dimensions!" << std::endl;
-            Gtk::Box::size_allocate_vfunc(width, height, baseline);
-            return;
+        } else {
+            _rescale = true;
+            _keepaspect = true;
+            _width = width;
+            _height = height;
+
+            doRescale();
         }
-
-        _rescale = true;
-        _keepaspect = true;
-        _width = width;
-        _height = height;
-
-        doRescale();
     }
 
-    Gtk::Box::size_allocate_vfunc(width, height, baseline);
+    Bin::size_allocate_vfunc(width, height, baseline);
 }
 
 /**

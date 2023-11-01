@@ -118,10 +118,12 @@ ComboToolItem::use_group_label(bool use_group_label)
     }
 
     if (use_group_label) {
+        _combobox->reference();
         _container->remove(*_combobox);
         _group_label_widget = std::make_unique<Gtk::Label>(_group_label + ": ");
         UI::pack_start(*_container, *_group_label_widget);
         UI::pack_start(*_container, *_combobox);
+        _combobox->unreference();
     } else {
         _container->remove(*_group_label_widget);
         _group_label_widget.reset();

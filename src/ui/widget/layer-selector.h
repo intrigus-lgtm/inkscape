@@ -47,6 +47,8 @@ public:
     void setDesktop(SPDesktop *desktop);
 
 private:
+    int const _instance_number;
+
     SPDesktop *_desktop = nullptr;
     SPGroup   *_layer   = nullptr;
 

@@ -74,9 +74,11 @@ private:
 };
 
 static constexpr auto cssName = "LayerSelector";
+static int instance_number = 0;
 
 LayerSelector::LayerSelector(SPDesktop *desktop)
     : Gtk::Box(Gtk::Orientation::HORIZONTAL)
+    , _instance_number{++instance_number}
     , _label_style{Gtk::CssProvider::create()}
     , _observer{std::make_unique<Inkscape::XML::SignalObserver>()}
 {
@@ -203,7 +205,7 @@ void LayerSelector::_layerChoose()
 
 Glib::ustring LayerSelector::getThisCssClass() const
 {
-    return "this" + Glib::ustring::format(this);
+    return "this" + std::to_string(_instance_number);
 }
 
 } // namespace Inkscape::UI::Widget

@@ -177,6 +177,7 @@ set(ui_SRC
 	widget/iconrenderer.cpp
 	widget/alignment-selector.cpp
 	widget/anchor-selector.cpp
+	widget/bin.cpp
 	widget/completion-popup.cpp
 	widget/canvas.cpp
 	widget/canvas/stores.cpp
@@ -462,6 +463,7 @@ set(ui_SRC
 	widget/alignment-selector.h
 	widget/anchor-selector.h
 	widget/attr-widget.h
+	widget/bin.h
 	widget/canvas.h
 	widget/canvas/fragment.h
 	widget/canvas/prefs.h

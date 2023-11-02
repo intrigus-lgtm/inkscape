@@ -16,7 +16,7 @@
     <property name="popup-set-width">False</property>
     <child>
       <object class="GtkCellRendererPixbuf" id="icon-cell">
-        <property name="stock-size">3</property>
+        <property name="icon-size">large</property>
       </object>
       <attributes>
         <attribute name="icon-name">2</attribute>
@@ -39,12 +39,6 @@
         <property name="hexpand">True</property>
         <property name="activates-default">True</property>
         <property name="width-chars">1</property>
-        <property name="caps-lock-warning">False</property>
-        <property name="primary-icon-name">edit-find-symbolic</property>
-        <property name="primary-icon-activatable">False</property>
-        <property name="primary-icon-sensitive">False</property>
-        <property name="placeholder-text" translatable="yes">Add item</property>
-        <property name="completion">completion</property>
       </object>
     </child>
     <child>

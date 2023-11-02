@@ -64,9 +64,6 @@
                       <object class="GtkSearchEntry" id="search_entry">
                         <property name="focusable">True</property>
                         <property name="tooltip-text" translatable="yes">Search fonts</property>
-                        <property name="primary-icon-name">edit-find-symbolic</property>
-                        <property name="primary-icon-activatable">False</property>
-                        <property name="primary-icon-sensitive">False</property>
                       </object>
                     </child>
                     <child>
@@ -190,7 +187,6 @@
           <object class="GtkButton" id="apply_button">
             <property name="label" translatable="yes">Apply</property>
             <property name="focusable">True</property>
-            <property name="can-default">True</property>
             <property name="receives-default">True</property>
           </object>
         </child>

@@ -5,9 +5,7 @@
     <property name="name">about</property>
     <property name="title" translatable="yes">Inkscape. Draw freely.</property>
     <property name="resizable">False</property>
-    <property name="window-position">center-always</property>
     <property name="icon-name">org.inkscape.Inkscape</property>
-    <property name="gravity">north</property>
     <property name="child">
       <object class="GtkBox">
         <property name="orientation">vertical</property>

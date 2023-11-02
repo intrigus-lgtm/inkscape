@@ -58,7 +58,6 @@
             <property name="child">
               <object class="GtkExpander" id="LPEExpander">
                 <property name="focusable">True</property>
-                <property name="label-fill">True</property>
                 <child type="label">
                   <object class="GtkBox">
                     <property name="name">LPEExpanderBox</property>
@@ -115,7 +114,7 @@
                 <property name="name">LPEActionButtons</property>
                 <property name="halign">end</property>
                 <property name="valign">start</property>
-                <property name="can-pick">False</property>
+                <property name="can-target">0</property>
                 <child>
                   <object class="GtkBox">
                     <child>

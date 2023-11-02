@@ -35,6 +35,7 @@
         </child>
         <child>
           <object class="GtkScale" id="symbol-size">
+            <property name="draw-value">True</property>
             <property name="width-request">120</property>
             <property name="focusable">True</property>
             <property name="adjustment">adjustment-symbol-size</property>
@@ -83,6 +84,7 @@
         </child>
         <child>
           <object class="GtkScale" id="zoom">
+            <property name="draw-value">True</property>
             <property name="focusable">True</property>
             <property name="adjustment">adjustment-zoom</property>
             <property name="show-fill-level">True</property>
@@ -130,9 +132,6 @@
           <object class="GtkSearchEntry" id="set-search">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Search for symbol set</property>
-            <property name="primary-icon-name">edit-find-symbolic</property>
-            <property name="primary-icon-activatable">False</property>
-            <property name="primary-icon-sensitive">False</property>
             <layout>
               <property name="column">1</property>
               <property name="row">0</property>
@@ -212,9 +211,6 @@
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Search for symbol</property>
             <property name="width-chars">15</property>
-            <property name="primary-icon-name">edit-find-symbolic</property>
-            <property name="primary-icon-activatable">False</property>
-            <property name="primary-icon-sensitive">False</property>
           </object>
         </child>
       </object>

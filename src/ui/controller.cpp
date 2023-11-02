@@ -49,7 +49,12 @@ template <typename Object, typename Getter, typename SlotResult, typename ...Slo
 void connect(Object &object, Getter const getter, sigc::slot<SlotResult (SlotArgs...)> &&slot,
              When const when)
 {
-    if (slot) connect(object, getter, std::move(slot), when);
+    // Fixme: This function is now just a ripoff of the previous one.
+    if (slot) {
+        auto signal = std::invoke(getter, object);
+        signal.connect(sigc::bind<0>(std::move(slot), std::ref(object)),
+                       when == When::after);
+    }
 }
 
 // We add the requirement that slots return an EventSequenceState, which if itʼs

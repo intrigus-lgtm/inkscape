@@ -95,8 +95,9 @@
             </child>
             <child>
               <object class="GtkScale" id="tile-slider">
-                <property name="focusable">True</property>
+                <property name="draw-value">True</property>
                 <property name="hexpand">True</property>
+                <property name="focusable">True</property>
                 <property name="adjustment">adjustment-tile-size</property>
                 <property name="round-digits">0</property>
                 <property name="has-origin">False</property>
@@ -148,11 +149,11 @@
   </object>
   <object class="GtkImage" id="image-linked">
     <property name="icon-name">entries-linked-symbolic</property>
-    <property name="icon-size">3</property>
+    <property name="icon-size">large</property>
   </object>
   <object class="GtkImage" id="image-unlinked">
     <property name="icon-name">entries-unlinked-symbolic</property>
-    <property name="icon-size">3</property>
+    <property name="icon-size">large</property>
   </object>
   <object class="GtkBox" id="main-box">
     <property name="orientation">vertical</property>
@@ -171,10 +172,6 @@
             <property name="focusable">True</property>
             <property name="halign">end</property>
             <property name="width-chars">16</property>
-            <property name="caps-lock-warning">False</property>
-            <property name="primary-icon-name">edit-find-symbolic</property>
-            <property name="primary-icon-activatable">False</property>
-            <property name="primary-icon-sensitive">False</property>
           </object>
         </child>
         <child>
@@ -383,6 +380,7 @@
         </child>
         <child>
           <object class="GtkScale" id="orient">
+            <property name="draw-value">True</property>
             <property name="focusable">True</property>
             <property name="round-digits">0</property>
             <property name="has-origin">False</property>
@@ -492,7 +490,6 @@
                 <property name="has-frame">False</property>
                 <property name="width-chars">10</property>
                 <property name="xalign">0.5</property>
-                <property name="caps-lock-warning">False</property>
                 <property name="placeholder-text" translatable="yes" comments="This is a hint that shows up when pattern name is blank">name</property>
                 <style>
                   <class name="small-font"/>

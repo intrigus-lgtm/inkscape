@@ -33,17 +33,16 @@
   </object>
   <object class="GtkImage" id="image-linked">
     <property name="icon-name">entries-linked-symbolic</property>
-    <property name="icon-size">3</property>
+    <property name="icon-size">large</property>
   </object>
   <object class="GtkImage" id="image-unlinked">
     <property name="icon-name">entries-unlinked-symbolic</property>
-    <property name="icon-size">3</property>
+    <property name="icon-size">large</property>
   </object>
   <object class="GtkToggleButton" id="radio-orient">
     <property name="label">radiobutton</property>
     <property name="focusable">True</property>
     <property name="active">True</property>
-    <property name="draw-indicator">True</property>
   </object>
   <object class="GtkPopover" id="popover">
     <property name="child">
@@ -160,7 +159,6 @@
                     <property name="focusable">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Orient along the path, reversing at the start</property>
-                    <property name="draw-indicator">False</property>
                     <property name="group">radio-orient</property>
                     <style>
                       <class name="tight-button"/>
@@ -177,7 +175,6 @@
                     <property name="focusable">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Orient along the path</property>
-                    <property name="draw-indicator">False</property>
                     <property name="group">radio-orient</property>
                     <style>
                       <class name="tight-button"/>
@@ -194,7 +191,6 @@
                     <property name="focusable">True</property>
                     <property name="tooltip-text" translatable="yes">Fixed specified angle</property>
                     <property name="active">True</property>
-                    <property name="draw-indicator">False</property>
                     <property name="group">radio-orient</property>
                     <style>
                       <class name="tight-button"/>

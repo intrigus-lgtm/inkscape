@@ -58,7 +58,6 @@
         <property name="overlay-scrolling">False</property>
         <property name="child">
           <object class="GtkViewport" id="view-port">
-            <property name="has-frame">false</property>
             <property name="child">
               <object class="GtkFlowBox" id="flow-box">
                 <property name="halign">start</property>
@@ -85,7 +84,6 @@
         <property name="receives-default">True</property>
         <property name="margin-start">1</property>
         <property name="margin-end">1</property>
-        <property name="has-frame">False</property>
         <style>
           <class name="small"/>
         </style>
@@ -103,7 +101,6 @@
         <property name="receives-default">True</property>
         <property name="margin-start">1</property>
         <property name="margin-end">1</property>
-        <property name="has-frame">False</property>
         <style>
           <class name="small"/>
         </style>
@@ -133,7 +130,6 @@
                 <property name="receives-default">True</property>
                 <property name="margin-start">1</property>
                 <property name="margin-end">1</property>
-                <property name="has-frame">False</property>
                 <style>
                   <class name="small"/>
                 </style>
@@ -158,7 +154,6 @@
                 <property name="receives-default">True</property>
                 <property name="margin-start">1</property>
                 <property name="margin-end">1</property>
-                <property name="has-frame">False</property>
                 <style>
                   <class name="small"/>
                 </style>
@@ -182,9 +177,7 @@
         <property name="valign">end</property>
         <property name="margin-start">1</property>
         <property name="margin-end">1</property>
-        <property name="has-frame">False</property>
         <property name="direction">none</property>
-        <property name="use-popover">False</property>
         <style>
           <class name="small"/>
         </style>
@@ -195,7 +188,6 @@
     </style>
   </object>
   <object class="GtkPopover" id="config-popup">
-    <property name="relative-to">btn-menu</property>
     <property name="child">
       <object class="GtkGrid" id="main-grid">
         <property name="halign">start</property>

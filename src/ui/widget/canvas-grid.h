@@ -87,7 +87,7 @@ public:
     Gtk::Adjustment *GetVAdj() { return _vadj.get(); };
     Gtk::ToggleButton *GetGuideLock()  { return &_guide_lock; }
     Gtk::ToggleButton *GetCmsAdjust()  { return &_cms_adjust; }
-    Gtk::ToggleButton *GetStickyZoom();
+    Gtk::CheckButton  *GetStickyZoom();
     Dialog::CommandPalette *getCommandPalette() { return _command_palette.get(); }
 
     // Motion event handler, and delayed snap event callback.

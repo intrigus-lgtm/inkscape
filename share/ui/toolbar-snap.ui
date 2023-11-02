@@ -839,21 +839,17 @@
       </object>
     </child>
     <child>
-      <object class="GtkMenuButton" id="btn-advanced">
+      <object class="GtkButton" id="btn-advanced">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="direction">left</property>
-        <property name="popover">advanced</property>
       </object>
     </child>
     <child>
-      <object class="GtkMenuButton" id="btn-simple">
+      <object class="GtkButton" id="btn-simple">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="direction">left</property>
-        <property name="popover">simple</property>
       </object>
     </child>
     <child>

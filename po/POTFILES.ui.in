@@ -1,7 +1,6 @@
 ../share/ui/attribute-edit-component.glade
 ../share/ui/color-palette.glade
 ../share/ui/command-palette-operation.glade
-../share/ui/completion-box.glade
 ../share/ui/dialog-crash.glade
 ../share/ui/dialog-css.glade
 ../share/ui/dialog-document-resources.glade

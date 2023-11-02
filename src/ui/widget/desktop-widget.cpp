@@ -29,6 +29,7 @@
 #include <glibmm/i18n.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/adjustment.h>
+#include <gtkmm/checkbutton.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
 #include <gtkmm/messagedialog.h>

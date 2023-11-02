@@ -42,7 +42,6 @@
   <object class="GtkToggleButton" id="radio_button_group">
     <property name="focusable">True</property>
     <property name="active">True</property>
-    <property name="draw-indicator">False</property>
   </object>
   <object class="GtkBox" id="arc-toolbar">
     <property name="halign">start</property>
@@ -185,7 +184,6 @@
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Switch to slice (closed shape with two radii)</property>
         <property name="has-frame">False</property>
-        <property name="draw-indicator">False</property>
         <property name="group">radio_button_group</property>
         <style>
           <class name="tag2"/>
@@ -202,7 +200,6 @@
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Switch to arc (unclosed shape)</property>
         <property name="has-frame">False</property>
-        <property name="draw-indicator">False</property>
         <property name="group">radio_button_group</property>
         <style>
           <class name="tag2"/>
@@ -219,7 +216,6 @@
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Switch to chord (closed shape)</property>
         <property name="has-frame">False</property>
-        <property name="draw-indicator">False</property>
         <property name="group">radio_button_group</property>
         <style>
           <class name="tag2"/>

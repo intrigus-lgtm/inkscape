@@ -3,6 +3,7 @@
   <requires lib="gtk" version="4.0"/>
   <object class="GtkTextBuffer" id="stacktrace"/>
   <object class="GtkMessageDialog" id="crash_dialog">
+    <property name="resizable">True</property>
     <property name="message-type">error</property>
     <property name="buttons">ok</property>
     <property name="text" translatable="yes">Inkscape has crashed and will now close.</property>
@@ -35,7 +36,7 @@
           <object class="GtkScrolledWindow" id="stacktrace_area">
             <property name="name">stacktrace_area</property>
             <property name="focusable">True</property>
-            <property name="has-frame">True</property>
+            <property name="has-frame">true</property>
             <property name="child">
               <object class="GtkTextView">
                 <property name="focusable">True</property>

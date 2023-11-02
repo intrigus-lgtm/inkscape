@@ -5,7 +5,6 @@
     <property name="width-request">400</property>
     <property name="height-request">200</property>
     <property name="title" translatable="yes">Save Document as Template</property>
-    <property name="type-hint">dialog</property>
     <child type="titlebar"/>
     <child internal-child="content_area">
       <object class="GtkBox">

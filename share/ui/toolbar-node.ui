@@ -56,7 +56,6 @@
     <child>
       <object class="GtkButton" id="insert_node_btn">
         <property name="focusable">True</property>
-        <property name="can-default">True</property>
         <property name="tooltip-text" translatable="yes">Insert new nodes into selected segments</property>
         <property name="has-frame">False</property>
         <child>
@@ -83,7 +82,6 @@
     <child>
       <object class="GtkButton" id="delete_btn">
         <property name="focusable">True</property>
-        <property name="can-default">True</property>
         <property name="tooltip-text" translatable="yes">Delete selected nodes</property>
         <property name="has-frame">False</property>
         <child>

@@ -21,6 +21,7 @@
         </child>
         <child>
           <object class="GtkScale" id="thumb-size">
+            <property name="draw-value">True</property>
             <property name="width-request">130</property>
             <property name="focusable">True</property>
             <property name="adjustment">adjustment-thumbnails</property>
@@ -74,9 +75,6 @@
         <child>
           <object class="GtkSearchEntry" id="search">
             <property name="focusable">True</property>
-            <property name="primary-icon-name">edit-find-symbolic</property>
-            <property name="primary-icon-activatable">False</property>
-            <property name="primary-icon-sensitive">False</property>
           </object>
         </child>
         <child>

@@ -23,7 +23,6 @@
         </child>
         <child>
           <object class="GtkViewport" id="pref_holder">
-            <property name="has-frame">false</property>
           </object>
         </child>
       </object>

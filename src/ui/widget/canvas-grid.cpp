@@ -214,8 +214,8 @@ void CanvasGrid::on_realize() {
 }
 
 // TODO: remove when sticky zoom gets replaced by Gio::Action:
-Gtk::ToggleButton *CanvasGrid::GetStickyZoom() {
-    return &get_widget<Gtk::ToggleButton>(_builder_display_popup, "zoom-resize");
+Gtk::CheckButton *CanvasGrid::GetStickyZoom() {
+    return &get_widget<Gtk::CheckButton>(_builder_display_popup, "zoom-resize");
 }
 
 // _dt2r should be a member of _canvas.

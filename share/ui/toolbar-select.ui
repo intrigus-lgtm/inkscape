@@ -63,7 +63,6 @@
     <child>
       <object class="GtkButton">
         <property name="focusable">True</property>
-        <property name="can-default">True</property>
         <property name="tooltip-text" translatable="yes">"Select all objects</property>
         <property name="action-name">win.select-all</property>
         <property name="has-frame">False</property>

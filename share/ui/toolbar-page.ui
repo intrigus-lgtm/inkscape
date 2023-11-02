@@ -217,7 +217,7 @@
     </style>
   </object>
   <object class="GtkPopover" id="margin_popover">
-    <property name="relative-to">_text_page_margins</property>
+    <property name="parent">_text_page_margins</property>
     <property name="child">
       <object class="GtkGrid">
         <property name="margin-start">5</property>
@@ -244,8 +244,6 @@
             <property name="margin-start">5</property>
             <property name="margin-top">5</property>
             <property name="margin-bottom">5</property>
-            <property name="overwrite-mode">1</property>
-            <property name="placeholder-text">0px</property>
             <property name="adjustment">adjust_margin_right</property>
             <property name="digits">2</property>
             <layout>
@@ -259,7 +257,6 @@
           <object class="GtkSpinButton" id="_margin_top">
             <property name="focusable">True</property>
             <property name="valign">center</property>
-            <property name="placeholder-text">0px</property>
             <property name="adjustment">adjust_margin_top</property>
             <property name="digits">2</property>
             <layout>
@@ -275,7 +272,6 @@
             <property name="margin-start">5</property>
             <property name="margin-top">5</property>
             <property name="margin-bottom">5</property>
-            <property name="placeholder-text">0px</property>
             <property name="adjustment">adjust_margin_left</property>
             <property name="digits">2</property>
             <layout>
@@ -292,7 +288,6 @@
             <property name="margin-start">5</property>
             <property name="margin-top">5</property>
             <property name="margin-bottom">5</property>
-            <property name="placeholder-text">0px</property>
             <property name="adjustment">adjust_margin_bottom</property>
             <property name="digits">2</property>
             <layout>

@@ -47,7 +47,6 @@
               <object class="GtkFlowBoxChild">
                 <property name="child">
                   <object class="GtkToggleButton" id="toolsradio">
-                    <property name="group">toolsradio</property>
                     <property name="focusable">True</property>
                     <property name="halign">center</property>
                     <property name="valign">center</property>

@@ -12,9 +12,6 @@
           <object class="GtkSearchEntry" id="search_entry">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Search fonts present in the font list</property>
-            <property name="primary-icon-name">edit-find-symbolic</property>
-            <property name="primary-icon-activatable">False</property>
-            <property name="primary-icon-sensitive">False</property>
           </object>
         </child>
         <child>

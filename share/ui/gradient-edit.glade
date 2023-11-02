@@ -67,6 +67,7 @@
         </child>
         <child>
           <object class="GtkScale" id="angleSlider">
+            <property name="draw-value">True</property>
             <property name="focusable">True</property>
             <property name="hexpand">True</property>
             <property name="adjustment">adjustmentAngle</property>

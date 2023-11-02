@@ -334,7 +334,7 @@
       <object class="GtkBox">
         <property name="spacing">4</property>
         <child>
-          <object class="GtkCheckButton" id="star-poly">
+          <object class="GtkToggleButton" id="star-poly">
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Regular polygon (with one handle) instead of a star</property>

@@ -79,8 +79,8 @@ public:
     void init();
     void clear();
 
-    bool read( Glib::RefPtr<Gio::File> file, bool user_set = false);
-    bool write(Glib::RefPtr<Gio::File> file, What what = User);
+    bool read (Glib::RefPtr<Gio::File> const &file, bool user_set = false);
+    bool write(Glib::RefPtr<Gio::File> const &file, What what     = User );
     bool write_user();
 
     bool is_user_set(Glib::ustring const &action);
@@ -127,7 +127,7 @@ public:
 
 private:
     // Gio::Actions
-    Glib::RefPtr<Gtk::Application> app;
+    Gtk::Application * const app;
     std::map<Glib::ustring, bool> action_user_set;
 
     void _read(XML::Node const &keysnode, bool user_set);

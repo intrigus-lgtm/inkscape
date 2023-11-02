@@ -59,9 +59,8 @@ using namespace Inkscape::Modifiers;
 namespace Inkscape {
 
 Shortcuts::Shortcuts()
+    : app{dynamic_cast<Gtk::Application *>(Gio::Application::get_default().get())}
 {
-    Glib::RefPtr<Gio::Application> gapp = Gio::Application::get_default();
-    app = std::dynamic_pointer_cast<Gtk::Application>(gapp); // Save as we constantly use it.
     if (!app) {
         std::cerr << "Shortcuts::Shortcuts: No app! Shortcuts cannot be used without a Gtk::Application!" << std::endl;
     }
@@ -225,7 +224,7 @@ parse_modifier_string(char const * const modifiers_string)
 
 // Read a shortcut file.
 bool
-Shortcuts::read(Glib::RefPtr<Gio::File> file, bool user_set)
+Shortcuts::read(Glib::RefPtr<Gio::File> const &file, bool const user_set)
 {
     if (!file->query_exists()) {
         std::cerr << "Shortcut::read: file does not exist: " << file->get_path() << std::endl;
@@ -369,8 +368,8 @@ join(std::vector<Glib::ustring> const &accels, char const separator)
 
 // In principle, we only write User shortcuts. But for debugging, we might want to write something else.
 bool
-Shortcuts::write(Glib::RefPtr<Gio::File> file, What what) {
-
+Shortcuts::write(Glib::RefPtr<Gio::File> const &file, What const what)
+{
     auto *document = new XML::SimpleDocument();
     XML::Node * node = document->createElement("keys");
     switch (what) {

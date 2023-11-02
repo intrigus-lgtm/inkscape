@@ -36,11 +36,13 @@ ScalarUnit::ScalarUnit(Glib::ustring const &label, Glib::ustring const &tooltip,
 
         auto const widget = getWidget();
         g_assert(widget);
+        widget->reference();
         remove(*widget);
         auto const widget_holder = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 6);
         UI::pack_start(*widget_holder, *getWidget(), UI::PackOptions::shrink);
         UI::pack_start(*widget_holder, *_unit_menu, UI::PackOptions::shrink);
         UI::pack_start(*this, *widget_holder, UI::PackOptions::shrink);
+        widget->unreference();
     }
 
     g_assert(_unit_menu);

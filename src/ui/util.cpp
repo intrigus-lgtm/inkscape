@@ -386,10 +386,13 @@ void set_dark_titlebar(Glib::RefPtr<Gdk::Surface> const &surface, bool is_dark)
 
 Glib::RefPtr<Gdk::Texture> to_texture(Cairo::RefPtr<Cairo::Surface> const &surface)
 {
-    assert(surface);
+    if (!surface) {
+        return {};
+    }
+
     assert(surface->get_type() == Cairo::Surface::Type::IMAGE);
 
-    auto img = Cairo::ImageSurface(surface->cobj(), true);
+    auto img = Cairo::ImageSurface(surface->cobj());
     assert(img.get_format() == Cairo::ImageSurface::Format::ARGB32);
 
     auto bytes = g_bytes_new_with_free_func(img.get_data(),

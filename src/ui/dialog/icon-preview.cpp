@@ -104,6 +104,7 @@ IconPreviewPanel::IconPreviewPanel()
     images .resize(sizes.size());
     labels .resize(sizes.size());
     buttons.resize(sizes.size());
+    textures.resize(sizes.size());
 
     for (std::size_t i = 0; i < sizes.size(); ++i) {
         labels[i] = Glib::ustring::compose("%1 x %1", sizes[i]);

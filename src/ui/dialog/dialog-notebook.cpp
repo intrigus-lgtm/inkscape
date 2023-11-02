@@ -278,8 +278,10 @@ void DialogNotebook::add_page(Gtk::Widget &page, Gtk::Widget &tab, Glib::ustring
 
         // This used to transfer pack-type and child properties, but now those are set on children.
         for_each_child(*box, [=](Gtk::Widget &child) {
+            child.reference();
             box       ->remove(child);
             wrapperbox->append(child);
+            child.unreference();
             return ForEachResult::_continue;
         });
 

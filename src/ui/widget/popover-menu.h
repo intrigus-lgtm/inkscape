@@ -41,6 +41,7 @@ class PopoverMenu final : public Gtk::Popover {
 public:
     /// Create popover with CSS classes `.menu` & `.popover-menu`,
     /// positioned as requested vs. relative-to/popup_at() widget.
+    [[nodiscard]] PopoverMenu(Gtk::Widget *parent, Gtk::PositionType const position);
     [[nodiscard]] PopoverMenu(Gtk::Widget &parent, Gtk::PositionType const position);
 
     /// Add child at pos as per Gtk::Menu::attach()

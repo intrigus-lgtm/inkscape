@@ -50,8 +50,8 @@ std::list<DialogNotebook *> DialogNotebook::_instances;
 DialogNotebook::DialogNotebook(DialogContainer *container)
     : Gtk::ScrolledWindow()
     , _container(container)
-    , _menu    {*this, Gtk::PositionType::BOTTOM}
-    , _menutabs{*this, Gtk::PositionType::BOTTOM}
+    , _menu    {nullptr, Gtk::PositionType::BOTTOM}
+    , _menutabs{*this  , Gtk::PositionType::BOTTOM}
     , _labels_auto(true)
     , _detaching_duplicate(false)
     , _selected_page(nullptr)

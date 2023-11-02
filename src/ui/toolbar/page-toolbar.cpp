@@ -34,6 +34,7 @@
 #include "object/sp-page.h"
 #include "ui/builder-utils.h"
 #include "ui/icon-names.h"
+#include "ui/popup-menu.h"
 #include "ui/tools/pages-tool.h"
 #include "ui/util.h"
 #include "ui/widget/toolbar-menu-button.h"
@@ -64,6 +65,7 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
     , _builder(create_builder("toolbar-page.ui"))
     , _combo_page_sizes(get_widget<Gtk::ComboBoxText>(_builder, "_combo_page_sizes"))
     , _text_page_margins(get_widget<Gtk::Entry>(_builder, "_text_page_margins"))
+    , _margin_popover(get_widget<Gtk::Popover>(_builder, "margin_popover"))
     , _text_page_bleeds(get_widget<Gtk::Entry>(_builder, "_text_page_bleeds"))
     , _text_page_label(get_widget<Gtk::Entry>(_builder, "_text_page_label"))
     , _label_page_pos(get_widget<Gtk::Label>(_builder, "_label_page_pos"))
@@ -113,7 +115,8 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
 
     _text_page_bleeds.signal_activate().connect(sigc::mem_fun(*this, &PageToolbar::bleedsEdited));
     _text_page_margins.signal_activate().connect(sigc::mem_fun(*this, &PageToolbar::marginsEdited));
-    _text_page_margins.signal_icon_press().connect([this] (Gtk::Entry::IconPosition) {
+    _margin_popover.set_parent(*this);
+    _text_page_margins.signal_icon_press().connect([&](Gtk::Entry::IconPosition) {
         if (auto page = _document->getPageManager().getSelected()) {
             auto margin = page->getMargin();
             auto unit = _document->getDisplayUnit()->abbr;
@@ -124,7 +127,7 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
             _margin_left.set_value(margin.left().toValue(unit) * scale[Geom::X]);
             _text_page_bleeds.set_text(page->getBleedLabel());
         }
-        get_widget<Gtk::Popover>(_builder, "margin_popover").set_visible(true);
+        UI::popup_at(_margin_popover, _text_page_margins);
     });
     _margin_top.signal_value_changed().connect(sigc::mem_fun(*this, &PageToolbar::marginTopEdited));
     _margin_right.signal_value_changed().connect(sigc::mem_fun(*this, &PageToolbar::marginRightEdited));
@@ -515,6 +518,13 @@ void PageToolbar::selectionChanged(SPPage *page)
     }
     setSizeText(page);
     _label_edited.unblock();
+}
+
+void PageToolbar::size_allocate_vfunc(int const width, int const height, int const baseline)
+{
+    Toolbar::size_allocate_vfunc(width, height, baseline);
+
+    _margin_popover.present();
 }
 
 } // namespace Inkscape::UI::Toolbar

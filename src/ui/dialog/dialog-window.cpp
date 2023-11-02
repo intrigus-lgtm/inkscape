@@ -189,13 +189,11 @@ void DialogWindow::update_dialogs()
 void DialogWindow::update_window_size_to_fit_children()
 {
     // Declare variables
-    int pos_x = 0, pos_y = 0;
     int width = 0, height = 0;
     int overhead = 0;
 
     // Read needed data
     auto allocation = get_allocation();
-    int baseline = get_allocated_baseline();
     auto const &dialogs = _container->get_dialogs();
 
     // Get largest sizes for dialogs
@@ -209,8 +207,8 @@ void DialogWindow::update_window_size_to_fit_children()
 
     // Compute sizes including overhead
     overhead = 2 * (WINDOW_DROPZONE_SIZE_LARGE + overhead);
-    width = width + overhead;
-    height = height + overhead + NOTEBOOK_TAB_HEIGHT;
+    width += overhead;
+    height += overhead + NOTEBOOK_TAB_HEIGHT;
 
     // If sizes are lower then current, don't change them
     if (allocation.get_width() >= width && allocation.get_height() >= height) {
@@ -221,16 +219,11 @@ void DialogWindow::update_window_size_to_fit_children()
     width = std::max(width, allocation.get_width());
     height = std::max(height, allocation.get_height());
 
-    // Compute new positions to keep window centered
-    pos_x = pos_x - (width - allocation.get_width()) / 2;
-    pos_y = pos_y - (height - allocation.get_height()) / 2;
-
-    // Keep window inside the screen
-    pos_x = std::max(pos_x, 0);
-    pos_y = std::max(pos_y, 0);
-
     // Resize window
     set_default_size(width, height);
+
+    // Note: This function also used to maintain the center of the window
+    // before GTK4 removed the ability to do that.
 }
 
 // TODO: GTK4: We wonʼt be able to do this, but shouldnʼt need to, if instead of using

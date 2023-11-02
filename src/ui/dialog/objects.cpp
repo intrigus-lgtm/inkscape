@@ -93,7 +93,7 @@ using namespace Inkscape::UI::Widget;
 
 // This was the 1 widget where we used signal_style_updated(), so just hack together a replacement!
 class ObjectsPanel::TreeViewWithCssChanged final
-    : public UI::Widget::WidgetVfuncsClassInit
+    : public WidgetVfuncsClassInit
     , public Gtk::TreeView
 {
 public:

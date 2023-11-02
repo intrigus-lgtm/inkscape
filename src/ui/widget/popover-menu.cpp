@@ -46,6 +46,10 @@ public:
 };
 
 PopoverMenu::PopoverMenu(Gtk::Widget &parent, Gtk::PositionType const position)
+: PopoverMenu{&parent, position}
+{}
+
+PopoverMenu::PopoverMenu(Gtk::Widget *const parent, Gtk::PositionType const position)
     : Glib::ObjectBase{"PopoverMenu"}
     , Gtk::Popover{}
     , _scrolled_window{*Gtk::make_managed<Gtk::ScrolledWindow>()}
@@ -54,7 +58,7 @@ PopoverMenu::PopoverMenu(Gtk::Widget &parent, Gtk::PositionType const position)
     add_css_class("popover-menu");
     add_css_class("menu");
 
-    set_parent(parent);
+    if (parent) set_parent(*parent);
     set_position(position);
 
     _scrolled_window.set_propagate_natural_width (true);

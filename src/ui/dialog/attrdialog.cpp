@@ -335,6 +335,13 @@ void AttrDialog::adjust_popup_edit_size()
     }
 }
 
+void AttrDialog::size_allocate_vfunc(int const width, int const height, int const baseline)
+{
+    DialogBase::size_allocate_vfunc(width, height, baseline);
+
+    _popover->present();
+}
+
 bool AttrDialog::onPopoverKeyPressed(GtkEventControllerKey const * /*controller*/,
                                      unsigned keyval, unsigned /*keycode*/,
                                      GdkModifierType state)

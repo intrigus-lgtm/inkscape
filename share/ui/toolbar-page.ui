@@ -217,7 +217,6 @@
     </style>
   </object>
   <object class="GtkPopover" id="margin_popover">
-    <property name="parent">_text_page_margins</property>
     <property name="child">
       <object class="GtkGrid">
         <property name="margin-start">5</property>

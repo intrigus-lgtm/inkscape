@@ -87,6 +87,9 @@ double get_attrib_num(SPMarker* marker, const char* attrib) {
 }
 
 MarkerComboBox::MarkerComboBox(Glib::ustring id, int l) :
+    Glib::ObjectBase{"MarkerComboBox"},
+    WidgetVfuncsClassInit{},
+    Gtk::Box{},
     _combo_id(std::move(id)),
     _loc(l),
     _builder(create_builder("marker-popup.glade")),

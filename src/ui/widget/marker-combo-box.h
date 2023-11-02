@@ -56,7 +56,7 @@ namespace Inkscape::UI::Widget {
  * ComboBox-like class for selecting stroke markers.
  */
 class MarkerComboBox final
-    : public UI::Widget::WidgetVfuncsClassInit
+    : public WidgetVfuncsClassInit
     , public Gtk::Box
 {
     using parent_type = Gtk::Box;

@@ -139,7 +139,6 @@ private:
     bool _embedNewline = false;
     void setEditingEntry(Gtk::Entry *entry, bool embedNewline);
 
-private:
     // Text/comment nodes
     Gtk::ScrolledWindow& _content_sw;
     std::unique_ptr<Syntax::TextEditView> _text_edit;  // text content editing (plain text)
@@ -155,8 +154,10 @@ private:
     auto_connection _close_popup;
     int _rounding_precision = 0;
 
+    void size_allocate_vfunc(int width, int height, int baseline) final;
     bool onPopoverKeyPressed(GtkEventControllerKey const *controller,
                              unsigned keyval, unsigned keycode, GdkModifierType state);
+
     void setPrecision(int const n);
 
     void notifyAttributeChanged(XML::Node &repr, GQuark name, Util::ptr_shared old_value, Util::ptr_shared new_value) final;

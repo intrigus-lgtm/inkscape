@@ -39,7 +39,7 @@
 
 namespace Inkscape::UI::Widget {
 
-[[nodiscard]] static auto make_menu(Gtk::Widget &parent)
+[[nodiscard]] static auto make_menu()
 {
     auto const separator = Gtk::make_managed<Gtk::Separator>(Gtk::Orientation::HORIZONTAL);
     separator->set_margin_top   (5);
@@ -47,7 +47,7 @@ namespace Inkscape::UI::Widget {
 
     auto const config = Gtk::make_managed<PopoverMenuItem>(_("Configure..."), true);
 
-    auto menu = std::make_unique<PopoverMenu>(parent, Gtk::PositionType::TOP);
+    auto menu = std::make_unique<PopoverMenu>(nullptr, Gtk::PositionType::TOP);
     menu->add_css_class("ColorPalette");
     menu->append(*separator);
     menu->append(*config);
@@ -72,7 +72,7 @@ ColorPalette::ColorPalette():
     auto& box = get_widget<Gtk::Box>(_builder, "palette-box");
     append(box);
 
-    auto [menu, config] = make_menu(*this);
+    auto [menu, config] = make_menu();
     _menu = std::move(menu);
     auto& btn_menu = get_widget<Gtk::MenuButton>(_builder, "btn-menu");
     btn_menu.set_popover(*_menu);

@@ -271,6 +271,7 @@ set(ui_SRC
 	widget/toolbar-menu-button.cpp
 	widget/unit-menu.cpp
 	widget/unit-tracker.cpp
+	widget/widget-vfuncs-class-init.cpp
 
 	view/svg-view-widget.cpp
 
@@ -561,6 +562,7 @@ set(ui_SRC
 	widget/text.h
 	widget/unit-menu.h
 	widget/unit-tracker.h
+	widget/widget-vfuncs-class-init.h
 
 	view/svg-view-widget.h
 )

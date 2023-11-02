@@ -24,7 +24,6 @@
 #include <gdkmm/drag.h> // Gdk::DragCancelReason
 #include <gdkmm/enums.h>
 #include <gtk/gtk.h>
-#include <gtkmm/eventcontroller.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <gtkmm/widget.h>
 #include <gtkmm/window.h>
@@ -34,6 +33,7 @@
 namespace Gtk {
 class DragSource;
 class DropTarget;
+class EventController;
 class GestureDrag;
 class GestureClick;
 class GestureSingle;
@@ -54,7 +54,7 @@ namespace Inkscape::UI::Controller {
     { return (state & flags) != GdkModifierType{}; }
 
 /*
-* * helpers to more easily add Controllers to Widgets, & let Widgets manage them
+* * helpers to more easily add Controllers to Widgets
  */
 
 /// Whether to connect a slot to a signal before or after the default handler.
@@ -69,7 +69,7 @@ using ClickSlot = sigc::slot<Gtk::EventSequenceState (Gtk::GestureClick &, int, 
 /// helper to stop accidents on int vs gtkmm3's weak=typed enums, & looks nicer!
 enum class Button {any = 0, left = 1, middle = 2, right = 3};
 
-/// Create a click gesture for & manage()d by widget; by default claim sequence.
+/// Create a click gesture for the given widget; by default claim sequence.
 Gtk::GestureClick &add_click(Gtk::Widget &widget,
                              ClickSlot on_pressed,
                              ClickSlot on_released = {},
@@ -83,7 +83,7 @@ Gtk::GestureClick &add_click(Gtk::Widget &widget,
 /// The arguments are the gesture, x coordinate & y coordinate (in widget space)
 using DragSlot = sigc::slot<Gtk::EventSequenceState (Gtk::GestureDrag &, double, double)>;
 
-/// Create a drag gesture for & manage()d by widget.
+/// Create a drag gesture for the given widget.
 Gtk::GestureDrag &add_drag(Gtk::Widget &widget,
                            DragSlot on_drag_begin ,
                            DragSlot on_drag_update,
@@ -123,7 +123,7 @@ struct AddDragSourceArgs final {
     DragSourceDragEndSlot    end    ;
 };
 
-/// Create a drag source for & manage()d by widget.
+/// Create a drag source for the given widget.
 Gtk::DragSource &add_drag_source(Gtk::Widget &widget,
                                  AddDragSourceArgs &&args = {},
                                  Gtk::PropagationPhase phase = Gtk::PropagationPhase::BUBBLE,
@@ -162,7 +162,7 @@ struct AddDropTargetArgs final {
     DropTargetLeaveSlot  leave ;
 };
 
-/// Create a drop target for & manage()d by widget, supporting the given type(s) and drag actions.
+/// Create a drop target for the given widget, supporting the given type(s) and drag actions.
 Gtk::DropTarget &add_drop_target(Gtk::Widget &widget,
                                  AddDropTargetArgs &&args,
                                  Gtk::PropagationPhase phase = Gtk::PropagationPhase::BUBBLE,
@@ -171,16 +171,10 @@ Gtk::DropTarget &add_drop_target(Gtk::Widget &widget,
 /// internal stuff
 namespace Detail {
 
-/// Helper to create EventController or subclass, for & manage()d by the widget.
-template <typename Controller>
-[[nodiscard]] Controller &add(Gtk::Widget &widget, Glib::RefPtr<Controller> const &controller,
-                              Gtk::PropagationPhase const phase)
-{
-    static_assert(std::is_base_of_v<Gtk::EventController, Controller>);
-    controller->set_propagation_phase(phase);
-    widget.add_controller(controller);
-    return *controller;
-}
+/// Helper to create EventController or subclass, for the given the widget.
+[[nodiscard]] Gtk::EventController &add(Gtk::Widget &widget,
+                                        Glib::RefPtr<Gtk::EventController> const &controller,
+                                        Gtk::PropagationPhase const phase);
 
 /// Helper to connect member func of a C++ Listener object to a C GObject signal.
 /// If method is not a nullptr, calls make_g_callback<method>, & connects result
@@ -272,7 +266,7 @@ auto constexpr is_zoom_scale_handler = Detail::callable_or_null<Function, void,
 
 // TODO: GTK4: The below should be gtkmm-ified, but for now, I am only making min changes to build.
 
-/// Create a key event controller for & manage()d by widget.
+/// Create a key event controller for the given widget.
 /// Note that ::modifiers seems buggy, i.e. gives wrong state, in GTK3. Beware!!
 // As gtkmm 3 lacks EventControllerKey, this must go via C API, so to make it
 // easier I reuse Util::make_g_callback(), which needs methods as template args.
@@ -303,7 +297,7 @@ decltype(auto) add_key(Gtk::Widget &widget, Listener &listener,
     }
 }
 
-/// Create a motion event controller for & manage()d by widget.
+/// Create a motion event controller for the given widget.
 // See comments for add_key().
 template <auto on_enter, auto on_motion, auto on_leave,
           typename Listener>
@@ -324,7 +318,7 @@ Gtk::EventController &add_motion(Gtk::Widget &widget  ,
     return Detail::add(widget, Glib::wrap(gcontroller), phase);
 }
 
-/// Create a scroll event controller for & manage()d by widget.
+/// Create a scroll event controller for the given widget.
 // See comments for add_key().
 template <auto on_scroll_begin, auto on_scroll, auto on_scroll_end, auto on_decelerate = nullptr,
           typename Listener>
@@ -348,7 +342,7 @@ Gtk::EventController &add_scroll(Gtk::Widget &widget  ,
     return Detail::add(widget, Glib::wrap(gcontroller), phase);
 }
 
-/// Create a zoom gesture for & manage()d by widget.
+/// Create a zoom gesture for the given widget.
 template <auto on_begin, auto on_scale_changed, auto on_end,
           typename Listener>
 decltype(auto) add_zoom(Gtk::Widget &widget  ,

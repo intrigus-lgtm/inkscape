@@ -16,6 +16,7 @@
 #include <gdk/gdk.h>
 #include <gtkmm/dragsource.h>
 #include <gtkmm/droptarget.h>
+#include <gtkmm/eventcontroller.h>
 #include <gtkmm/gesturedrag.h>
 #include <gtkmm/gestureclick.h>
 
@@ -23,24 +24,44 @@
 
 namespace Inkscape::UI::Controller {
 
+namespace Detail {
+
+Gtk::EventController &add(Gtk::Widget &widget, Glib::RefPtr<Gtk::EventController> const &controller,
+                          Gtk::PropagationPhase const phase)
+{
+    controller->set_propagation_phase(phase);
+    widget.add_controller(controller);
+    return *controller;
+}
+
+} // namespace Detail
+
 namespace {
 
-/// Helper to create EventController or subclass, for & manage()d by the widget.
+/// Helper to create EventController or subclass, for the given widget.
 template <typename Controller, typename ...Args>
 [[nodiscard]] Controller &create(Gtk::Widget &widget, Gtk::PropagationPhase const phase,
                                  Args &&...args)
 {
     static_assert(std::is_base_of_v<Gtk::EventController, Controller>);
-    return Detail::add(widget, Controller::create(std::forward<Args>(args)...), phase);
+    auto controller = Controller::create(std::forward<Args>(args)...);
+    static_cast<void>(Detail::add(widget, controller, phase));
+    return *controller;
+}
+
+template <typename Object, typename Getter, typename Slot>
+static void _connect(Object &object, Getter const getter, Slot slot, When const when)
+{
+    auto signal = std::invoke(getter, object);
+    signal.connect(sigc::bind<0>(std::move(slot), std::ref(object)),
+                   when == When::after);
 }
 
 /// Helper to invoke getter on object, & connect a slot to the resulting signal.
 template <typename Object, typename Getter, typename Slot>
 void connect(Object &object, Getter const getter, Slot slot, When const when)
 {
-    auto signal = std::invoke(getter, object);
-    signal.connect(sigc::bind<0>(std::move(slot), std::ref(object)),
-                   when == When::after);
+    _connect(object, getter, std::move(slot), when);
 }
 
 /// Helper to invoke getter on object, & connect a slot to the resulting signal,
@@ -49,12 +70,7 @@ template <typename Object, typename Getter, typename SlotResult, typename ...Slo
 void connect(Object &object, Getter const getter, sigc::slot<SlotResult (SlotArgs...)> &&slot,
              When const when)
 {
-    // Fixme: This function is now just a ripoff of the previous one.
-    if (slot) {
-        auto signal = std::invoke(getter, object);
-        signal.connect(sigc::bind<0>(std::move(slot), std::ref(object)),
-                       when == When::after);
-    }
+    if (slot) _connect(object, getter, std::move(slot), when);
 }
 
 // We add the requirement that slots return an EventSequenceState, which if itʼs

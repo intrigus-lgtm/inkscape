@@ -16,7 +16,7 @@
 #include <gdkmm/general.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/drawingarea.h>
-#include <gtkmm/gesturemultipress.h>
+#include <gtkmm/gestureclick.h>
 
 #include "ui/widget/color-slider.h"
 #include "preferences.h"
@@ -105,7 +105,7 @@ Gtk::EventSequenceState ColorSlider::on_click_pressed(Gtk::GestureClick const &c
     _dragging = true;
     _oldvalue = _value;
     auto const value = get_value_at(*_drawing_area, x, y);
-    auto const state = Controller::get_current_event_state(click);
+    auto const state = click.get_current_event_state();
     auto const constrained = get_constrained(state);
     ColorScales<>::setScaled(_adjustment, value, constrained);
     signal_dragged.emit();
@@ -128,7 +128,7 @@ void ColorSlider::on_motion(GtkEventControllerMotion const * const motion,
 {
     if (_dragging) {
         auto const value = get_value_at(*_drawing_area, x, y);
-        auto const state = Controller::get_device_state(GTK_EVENT_CONTROLLER(motion));
+        auto const state = gtk_event_controller_get_current_event_state(GTK_EVENT_CONTROLLER(motion));
         auto const constrained = get_constrained(state);
         ColorScales<>::setScaled(_adjustment, value, constrained);
         signal_dragged.emit();

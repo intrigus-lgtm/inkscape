@@ -18,7 +18,7 @@
 #include <sigc++/functors/mem_fun.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/adjustment.h>
-#include <gtkmm/gesturemultipress.h>
+#include <gtkmm/gestureclick.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/radiobuttongroup.h>
 
@@ -1140,10 +1140,7 @@ RotateableSwatch::do_motion(double by, guint modifier) {
         } else if (modifier == 3) {
             cursor_filename = "adjust_alpha.svg";
         }
-
-        auto window = get_window();
-        auto cursor = load_svg_cursor(get_display(), window, cursor_filename);
-        get_window()->set_cursor(cursor);
+        set_svg_cursor(*this, cursor_filename);
 
         cursor_state = modifier;
     }

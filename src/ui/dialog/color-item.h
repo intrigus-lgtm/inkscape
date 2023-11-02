@@ -28,7 +28,7 @@ class ImageSurface;
 } // namespace Cairo
 
 namespace Gtk {
-class GestureMultiPress;
+class GestureClick;
 } // namespace Gtk
 
 class SPGradient;

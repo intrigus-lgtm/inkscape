@@ -22,6 +22,7 @@
 #include <glibmm/refptr.h>
 #include <gtk/gtk.h> // GtkEventController*
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
+#include <sigc++/signal.h>
 
 #include "display/rendermode.h"
 #include "events/enums.h"
@@ -139,7 +140,11 @@ public:
 
     void enable_autoscroll();
 
+    sigc::connection connect_before_snapshot(sigc::slot<void ()> slot);
+
 private:
+    void snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &snapshot) final;
+
     // EventControllerScroll
     bool on_scroll(GtkEventControllerScroll const *controller,
                    double dx, double dy);
@@ -164,7 +169,7 @@ private:
 
     void on_realize() final;
     void on_unrealize() final;
-    void on_size_allocate(Gdk::Rectangle &allocation) final;
+    void size_allocate_vfunc(int width, int height, int baseline) final;
 
     Glib::RefPtr<Gdk::GLContext> create_context() final;
     void paint_widget(Cairo::RefPtr<Cairo::Context> const &) final;
@@ -215,7 +220,9 @@ private:
     bool _split_dragging;
     Geom::IntPoint _split_drag_start;
 
-    void set_cursor();
+    sigc::signal<void ()> _signal_before_snapshot;
+
+    void update_cursor();
 
     // Opaque pointer to implementation
     friend class CanvasPrivate;

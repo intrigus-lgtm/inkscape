@@ -46,7 +46,7 @@
 namespace Gtk {
 class Button;
 class CheckButton;
-class GestureMultiPress;
+class GestureClick;
 class Grid;
 class Label;
 class ListStore;

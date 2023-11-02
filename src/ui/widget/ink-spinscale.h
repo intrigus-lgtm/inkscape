@@ -28,7 +28,7 @@
 
 namespace Gtk {
 class Adjustment;
-class GestureMultiPress;
+class GestureClick;
 class SpinButton;
 } // namespace Gtk
 

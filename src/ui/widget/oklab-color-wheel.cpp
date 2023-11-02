@@ -15,7 +15,7 @@
 
 #include <algorithm>
 #include <cmath>
-#include <gtkmm/gesturemultipress.h>
+#include <gtkmm/gestureclick.h>
 
 #include "display/cairo-utils.h"
 #include "oklab.h"

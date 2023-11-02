@@ -17,7 +17,6 @@
 
 #include <iostream>
 #include <gtkmm/box.h>
-#include <gtkmm/menubar.h>
 #include <sigc++/functors/mem_fun.h>
 
 #include "desktop.h"
@@ -81,7 +80,7 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
     _mainbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     _mainbox->set_name("DesktopMainBox");
     _mainbox->set_visible(true);
-    add(*_mainbox);
+    set_child(*_mainbox);
 
     // Desktop widget (=> MultiPaned)
     _desktop_widget = Gtk::make_managed<SPDesktopWidget>(this, _document);
@@ -128,8 +127,12 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
     Inkscape::UI::pack_start(*_mainbox, *_desktop_widget, true, true);
 
     // ================== Callbacks ==================
-    signal_window_state_event()          .connect(sigc::mem_fun(*this, &InkscapeWindow::on_window_state_changed));
-    property_is_active().signal_changed().connect(sigc::mem_fun(*this, &InkscapeWindow::on_is_active_changed   ));
+    get_toplevel().property_state().signal_changed().connect(
+        sigc::mem_fun(*this, &InkscapeWindow::on_toplevel_state_changed));
+    property_is_active().signal_changed().connect(sigc::mem_fun(*this, &InkscapeWindow::on_is_active_changed));
+    signal_close_request().connect(sigc::mem_fun(*this, &InkscapeWindow::on_close_request), false); // before
+    property_default_width ().signal_changed().connect(sigc::mem_fun(*this, &InkscapeWindow::on_size_changed));
+    property_default_height().signal_changed().connect(sigc::mem_fun(*this, &InkscapeWindow::on_size_changed));
 
     // ================ Window Options ===============
     setup_view();
@@ -145,6 +148,8 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
     // ================= Shift Icons =================
     // Note: The menu is defined at the app level but shifting icons requires actual widgets and
     // must be done on the window level.
+// TODO: GTK4: We won't be using Gtk::MenuBar anymore, so figure out the replacement later.
+#if 0
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     bool shift_icons = prefs->getInt("/theme/shiftIcons", true);
     for (auto const child : Inkscape::UI::get_children(*this)) {
@@ -153,6 +158,7 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
             if (shifted) shift_icons = false;
         }
     }
+#endif
 
     // ========= Update text for Accellerators =======
     Inkscape::Shortcuts::getInstance().update_gui_text_recursive(this);
@@ -186,7 +192,7 @@ InkscapeWindow::setup_view()
 {
     // Make sure the GdkWindow is fully initialized before resizing/moving
     // (ensures the monitor it'll be shown on is known)
-    realize();
+    Gtk::Widget::realize();
 
     // Resize the window to match the document properties
     sp_namedview_window_from_document(_desktop); // This should probably be a member function here.
@@ -208,6 +214,11 @@ InkscapeWindow::setup_view()
     }
 }
 
+// TODO: GTK4: We wonʼt be able to do this, but shouldnʼt need to, if instead of using
+// Application.set_accels_for_action(), we use GtkShortcutController in CAPTURE phase.
+// ::key-press-event handlers will be replaced by GtkEventControllerKey, w/ phase TBC.
+// See: https://gitlab.com/dboles/inkscape/-/issues/1
+#if 0
 bool InkscapeWindow::on_key_press_event(GdkEventKey *event)
 {
     if constexpr (false) {
@@ -225,11 +236,6 @@ bool InkscapeWindow::on_key_press_event(GdkEventKey *event)
     // events first to the focus widget.
     //
     // See https://developer.gnome.org/gtk3/stable/chap-input-handling.html (Event Propagation)
-    //
-    // TODO: GTK4: We wonʼt be able to do this, but shouldnʼt need to, if instead of using
-    // Application.set_accels_for_action(), we use GtkShortcutController in CAPTURE phase.
-    // ::key-press-event handlers will be replaced by GtkEventControllerKey, w/ phase TBC.
-    // See: https://gitlab.com/dboles/inkscape/-/issues/1
     auto focus = get_focus();
     if (focus) {
         if (focus->event(reinterpret_cast<GdkEvent *>(event))) {
@@ -253,6 +259,7 @@ bool InkscapeWindow::on_key_press_event(GdkEventKey *event)
 
     return false;
 }
+#endif
 
 /**
  * If "dialogs on top" is activated in the preferences, set `parent` as the
@@ -277,12 +284,20 @@ static void retransientize_dialogs(Gtk::Window &parent)
     }
 }
 
-// TODO: GTK4: Just change over to GdkTopLevel::notify:state & GdkToplevelState.
-bool
-InkscapeWindow::on_window_state_changed(GdkEventWindowState const * const event)
+Gdk::Toplevel &
+InkscapeWindow::get_toplevel()
 {
-   _desktop->onWindowStateChanged(event->changed_mask, event->new_window_state);
-   return false;
+    auto const toplevel = std::dynamic_pointer_cast<Gdk::Toplevel>(get_surface());
+    g_assert(toplevel);
+    return *toplevel;
+}
+
+void
+InkscapeWindow::on_toplevel_state_changed()
+{
+    auto const new_toplevel_state = get_toplevel().get_state();
+    auto const changed_mask = old_toplevel_state ^ new_toplevel_state;
+   _desktop->onWindowStateChanged(changed_mask, new_toplevel_state);
 }
 
 void
@@ -310,7 +325,7 @@ InkscapeWindow::on_is_active_changed()
 
 // Called when a window is closed via the 'X' in the window bar.
 bool
-InkscapeWindow::on_delete_event(GdkEventAny* event)
+InkscapeWindow::on_close_request()
 {
     if (_app) {
         _app->destroy_window(this);
@@ -321,12 +336,13 @@ InkscapeWindow::on_delete_event(GdkEventAny* event)
 /**
  * Configure is called when the widget's size, position or stack changes.
  */
-bool InkscapeWindow::on_configure_event(GdkEventConfigure *event)
+void
+InkscapeWindow::on_size_changed()
 {
-    bool ret = Gtk::ApplicationWindow::on_configure_event(event);
     // Store the desktop widget size on resize.
-    if (!_desktop || !get_realized())
-        return ret;
+    if (!_desktop || !get_realized()) {
+        return;
+    }
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     bool maxed = _desktop->is_maximized();
@@ -340,19 +356,22 @@ bool InkscapeWindow::on_configure_event(GdkEventConfigure *event)
     if (!_desktop->is_iconified() && !maxed && !full) {
         // Get size is more accurate than frame extends for window size.
         int w,h = 0;
-        get_size(w, h);
+        get_default_size(w, h);
         prefs->setInt("/desktop/geometry/width", w);
         prefs->setInt("/desktop/geometry/height", h);
 
         // Frame extends returns real positions, unlike get_position()
-        if (Glib::RefPtr<Gdk::Window> gdkw = get_window()) {
+        // TODO: GTK4: get_frame_extents() and Window.get_position() are gone.
+        // We will must add backend-specific code to get the position or give up
+#if 0
+        if (auto const surface = get_surface()) {
             Gdk::Rectangle rect;
-            gdkw->get_frame_extents(rect);
+            surface->get_frame_extents(rect);
             prefs->setInt("/desktop/geometry/x", rect.get_x());
             prefs->setInt("/desktop/geometry/y", rect.get_y());
         }
+#endif
     }
-    return ret;
 }
 
 void InkscapeWindow::update_dialogs()

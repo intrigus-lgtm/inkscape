@@ -42,7 +42,6 @@
 #include "io/dir-util.h"
 #include "io/resource.h"
 #include "io/sys.h"
-#include "ui/controller.h" // get_group(GtkEventControllerKey constt *)
 #include "ui/modifiers.h"
 #include "ui/tools/tool-base.h"    // For latin keyval
 #include "ui/dialog/filedialog.h"  // Importing/exporting files.
@@ -755,7 +754,7 @@ Shortcuts::get_from(GtkEventControllerKey const * const controller,
                     unsigned const keyval, unsigned const keycode, GdkModifierType const state,
                     bool const fix)
 {
-    auto const group = controller ? UI::Controller::get_group(controller) : 0u;
+    auto const group = controller ? gtk_event_controller_key_get_group(controller) : 0u;
     return get_from_event_impl(keyval, keycode, state, group, fix);
 }
 

@@ -16,30 +16,28 @@
 
 #include <utility>
 #include <2geom/point.h>
+#include <gtkmm/accelerator.h>
+#include <gtkmm/eventcontrollerkey.h>
+#include <gtkmm/gestureclick.h>
 #include <gdkmm/rectangle.h>
-#include <gtkmm/gesturemultipress.h>
 #include <gtkmm/popover.h>
 #include <gtkmm/widget.h>
 
 #include "controller.h"
-#include "manage.h"
 #include "ui/util.h"
 
 namespace Inkscape::UI {
 
-static bool on_key_pressed(GtkEventControllerKey const * /*controller*/,
-                           unsigned const keyval, unsigned /*keycode*/, GdkModifierType state,
-                           PopupMenuSlot const * const slot)
+static bool on_key_pressed(unsigned const keyval, unsigned /*keycode*/, Gdk::ModifierType state,
+                           PopupMenuSlot const &slot)
 {
-    g_return_val_if_fail(slot != nullptr, false);
-
     if (keyval == GDK_KEY_Menu) {
-        return (*slot)(std::nullopt);
+        return slot(std::nullopt);
     }
 
-    state = static_cast<GdkModifierType>(state & gtk_accelerator_get_default_mod_mask());
-    if (keyval == GDK_KEY_F10 && Controller::has_flag(state, GDK_SHIFT_MASK)) {
-        return (*slot)(std::nullopt);
+    state &= Gtk::Accelerator::get_default_mod_mask();
+    if (keyval == GDK_KEY_F10 && Controller::has_flag(state, Gdk::ModifierType::SHIFT_MASK)) {
+        return slot(std::nullopt);
     }
 
     return false;
@@ -47,26 +45,27 @@ static bool on_key_pressed(GtkEventControllerKey const * /*controller*/,
 
 static Gtk::EventSequenceState on_click_pressed(Gtk::GestureClick const &click,
                                                 int const n_press, double const x, double const y,
-                                                PopupMenuSlot const * const slot)
+                                                PopupMenuSlot const &slot)
 {
-    g_return_val_if_fail(slot != nullptr, Gtk::EventSequenceState::NONE);
+    auto const event = click.get_current_event();
+    g_return_val_if_fail(event, Gtk::EventSequenceState::NONE);
 
-    if (gdk_event_triggers_context_menu(Controller::get_last_event(click))) {
+    if (event->triggers_context_menu()) {
         auto const click = PopupMenuClick{n_press, x, y};
-        if ((*slot)(click)) return Gtk::EventSequenceState::CLAIMED;
+        if (slot(click)) return Gtk::EventSequenceState::CLAIMED;
     }
 
     return Gtk::EventSequenceState::NONE;
 }
 
-sigc::connection on_popup_menu(Gtk::Widget &widget, PopupMenuSlot slot)
+void on_popup_menu(Gtk::Widget &widget, PopupMenuSlot slot)
 {
-    auto &managed_slot = manage(std::move(slot), widget);
-    auto const key = gtk_event_controller_key_new(widget.Gtk::Widget::gobj());
-    g_signal_connect(key, "key-pressed", G_CALLBACK(on_key_pressed), &managed_slot);
-    Controller::add_click(widget, sigc::bind(&on_click_pressed, &managed_slot), {},
+    auto key = Gtk::EventControllerKey::create();
+    key->signal_key_pressed().connect(sigc::bind(&on_key_pressed, slot), true); // after
+    widget.add_controller(std::move(key));
+
+    Controller::add_click(widget, sigc::bind(&on_click_pressed, std::move(slot)), {},
                           Controller::Button::any, Gtk::PropagationPhase::TARGET); // ←beat Entry popup handler
-    return sigc::connection{managed_slot};
 }
 
 sigc::connection on_hide_reset(std::shared_ptr<Gtk::Widget> widget)
@@ -75,30 +74,30 @@ sigc::connection on_hide_reset(std::shared_ptr<Gtk::Widget> widget)
 }
 
 static void popup_at(Gtk::Popover &popover, Gtk::Widget &widget,
-                     int const x_offset, int const y_offset,
+                     double const x_offset, double const y_offset,
                      int width, int height)
 {
     popover.set_visible(false);
 
-    auto const parent = popover.get_relative_to();
+    auto const parent = popover.get_parent();
     g_return_if_fail(parent);
     g_return_if_fail(&widget == parent || is_descendant_of(widget, *parent));
 
     auto const allocation = widget.get_allocation();
     if (!width ) width  = x_offset ? 1 : allocation.get_width ();
     if (!height) height = y_offset ? 1 : allocation.get_height();
-    int x{}, y{};
+    double x{}, y{};
     widget.translate_coordinates(*parent, 0, 0, x, y);
     x += x_offset;
     y += y_offset;
-    popover.set_pointing_to({x, y, width, height});
+    auto const ix = static_cast<int>(x + 0.5), iy = static_cast<int>(y + 0.5);
+    popover.set_pointing_to({ix, iy, width, height});
 
-    popover.show_all_children();
     popover.popup();
 }
 
 void popup_at(Gtk::Popover &popover, Gtk::Widget &widget,
-              int const x_offset, int const y_offset)
+              double const x_offset, double const y_offset)
 {
     popup_at(popover, widget, x_offset, y_offset, 0, 0);
 }

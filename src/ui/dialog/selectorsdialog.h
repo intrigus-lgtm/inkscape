@@ -34,7 +34,7 @@
 namespace Gtk {
 class Adjustment;
 class Dialog;
-class GestureMultiPress;
+class GestureClick;
 class RadioButton;
 class SelectionData;
 class TreeModelFilter;

@@ -15,9 +15,9 @@
 #include <iostream>
 #include <numeric>
 #include <glibmm/i18n.h>
+#include <gtkmm/box.h>
 #include <gtkmm/drawingarea.h>
-#include <gtkmm/eventbox.h>
-#include <gtkmm/gesturemultipress.h>
+#include <gtkmm/gestureclick.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/overlay.h>
@@ -64,7 +64,7 @@ int get_handle_size() {
  */
 class MyDropZone final
     : public Gtk::Orientable
-    , public Gtk::EventBox
+    , public Gtk::Box
 {
 public:
     MyDropZone(Gtk::Orientation orientation);
@@ -88,7 +88,7 @@ std::vector<MyDropZone *> MyDropZone::_instances_list;
 MyDropZone::MyDropZone(Gtk::Orientation orientation)
     : Glib::ObjectBase("MultipanedDropZone")
     , Gtk::Orientable()
-    , Gtk::EventBox()
+    , Gtk::Box()
 {
     set_name("MultipanedDropZone");
     set_orientation(orientation);

@@ -37,7 +37,7 @@ namespace Inkscape {
 
 namespace UI {
 
-/// Information from a GestureMultiPress if a popup menu was opened by click
+/// Information from a GestureClick if a popup menu was opened by click
 struct PopupMenuClick final { int const n_press{}; double const x{}, y{}; };
 /// Optional: not present if popup wasnʼt triggered by click.
 using PopupMenuOptionalClick = std::optional<PopupMenuClick>;
@@ -49,8 +49,7 @@ using PopupMenuSlot = sigc::slot<bool (PopupMenuOptionalClick)>;
 /// Connect slot to a widgetʼs key and button events that traditionally trigger a popup menu, i.e.:
 /// * The keys used by GTK3ʼs signal Widget::popup-menu: the Menu key, or the Shift+F10 combination
 /// * The right mouse button or other platform convention, as per gtk_event_triggers_context_menu()
-/// @returns A connection that can be used to disconnect & disable menu.
-sigc::connection on_popup_menu(Gtk::Widget &widget, PopupMenuSlot slot);
+void on_popup_menu(Gtk::Widget &widget, PopupMenuSlot slot);
 
 /// Connects ::hide of widget to reset() the shared_ptr i.e. to ‘self-destruct’.
 /// @returns A connection that can be used to disconnect & prevent self-destruct
@@ -62,7 +61,7 @@ sigc::connection on_hide_reset(std::shared_ptr<Gtk::Widget> widget);
 /// @a popoverʼs parent (:relative-to) widget. Hence, the @a widget must be the @a popoverʼs parent
 /// (:relative-to) widget or a descendant thereof.
 void popup_at(Gtk::Popover &popover, Gtk::Widget &widget,
-              int x_offset = 0, int y_offset = 0);
+              double x_offset = 0.0, double y_offset = 0.0);
 /// @copydoc popup_at()
 void popup_at(Gtk::Popover &popover, Gtk::Widget &widget,
               std::optional<Geom::Point> const &offset);

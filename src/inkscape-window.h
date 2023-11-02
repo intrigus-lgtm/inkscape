@@ -17,6 +17,7 @@
 #ifndef INKSCAPE_WINDOW_H
 #define INKSCAPE_WINDOW_H
 
+#include <gdkmm/toplevel.h>
 #include <gtkmm/applicationwindow.h>
 
 namespace Gtk { class Box; }
@@ -46,15 +47,20 @@ private:
     void setup_view();
     void add_document_actions();
 
+// TODO: GTK4: Presumably we can use Gtk::ShortcutController and not need to replicate this monster
+#if 0
 public:
-    // TODO: Can we avoid it being public? Probably yes in GTK4.
     bool on_key_press_event(GdkEventKey* event) final;
+#endif
 
 private:
-    bool on_window_state_changed(GdkEventWindowState const *event);
+    Gdk::Toplevel::State old_toplevel_state{};
+
+    Gdk::Toplevel &get_toplevel();
+    void on_toplevel_state_changed();
     void on_is_active_changed();
-    bool on_delete_event(GdkEventAny* event) final;
-    bool on_configure_event(GdkEventConfigure *event) final;
+    bool on_close_request();
+    void on_size_changed();
 
     void update_dialogs();
 };

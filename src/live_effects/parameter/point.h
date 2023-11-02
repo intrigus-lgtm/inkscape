@@ -20,7 +20,7 @@
 #include "ui/widget/registered-widget.h"
 
 namespace Gtk {
-class GestureMultiPress;
+class GestureClick;
 class Widget;
 } // namespace Gtk
 

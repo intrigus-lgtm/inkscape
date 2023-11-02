@@ -21,7 +21,7 @@
 #include <gdkmm/general.h>
 #include <gdkmm/cursor.h>
 #include <gtkmm/adjustment.h>
-#include <gtkmm/gesturemultipress.h>
+#include <gtkmm/gestureclick.h>
 #include <gtkmm/spinbutton.h>
 
 #include "ink-spinscale.h"
@@ -121,7 +121,7 @@ static bool get_constrained(Gdk::ModifierType const state)
 Gtk::EventSequenceState InkScale::on_click_pressed(Gtk::GestureClick const &click,
                                                    int /*n_press*/, double const x, double /*y*/)
 {
-    auto const state = Controller::get_current_event_state(click);
+    auto const state = click.get_current_event_state();
     if (!Controller::has_flag(state, Gdk::ALT_MASK)) {
         auto const constrained = get_constrained(state);
         set_adjustment_value(x, constrained);
@@ -157,7 +157,7 @@ InkScale::on_motion_motion(GtkEventControllerMotion const * const motion, double
         return;
     }
 
-    auto const state = Controller::get_device_state(GTK_EVENT_CONTROLLER(motion));
+    auto const state = gtk_event_controller_get_current_event_state(GTK_EVENT_CONTROLLER(motion));
     if (!Controller::has_flag(state, Gdk::ALT_MASK)) {
         // Absolute change
         auto const constrained = get_constrained(state);

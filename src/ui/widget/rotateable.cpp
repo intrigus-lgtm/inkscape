@@ -9,7 +9,7 @@
  */
 
 #include <sigc++/functors/mem_fun.h>
-#include <gtkmm/gesturemultipress.h>
+#include <gtkmm/gestureclick.h>
 #include <2geom/point.h>
 
 #include "rotateable.h"
@@ -40,7 +40,7 @@ Gtk::EventSequenceState Rotateable::on_click(Gtk::GestureClick const &click,
 {
     drag_started_x = x;
     drag_started_y = y;
-    auto const state = Controller::get_current_event_state(click);
+    auto const state = click.get_current_event_state();
     modifier = get_single_modifier(modifier, state);
     dragging = true;
     working = false;
@@ -102,7 +102,7 @@ void Rotateable::on_motion(GtkEventControllerMotion const * const motion,
         if (fabs(force) < 0.002)
             force = 0; // snap to zero
 
-        auto const state = Controller::get_device_state(GTK_EVENT_CONTROLLER(motion));
+        auto const state = gtk_event_controller_get_current_event_state(GTK_EVENT_CONTROLLER(motion));
         auto const new_modifier = get_single_modifier(modifier, state);
         if (modifier != new_modifier) {
             // user has switched modifiers in mid drag, close past drag and start a new
@@ -152,7 +152,7 @@ bool Rotateable::on_scroll(GtkEventControllerScroll const * const scroll,
     drag_started_y = event->y;
 #endif
 
-    auto const state = Controller::get_device_state(GTK_EVENT_CONTROLLER(scroll));
+    auto const state = gtk_event_controller_get_current_event_state(GTK_EVENT_CONTROLLER(scroll));
     modifier = get_single_modifier(modifier, state);
     dragging = false;
     working = false;

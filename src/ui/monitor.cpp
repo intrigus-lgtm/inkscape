@@ -10,9 +10,10 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "monitor.h"
+
 #include <gdkmm/monitor.h>
-#include <gdkmm/rectangle.h>
-#include <gdkmm/window.h>
+#include <gdkmm/surface.h>
 
 #include "include/gtkmm_version.h"
 
@@ -33,11 +34,11 @@ Gdk::Rectangle get_monitor_geometry_primary() {
     return monitor_geometry;
 }
 
-/** get monitor geometry of monitor containing largest part of window */
-Gdk::Rectangle get_monitor_geometry_at_window(const Glib::RefPtr<Gdk::Window>& window) {
+/** get monitor geometry of monitor containing largest part of surface */
+Gdk::Rectangle get_monitor_geometry_at_surface(Glib::RefPtr<Gdk::Surface> const &surface) {
     Gdk::Rectangle monitor_geometry;
     auto const display = Gdk::Display::get_default();
-    auto const monitor = display->get_monitor_at_window(window);
+    auto const monitor = display->get_monitor_at_surface(surface);
     monitor->get_geometry(monitor_geometry);
     return monitor_geometry;
 }

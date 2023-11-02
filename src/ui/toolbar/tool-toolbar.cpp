@@ -22,7 +22,7 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/flowbox.h>
-#include <gtkmm/gesturemultipress.h>
+#include <gtkmm/gestureclick.h>
 #include <gtkmm/popover.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/scrolledwindow.h>

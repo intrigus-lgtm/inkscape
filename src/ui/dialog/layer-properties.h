@@ -32,7 +32,7 @@
 #include "layer-manager.h"
 
 namespace Gtk {
-class GestureMultiPress;
+class GestureClick;
 }
 
 class SPDesktop;

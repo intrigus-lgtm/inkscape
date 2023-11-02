@@ -16,22 +16,30 @@
 #include <glibmm/refptr.h>
 
 namespace Gdk {
-class Cursor ;
-class Display;
-class Window ;
+class Cursor;
 } // namespace Gdk
+
+namespace Gtk {
+class Widget;
+} // namespace Gtk
 
 namespace Inkscape {
 
-Glib::RefPtr<Gdk::Cursor> load_svg_cursor(Glib::RefPtr<Gdk::Display> const &display,
-                                          Glib::RefPtr<Gdk::Window > const &window ,
+Glib::RefPtr<Gdk::Cursor> load_svg_cursor(Gtk::Widget &widget,
                                           std::string const &file_name,
                                           std::uint32_t fill = 0xffffffff,
                                           std::uint32_t stroke = 0x000000ff,
                                           double fill_opacity = 1.0,
                                           double stroke_opacity = 1.0);
 
-} // Namespace Inkscape
+Glib::RefPtr<Gdk::Cursor> set_svg_cursor(Gtk::Widget &widget,
+                                         std::string const &file_name,
+                                         std::uint32_t fill = 0xffffffff,
+                                         std::uint32_t stroke = 0x000000ff,
+                                         double fill_opacity = 1.0,
+                                         double stroke_opacity = 1.0);
+
+} // namespace Inkscape
 
 #endif // INK_CURSOR_UTILITIES_H
 

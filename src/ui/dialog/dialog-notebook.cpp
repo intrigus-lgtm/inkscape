@@ -21,7 +21,7 @@
 #include <gtkmm/button.h>
 #include <gtkmm/eventbox.h>
 #include <gtkmm/menubutton.h>
-#include <gtkmm/gesturemultipress.h>
+#include <gtkmm/gestureclick.h>
 #include <gtkmm/scrollbar.h>
 #include <gtkmm/separator.h>
 

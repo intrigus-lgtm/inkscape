@@ -24,7 +24,7 @@
 #include <gtkmm/adjustment.h>
 #include <gtkmm/dialog.h>
 #include <gtkmm/entry.h>
-#include <gtkmm/gesturemultipress.h>
+#include <gtkmm/gestureclick.h>
 #include <gtkmm/label.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/selectiondata.h>

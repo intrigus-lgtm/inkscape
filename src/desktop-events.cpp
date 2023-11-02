@@ -17,27 +17,24 @@
 
 #include <map>
 #include <string>
-
 #include <2geom/line.h>
 #include <2geom/angle.h>
-
+#include <glibmm/i18n.h>
+#include <gdkmm/devicetool.h>
 #include <gdkmm/display.h>
 #include <gdkmm/seat.h>
 #include <glibmm/i18n.h>
+#include <gtk/gtk.h>
 
 #include "desktop.h"
 #include "document-undo.h"
 #include "message-context.h"
 #include "preferences.h"
 #include "snap.h"
-
 #include "actions/actions-tools.h"
-
 #include "display/control/canvas-item-guideline.h"
-
 #include "object/sp-guide.h"
 #include "object/sp-namedview.h"
-
 #include "ui/cursor-utils.h"
 #include "ui/dialog/guides.h"
 #include "ui/tools/tool-base.h"
@@ -269,25 +266,23 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
         },
 
         [&] (Inkscape::EnterEvent const &event) {
+            auto const canvas = desktop->getCanvas();
+            g_assert(canvas);
+
             // This is a UX thing. Check if the canvas has focus, so the user knows they can
             // use hotkeys. See issue: https://gitlab.com/inkscape/inkscape/-/issues/2439
-            if (!guide->getLocked() && desktop->getCanvas()->has_focus()) {
+            if (!guide->getLocked() && canvas->has_focus()) {
                 guide_item->set_stroke(guide->getHiColor());
             }
 
             // set move or rotate cursor
-            auto display = desktop->getCanvas()->get_display();
-            auto window  = desktop->getCanvas()->get_window();
-
-            Glib::RefPtr<Gdk::Cursor> cursor;
             if (guide->getLocked()) {
-                cursor = Inkscape::load_svg_cursor(display, window, "select.svg");
+                Inkscape::set_svg_cursor(*canvas, "select.svg");
             } else if (event.modifiers & GDK_SHIFT_MASK && drag_type != SP_DRAG_MOVE_ORIGIN) {
-                cursor = Inkscape::load_svg_cursor(display, window, "rotate.svg");
+                Inkscape::set_svg_cursor(*canvas, "rotate.svg");
             } else {
-                cursor = Gdk::Cursor::create(display, "grab");
+                canvas->set_cursor("grab");
             }
-            window->set_cursor(cursor);
 
             auto guide_description = guide->description();
             desktop->guidesMessageContext()->setF(Inkscape::NORMAL_MESSAGE, _("<b>Guideline</b>: %s"), guide_description);
@@ -321,11 +316,7 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
                 case GDK_KEY_Shift_L:
                 case GDK_KEY_Shift_R:
                     if (drag_type != SP_DRAG_MOVE_ORIGIN) {
-                        auto display = desktop->getCanvas()->get_display();
-                        auto window  = desktop->getCanvas()->get_window();
-
-                        auto cursor = Inkscape::load_svg_cursor(display, window, "rotate.svg");
-                        window->set_cursor(cursor);
+                        Inkscape::set_svg_cursor(*desktop->getCanvas(), "rotate.svg");
                         ret = true;
                         break;
                     }
@@ -338,9 +329,7 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
             switch (Inkscape::UI::Tools::get_latin_keyval(event)) {
                 case GDK_KEY_Shift_L:
                 case GDK_KEY_Shift_R: {
-                    auto display = Gdk::Display::get_default();
-                    auto guide_cursor = Gdk::Cursor::create(display, "grab");
-                    desktop->getCanvas()->get_window()->set_cursor(guide_cursor);
+                    desktop->getCanvas()->set_cursor("grab");
                     break;
                 }
                 default:
@@ -364,25 +353,27 @@ static void init_extended()
 {
     auto display = Gdk::Display::get_default();
     auto seat = display->get_default_seat();
-    auto const devices = seat->get_slaves(Gdk::Seat::Capabilities::ALL);
+    auto const devices = seat->get_devices(Gdk::Seat::Capabilities::ALL);
     
     for (auto const &dev : devices) {
-        auto const name = dev->get_name();
-        auto src = dev->get_source();
+        auto const src = dev->get_source();
+        if (src == Gdk::InputSource::MOUSE) continue;
 
-        if (src == Gdk::InputSource::MOUSE || name.empty() || name == "pad") {
-            continue;
-        }
+        auto const &name = dev->get_name();
+        if (name.empty() || name == "pad") continue;
+
+        auto const tool = dev->property_tool().get_value();
+        if (!tool) continue;
 
         // Set the initial tool for the device.
-        switch (src) {
-            case Gdk::InputSource::PEN:
+        switch (tool->get_tool_type()) {
+            case Gdk::DeviceTool::Type::PEN:
                 name_to_tool[name] = "Calligraphic";
                 break;
-            case Gdk::InputSource::ERASER:
+            case Gdk::DeviceTool::Type::ERASER:
                 name_to_tool[name] = "Eraser";
                 break;
-            case Gdk::InputSource::CURSOR:
+            case Gdk::DeviceTool::Type::MOUSE:
                 name_to_tool[name] = "Select";
                 break;
             default:

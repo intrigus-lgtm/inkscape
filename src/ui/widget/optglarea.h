@@ -46,13 +46,12 @@ public:
      */
     void bind_framebuffer() const;
 
-protected:
+private:
     void on_realize() override;
     void on_unrealize() override;
-    void on_size_allocate(Gtk::Allocation&) override;
+    void size_allocate_vfunc(int width, int height, int baseline) override;
 
-private:
-    bool on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
+    void draw_func(Cairo::RefPtr<Cairo::Context> cr, int width, int height);
 
     /**
      * Reimplement to create the desired OpenGL context. Return nullptr on error.

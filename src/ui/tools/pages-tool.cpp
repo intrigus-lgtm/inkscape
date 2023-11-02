@@ -69,12 +69,11 @@ PagesTool::PagesTool(SPDesktop *desktop)
             m_knot->ungrabbed_signal.connect(sigc::mem_fun(*this, &PagesTool::marginKnotFinished));
             margin_knots.push_back(m_knot);
 
-            if (auto window = desktop->getCanvas()->get_window()) {
-                knot->setCursor(SP_KNOT_STATE_DRAGGING, get_cursor(window, "page-resizing.svg"));
-                knot->setCursor(SP_KNOT_STATE_MOUSEOVER, get_cursor(window, "page-resize.svg"));
-                m_knot->setCursor(SP_KNOT_STATE_DRAGGING, get_cursor(window, "page-resizing.svg"));
-                m_knot->setCursor(SP_KNOT_STATE_MOUSEOVER, get_cursor(window, "page-resize.svg"));
-            }
+            auto &widget = dynamic_cast<Gtk::Widget &>(*desktop->getCanvas());
+            knot->setCursor  (SP_KNOT_STATE_DRAGGING , get_cursor(widget, "page-resizing.svg"));
+            knot->setCursor  (SP_KNOT_STATE_MOUSEOVER, get_cursor(widget, "page-resize.svg"  ));
+            m_knot->setCursor(SP_KNOT_STATE_DRAGGING , get_cursor(widget, "page-resizing.svg"));
+            m_knot->setCursor(SP_KNOT_STATE_MOUSEOVER, get_cursor(widget, "page-resize.svg"  ));
         }
     }
 

@@ -30,9 +30,9 @@
 #include "preferences.h"
 #include "ui/widget/events/enums.h"
 
-namespace Gdk {
-class Surface;
-}
+namespace Gtk {
+class Widget;
+} // namespace Gtk
 
 class GrDrag;
 class SPDesktop;
@@ -203,7 +203,8 @@ public:
 
     void set_cursor(std::string filename);
     void use_cursor(Glib::RefPtr<Gdk::Cursor> cursor);
-    Glib::RefPtr<Gdk::Cursor> get_cursor(Glib::RefPtr<Gdk::Surface> surface, std::string const &filename) const;
+    Glib::RefPtr<Gdk::Cursor> get_cursor(Gtk::Widget &widget,
+                                         std::string const &filename) const;
     void use_tool_cursor();
 
     void enableGrDrag(bool enable = true);
@@ -242,7 +243,6 @@ void init_latin_keys_group();
 unsigned get_latin_keyval_impl(unsigned event_keyval, unsigned event_keycode,
                                GdkModifierType event_state, unsigned event_group,
                                unsigned *consumed_modifiers);
-unsigned get_latin_keyval(GdkEventKey const *event, unsigned *consumed_modifiers = nullptr); // Todo: Remove.
 unsigned get_latin_keyval(GtkEventControllerKey const *controller,
                           unsigned keyval, unsigned keycode, GdkModifierType state,
                           unsigned *consumed_modifiers = nullptr);

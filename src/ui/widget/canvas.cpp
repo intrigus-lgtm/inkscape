@@ -29,7 +29,7 @@
 #include <gdkmm/frameclock.h>
 #include <gdkmm/glcontext.h>
 #include <gtkmm/applicationwindow.h>
-#include <gtkmm/gesturemultipress.h>
+#include <gtkmm/gestureclick.h>
 #include <sigc++/functors/mem_fun.h>
 
 #include "canvas/fragment.h"
@@ -977,7 +977,7 @@ Gtk::EventSequenceState Canvas::on_button_released(Gtk::GestureClick const &cont
             y > get_allocation().get_height() - 5)
         {
             // Reset everything.
-            set_cursor();
+            update_cursor();
             set_split_mode(SplitMode::NORMAL);
 
             // Update action (turn into utility function?).
@@ -1153,7 +1153,7 @@ void Canvas::on_motion(GtkEventControllerMotion const * const controller,
 
         if (_hover_direction != hover_direction) {
             _hover_direction = hover_direction;
-            set_cursor();
+            update_cursor();
             queue_draw();
         }
 
@@ -1472,7 +1472,7 @@ void CanvasPrivate::ensure_geometry_uptodate()
 
 Geom::IntPoint Canvas::get_dimensions() const
 {
-    return dimensions(get_allocation());
+    return {get_width(), get_height()};
 }
 
 /**
@@ -1808,13 +1808,11 @@ void Canvas::set_cms_transform()
 }
 
 // Change cursor
-void Canvas::set_cursor()
+void Canvas::update_cursor()
 {
     if (!_desktop) {
         return;
     }
-
-    auto display = Gdk::Display::get_default();
 
     switch (_hover_direction) {
         case SplitDirection::NONE:
@@ -1826,32 +1824,29 @@ void Canvas::set_cursor()
         case SplitDirection::SOUTH:
         case SplitDirection::WEST:
         {
-            auto cursor = Gdk::Cursor::create(display, "pointer");
-            get_window()->set_cursor(cursor);
+            set_cursor("pointer");
             break;
         }
 
         case SplitDirection::HORIZONTAL:
         {
-            auto cursor = Gdk::Cursor::create(display, "ns-resize");
-            get_window()->set_cursor(cursor);
+            set_cursor("ns-resize");
             break;
         }
 
         case SplitDirection::VERTICAL:
         {
-            auto cursor = Gdk::Cursor::create(display, "ew-resize");
-            get_window()->set_cursor(cursor);
+            set_cursor("ew-resize");
             break;
         }
 
         default:
             // Shouldn't reach.
-            std::cerr << "Canvas::set_cursor: Unknown hover direction!" << std::endl;
+            std::cerr << "Canvas::update_cursor: Unknown hover direction!" << std::endl;
     }
 }
 
-void Canvas::on_size_allocate(Gtk::Allocation &allocation)
+void Canvas::size_allocate_vfunc(int const width, int const height, int const baseline)
 {
     auto const old_dimensions = get_dimensions();
     parent_type::on_size_allocate(allocation);
@@ -1952,6 +1947,18 @@ void Canvas::paint_widget(Cairo::RefPtr<Cairo::Context> const &cr)
         auto dim = _desktop && _desktop->doc() ? _desktop->doc()->getDimensions() : Geom::Point();
         set_pos(Geom::Point((0.5 + 0.3 * cos(t * 2)) * dim.x(), (0.5 + 0.3 * sin(t * 3)) * dim.y()) * affine - Geom::Point(get_dimensions()) * 0.5);
     }
+}
+
+void Canvas::snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &snapshot)
+{
+    _signal_before_snapshot.emit();
+
+    parent_type::snapshot_vfunc(snapshot);
+}
+
+sigc::connection Canvas::connect_before_snapshot(sigc::slot<void ()> slot)
+{
+    return _signal_before_snapshot.connect(std::move(slot));
 }
 
 /*

@@ -43,7 +43,10 @@ public:
     DialogContainer *get_container() { return _container; }
 
 private:
+// TODO: GTK4: Presumably we can use Gtk::ShortcutController and not need to replicate this monster
+#if 0
     bool on_key_press_event(GdkEventKey *key_event) final;
+#endif
 
     InkscapeApplication *_app = nullptr;
 

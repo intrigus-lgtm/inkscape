@@ -32,7 +32,7 @@
 
 namespace Gtk {
 class DrawingArea;
-class GestureMultiPress;
+class GestureClick;
 } // namespace Gtk
 
 namespace Inkscape::UI::Widget {

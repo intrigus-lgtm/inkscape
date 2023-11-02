@@ -39,7 +39,6 @@
 #include "object/sp-guide.h"
 #include "object/sp-namedview.h"
 #include "ui/contextmenu.h"
-#include "ui/controller.h" // get_group(GtkEventControllerKey const *)
 #include "ui/cursor-utils.h"
 #include "ui/interface.h"
 #include "ui/knot/knot.h"
@@ -155,8 +154,9 @@ void ToolBase::set_cursor(std::string filename)
  * Returns the Gdk Cursor for the given filename
  *
  * WARNING: currently this changes the window cursor, see load_svg_cursor
+ * TODO: GTK4: Is the above warning still applicable?
  */
-Glib::RefPtr<Gdk::Cursor> ToolBase::get_cursor(Glib::RefPtr<Gdk::Surface> surface, std::string const &filename) const
+Glib::RefPtr<Gdk::Cursor> ToolBase::get_cursor(Gtk::Widget &widget, std::string const &filename) const
 {
     bool fillHasColor   = false;
     bool strokeHasColor = false;
@@ -164,7 +164,7 @@ Glib::RefPtr<Gdk::Cursor> ToolBase::get_cursor(Glib::RefPtr<Gdk::Surface> surfac
     guint32 strokeColor = sp_desktop_get_color_tool(_desktop, getPrefsPath(), false, &strokeHasColor);
     double fillOpacity = fillHasColor ? sp_desktop_get_opacity_tool(_desktop, getPrefsPath(), true) : 1.0;
     double strokeOpacity = strokeHasColor ? sp_desktop_get_opacity_tool(_desktop, getPrefsPath(), false) : 1.0;
-    return load_svg_cursor(surface->get_display(), surface, filename,
+    return load_svg_cursor(widget, filename,
                            fillColor, strokeColor, fillOpacity, strokeOpacity);
 }
 
@@ -173,10 +173,9 @@ Glib::RefPtr<Gdk::Cursor> ToolBase::get_cursor(Glib::RefPtr<Gdk::Surface> surfac
  */
 void ToolBase::use_tool_cursor()
 {
-    if (auto window = _desktop->getCanvas()->get_window()) {
-        _cursor = get_cursor(window, _cursor_filename);
-        window->set_cursor(_cursor);
-    }
+    auto &widget = dynamic_cast<Gtk::Widget &>(*desktop->getCanvas());
+    widget.set_cursor(get_cursor(widget, _cursor_filename));
+
     _desktop->waiting_cursor = false;
 }
 
@@ -1459,19 +1458,6 @@ unsigned get_latin_keyval_impl(unsigned const event_keyval, unsigned const event
 }
 
 /**
- * Return the keyval corresponding to the key event in Latin group.
- *
- * Use this instead of simply event->keyval, so that your keyboard shortcuts
- * work regardless of layouts (e.g., in Cyrillic).
- */
-unsigned get_latin_keyval(GdkEventKey const *event, unsigned *consumed_modifiers /*= nullptr*/)
-{
-    return get_latin_keyval_impl(event->keyval, event->hardware_keycode,
-                                 static_cast<GdkModifierType>(event->state), event->group,
-                                 consumed_modifiers);
-}
-
-/**
  * Return the keyval corresponding to the event controller key in Latin group.
  *
  * Use this instead of simply a signal's keyval, so that your keyboard shortcuts
@@ -1481,7 +1467,7 @@ unsigned get_latin_keyval(GtkEventControllerKey const * const controller,
                           unsigned const keyval, unsigned const keycode, GdkModifierType const state,
                           unsigned *consumed_modifiers /*= nullptr*/)
 {
-    auto const group = Controller::get_group(controller);
+    auto const group = gtk_event_controller_key_get_group(controller);
     return get_latin_keyval_impl(keyval, keycode, state, group, consumed_modifiers);
 }
 

@@ -23,7 +23,7 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/enums.h>
-#include <gtkmm/gesturemultipress.h>
+#include <gtkmm/gestureclick.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/popover.h>
@@ -365,11 +365,13 @@ CanvasGrid::ShowCommandPalette(bool state)
 
 // Update rulers on change of widget size, but only if allocation really changed.
 void
-CanvasGrid::on_size_allocate(Gtk::Allocation& allocation)
+CanvasGrid::size_allocate_vfunc(int const width, int const height, int const baseline)
 {
-    Gtk::Grid::on_size_allocate(allocation);
-    if (!(_allocation == allocation)) { // No != function defined!
-        _allocation = allocation;
+    Gtk::Grid::size_allocate_vfunc(width, height, baseline);
+
+    if (std::exchange(_width , width ) != width  ||
+        std::exchange(_height, height) != height)
+    {
         updateRulers();
     }
 }
@@ -389,7 +391,7 @@ Gtk::EventSequenceState CanvasGrid::_rulerButtonPress(Gtk::GestureClick const &g
         return Gtk::EventSequenceState::NONE;
     }
 
-    auto const state = Controller::get_current_event_state(gesture);
+    auto const state = gesture.get_current_event_state();
 
     _ruler_clicked = true;
     _ruler_dragged = false;
@@ -596,7 +598,7 @@ Gtk::EventSequenceState CanvasGrid::_rulerButtonRelease(Gtk::GestureClick const 
         desktop->getTool()->discard_delayed_snap_event();
 
         auto const pos = Geom::Point(x, y) + _rulerToCanvas(horiz);
-        auto const state = Controller::get_current_event_state(gesture);
+        auto const state = gesture.get_current_event_state();
 
         // Get the snapped position and normal.
         auto const event_w = _canvas->canvas_to_world(pos);

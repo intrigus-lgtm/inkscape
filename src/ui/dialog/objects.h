@@ -39,7 +39,7 @@
 
 namespace Gtk {
 class Builder;
-class GestureMultiPress;
+class GestureClick;
 class Popover;
 class RadioButton;
 class Scale;

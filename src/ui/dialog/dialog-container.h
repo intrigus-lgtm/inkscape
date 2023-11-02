@@ -27,6 +27,10 @@
 #include "desktop.h"
 #include "helper/auto-connection.h"
 
+namespace Gdk {
+class DragContext;
+} // namespace Gdk
+
 namespace Gtk {
 class SelectionData;
 } // namespace Gtk

@@ -383,14 +383,11 @@ inline bool held_button(CanvasEvent const &event) { return state_held_button<but
  */
 inline unsigned shortcut_key(KeyEvent const &event)
 {
-    unsigned shortcut_key = 0;
-    gdk_keymap_translate_keyboard_state(
-        gdk_keymap_get_for_display(gdk_display_get_default()),
-        event.hardware_keycode,
-        static_cast<GdkModifierType>(event.modifiers),
-        0, // group
-        &shortcut_key, nullptr, nullptr, nullptr);
-    return shortcut_key;
+    // Even in GTK3, “`GdkEventKey` already contains the translated keyval, so
+    // this function isn’t as useful as you might think.” – which we were using
+    // here, but which is gone in GTK4. Since it doesnʼt therefore seem to have
+    // been doing anything, now we just directly use GdKeyEvent→KeyEvent→keyval.
+    return event.keyval;
 }
 
 } // namespace Inkscape

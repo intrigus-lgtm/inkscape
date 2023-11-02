@@ -12,52 +12,14 @@
 
 #include "controller.h"
 
-#include <cassert>
 #include <sigc++/adaptors/bind.h>
 #include <gdk/gdk.h>
 #include <gtkmm/gesturedrag.h>
-#include <gtkmm/gesturemultipress.h>
+#include <gtkmm/gestureclick.h>
 
 #include "helper/auto-connection.h"
 
 namespace Inkscape::UI::Controller {
-
-template <typename T> static auto asserted(T * const t) { assert(t); return t; }
-
-// TODO: GTK4: We will have gtkmm API for all controllers, so migrate from C API
-
-// TODO: GTK4: We will have EventController.get_current_event_state(). And phew!
-Gdk::ModifierType get_device_state(GtkEventController const * const controller)
-{
-    auto const widget = asserted(
-        gtk_event_controller_get_widget(const_cast<GtkEventController *>(controller)));
-    auto const surface = asserted(gtk_widget_get_window       (widget ));
-    auto const display = asserted(gdk_window_get_display      (surface));
-    auto const seat    = asserted(gdk_display_get_default_seat(display));
-    auto const device  = asserted(gdk_seat_get_pointer        (seat   ));
-    GdkModifierType state{};
-    gdk_window_get_device_position(surface, device, NULL, NULL, &state);
-    return static_cast<Gdk::ModifierType>(state);
-}
-
-GdkEvent const *get_last_event(Gtk::GestureSingle const &gesture)
-{
-    auto const sequence = gesture.get_current_sequence();
-    return gesture.get_last_event(const_cast<GdkEventSequence *>(sequence));
-}
-
-// TODO: GTK4: We can replace w/ just EventController.get_current_event_state().
-Gdk::ModifierType get_current_event_state(Gtk::GestureSingle const &gesture)
-{
-    auto state = GdkModifierType{};
-    gdk_event_get_state(get_last_event(gesture), &state);
-    return static_cast<Gdk::ModifierType>(state);
-}
-
-unsigned get_group(GtkEventControllerKey const * const controller)
-{
-    return gtk_event_controller_key_get_group(const_cast<GtkEventControllerKey *>(controller));
-}
 
 namespace {
 
@@ -66,9 +28,7 @@ template <typename Controller>
 [[nodiscard]] Controller &create(Gtk::Widget &widget, Gtk::PropagationPhase const phase)
 {
     static_assert(std::is_base_of_v<Gtk::EventController, Controller>);
-    auto &controller = Detail::managed(Controller::create(widget), widget);
-    controller.set_propagation_phase(phase);
-    return controller;
+    return Detail::add(widget, Controller::create(), phase);
 }
 
 /// Helper to invoke getter on object, & connect a slot to the resulting signal.
@@ -138,9 +98,10 @@ void add_focus_on_window(Gtk::Widget &widget, WindowFocusSlot slot)
     static auto connections = std::unordered_map<Gtk::Widget *, std::vector<auto_connection>>{};
     widget.signal_map().connect([&widget, slot = std::move(slot)]
     {
-        auto &window = dynamic_cast<Gtk::Window &>(*widget.get_toplevel());
-        auto connection = auto_connection{window.signal_set_focus().connect(slot)};
-        connections[&widget].push_back(std::move(connection));
+        auto &window = dynamic_cast<Gtk::Window &>(*widget.get_root());
+        auto connection = window.property_focus_widget().signal_changed().connect(
+            [=, &window]{ slot(window.property_focus_widget().get_value()); });
+        connections[&widget].emplace_back(std::move(connection));
     });
     widget.signal_unmap().connect([&widget]{ connections.erase(&widget); });
 }

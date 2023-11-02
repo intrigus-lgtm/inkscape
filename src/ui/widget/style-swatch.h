@@ -27,7 +27,7 @@ class SPStyle;
 class SPCSSAttr;
 
 namespace Gtk {
-class GestureMultiPress;
+class GestureClick;
 class Grid;
 } // namespace Gtk
 

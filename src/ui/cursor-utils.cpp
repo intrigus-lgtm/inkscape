@@ -23,10 +23,10 @@
 #include <glibmm/miscutils.h>
 #include <giomm/file.h>
 #include <gdkmm/cursor.h>
-#include <gdkmm/display.h>
-#include <gdkmm/window.h>
+#include <gdkmm/pixbuf.h>
 #include <gtkmm/icontheme.h>
 #include <gtkmm/settings.h>
+#include <gtkmm/widget.h>
 
 #include "document.h"
 #include "preferences.h"
@@ -56,8 +56,7 @@ struct KeyHasher {
  * Returns pointer to cursor (or null cursor if we could not load a cursor).
  */
 Glib::RefPtr<Gdk::Cursor>
-load_svg_cursor(Glib::RefPtr<Gdk::Display> const &display,
-                Glib::RefPtr<Gdk::Window > const &window ,
+load_svg_cursor(Gtk::Widget &widget,
                 std::string const &file_name,
                 std::uint32_t const fill,
                 std::uint32_t const stroke,
@@ -100,7 +99,7 @@ load_svg_cursor(Glib::RefPtr<Gdk::Display> const &display,
     // cursor scaling? note: true by default - this has to be in sync with inkscape-preferences where it is true
     bool cursor_scaling = prefs->getBool("/options/cursorscaling", true); // Fractional scaling is broken but we can't detect it.
     if (cursor_scaling) {
-        scale = window->get_scale_factor(); // Adjust for HiDPI screens.
+        scale = widget.get_scale_factor(); // Adjust for HiDPI screens.
     }
 
     static std::unordered_map<Key, Glib::RefPtr<Gdk::Cursor>, KeyHasher> cursor_cache;
@@ -118,8 +117,7 @@ load_svg_cursor(Glib::RefPtr<Gdk::Display> const &display,
     }
 
     // Find theme paths.
-    auto screen = display->get_default_screen();
-    auto icon_theme = Gtk::IconTheme::get_for_screen(screen);
+    auto const icon_theme = Gtk::IconTheme::get_for_display(widget.get_display());
     auto theme_paths = icon_theme->get_search_path();
 
     // Loop over theme names and paths, looking for file.
@@ -201,34 +199,26 @@ load_svg_cursor(Glib::RefPtr<Gdk::Display> const &display,
     auto w = document->getWidth().value("px");
     auto h = document->getHeight().value("px");
     // Calculate the hotspot.
-    int hotspot_x = root->getIntAttribute("inkscape:hotspot_x", 0); // Do not include window scale factor!
+    int hotspot_x = root->getIntAttribute("inkscape:hotspot_x", 0); // Do not include surface scale factor!
     int hotspot_y = root->getIntAttribute("inkscape:hotspot_y", 0);
 
     Geom::Rect area(0, 0, cursor_scaling ? w * scale : w, cursor_scaling ? h * scale : h);
     int dpi = 96 * scale;
     // render document into internal bitmap; returns null on failure
     if (auto ink_pixbuf = std::unique_ptr<Inkscape::Pixbuf>(sp_generate_internal_bitmap(document.get(), area, dpi))) {
-       if (cursor_scaling) {
+        auto pixbuf = Glib::wrap(ink_pixbuf->getPixbufRaw(), true);
+
+        if (cursor_scaling) {
             // creating cursor from Cairo surface rather than pixbuf gives us opportunity to set device scaling;
             // what that means in practice is we can prepare high-res image and it will be used as-is on
             // a high-res display; cursors created from pixbuf are up-scaled to device pixels (blurry)
-            auto surface = ink_pixbuf->getSurface();
-            if (surface && surface->cobj()) {
-                cairo_surface_set_device_scale(surface->cobj(), scale, scale);
-                cursor = Gdk::Cursor::create(display, surface, hotspot_x, hotspot_y);
-            }
-            else {
-                std::cerr << "load_svg_cursor: failed to get surface for: " << full_file_path << std::endl;
-            }
+            // TODO: GTK4: Gdk::Cursor() cannot be created from Cairo::Surface,
+            //             only Gdk::Texture, which has no scaling. What to do?
+            pixbuf->scale_simple(w * scale, h * scale, Gdk::InterpType::BILINEAR);
         }
-        else {
-            // original code path when cursor scaling is turned off in preferences
-            auto pixbuf = Glib::wrap(ink_pixbuf->getPixbufRaw(), true);
 
-            if (pixbuf) {
-                cursor = Gdk::Cursor::create(display, pixbuf, hotspot_x, hotspot_y);
-            }
-        }
+        auto texture = Gdk::Texture::create_for_pixbuf(std::move(pixbuf));
+        cursor = Gdk::Cursor::create(std::move(texture), hotspot_x, hotspot_y);
     } else {
         std::cerr << "load_svg_cursor: failed to create pixbuf for: " << full_file_path << std::endl;
     }
@@ -240,6 +230,22 @@ load_svg_cursor(Glib::RefPtr<Gdk::Display> const &display,
     }
 
     return cursor;
+}
+
+/**
+ * Loads an SVG cursor from the specified file name, and sets it as the cursor
+ * of the given widget.
+ */
+void
+load_svg_cursor(Gtk::Widget &widget,
+                std::string const &file_name,
+                std::uint32_t const fill,
+                std::uint32_t const stroke,
+                double fill_opacity,
+                double stroke_opacity)
+{
+    auto cursor = load_svg_cursor(widget, file_name, fill, stroke, fill_opacity, stroke_opacity));
+    widget.set_cursor(std::move(cursor));
 }
 
 } // namespace Inkscape

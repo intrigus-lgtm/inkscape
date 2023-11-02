@@ -30,7 +30,7 @@ class Cursor;
 
 namespace Gtk {
 class DrawingArea;
-class GestureMultiPress;
+class GestureClick;
 } // namespace Gtk
 
 class SPGradient;

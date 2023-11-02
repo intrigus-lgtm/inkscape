@@ -5,6 +5,7 @@
 #include <cassert>
 #include <cairomm/context.h>
 #include <gdkmm/glcontext.h>
+#include <sigc++/functors/mem_fun.h>
 
 namespace Inkscape::UI::Widget {
 
@@ -12,6 +13,8 @@ OptGLArea::OptGLArea()
 {
     set_app_paintable(true); // No problem for GTK4 port since this whole widget will be deleted.
     opengl_enabled = false;
+
+    set_draw_func(sigc::mem_fun(*this, &OptGLArea::draw_func));
 }
 
 OptGLArea::~OptGLArea() = default;
@@ -37,9 +40,10 @@ void OptGLArea::on_unrealize()
     Gtk::DrawingArea::on_unrealize();
 }
 
-void OptGLArea::on_size_allocate(Gtk::Allocation &allocation)
+void OptGLArea::on_size_allocate(int const width, int const height, int const baseline)
 {
-    Gtk::DrawingArea::on_size_allocate(allocation);
+    Gtk::DrawingArea::on_size_allocate(width, height, baseline);
+
     if (get_realized()) need_resize = true;
 }
 
@@ -64,7 +68,7 @@ void OptGLArea::make_current()
     context->make_current();
 }
 
-bool OptGLArea::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
+void OptGLArea::draw_func(Cairo::RefPtr<Cairo::Context> const &cr, int const width, int const height)
 {
     if (opengl_enabled) {
         context->make_current();
@@ -81,8 +85,8 @@ bool OptGLArea::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
         paint_widget(cr);
 
         int s = get_scale_factor();
-        int w = get_allocated_width() * s;
-        int h = get_allocated_height() * s;
+        int const w = width  * s;
+        int const h = height * s;
         gdk_cairo_draw_from_gl(cr->cobj(), get_window()->gobj(), renderbuffer, GL_RENDERBUFFER, s, 0, 0, w, h);
 
         context->make_current(); // ?

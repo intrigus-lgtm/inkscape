@@ -726,11 +726,10 @@ void SPDesktop::schedule_zoom_from_document()
         return;
     }
 
-    _schedule_zoom_from_document_connection = canvas->signal_draw().connect([this] (Cairo::RefPtr<Cairo::Context> const &) {
+    _schedule_zoom_from_document_connection = canvas->connect_before_snapshot([this]{
         sp_namedview_zoom_and_view_from_document(this);
         _schedule_zoom_from_document_connection.disconnect(); // one-shot
-        return false; // don't block draw
-    }, false); // run before draw
+    });
 }
 
 Geom::Point SPDesktop::current_center() const {
@@ -991,10 +990,16 @@ bool SPDesktop::scroll_to_point(Geom::Point const &p, double)
     return false;
 }
 
+[[nodiscard]] static bool
+has_flag(Gdk::Toplevel::State const state, Gdk::Toplevel::State const flags)
+{
+    return (state & flags) != Gdk::Toplevel::State{};
+}
+
 bool
 SPDesktop::is_iconified() const
 {
-    return 0!=(window_state & GDK_WINDOW_STATE_ICONIFIED);
+    return has_flag(toplevel_state, Gdk::Toplevel::State::MINIMIZED);
 }
 
 void
@@ -1003,12 +1008,15 @@ SPDesktop::iconify()
     _widget->iconify();
 }
 
-bool SPDesktop::is_darktheme() const { return getToplevel()->get_style_context()->has_class("dark"); }
+bool SPDesktop::is_darktheme() const
+{
+    return getToplevel()->has_css_class("dark");
+}
 
 bool
 SPDesktop::is_maximized() const
 {
-    return 0!=(window_state & GDK_WINDOW_STATE_MAXIMIZED);
+    return has_flag(toplevel_state, Gdk::Toplevel::State::MAXIMIZED);
 }
 
 void
@@ -1020,7 +1028,7 @@ SPDesktop::maximize()
 bool
 SPDesktop::is_fullscreen() const
 {
-    return 0!=(window_state & GDK_WINDOW_STATE_FULLSCREEN);
+    return has_flag(toplevel_state, Gdk::Toplevel::State::FULLSCREEN);
 }
 
 void
@@ -1204,13 +1212,14 @@ SPDesktop::layoutWidget()
  *  record it for the desktop here, and also possibly trigger a layout.
  */
 void
-SPDesktop::onWindowStateChanged(GdkWindowState const changed, GdkWindowState const new_window_state)
+SPDesktop::onWindowStateChanged(Gdk::Toplevel::State const changed,
+                                Gdk::Toplevel::State const new_state)
 {
     // Record the desktop window's state
-    window_state = new_window_state;
+    toplevel_state = new_state;
 
     // Layout may differ depending on full-screen mode or not
-    if (changed & (GDK_WINDOW_STATE_FULLSCREEN | GDK_WINDOW_STATE_MAXIMIZED)) {
+    if (has_flag(changed, Gdk::Toplevel::State::FULLSCREEN | Gdk::Toplevel::State::MAXIMIZED)) {
         layoutWidget();
         view_set_gui(getInkscapeWindow()); // Updates View menu
     }
@@ -1300,15 +1309,12 @@ void SPDesktop::disableInteraction()
 
 void SPDesktop::setWaitingCursor()
 {
-    auto window = canvas->get_window();
-    if (!window) {
-        return;
-    }
-    Glib::RefPtr<Gdk::Display> display = Gdk::Display::get_default();
-    Glib::RefPtr<Gdk::Cursor> waiting = Gdk::Cursor::create(display, "wait");
-    window->set_cursor(waiting);
+    canvas->set_cursor("wait");
+
     // GDK needs the flush for the cursor change to take effect
-    display->flush();
+    // TODO: GTK4: Is that still the case?
+    // display->flush();
+
     waiting_cursor = true;
 }
 

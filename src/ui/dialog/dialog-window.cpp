@@ -60,7 +60,7 @@ DialogWindow::DialogWindow(InkscapeWindow *inkscape_window, Gtk::Widget *page)
     // Add the dialog window to our app
     _app->gtk_app()->add_window(*this);
 
-    this->signal_delete_event().connect([=](GdkEventAny *) {
+    signal_close_request().connect([this]{
         DialogManager::singleton().store_state(*this);
         delete this;
         return true;
@@ -236,13 +236,14 @@ void DialogWindow::update_window_size_to_fit_children()
     resize(width, height);
 }
 
+// TODO: GTK4: We wonʼt be able to do this, but shouldnʼt need to, if instead of using
+// Application.set_accels_for_action(), we use GtkShortcutController in CAPTURE phase.
+// ::key-press-event handlers will be replaced by GtkEventControllerKey, w/ phase TBC.
+// See: https://gitlab.com/dboles/inkscape/-/issues/1
+#if 0
 // mimic InkscapeWindow handling of shortcuts to make them work with active floating dialog window
 bool DialogWindow::on_key_press_event(GdkEventKey *key_event)
 {
-    // TODO: GTK4: We wonʼt be able to do this, but shouldnʼt need to, if instead of using
-    // Application.set_accels_for_action(), we use GtkShortcutController in CAPTURE phase.
-    // ::key-press-event handlers will be replaced by GtkEventControllerKey, w/ phase TBC.
-    // See: https://gitlab.com/dboles/inkscape/-/issues/1
     auto focus = get_focus();
     if (focus) {
         if (focus->event(reinterpret_cast<GdkEvent *>(key_event))) {
@@ -262,6 +263,7 @@ bool DialogWindow::on_key_press_event(GdkEventKey *key_event)
 
     return false;
 }
+#endif
 
 } // namespace Inkscape::UI::Dialog
 

@@ -24,7 +24,7 @@
 #include <giomm/simpleaction.h>
 #include <giomm/simpleactiongroup.h>
 #include <gdkmm/general.h>
-#include <gtkmm/gesturemultipress.h>
+#include <gtkmm/gestureclick.h>
 #include <gtkmm/popover.h>
 #include <sigc++/functors/mem_fun.h>
 
@@ -342,7 +342,7 @@ Gtk::EventSequenceState ColorItem::on_click_released(Gtk::GestureClick const &cl
 
     auto const button = click.get_current_button();
     if (mouse_inside && (button == 1 || button == 2)) {
-        auto const state = Controller::get_current_event_state(click);
+        auto const state = click.get_current_event_state();
         auto const stroke = button == 2 || (state & Gdk::SHIFT_MASK) != 0;
         on_click(stroke);
         return Gtk::EventSequenceState::CLAIMED;

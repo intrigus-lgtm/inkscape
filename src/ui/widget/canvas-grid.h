@@ -30,7 +30,7 @@
 namespace Gtk {
 class Adjustment;
 class Builder;
-class GestureMultiPress;
+class GestureClick;
 } // namespace Gtk
 
 class SPDocument;
@@ -97,7 +97,7 @@ public:
 
 private:
     // Signal callbacks
-    void on_size_allocate(Gtk::Allocation &allocation) final;
+    void size_allocate_vfunc(int width, int height, int baseline) final;
     void on_realize() final;
 
     // The widgets
@@ -129,7 +129,7 @@ private:
     SPDocument *_document = nullptr;
 
     // Store allocation so we don't redraw too often.
-    Gtk::Allocation _allocation;
+    int _width{}, _height{};
 
     // Connections for page and selection tracking
     auto_connection _page_selected_connection;

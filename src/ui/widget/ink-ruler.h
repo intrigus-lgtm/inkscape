@@ -31,7 +31,7 @@ class Context;
 
 namespace Gtk {
 class DrawingArea;
-class GestureMultiPress;
+class GestureClick;
 class Popover;
 } // namespace Gtk
 

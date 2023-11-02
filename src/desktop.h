@@ -36,6 +36,7 @@
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 #include <gtk/gtk.h> // EventController et al.
+#include <gdkmm/toplevel.h>
 #include <sigc++/signal.h>
 #include <2geom/affine.h>
 #include <2geom/transforms.h>
@@ -223,7 +224,7 @@ public:
     bool           _focusMode;  ///< Whether we're focused working or general working
 
     unsigned int dkey;
-    unsigned window_state{};
+    Gdk::Toplevel::State toplevel_state{};
     unsigned int interaction_disabled_counter;
     bool waiting_cursor;
     bool showing_dialogs;
@@ -448,7 +449,7 @@ public:
 
     void setDocument (SPDocument* doc);
 
-    void onWindowStateChanged(GdkWindowState changed, GdkWindowState new_window_state);
+    void onWindowStateChanged(Gdk::Toplevel::State changed, Gdk::Toplevel::State new_toplevel_state);
 
     void applyCurrentOrToolStyle(SPObject *obj, Glib::ustring const &tool_path, bool with_text);
 

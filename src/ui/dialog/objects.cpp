@@ -1491,7 +1491,7 @@ void ObjectsPanel::on_motion_motion(GtkEventControllerMotion const * const contr
         }
     }
 
-    auto const state = Controller::get_device_state(GTK_EVENT_CONTROLLER(controller));
+    auto const state = gtk_event_controller_get_current_event_state(GTK_EVENT_CONTROLLER(controller));
     _handleTransparentHover(Controller::has_flag(state, Gdk::ALT_MASK));
 }
 
@@ -1557,7 +1557,7 @@ Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureClick const &gesture,
 
     if (auto row = *_store->get_iter(path)) {
         if (event_type == EventType::pressed) {
-            auto const state = Controller::get_current_event_state(gesture);
+            auto const state = gesture.get_current_event_state();
             // Remember column for dragging feature
             _drag_column = col;
             if (col == _eye_column) {
@@ -1594,7 +1594,7 @@ Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureClick const &gesture,
     if (!item) return Gtk::EventSequenceState::NONE;
 
     auto layer = Inkscape::LayerManager::asLayer(item);
-    auto const state = Controller::get_current_event_state(gesture);
+    auto const state = gesture.get_current_event_state();
     auto const should_set_current_layer = [&] {
         if (!layer)
             return false;

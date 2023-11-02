@@ -16,7 +16,7 @@
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 
 namespace Gtk {
-class GestureMultiPress;
+class GestureClick;
 } // namespace Gtk
 
 namespace Inkscape::UI::Widget {

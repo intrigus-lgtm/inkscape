@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /**
  * @file
- * Inkview - An SVG file viewer.
+ * Inkscape - An SVG editor.
  */
 /*
  * Authors:
@@ -16,6 +16,7 @@
 #include "inkscape-window.h"
 
 #include <iostream>
+#include <gdkmm/surface.h>
 #include <gtkmm/box.h>
 #include <gtkmm/popovermenubar.h>
 #include <sigc++/functors/mem_fun.h>
@@ -128,8 +129,6 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
     Inkscape::UI::pack_start(*_mainbox, *_desktop_widget, true, true);
 
     // ================== Callbacks ==================
-    get_toplevel().property_state().signal_changed().connect(
-        sigc::mem_fun(*this, &InkscapeWindow::on_toplevel_state_changed));
     property_is_active().signal_changed().connect(sigc::mem_fun(*this, &InkscapeWindow::on_is_active_changed));
     signal_close_request().connect(sigc::mem_fun(*this, &InkscapeWindow::on_close_request), false); // before
     property_default_width ().signal_changed().connect(sigc::mem_fun(*this, &InkscapeWindow::on_size_changed));
@@ -160,6 +159,16 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
 
     // ========= Update text for Accellerators =======
     Inkscape::Shortcuts::getInstance().update_gui_text_recursive(this);
+}
+
+void InkscapeWindow::on_realize()
+{
+    Gtk::ApplicationWindow::on_realize();
+
+    // Note: Toplevel only becomes non-null after realisation.
+    _toplevel_state_connection = get_toplevel()->property_state().signal_changed().connect(
+        sigc::mem_fun(*this, &InkscapeWindow::on_toplevel_state_changed)
+    );
 }
 
 InkscapeWindow::~InkscapeWindow()
@@ -281,19 +290,20 @@ static void retransientize_dialogs(Gtk::Window &parent)
     }
 }
 
-Gdk::Toplevel &
-InkscapeWindow::get_toplevel()
+Glib::RefPtr<Gdk::Toplevel const>
+InkscapeWindow::get_toplevel() const
 {
-    auto const toplevel = std::dynamic_pointer_cast<Gdk::Toplevel>(get_surface());
-    g_assert(toplevel);
-    return *toplevel;
+    return std::dynamic_pointer_cast<Gdk::Toplevel const>(get_surface());
 }
 
 void
 InkscapeWindow::on_toplevel_state_changed()
 {
-    auto const new_toplevel_state = get_toplevel().get_state();
-    auto const changed_mask = old_toplevel_state ^ new_toplevel_state;
+    // The initial old state is empty {}, as is the new state if we do not have a toplevel anymore.
+    Gdk::Toplevel::State new_toplevel_state{};
+    if (auto const toplevel = get_toplevel()) new_toplevel_state = toplevel->get_state();
+    auto const changed_mask = _old_toplevel_state ^ new_toplevel_state;
+    _old_toplevel_state = new_toplevel_state;
    _desktop->onWindowStateChanged(changed_mask, new_toplevel_state);
 }
 

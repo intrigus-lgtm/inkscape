@@ -91,7 +91,7 @@ DialogContainer::DialogContainer(InkscapeWindow* inkscape_window)
 
     columns = std::make_unique<DialogMultipaned>(Gtk::Orientation::HORIZONTAL);
     setup_drag_and_drop(columns.get());
-    add(*columns.get());
+    append(*columns.get());
 }
 
 DialogMultipaned *DialogContainer::create_column()
@@ -182,8 +182,9 @@ Gtk::Widget *DialogContainer::create_notebook_tab(Glib::ustring const &label_str
     tab->append(*close);
 
     // Workaround to the fact that Gtk::Box doesn't receive on_button_press event
-    auto const cover = Gtk::make_managed<Gtk::EventBox>();
-    cover->add(*tab);
+    // Todo: Above comment no longer applies in GTK4 - workaround may be removable.
+    auto const cover = Gtk::make_managed<Gtk::Box>();
+    cover->append(*tab);
 
     // Add shortcut tooltip
     if (shortcut.size() > 0) {
@@ -832,7 +833,7 @@ std::shared_ptr<Glib::KeyFile> DialogContainer::get_container_state(const window
 {
     static constexpr int window_idx = 0;
 
-    auto const keyfile = std::make_shared<Glib::KeyFile>();
+    auto const keyfile = Glib::KeyFile::create();
 
     // Step 2: save the number of windows
     keyfile->set_integer("Windows", "Count", 1);
@@ -906,9 +907,9 @@ std::shared_ptr<Glib::KeyFile> DialogContainer::get_container_state(const window
  * BeforeCanvas=false
  *
  */
-std::unique_ptr<Glib::KeyFile> DialogContainer::save_container_state()
+Glib::RefPtr<Glib::KeyFile> DialogContainer::save_container_state()
 {
-    std::unique_ptr<Glib::KeyFile> keyfile = std::make_unique<Glib::KeyFile>();
+    auto keyfile = Glib::KeyFile::create();
     auto app = InkscapeApplication::instance();
 
     // Step 1: get all the container columns (in order, from the current container and all DialogWindow containers)

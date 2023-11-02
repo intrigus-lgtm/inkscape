@@ -75,7 +75,7 @@ InkviewWindow::InkviewWindow(Gio::Application::type_vec_files files,
     }
 
     // Show first file
-    activate_action("show_first");
+    activate_action("win.show_first");
 }
 
 std::vector<Glib::RefPtr<Gio::File>> InkviewWindow::create_file_list(std::vector<Glib::RefPtr<Gio::File>> const &files)

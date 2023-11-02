@@ -48,7 +48,7 @@ Inkscape::XML::Node *dragging_repr = nullptr;
 
 enum { STORE_TEXT_COL = 0, STORE_DATA_COL, STORE_MARKUP_COL, STORE_N_COLS };
 
-static void sp_xmlview_tree_destroy(GtkWidget * object);
+static void sp_xmlview_tree_dispose(GObject * object);
 
 static NodeData *sp_xmlview_tree_node_get_data(GtkTreeModel *model, GtkTreeIter *iter);
 
@@ -364,16 +364,17 @@ public:
     // we need a separate property for plain text (placeholder_text could be hijacked potentially)
     Glib::Property<Glib::ustring> _property_plain_text;
 
-    void render_vfunc(const Cairo::RefPtr<Cairo::Context>& ctx,
-                      Gtk::Widget& widget,
-                      const Gdk::Rectangle& background_area,
-                      const Gdk::Rectangle& cell_area,
-                      Gtk::CellRendererState flags) override {
-        if (flags & Gtk::CellRendererState::SELECTED) {
+    void snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &snapshot,
+                        Gtk::Widget &widget,
+                        const Gdk::Rectangle &background_area,
+                        const Gdk::Rectangle &cell_area,
+                        Gtk::CellRendererState flags) override
+    {
+        if ((bool)(flags & Gtk::CellRendererState::SELECTED)) {
             // use plain text instead of marked up text to render selected nodes, so they are legible
             property_text() = _property_plain_text.get_value();
         }
-        Gtk::CellRendererText::render_vfunc(ctx, widget, background_area, cell_area, flags);
+        Gtk::CellRendererText::snapshot_vfunc(snapshot, widget, background_area, cell_area, flags);
     }
 };
 
@@ -415,8 +416,8 @@ G_DEFINE_TYPE(SPXMLViewTree, sp_xmlview_tree, GTK_TYPE_TREE_VIEW);
 
 void sp_xmlview_tree_class_init(SPXMLViewTreeClass * klass)
 {
-    auto widget_class = GTK_WIDGET_CLASS(klass);
-    widget_class->destroy = sp_xmlview_tree_destroy;
+    auto widget_class = G_OBJECT_CLASS(klass);
+    widget_class->dispose = sp_xmlview_tree_dispose;
 }
 
 void
@@ -426,7 +427,7 @@ sp_xmlview_tree_init (SPXMLViewTree * tree)
 	tree->blocked = 0;
 }
 
-void sp_xmlview_tree_destroy(GtkWidget * object)
+void sp_xmlview_tree_dispose(GObject * object)
 {
 	SPXMLViewTree * tree = SP_XMLVIEW_TREE (object);
 
@@ -439,7 +440,7 @@ void sp_xmlview_tree_destroy(GtkWidget * object)
 
 	sp_xmlview_tree_set_repr (tree, nullptr);
 
-	GTK_WIDGET_CLASS(sp_xmlview_tree_parent_class)->destroy (object);
+    G_OBJECT_CLASS(sp_xmlview_tree_parent_class)->dispose(object);
 }
 
 /*

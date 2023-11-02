@@ -73,7 +73,7 @@ public:
     InkscapeWindow *get_inkscape_window() { return _inkscape_window; }
 
     // State saving functionality
-    std::unique_ptr<Glib::KeyFile> save_container_state();
+    Glib::RefPtr<Glib::KeyFile> save_container_state();
     void load_container_state(Glib::KeyFile* keyfile, bool include_floating);
 
     void restore_window_position(DialogWindow* window);

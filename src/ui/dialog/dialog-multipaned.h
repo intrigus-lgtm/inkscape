@@ -17,7 +17,7 @@
 #include <vector>
 #include <glibmm/refptr.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
-#include <gtkmm/orientable.h>
+#include <gtkmm/box.h>
 
 #include "helper/auto-connection.h"
 
@@ -39,8 +39,7 @@ namespace Inkscape::UI::Dialog {
  * at either end.
  */
 class DialogMultipaned final
-    : public Gtk::Orientable
-    , public Gtk::Container
+    : public Gtk::Box
 {
 public:
     DialogMultipaned(Gtk::Orientation orientation = Gtk::Orientation::HORIZONTAL);

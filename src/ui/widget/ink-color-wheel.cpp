@@ -1053,8 +1053,6 @@ void ColorWheelHSLuv::on_drawing_area_draw(::Cairo::RefPtr<::Cairo::Context> con
         cr->arc(mp[Geom::X], mp[Geom::Y], marker_radius + focus_padding, 0, 2 * M_PI);
         cr->stroke();
     }
-
-    return true;
 }
 
 bool ColorWheelHSLuv::_set_from_xy(double const x, double const y)

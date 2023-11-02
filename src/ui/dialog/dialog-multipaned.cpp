@@ -63,8 +63,7 @@ int get_handle_size() {
  * Dropzones are eventboxes at the ends of a DialogMultipaned where you can drop dialogs.
  */
 class MyDropZone final
-    : public Gtk::Orientable
-    , public Gtk::Box
+    : public Gtk::Box
 {
 public:
     MyDropZone(Gtk::Orientation orientation);
@@ -87,7 +86,6 @@ std::vector<MyDropZone *> MyDropZone::_instances_list;
 
 MyDropZone::MyDropZone(Gtk::Orientation orientation)
     : Glib::ObjectBase("MultipanedDropZone")
-    , Gtk::Orientable()
     , Gtk::Box()
 {
     set_name("MultipanedDropZone");
@@ -188,7 +186,7 @@ private:
     void toggle_multipaned();
     void update_click_indicator(double x, double y);
     void show_click_indicator(bool show);
-    bool on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr);
+    void on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int);
     Cairo::Rectangle get_active_click_zone();
 
     Gtk::DrawingArea * const _drawing_area;
@@ -223,9 +221,9 @@ MyHandle::MyHandle(Gtk::Orientation orientation, int size = get_handle_size())
         set_size_request(-1, size);
     }
     image->set_pixel_size(size);
-    add(*image);
+    set_child(*image);
 
-    _drawing_area->signal_draw().connect(sigc::mem_fun(*this, &MyHandle::on_drawing_area_draw));
+    _drawing_area->set_draw_func(sigc::mem_fun(*this, &MyHandle::on_drawing_area_draw));
     add_overlay(*_drawing_area);
 
     signal_size_allocate().connect(sigc::mem_fun(*this, &MyHandle::resize_handler));
@@ -261,7 +259,7 @@ Cairo::Rectangle MyHandle::get_active_click_zone() {
     return rect;
 }
 
-bool MyHandle::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr)
+void MyHandle::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int)
 {
     // show click indicator/highlight?
     if (_click_indicator && is_click_resize_active() && !_dragging) {
@@ -273,7 +271,6 @@ bool MyHandle::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr)
             cr->fill();
         }
     }
-    return true;
 }
 
 void MyHandle::set_dragging(bool dragging) {
@@ -295,14 +292,13 @@ void MyHandle::set_drag_updated(bool const updated) {
 void MyHandle::on_motion_enter(GtkEventControllerMotion const * /*motion*/,
                                double const x, double const y)
 {
-    auto window = get_window();
-    auto display = get_display();
+    auto window = dynamic_cast<Gtk::Window *>(get_root());
 
     if (get_orientation() == Gtk::Orientation::HORIZONTAL) {
-        auto cursor = Gdk::Cursor::create(display, "col-resize");
+        auto cursor = Gdk::Cursor::create("col-resize");
         window->set_cursor(cursor);
     } else {
-        auto cursor = Gdk::Cursor::create(display, "row-resize");
+        auto cursor = Gdk::Cursor::create("row-resize");
         window->set_cursor(cursor);
     }
 
@@ -311,7 +307,8 @@ void MyHandle::on_motion_enter(GtkEventControllerMotion const * /*motion*/,
 
 void MyHandle::on_motion_leave(GtkEventControllerMotion const * /*motion*/)
 {
-    get_window()->set_cursor({});
+    auto window = dynamic_cast<Gtk::Window *>(get_root());
+    window->set_cursor(Glib::RefPtr<Gdk::Cursor>{});
     show_click_indicator(false);
 }
 
@@ -433,9 +430,9 @@ void MyHandle::resize_handler(Gtk::Allocation &allocation)
 
     if (_cross_size > size && HANDLE_CROSS_SIZE > size && !_child) {
         _child = get_child();
-        remove();
+        unset_child();
     } else if (_cross_size < size && HANDLE_CROSS_SIZE < size && _child) {
-        add(*_child);
+        set_child(*_child);
         _child = nullptr;
     }
 
@@ -446,8 +443,6 @@ void MyHandle::resize_handler(Gtk::Allocation &allocation)
 
 DialogMultipaned::DialogMultipaned(Gtk::Orientation orientation)
     : Glib::ObjectBase("DialogMultipaned")
-    , Gtk::Orientable()
-    , Gtk::Container()
     , _empty_widget(nullptr)
 {
     set_name("DialogMultipaned");
@@ -685,9 +680,9 @@ void DialogMultipaned::ensure_multipaned_children()
 Gtk::SizeRequestMode DialogMultipaned::get_request_mode_vfunc() const
 {
     if (get_orientation() == Gtk::Orientation::HORIZONTAL) {
-        return Gtk::SIZE_REQUEST_WIDTH_FOR_HEIGHT;
+        return Gtk::SizeRequestMode::WIDTH_FOR_HEIGHT;
     } else {
-        return Gtk::SIZE_REQUEST_HEIGHT_FOR_WIDTH;
+        return Gtk::SizeRequestMode::HEIGHT_FOR_WIDTH;
     }
 }
 
@@ -1153,7 +1148,8 @@ int get_min_width(Gtk::Widget* widget) {
     if (hidden) widget->set_visible(true);
     int minimum_size = 0;
     int natural_size = 0;
-    widget->get_preferred_width(minimum_size, natural_size);
+    int ignore;
+    widget->measure(Gtk::Orientation::HORIZONTAL, -1, minimum_size, natural_size, ignore, ignore);
     if (hidden) widget->set_visible(false);
     return minimum_size;
 }

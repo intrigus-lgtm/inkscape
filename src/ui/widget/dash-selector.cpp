@@ -94,7 +94,7 @@ void DashSelector::prepareImageRenderer( Gtk::TreeModel::const_iterator const &r
         surface = Cairo::RefPtr<Cairo::Surface>(new Cairo::Surface(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 1, 1)));
         g_warning("No surface in prepareImageRenderer.");
     }
-    _image_renderer.property_surface() = surface;
+    _image_renderer.property_texture() = to_texture(surface);
 }
 
 static std::vector<double> map_values(const std::vector<SPILength>& values) {

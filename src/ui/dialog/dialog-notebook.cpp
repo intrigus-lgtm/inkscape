@@ -719,12 +719,12 @@ get_cover_box_children(Gtk::Widget * const tab_label)
         return std::nullopt;
     }
 
-    auto const cover = dynamic_cast<Gtk::EventBox *>(tab_label);
+    auto const cover = dynamic_cast<Gtk::Box *>(tab_label);
     if (!cover) {
         return std::nullopt;
     }
 
-    auto const box = dynamic_cast<Gtk::Box *>(cover->get_child());
+    auto const box = dynamic_cast<Gtk::Box *>(cover->get_first_child());
     if (!box) {
         return std::nullopt;
     }
@@ -854,7 +854,7 @@ void DialogNotebook::on_page_switch(Gtk::Widget *curr_page, guint)
         if (auto const dialogbase = dynamic_cast<DialogBase *>(&page)) {
             if (auto const widgs = UI::get_children(*dialogbase); !widgs.empty()) {
                 if (curr_page == &page) {
-                    widgs[0]->show_now();
+                    widgs[0]->set_visible(true);
                 } else {
                     widgs[0]->set_visible(false);
                 }

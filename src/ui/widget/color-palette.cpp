@@ -180,10 +180,10 @@ void ColorPalette::set_settings_visibility(bool show) {
 
 void ColorPalette::do_scroll(int dx, int dy) {
     if (auto vert = _scroll.get_vscrollbar()) {
-        vert->set_value(vert->get_value() + dy);
+        vert->get_adjustment()->set_value(vert->get_adjustment()->get_value() + dy);
     }
     if (auto horz = _scroll.get_hscrollbar()) {
-        horz->set_value(horz->get_value() + dx);
+        horz->get_adjustment()->set_value(horz->get_adjustment()->get_value() + dx);
     }
 }
 
@@ -197,15 +197,15 @@ gboolean ColorPalette::scroll_cb(gpointer self) {
     bool fire_again = false;
 
     if (auto vert = ptr->_scroll.get_vscrollbar()) {
-        auto value = vert->get_value();
+        auto value = vert->get_adjustment()->get_value();
         // is this the final adjustment step?
         if (fabs(ptr->_scroll_final - value) < fabs(ptr->_scroll_step)) {
-            vert->set_value(ptr->_scroll_final);
+            vert->get_adjustment()->set_value(ptr->_scroll_final);
             fire_again = false; // cancel timer
         }
         else {
             auto pos = value + ptr->_scroll_step;
-            vert->set_value(pos);
+            vert->get_adjustment()->set_value(pos);
             auto range = get_range(*vert);
             if (pos > range.first && pos < range.second) {
                 // not yet done
@@ -224,7 +224,7 @@ gboolean ColorPalette::scroll_cb(gpointer self) {
 void ColorPalette::scroll(int dx, int dy, double snap, bool smooth) {
     if (auto vert = _scroll.get_vscrollbar()) {
         if (smooth && dy != 0.0) {
-            _scroll_final = vert->get_value() + dy;
+            _scroll_final = vert->get_adjustment()->get_value() + dy;
             if (snap > 0) {
                 // round it to whole 'dy' increments
                 _scroll_final -= fmod(_scroll_final, snap);
@@ -237,17 +237,17 @@ void ColorPalette::scroll(int dx, int dy, double snap, bool smooth) {
                 _scroll_final = range.second;
             }
             _scroll_step = dy / 4.0;
-            if (!_active_timeout && vert->get_value() != _scroll_final) {
+            if (!_active_timeout && vert->get_adjustment()->get_value() != _scroll_final) {
                 // limit refresh to 60 fps, in practice it will be slower
                 _active_timeout = g_timeout_add(1000 / 60, &ColorPalette::scroll_cb, this);
             }
         }
         else {
-            vert->set_value(vert->get_value() + dy);
+            vert->get_adjustment()->set_value(vert->get_adjustment()->get_value() + dy);
         }
     }
     if (auto horz = _scroll.get_hscrollbar()) {
-        horz->set_value(horz->get_value() + dx);
+        horz->get_adjustment()->set_value(horz->get_adjustment()->get_value() + dx);
     }
 }
 
@@ -690,15 +690,6 @@ public:
 private:
     Gtk::CheckButton    *_radio_button = nullptr;
     ColorPalettePreview *_preview      = nullptr;
-
-    bool on_draw(Cairo::RefPtr<Cairo::Context> const &cr) final
-    {
-        // Skip height of radiobutton at side, to skip the circular radio indicator.
-        // Doing this in size_allocate_vfunc() did not work, but this one *seems* to
-        _preview->set_margin_start(_radio_button->get_height());
-
-        return PopoverMenuItem::on_draw(cr);
-    }
 };
 
 void ColorPalette::set_palettes(std::vector<palette_t> const &palettes)

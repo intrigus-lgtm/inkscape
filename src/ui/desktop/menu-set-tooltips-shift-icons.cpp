@@ -24,7 +24,6 @@
 #include <gtkmm/cssprovider.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
-#include <gtkmm/menuitem.h>
 
 #include "inkscape-application.h"  // Action extra data
 #include "ui/util.h"

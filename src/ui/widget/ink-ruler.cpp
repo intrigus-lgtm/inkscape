@@ -83,6 +83,13 @@ Ruler::Ruler(Gtk::Orientation orientation)
     on_prefs_changed();
 
     INKSCAPE.themecontext->getChangeThemeSignal().connect([this]{ css_changed(nullptr); });
+
+    signal_destroy().connect([this]{ unparent_children(); });
+}
+
+Ruler::~Ruler()
+{
+    unparent_children();
 }
 
 void Ruler::on_prefs_changed()
@@ -548,6 +555,11 @@ std::unique_ptr<Gtk::Popover> Ruler::create_context_menu()
     popover->set_parent(*this);
     popover->set_autohide(true);
     return popover;
+}
+
+void Ruler::unparent_children()
+{
+    _popover->unparent();
 }
 
 } // namespace Inkscape::UI::Widget

@@ -49,6 +49,7 @@ class Ruler
 {
 public:
     Ruler(Gtk::Orientation orientation);
+    ~Ruler();
 
     void set_unit(Inkscape::Util::Unit const *unit);
     void set_range(double lower, double upper);
@@ -59,6 +60,7 @@ public:
 
 private:
     void size_allocate_vfunc(int width, int height, int baseline) final;
+    void unparent_children();
 
     std::pair<int, int> get_drawing_size();
     bool draw_scale(const Cairo::RefPtr<::Cairo::Context>& cr);

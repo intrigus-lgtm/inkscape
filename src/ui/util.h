@@ -75,9 +75,18 @@ std::vector<Gtk::Widget *> get_children(Gtk::Widget &widget);
 /// Get the widgetʼs child at the given position. Throws std::out_of_range if the index is invalid.
 Gtk::Widget &get_nth_child(Gtk::Widget &widget, std::size_t index);
 /// For each child in get_children(widget), call widget.remove(*child). May not cause delete child!
-void remove_all_children(Gtk::Widget &widget);
+template <typename Widget> void remove_all_children(Widget &widget, bool const also_delete = false)
+{
+    for (auto const child: get_children(widget)) {
+        widget.remove(*child);
+        if (also_delete) delete child;
+    }
+}
 /// For each child in get_children(widget), call widget.remove(*child) then also do `delete child`.
-void delete_all_children(Gtk::Widget &widget);
+template <typename Widget> void delete_all_children(Widget &widget)
+{
+    remove_all_children(widget, true);
+}
 
 /// Call Func with a reference to each child of parent, until it returns _break.
 /// Accessing children changes between GTK3 & GTK4, so best consolidate it here.

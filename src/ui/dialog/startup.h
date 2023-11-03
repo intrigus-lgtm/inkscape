@@ -73,8 +73,8 @@ private:
     void on_recent_changed();
     void on_kind_changed(Gtk::Widget *tab, unsigned page_num);
 
+    void remove_banners_and_tabs(Gtk::Window &window);
 
-private:
     Glib::RefPtr<Gtk::Builder> builder;
     Gtk::Window   &window;
     Gtk::Notebook &tabs;

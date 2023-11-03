@@ -186,8 +186,7 @@ StartScreen::StartScreen()
     auto dark_toggle = &get_widget<Gtk::Switch>  (builder, "dark_toggle");
 
     // Unparent to move to our dialog window.
-    banners.unparent();
-    tabs.unparent();
+    remove_banners_and_tabs(window);
 
     // Add signals and setup things.
     auto prefs = Inkscape::Preferences::get();
@@ -258,8 +257,7 @@ StartScreen::StartScreen()
 StartScreen::~StartScreen()
 {
     // These are "owned" by builder... don't delete them!
-    banners.unparent();
-    tabs.unparent();
+    remove_banners_and_tabs(*this);
 }
 
 /**
@@ -741,6 +739,14 @@ void StartScreen::refresh_dark_switch()
     auto &dark_toggle = get_widget<Gtk::Switch>(builder, "dark_toggle");
     dark_toggle.set_sensitive(themes[current_theme]);
     dark_toggle.set_active(dark);
+}
+
+void StartScreen::remove_banners_and_tabs(Gtk::Window &window)
+{
+    g_assert(banners.get_parent() == &window);
+    g_assert(tabs   .get_parent() == &window);
+    window.unset_titlebar();
+    window.unset_child   ();
 }
 
 } // namespace Inkscape::UI::Dialog

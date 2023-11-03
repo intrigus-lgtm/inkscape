@@ -196,6 +196,7 @@ private:
 
     void namedviewModified(SPObject *obj, unsigned flags);
     void apply_ctrlbar_settings();
+    void remove_from_top_toolbar_or_hbox(Gtk::Widget &widget);
 };
 
 #endif /* !SEEN_SP_DESKTOP_WIDGET_H */

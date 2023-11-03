@@ -639,7 +639,7 @@ void SPDesktopWidget::layoutWidgets()
 
     // Unlink command toolbar.
     command_toolbar->reference(); // So toolbox is not deleted.
-    command_toolbar->unparent();
+    remove_from_top_toolbar_or_hbox(*command_toolbar);
 
     // Link command toolbar back.
     auto orientation_c = GTK_ORIENTATION_HORIZONTAL;
@@ -743,7 +743,7 @@ void SPDesktopWidget::repack_snaptoolbar()
     // Only remove from the parent if the status has changed
     auto parent = snap.get_parent();
     if (parent && ((is_perm && parent != _hbox) || (!is_perm && parent != _top_toolbars))) {
-        snap.unparent();
+        remove_from_top_toolbar_or_hbox(snap);
     }
 
     // Only repack if there's no parent widget now.
@@ -884,6 +884,23 @@ SPDesktopWidget::toggle_scrollbars()
 
 Gio::ActionMap* SPDesktopWidget::get_action_map() {
     return _window;
+}
+
+void SPDesktopWidget::remove_from_top_toolbar_or_hbox(Gtk::Widget &widget)
+{
+    g_assert(_top_toolbars);
+    g_assert(_hbox        );
+
+    auto const parent = widget.get_parent();
+    if (!parent) return;
+
+    if (parent == _top_toolbars) {
+        _top_toolbars->remove(widget);
+    } else if (parent == _hbox) {
+        _hbox->remove(widget);
+    } else {
+        g_critical("SPDesktopWidget::remove_from_top_toolbar_or_hbox(): unexpected parent!");
+    }
 }
 
 /*

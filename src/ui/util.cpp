@@ -154,21 +154,6 @@ Gtk::Widget &get_nth_child(Gtk::Widget &widget, std::size_t const index)
     return *child;
 }
 
-void remove_all_children(Gtk::Widget &widget)
-{
-    for (auto const child: get_children(widget)) {
-        widget.unparent(*child);
-    }
-}
-
-void delete_all_children(Gtk::Widget &widget)
-{
-    for (auto const child: get_children(widget)) {
-        widget.remove(*child);
-        delete child;
-    }
-}
-
 /**
  * Returns a named descendent of parent, which has the given name, or nullptr if there's none.
  *

@@ -616,7 +616,8 @@ void ColorPalette::set_colors(std::vector<Dialog::ColorItem*> const &swatches)
 
 Gtk::Widget *ColorPalette::_get_widget(Dialog::ColorItem *item) {
     if (auto parent = item->get_parent()) {
-        parent->remove(*item);
+        auto &flowbox = dynamic_cast<Gtk::FlowBox &>(*parent);
+        flowbox.remove(*item);
     }
     if (_show_labels) {
         item->set_valign(Gtk::Align::CENTER);

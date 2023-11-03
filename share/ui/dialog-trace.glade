@@ -369,15 +369,18 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkComboBoxText" id="CBT_SS">
-                            <property name="active">0</property>
-                            <items>
-                              <item id="SS_BC" translatable="yes">Brightness cutoff</item>
-                              <item id="SS_ED" translatable="yes">Edge detection</item>
-                              <item id="SS_CQ" translatable="yes">Color quantization</item>
-                              <item id="SS_AT" translatable="yes">Autotrace</item>
-                              <item id="SS_CT" translatable="yes">Centerline tracing (autotrace)</item>
-                            </items>
+                          <object class="GtkDropDown" id="CBT_SS">
+                            <property name="model">
+                              <object class="GtkStringList">
+                                <items>
+                                  <item translatable="yes">Brightness cutoff</item>
+                                  <item translatable="yes">Edge detection</item>
+                                  <item translatable="yes">Color quantization</item>
+                                  <item translatable="yes">Autotrace</item>
+                                  <item translatable="yes">Centerline tracing (autotrace)</item>
+                                </items>
+                              </object>
+                            </property>
                             <layout>
                               <property name="column">0</property>
                               <property name="row">1</property>
@@ -528,14 +531,17 @@
                         <property name="margin-bottom">4</property>
                         <property name="row-spacing">4</property>
                         <child>
-                          <object class="GtkComboBoxText" id="CBT_MS">
-                            <property name="active">0</property>
-                            <items>
-                              <item id="MS_BS" translatable="yes">Brightness steps</item>
-                              <item id="MS_C" translatable="yes">Colors</item>
-                              <item id="MS_BW" translatable="yes">Grays</item>
-                              <item id="MS_AT" translatable="yes">Autotrace (slower)</item>
-                            </items>
+                          <object class="GtkDropDown" id="CBT_MS">
+                            <property name="model">
+                              <object class="GtkStringList">
+                                <items>
+                                  <item translatable="yes">Brightness steps</item>
+                                  <item translatable="yes">Colors</item>
+                                  <item translatable="yes">Grays</item>
+                                  <item translatable="yes">Autotrace (slower)</item>
+                                </items>
+                              </object>
+                            </property>
                             <layout>
                               <property name="column">0</property>
                               <property name="row">1</property>
@@ -788,262 +794,258 @@
             </child>
             <child>
               <object class="GtkNotebookPage">
+                <property name="position">2</property>
                 <property name="child">
-                  <object class="GtkNotebookPage">
-                    <property name="position">2</property>
-                    <property name="child">
-                      <object class="GtkBox">
+                  <object class="GtkBox">
+                    <property name="valign">start</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkGrid">
                         <property name="valign">start</property>
-                        <property name="orientation">vertical</property>
+                        <property name="margin-start">8</property>
+                        <property name="margin-end">8</property>
+                        <property name="margin-top">4</property>
+                        <property name="margin-bottom">4</property>
+                        <property name="row-spacing">4</property>
+                        <property name="column-spacing">2</property>
                         <child>
-                          <object class="GtkGrid">
-                            <property name="valign">start</property>
-                            <property name="margin-start">8</property>
-                            <property name="margin-end">8</property>
-                            <property name="margin-top">4</property>
-                            <property name="margin-bottom">4</property>
-                            <property name="row-spacing">4</property>
-                            <property name="column-spacing">2</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="tooltip-text" translatable="yes">Favors connections that are part of a long curve (multiplier)</property>
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes">Curves</property>
-                                <layout>
-                                  <property name="column">0</property>
-                                  <property name="row">1</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="tooltip-text" translatable="yes">Avoid single disconnected pixels (weight)</property>
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes">Islands</property>
-                                <layout>
-                                  <property name="column">0</property>
-                                  <property name="row">2</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="tooltip-text" translatable="yes">Favors connections that are part of foreground color</property>
-                                <property name="halign">start</property>
-                                <property name="margin-top">8</property>
-                                <property name="label" translatable="yes">Sparse pixels:</property>
-                                <layout>
-                                  <property name="column">0</property>
-                                  <property name="row">3</property>
-                                  <property name="column-span">2</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton">
-                                <property name="focusable">True</property>
-                                <property name="tooltip-text" translatable="yes">The heuristic computed vote will be multiplied by this value</property>
-                                <property name="adjustment">PA_curves</property>
-                                <property name="digits">3</property>
-                                <property name="numeric">True</property>
-                                <property name="value">1</property>
-                                <layout>
-                                  <property name="column">2</property>
-                                  <property name="row">1</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton">
-                                <property name="focusable">True</property>
-                                <property name="tooltip-text" translatable="yes">A constant vote value</property>
-                                <property name="adjustment">PA_islands</property>
-                                <property name="numeric">True</property>
-                                <property name="value">5</property>
-                                <layout>
-                                  <property name="column">2</property>
-                                  <property name="row">2</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton">
-                                <property name="focusable">True</property>
-                                <property name="tooltip-text" translatable="yes">The radius of the window analyzed</property>
-                                <property name="adjustment">PA_sparse1</property>
-                                <property name="numeric">True</property>
-                                <property name="value">2</property>
-                                <layout>
-                                  <property name="column">2</property>
-                                  <property name="row">4</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton">
-                                <property name="focusable">True</property>
-                                <property name="tooltip-text" translatable="yes">The heuristic computed vote will be multiplied by this value</property>
-                                <property name="adjustment">PA_sparse2</property>
-                                <property name="digits">3</property>
-                                <property name="numeric">True</property>
-                                <property name="value">1</property>
-                                <layout>
-                                  <property name="column">2</property>
-                                  <property name="row">5</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes"> Heuristics:</property>
-                                <attributes>
-                                  <attribute name="weight" value="bold"></attribute>
-                                </attributes>
-                                <layout>
-                                  <property name="column">0</property>
-                                  <property name="row">0</property>
-                                  <property name="column-span">2</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkScale">
-                                <property name="draw-value">True</property>
-                                <property name="width-request">60</property>
-                                <property name="focusable">True</property>
-                                <property name="hexpand">True</property>
-                                <property name="adjustment">PA_curves</property>
-                                <property name="round-digits">1</property>
-                                <layout>
-                                  <property name="column">1</property>
-                                  <property name="row">1</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkScale">
-                                <property name="draw-value">True</property>
-                                <property name="focusable">True</property>
-                                <property name="hexpand">True</property>
-                                <property name="adjustment">PA_islands</property>
-                                <layout>
-                                  <property name="column">1</property>
-                                  <property name="row">2</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkScale">
-                                <property name="draw-value">True</property>
-                                <property name="focusable">True</property>
-                                <property name="hexpand">True</property>
-                                <property name="adjustment">PA_sparse1</property>
-                                <layout>
-                                  <property name="column">1</property>
-                                  <property name="row">4</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkScale">
-                                <property name="draw-value">True</property>
-                                <property name="focusable">True</property>
-                                <property name="hexpand">True</property>
-                                <property name="adjustment">PA_sparse2</property>
-                                <layout>
-                                  <property name="column">1</property>
-                                  <property name="row">5</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton">
-                                <property name="label" translatable="yes">B-splines</property>
-                                <property name="focusable">True</property>
-                                <property name="tooltip-text" translatable="yes">Preserve staircasing artifacts</property>
-                                <property name="halign">start</property>
-                                <property name="group">RB_PA_voronoi</property>
-                                <layout>
-                                  <property name="column">0</property>
-                                  <property name="row">9</property>
-                                  <property name="column-span">2</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="RB_PA_voronoi">
-                                <property name="label" translatable="yes">Voronoi</property>
-                                <property name="focusable">True</property>
-                                <property name="tooltip-text" translatable="yes">Output composed of straight lines</property>
-                                <property name="halign">start</property>
-                                <property name="active">True</property>
-                                <layout>
-                                  <property name="column">0</property>
-                                  <property name="row">8</property>
-                                  <property name="column-span">2</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes"> Output:</property>
-                                <attributes>
-                                  <attribute name="weight" value="bold"></attribute>
-                                </attributes>
-                                <layout>
-                                  <property name="column">0</property>
-                                  <property name="row">7</property>
-                                  <property name="column-span">2</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="CB_PA_optimize">
-                                <property name="label" translatable="yes">Optimize</property>
-                                <property name="focusable">True</property>
-                                <property name="tooltip-text" translatable="yes">Try to optimize paths by joining adjacent Bezier curve segments</property>
-                                <property name="halign">start</property>
-                                <layout>
-                                  <property name="column">0</property>
-                                  <property name="row">6</property>
-                                  <property name="column-span">2</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="tooltip-text" translatable="yes">Favors connections that are part of foreground color</property>
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes">Multiplier</property>
-                                <layout>
-                                  <property name="column">0</property>
-                                  <property name="row">5</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="tooltip-text" translatable="yes">Favors connections that are part of foreground color</property>
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes">Window radius</property>
-                                <layout>
-                                  <property name="column">0</property>
-                                  <property name="row">4</property>
-                                </layout>
-                              </object>
-                            </child>
+                          <object class="GtkLabel">
+                            <property name="tooltip-text" translatable="yes">Favors connections that are part of a long curve (multiplier)</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Curves</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">1</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="tooltip-text" translatable="yes">Avoid single disconnected pixels (weight)</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Islands</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">2</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="tooltip-text" translatable="yes">Favors connections that are part of foreground color</property>
+                            <property name="halign">start</property>
+                            <property name="margin-top">8</property>
+                            <property name="label" translatable="yes">Sparse pixels:</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">3</property>
+                              <property name="column-span">2</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkSpinButton">
+                            <property name="focusable">True</property>
+                            <property name="tooltip-text" translatable="yes">The heuristic computed vote will be multiplied by this value</property>
+                            <property name="adjustment">PA_curves</property>
+                            <property name="digits">3</property>
+                            <property name="numeric">True</property>
+                            <property name="value">1</property>
+                            <layout>
+                              <property name="column">2</property>
+                              <property name="row">1</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkSpinButton">
+                            <property name="focusable">True</property>
+                            <property name="tooltip-text" translatable="yes">A constant vote value</property>
+                            <property name="adjustment">PA_islands</property>
+                            <property name="numeric">True</property>
+                            <property name="value">5</property>
+                            <layout>
+                              <property name="column">2</property>
+                              <property name="row">2</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkSpinButton">
+                            <property name="focusable">True</property>
+                            <property name="tooltip-text" translatable="yes">The radius of the window analyzed</property>
+                            <property name="adjustment">PA_sparse1</property>
+                            <property name="numeric">True</property>
+                            <property name="value">2</property>
+                            <layout>
+                              <property name="column">2</property>
+                              <property name="row">4</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkSpinButton">
+                            <property name="focusable">True</property>
+                            <property name="tooltip-text" translatable="yes">The heuristic computed vote will be multiplied by this value</property>
+                            <property name="adjustment">PA_sparse2</property>
+                            <property name="digits">3</property>
+                            <property name="numeric">True</property>
+                            <property name="value">1</property>
+                            <layout>
+                              <property name="column">2</property>
+                              <property name="row">5</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes"> Heuristics:</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"></attribute>
+                            </attributes>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">0</property>
+                              <property name="column-span">2</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScale">
+                            <property name="draw-value">True</property>
+                            <property name="width-request">60</property>
+                            <property name="focusable">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="adjustment">PA_curves</property>
+                            <property name="round-digits">1</property>
+                            <layout>
+                              <property name="column">1</property>
+                              <property name="row">1</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScale">
+                            <property name="draw-value">True</property>
+                            <property name="focusable">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="adjustment">PA_islands</property>
+                            <layout>
+                              <property name="column">1</property>
+                              <property name="row">2</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScale">
+                            <property name="draw-value">True</property>
+                            <property name="focusable">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="adjustment">PA_sparse1</property>
+                            <layout>
+                              <property name="column">1</property>
+                              <property name="row">4</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScale">
+                            <property name="draw-value">True</property>
+                            <property name="focusable">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="adjustment">PA_sparse2</property>
+                            <layout>
+                              <property name="column">1</property>
+                              <property name="row">5</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton">
+                            <property name="label" translatable="yes">B-splines</property>
+                            <property name="focusable">True</property>
+                            <property name="tooltip-text" translatable="yes">Preserve staircasing artifacts</property>
+                            <property name="halign">start</property>
+                            <property name="group">RB_PA_voronoi</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">9</property>
+                              <property name="column-span">2</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="RB_PA_voronoi">
+                            <property name="label" translatable="yes">Voronoi</property>
+                            <property name="focusable">True</property>
+                            <property name="tooltip-text" translatable="yes">Output composed of straight lines</property>
+                            <property name="halign">start</property>
+                            <property name="active">True</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">8</property>
+                              <property name="column-span">2</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes"> Output:</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"></attribute>
+                            </attributes>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">7</property>
+                              <property name="column-span">2</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="CB_PA_optimize">
+                            <property name="label" translatable="yes">Optimize</property>
+                            <property name="focusable">True</property>
+                            <property name="tooltip-text" translatable="yes">Try to optimize paths by joining adjacent Bezier curve segments</property>
+                            <property name="halign">start</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">6</property>
+                              <property name="column-span">2</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="tooltip-text" translatable="yes">Favors connections that are part of foreground color</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Multiplier</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">5</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="tooltip-text" translatable="yes">Favors connections that are part of foreground color</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Window radius</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">4</property>
+                            </layout>
                           </object>
                         </child>
                       </object>
-                    </property>
-                    <property name="tab">
-                      <object class="GtkLabel">
-                        <property name="halign">start</property>
-                        <property name="label" translatable="yes">Pixel art</property>
-                      </object>
-                    </property>
+                    </child>
+                  </object>
+                </property>
+                <property name="tab">
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">Pixel art</property>
                   </object>
                 </property>
               </object>
@@ -1069,7 +1071,7 @@
                 <property name="vexpand">True</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkDrawingArea" id="previewArea">
+                  <object class="GtkImage" id="previewArea">
                     <property name="vexpand">True</property>
                     <property name="width-request">100</property>
                     <property name="height-request">100</property>

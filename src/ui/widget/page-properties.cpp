@@ -34,7 +34,7 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
 #include <gtkmm/menubutton.h>
-#include <gtkmm/popover.h>
+#include <gtkmm/popovermenu.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/togglebutton.h>
@@ -89,7 +89,7 @@ class PagePropertiesBox final : public PageProperties {
     {
         static auto const group_name = "page-properties", action_name = "template";
         static auto const get_detailed_action = [](int const index)
-            { return Glib::ustring::compose("%1(%2)", action_name, index); };
+            { return Glib::ustring::compose("%1.%2(%3)", group_name, action_name, index); };
 
         _page_sizes = PaperSize::getPageSizes();
         std::stable_sort(_page_sizes.begin(), _page_sizes.end(), [](auto const &l, auto const &r)
@@ -97,10 +97,11 @@ class PagePropertiesBox final : public PageProperties {
 
         auto group = Gio::SimpleActionGroup::create();
         _template_action = group->add_action_radio_integer(action_name, 0);
-        _template_action->property_state().signal_changed().connect([this]
-        {
+        _template_action->property_state().signal_changed().connect([this] {
             _templates_menu_button.set_active(false);
-            int index; _template_action->get_state(index); set_page_template(index);
+            int index;
+            _template_action->get_state(index);
+            set_page_template(index);
         });
         insert_action_group(group_name, std::move(group));
 
@@ -118,7 +119,7 @@ class PagePropertiesBox final : public PageProperties {
             submenu->append(page.getDescription(false), get_detailed_action(i));
         }
         menu->append(_("Custom"), get_detailed_action(_page_sizes.size())); // sentinel
-        _templates_popover.bind_model(std::move(menu), group_name);
+        _templates_popover.set_menu_model(std::move(menu));
         UI::menuize_popover(_templates_popover);
     }
 
@@ -142,7 +143,7 @@ public:
       , _viewbox_width        (get_derived_widget<MathSpinButton>(_builder, "viewbox-width"))
       , _viewbox_height       (get_derived_widget<MathSpinButton>(_builder, "viewbox-height"))
       , _templates_menu_button(get_widget<Gtk::MenuButton>       (_builder, "page-menu-btn"))
-      , _templates_popover    (get_widget<Gtk::Popover>          (_builder, "templates-popover"))
+      , _templates_popover    (get_widget<Gtk::PopoverMenu>      (_builder, "templates-popover"))
       , _template_name        (get_widget<Gtk::Label>            (_builder, "page-template-name"))
       , _preview_box          (get_widget<Gtk::Box>              (_builder, "preview-box"))
       , _checkerboard         (get_widget<Gtk::CheckButton>      (_builder, "checkerboard"))
@@ -572,7 +573,7 @@ private:
     std::vector<PaperSize> _page_sizes;
     Glib::RefPtr<Gio::SimpleAction> _template_action;
     Gtk::MenuButton &_templates_menu_button;
-    Gtk::Popover &_templates_popover;
+    Gtk::PopoverMenu &_templates_popover;
     Gtk::Label &_template_name;
     Gtk::Box &_preview_box;
     std::unique_ptr<PageSizePreview> _preview = std::make_unique<PageSizePreview>();

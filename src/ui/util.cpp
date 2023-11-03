@@ -218,7 +218,7 @@ void ellipsize(Gtk::Label &label, int const max_width_chars, Pango::EllipsizeMod
 
         tooltip->set_text(label.get_text());
         return true;
-    });
+    }, true);
 }
 
 } // namespace Inkscape::UI

@@ -44,7 +44,7 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkPopover" id="templates-popover"/>
+  <object class="GtkPopoverMenu" id="templates-popover"/>
   <object class="GtkGrid" id="main-grid">
     <property name="halign">start</property>
     <property name="valign">start</property>

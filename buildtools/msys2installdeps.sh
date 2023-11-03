@@ -79,7 +79,6 @@ $ARCH-libvisio \
 $ARCH-libwpg \
 $ARCH-aspell \
 $ARCH-aspell-en \
-$ARCH-gspell \
 $ARCH-gtksourceview4 \
 $ARCH-graphicsmagick \
 $ARCH-libjxl

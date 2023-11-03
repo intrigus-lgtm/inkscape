@@ -18,17 +18,18 @@
 #include <glibmm/refptr.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <gtkmm/box.h>
+#include <gtkmm/orientable.h>
+#include <gtkmm/widget.h>
 
 #include "helper/auto-connection.h"
 
-namespace Gdk {
-class DragContext;
-} // namespace Gdk
+namespace Glib {
+class ValueBase;
+} // namespace Glib
 
 namespace Gtk {
+class DropTarget;
 class GestureDrag;
-class SelectionData;
-class TargetEntry;
 } // namespace Gtk
 
 namespace Inkscape::UI::Dialog {
@@ -39,7 +40,8 @@ namespace Inkscape::UI::Dialog {
  * at either end.
  */
 class DialogMultipaned final
-    : public Gtk::Box
+    : public Gtk::Orientable
+    , public Gtk::Widget
 {
 public:
     DialogMultipaned(Gtk::Orientation orientation = Gtk::Orientation::HORIZONTAL);
@@ -47,18 +49,20 @@ public:
 
     void prepend(Gtk::Widget &child);
     void append (Gtk::Widget &child);
+    void remove (Gtk::Widget &child);
 
     // Getters and setters
     Gtk::Widget *get_first_widget();
     Gtk::Widget *get_last_widget ();
     void get_children() = delete; ///< We manage our own child list. Call get_multipaned_children()
     std::vector<Gtk::Widget *> const &get_multipaned_children() const { return children; }
-    void set_target_entries(const std::vector<Gtk::TargetEntry> &target_entries);
+    void set_drop_gtypes(std::vector<GType> const &gtypes);
     bool has_empty_widget() const { return static_cast<bool>(_empty_widget); }
 
     // Signals
-    sigc::signal<void (Gtk::SelectionData const &)> signal_prepend_drag_data();
-    sigc::signal<void (Gtk::SelectionData const &)> signal_append_drag_data();
+    using DropSignal = sigc::signal<bool (Glib::ValueBase const)>;
+    DropSignal signal_prepend_drag_data();
+    DropSignal signal_append_drag_data ();
     sigc::signal<void ()> signal_now_empty();
 
     // UI functions
@@ -74,25 +78,20 @@ public:
 private:
     // Overrides
     Gtk::SizeRequestMode get_request_mode_vfunc() const override;
-    /*void get_preferred_width_vfunc(int &minimum_width, int &natural_width) const override;
-    void get_preferred_height_vfunc(int &minimum_height, int &natural_height) const override;
-    void get_preferred_width_for_height_vfunc(int height, int &minimum_width, int &natural_width) const override;
-    void get_preferred_height_for_width_vfunc(int width, int &minimum_height, int &natural_height) const override;
-    void on_size_allocate(Gtk::Allocation &allocation) override;*/
-
-    // Allow us to keep track of our widgets ourselves.
-    //void forall_vfunc(gboolean include_internals, GtkCallback callback, gpointer callback_data) override;
-
-    //void on_add(Gtk::Widget *child) override;
-    //void on_remove(Gtk::Widget *child) override;
+    void measure_vfunc(Gtk::Orientation orientation, int for_size,
+                       int &minimum, int &natural,
+                       int &minimum_baseline, int &natural_baseline) const final;
+    void size_allocate_vfunc(int width, int height, int baseline) final;
 
     // Signals
-    sigc::signal<void (Gtk::SelectionData const &)> _signal_prepend_drag_data;
-    sigc::signal<void (Gtk::SelectionData const &)> _signal_append_drag_data;
+    DropSignal _signal_prepend_drag_data;
+    DropSignal _signal_append_drag_data;
     sigc::signal<void ()> _signal_now_empty;
 
     // We must manage children ourselves.
     std::vector<Gtk::Widget *> children;
+
+    Glib::RefPtr<Gtk::DropTarget> const _drop_target;
 
     // Values used when dragging handle.
     int _handle = -1; // Child number of active handle
@@ -113,15 +112,13 @@ private:
     Gtk::EventSequenceState on_drag_end   (Gtk::GestureDrag const &gesture, double offset_x, double offset_y);
     Gtk::EventSequenceState on_drag_update(Gtk::GestureDrag const &gesture, double offset_x, double offset_y);
     // drag+drop data
-    void on_drag_data(Glib::RefPtr<Gdk::DragContext> const &context, int x, int y,
-                      const Gtk::SelectionData &selection_data, guint info, guint time);
-    void on_prepend_drag_data(Glib::RefPtr<Gdk::DragContext> const &context, int x, int y,
-                              const Gtk::SelectionData &selection_data, guint info, guint time);
-    void on_append_drag_data(Glib::RefPtr<Gdk::DragContext> const &context, int x, int y,
-                             const Gtk::SelectionData &selection_data, guint info, guint time);
+    bool on_drag_data        (Glib::ValueBase const &value, double x, double y);
+    bool on_prepend_drag_data(Glib::ValueBase const &value, double x, double y);
+    bool on_append_drag_data (Glib::ValueBase const &value, double x, double y);
 
     // Others
     Gtk::Widget *_empty_widget; // placeholder in an empty container
+    void unparent_children();
     void insert(int pos, Gtk::Widget &child);
     void add_empty_widget();
     void remove_empty_widget();

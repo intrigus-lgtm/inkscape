@@ -15,6 +15,7 @@
 #include <iostream>
 #include <glibmm/i18n.h>
 #include <glibmm/keyfile.h>
+#include <glibmm/value.h>
 #include <giomm/file.h>
 #include <gtkmm/accelerator.h>
 #include <gtkmm/box.h>
@@ -78,6 +79,7 @@ DialogContainer::~DialogContainer()
 
 DialogContainer::DialogContainer(InkscapeWindow* inkscape_window)
     : _inkscape_window(inkscape_window)
+    , _drop_gtypes{GTK_TYPE_WIDGET}
 {
     g_assert(_inkscape_window != nullptr);
 
@@ -103,7 +105,7 @@ void DialogContainer::setup_drag_and_drop(DialogMultipaned * const column)
         sigc::bind(sigc::mem_fun(*this, &DialogContainer::prepend_drop), column)));
     connections.emplace_back(column->signal_append_drag_data().connect(
         sigc::bind(sigc::mem_fun(*this, &DialogContainer::append_drop), column)));
-    column->set_target_entries(get_target_entries());
+    columns->set_drop_gtypes(_drop_gtypes);
 }
 
 /**
@@ -175,11 +177,6 @@ Gtk::Widget *DialogContainer::create_notebook_tab(Glib::ustring const &label_str
     tab->append(*label);
     tab->append(*close);
 
-    // Workaround to the fact that Gtk::Box doesn't receive on_button_press event
-    // Todo: Above comment no longer applies in GTK4 - workaround may be removable.
-    auto const cover = Gtk::make_managed<Gtk::Box>();
-    cover->append(*tab);
-
     // Add shortcut tooltip
     if (shortcut.size() > 0) {
         auto tlabel = shortcut;
@@ -187,12 +184,12 @@ Gtk::Widget *DialogContainer::create_notebook_tab(Glib::ustring const &label_str
         if (pos >= 0 && pos < tlabel.length()) {
             tlabel.replace(pos, 1, "&amp;");
         }
-        cover->set_tooltip_markup(label_str + " (<b>" + tlabel + "</b>)");
+        tab->set_tooltip_markup(label_str + " (<b>" + tlabel + "</b>)");
     } else {
-        cover->set_tooltip_text(label_str);
+        tab->set_tooltip_text(label_str);
     }
 
-    return cover;
+    return tab;
 }
 
 // find dialog's multipaned parent; is there a better way?
@@ -1015,25 +1012,46 @@ void DialogContainer::on_unrealize() {
     // Disconnect all signals
     connections.clear();
 
+    remove(*columns);
     columns.reset();
 
     parent_type::on_unrealize();
 }
 
 // Create a new notebook and move page.
-DialogNotebook *DialogContainer::prepare_drop(Gtk::SelectionData const &selection_data)
+DialogNotebook *DialogContainer::prepare_drop(Glib::ValueBase const &value)
 {
-    return nullptr;
+    if (!G_VALUE_HOLDS(value.gobj(), GTK_TYPE_NOTEBOOK_PAGE)) {
+        std::cerr << "DialogContainer::prepare_drop: tab not found!" << std::endl;
+        return nullptr;
+    }
+
+    // Find page
+    auto const page = static_cast<Glib::Value<Gtk::NotebookPage *> const &>(value).get();
+    auto const child = page ? page->get_child() : nullptr;
+    if (!page || !child) {
+        std::cerr << "DialogContainer::prepare_drop: page or child not found!" << std::endl;
+        return nullptr;
+    }
+
+    // Create new notebook and move page.
+    auto const new_notebook = Gtk::make_managed<DialogNotebook>(this);
+    new_notebook->move_page(*child);
+
+    // move_page() takes care of updating dialog lists.
+    INKSCAPE.themecontext->getChangeThemeSignal().emit();
+    INKSCAPE.themecontext->add_gtk_css(true);
+    return new_notebook;
 }
 
-void DialogContainer::take_drop(PrependOrAppend const prepend_or_append,
-                                Gtk::SelectionData const &selection_data,
+bool DialogContainer::take_drop(PrependOrAppend const prepend_or_append,
+                                Glib::ValueBase const &value,
                                 DialogMultipaned * const multipane)
 {
-    auto const new_notebook = prepare_drop(selection_data); // Creates notebook, moves page.
+    auto const new_notebook = prepare_drop(value); // Creates notebook, moves page.
     if (!new_notebook) {
         std::cerr << "DialogContainer::take_drop: no new notebook!" << std::endl;
-        return;
+        return false;
     }
 
     if (multipane->get_orientation() == Gtk::Orientation::HORIZONTAL) {
@@ -1045,20 +1063,21 @@ void DialogContainer::take_drop(PrependOrAppend const prepend_or_append,
     }
 
     update_dialogs(); // Always update dialogs on Notebook change
+    return true;
 }
 
 // Notebook page dropped on prepend target. Call function to create new notebook and then insert.
-void DialogContainer::prepend_drop(Gtk::SelectionData const &selection_data,
+bool DialogContainer::prepend_drop(Glib::ValueBase const &value,
                                    DialogMultipaned * const multipane)
 {
-    take_drop(&DialogMultipaned::prepend, selection_data, multipane);
+    return take_drop(&DialogMultipaned::prepend, value, multipane);
 }
 
 // Notebook page dropped on append target. Call function to create new notebook and then insert.
-void DialogContainer::append_drop(Gtk::SelectionData const &selection_data,
+bool DialogContainer::append_drop(Glib::ValueBase const &value,
                                   DialogMultipaned * const multipane)
 {
-    take_drop(&DialogMultipaned::append, selection_data, multipane);
+    return take_drop(&DialogMultipaned::append, value, multipane);
 }
 
 /**

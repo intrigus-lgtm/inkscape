@@ -64,7 +64,7 @@ DialogWindow::DialogWindow(InkscapeWindow *inkscape_window, Gtk::Widget *page)
         DialogManager::singleton().store_state(*this);
         delete this;
         return true;
-    }, true);
+    }, false); // before GTKʼs default handler, so it wonʼt try to double-delete
 
     auto win_action_group = dynamic_cast<Gio::ActionGroup *>(inkscape_window);
     if (win_action_group) {

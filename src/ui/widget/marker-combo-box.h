@@ -76,7 +76,9 @@ public:
     sigc::connection connect_edit   (sigc::slot<void ()> slot);
 
 private:
-    struct MarkerItem : Glib::Object {
+    class MarkerItem : public Glib::Object
+    {
+    public:
         Cairo::RefPtr<Cairo::Surface> pix;
         SPDocument* source = nullptr;
         std::string id;
@@ -88,13 +90,20 @@ private:
         int height = 0;
 
         bool operator == (const MarkerItem& item) const;
+
+        static Glib::RefPtr<MarkerItem> create() {
+            return Glib::make_refptr_for_instance(new MarkerItem());
+        }
+
+    protected:
+        MarkerItem() = default;
     };
 
     SPMarker* get_current() const;
     Glib::ustring _current_marker_id;
 
     sigc::signal<void ()> _signal_changed;
-    sigc::signal<void ()> _signal_edit   ;
+    sigc::signal<void ()> _signal_edit;
 
     Glib::RefPtr<Gtk::Builder> _builder;
     Gtk::FlowBox& _marker_list;

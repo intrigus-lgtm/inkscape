@@ -381,7 +381,7 @@ void MarkerComboBox::set_active(Glib::RefPtr<MarkerItem> item) {
         UI::for_each_child(_marker_list, [=, &selected] (Gtk::Widget &widget) {
             if (auto box = dynamic_cast<Gtk::FlowBoxChild*>(&widget)) {
                 if (auto marker = _widgets_to_markers[box->get_child()]) {
-                    if (*marker.get() == *item.get()) {
+                    if (*marker == *item) {
                         _marker_list.select_child(*box);
                         selected = true;
                     }
@@ -481,7 +481,7 @@ void MarkerComboBox::refresh_after_markers_modified() {
 }
 
 Glib::RefPtr<MarkerComboBox::MarkerItem> MarkerComboBox::add_separator(bool filler) {
-    auto item = Glib::RefPtr<MarkerItem>(new MarkerItem);
+    auto item = MarkerItem::create();
     item->history = false;
     item->separator = true;
     item->id = "None";
@@ -692,7 +692,7 @@ void MarkerComboBox::add_markers (std::vector<SPMarker *> const& marker_list, SP
 
     if (history) {
         // add "None"
-        auto item = Glib::RefPtr<MarkerItem>(new MarkerItem);
+        auto item = MarkerItem::create();
         item->pix = g_image_none;
         item->history = true;
         item->separator = false;
@@ -716,7 +716,7 @@ auto old_time =  std::chrono::high_resolution_clock::now();
         // generate preview
         auto pixbuf = create_marker_image(Geom::IntPoint(ITEM_WIDTH, ITEM_HEIGHT), repr->attribute("id"), source, drawing, visionkey, false, true, 1.50);
 
-        auto item = Glib::RefPtr<MarkerItem>(new MarkerItem);
+        auto item = MarkerItem::create();
         item->source = source;
         item->pix = pixbuf;
         if (auto id = repr->attribute("id")) {

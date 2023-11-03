@@ -331,7 +331,6 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
         AppendItemFromAction(gmenu_section,     "win.layer-lock-all",           _("_Lock All Layers"),           "");
         AppendItemFromAction(gmenu_section,     "win.layer-unlock-all",         _("_Unlock All Layers"),         "");
         gmenu->append_section(gmenu_section);
-
     }
     // clang-format on
 
@@ -340,6 +339,7 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
     set_parent(*widget);
     set_menu_model(gmenu);
     set_position(Gtk::PositionType::BOTTOM);
+    set_has_arrow(false);
     show_all_images(*this);
     Inkscape::UI::menuize_popover(*this);
 

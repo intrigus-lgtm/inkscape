@@ -312,7 +312,11 @@
                 <property name="hexpand">True</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkImage" id="preview">
+                  <object class="GtkWidget" id="preview-bin">
+                    <child>
+                      <object class="GtkImage" id="preview">
+                      </object>
+                    </child>
                     <property name="vexpand">True</property>
                     <property name="margin-end">4</property>
                     <property name="hexpand">True</property>

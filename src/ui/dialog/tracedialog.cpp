@@ -43,6 +43,7 @@
 #include "trace/potrace/inkscape-potrace.h"
 #include "ui/builder-utils.h"
 #include "ui/util.h"
+#include "ui/widget/bin.h"
 
 namespace Inkscape::UI::Dialog {
 namespace {
@@ -85,9 +86,6 @@ protected:
     void selectionModified(Selection *selection, unsigned flags) override;
     void selectionChanged(Selection *selection) override;
 
-    // Fixme: Won't get called; overriden by box layout manager.
-    void size_allocate_vfunc(int width, int height, int baseline) override;
-
 private:
     TraceData getTraceData() const;
     void setDefaults();
@@ -108,6 +106,7 @@ private:
     bool preview_pending_recompute = false;
 
     Glib::RefPtr<Gtk::Builder> builder;
+    UI::Widget::Bin bin;
     Glib::RefPtr<Gtk::Adjustment> MS_scans, PA_curves, PA_islands, PA_sparse1, PA_sparse2;
     Glib::RefPtr<Gtk::Adjustment> SS_AT_ET_T, SS_AT_FI_T, SS_BC_T, SS_CQ_T, SS_ED_T;
     Glib::RefPtr<Gtk::Adjustment> optimize, smooth, speckles;
@@ -232,29 +231,6 @@ TraceData TraceDialogImpl::getTraceData() const
 void TraceDialogImpl::selectionChanged(Inkscape::Selection *selection)
 {
     updatePreview();
-}
-
-// attempt at making UI responsive: relocate preview to the right or bottom of dialog depending on dialog size
-void TraceDialogImpl::size_allocate_vfunc(int width, int height, int baseline)
-{
-    // skip bogus sizes
-    if (width >= 10 && height >= 10) {
-        // ratio: is dialog wide or is it tall?
-        double const ratio = width / static_cast<double>(height);
-        // g_warning("size alloc: %d x %d - %f", alloc.get_width(), alloc.get_height(), ratio);
-        constexpr double hysteresis = 0.01;
-        if (ratio < 1 - hysteresis) {
-            // narrow/tall
-            choice_tab.set_valign(Gtk::Align::START);
-            orient_box.set_orientation(Gtk::Orientation::VERTICAL);
-        } else if (ratio > 1 + hysteresis) {
-            // wide/short
-            orient_box.set_orientation(Gtk::Orientation::HORIZONTAL);
-            choice_tab.set_valign(Gtk::Align::FILL);
-        }
-    }
-
-    TraceDialog::size_allocate_vfunc(width, height, baseline);
 }
 
 void TraceDialogImpl::selectionModified(Selection *selection, unsigned flags)
@@ -398,7 +374,9 @@ TraceDialogImpl::TraceDialogImpl()
   , boxchild1      (get_widget<Gtk::Box>         (builder,           "boxchild1"))
   , boxchild2      (get_widget<Gtk::Box>         (builder,           "boxchild2"))
 {
-    append(mainBox);
+    append(bin);
+    bin.set_child(mainBox);
+    bin.set_expand(true);
 
     auto prefs = Preferences::get();
 
@@ -408,6 +386,27 @@ TraceDialogImpl::TraceDialogImpl()
     B_OK.signal_clicked().connect(sigc::mem_fun(*this, &TraceDialogImpl::onTraceClicked));
     B_STOP.signal_clicked().connect(sigc::mem_fun(*this, &TraceDialogImpl::onAbortClicked));
     B_RESET.signal_clicked().connect(sigc::mem_fun(*this, &TraceDialogImpl::setDefaults));
+
+    // attempt at making UI responsive: relocate preview to the right or bottom of dialog depending on dialog size
+    bin.connectBeforeResize([this] (int width, int height, int baseline) {
+        std::cout << "Resize handler " << width << ' ' << height << std::endl;
+        // skip bogus sizes
+        if (width >= 10 && height >= 10) {
+            // ratio: is dialog wide or is it tall?
+            double const ratio = width / static_cast<double>(height);
+            // g_warning("size alloc: %d x %d - %f", alloc.get_width(), alloc.get_height(), ratio);
+            constexpr double hysteresis = 0.01;
+            if (ratio < 1 - hysteresis) {
+                // narrow/tall
+                choice_tab.set_valign(Gtk::Align::START);
+                orient_box.set_orientation(Gtk::Orientation::VERTICAL);
+            } else if (ratio > 1 + hysteresis) {
+                // wide/short
+                orient_box.set_orientation(Gtk::Orientation::HORIZONTAL);
+                choice_tab.set_valign(Gtk::Align::FILL);
+            }
+        }
+    });
 
     CBT_SS.property_selected().signal_changed().connect([this] { adjustParamsVisible(); });
     adjustParamsVisible();

@@ -18,9 +18,11 @@
 #include <glibmm/refptr.h>
 #include <gtkmm/box.h>
 #include <sigc++/signal.h>
+#include <2geom/int-point.h>
 
 #include "helper/auto-connection.h"
 #include "ui/widget/palette_t.h"
+#include "ui/widget/bin.h"
 
 namespace Gtk {
 class Builder;
@@ -41,7 +43,8 @@ namespace Widget {
 class ColorPaletteMenuItem;
 class PopoverMenu;
 
-class ColorPalette final : public Gtk::Box {
+class ColorPalette : public UI::Widget::Bin
+{
 public:
     ColorPalette();
     ~ColorPalette() override;
@@ -144,7 +147,7 @@ private:
     bool _large_pinned_panel = false;
     bool _show_labels = false;
     int _page_size = 0;
-    Gtk::Allocation _allocation;
+    Geom::IntPoint _allocation;
     auto_connection _idle_resize;
 };
 

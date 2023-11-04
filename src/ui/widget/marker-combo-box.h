@@ -52,6 +52,8 @@ class SPObject;
 
 namespace Inkscape::UI::Widget {
 
+class Bin;
+
 /**
  * ComboBox-like class for selecting stroke markers.
  */
@@ -112,6 +114,7 @@ private:
     std::vector<Glib::RefPtr<MarkerItem>> _stock_items;
     std::vector<Glib::RefPtr<MarkerItem>> _history_items;
     std::map<Gtk::Widget*, Glib::RefPtr<MarkerItem>> _widgets_to_markers;
+    UI::Widget::Bin &_preview_bin;
     Gtk::Image& _preview;
     bool _preview_no_alloc = true;
     Gtk::Button& _link_scale;

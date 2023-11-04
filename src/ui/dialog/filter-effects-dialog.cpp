@@ -2841,7 +2841,9 @@ FilterEffectsDialog::FilterEffectsDialog()
                              sigc::mem_fun(_primitive_list, &PrimitiveList::remove_selected));
 
     get_widget<Gtk::Button>(_builder, "new-filter").signal_clicked().connect([this]{ _filter_modifier.add_filter(); });
-    UI::pack_start(*this, _main_grid);
+    append(_bin);
+    _bin.set_child(_main_grid);
+    _bin.set_expand(true);
 
     get_widget<Gtk::Button>(_builder, "dup-btn").signal_clicked().connect([this]{ duplicate_primitive(); });
     get_widget<Gtk::Button>(_builder, "del-btn").signal_clicked().connect([this]{ _primitive_list.remove_selected(); });
@@ -2870,19 +2872,55 @@ FilterEffectsDialog::FilterEffectsDialog()
 
     _primitive_list.update();
 
-    set_visible(true);
-
     // reading minimal width at this point should reflect space needed for fitting effect parameters panel
     Gtk::Requisition minimum_size, natural_size;
     get_preferred_size(minimum_size, natural_size);
-    _min_width = minimum_size.get_width();
+    int min_width = minimum_size.get_width();
     _effects_popup.get_preferred_size(minimum_size, natural_size);
     auto const min_effects = minimum_size.get_width();
     // calculate threshold/minimum width of filters dialog in horizontal layout;
     // use this size to decide where transition from vertical to horizontal layout is;
     // if this size is too small dialog can get stuck in horizontal layout - users won't be able
     // to make it narrow again, due to min dialog size enforced by GTK
-    _threshold_width = _min_width + min_effects * 3;
+    int threshold_width = min_width + min_effects * 3;
+
+    // two alternative layout arrangements depending on the dialog size;
+    // one is tall and narrow with widgets in one column, while the other
+    // is for wide dialogs with filter parameters and effects side by side
+    _bin.connectBeforeResize([=, this] (int width, int height, int baseline) {
+        if (width < 10 || height < 10) return;
+
+        double const ratio = width / static_cast<double>(height);
+
+        constexpr double hysteresis = 0.01;
+        if (ratio < 1 - hysteresis || width <= threshold_width) {
+            // make narrow/tall
+            if (!_narrow_dialog) {
+                _main_grid.remove(_filter_wnd);
+                _search_wide_box.remove(_effects_popup);
+                _paned.set_start_child(_filter_wnd);
+                UI::pack_start(_search_box, _effects_popup);
+                _paned.set_size_request();
+                get_widget<Gtk::Box>(_builder, "connect-box-wide").remove(*_show_sources);
+                get_widget<Gtk::Box>(_builder, "connect-box").append(*_show_sources);
+                _narrow_dialog = true;
+                ensure_size();
+            }
+        } else if (ratio > 1 + hysteresis && width > threshold_width) {
+            // make wide/short
+            if (_narrow_dialog) {
+                _paned.property_start_child().set_value(nullptr);
+                _search_box.remove(_effects_popup);
+                _main_grid.attach(_filter_wnd, 2, 1, 1, 2);
+                UI::pack_start(_search_wide_box, _effects_popup);
+                _paned.set_size_request(min_width);
+                get_widget<Gtk::Box>(_builder, "connect-box").remove(*_show_sources);
+                get_widget<Gtk::Box>(_builder, "connect-box-wide").append(*_show_sources);
+                _narrow_dialog = false;
+                ensure_size();
+            }
+        }
+    });
 
     update_widgets();
     update();
@@ -3043,46 +3081,6 @@ void FilterEffectsDialog::init_settings_widgets()
     _settings->add_spinscale(1, SPAttr::NUMOCTAVES, _("Detail:"), 1, 10, 1, 1, 0);
     _settings->add_spinscale(0, SPAttr::SEED, _("Seed:"), 0, 1000, 1, 1, 0, _("The starting number for the pseudo random number generator."));
 }
-
-void FilterEffectsDialog::size_allocate_vfunc(int const width, int const height, int const baseline)
-{
-    parent_type::size_allocate_vfunc(width, height, baseline);
-
-    g_assert(_show_sources);
-
-    // two alternative layout arrangements depending on the dialog size;
-    // one is tall and narrow with widgets in one column, while the other
-    // is for wide dialogs with filter parameters and effects side by side
-    if (width < 10 || height < 10) return;
-
-    double const ratio = width / static_cast<double>(height);
-
-    double constexpr hysteresis = 0.01;
-    if (!_narrow_dialog && (ratio < 1 - hysteresis || width <= _threshold_width)) {
-        // make narrow/tall
-        _main_grid.remove(_filter_wnd);
-        _search_wide_box.remove(_effects_popup);
-        _paned.set_start_child(_filter_wnd);
-        UI::pack_start(_search_box, _effects_popup);
-        _paned.set_size_request();
-        get_widget<Gtk::Box>(_builder, "connect-box-wide").remove(*_show_sources);
-        get_widget<Gtk::Box>(_builder, "connect-box").append(*_show_sources);
-        _narrow_dialog = true;
-        ensure_size();
-    } else if (_narrow_dialog && ratio > 1 + hysteresis && width > _threshold_width) {
-        // make wide/short
-        _paned.property_start_child().set_value(nullptr);
-        _search_box.remove(_effects_popup);
-        _main_grid.attach(_filter_wnd, 2, 1, 1, 2);
-        UI::pack_start(_search_wide_box, _effects_popup);
-        _paned.set_size_request(_min_width);
-        get_widget<Gtk::Box>(_builder, "connect-box").remove(*_show_sources);
-        get_widget<Gtk::Box>(_builder, "connect-box-wide").append(*_show_sources);
-        _narrow_dialog = false;
-        ensure_size();
-    }
-}
-
 
 void FilterEffectsDialog::add_filter_primitive(Filters::FilterPrimitiveType type) {
     if (auto filter = _filter_modifier.get_selected_filter()) {

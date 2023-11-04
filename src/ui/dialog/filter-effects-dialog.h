@@ -41,6 +41,7 @@
 #include "display/nr-filter-types.h"
 #include "helper/auto-connection.h"
 #include "ui/dialog/dialog-base.h"
+#include "ui/widget/bin.h"
 #include "ui/widget/combo-enums.h"
 #include "ui/widget/completion-popup.h"
 #include "xml/helper-observer.h"
@@ -287,7 +288,6 @@ private:
     };
 
     void init_settings_widgets();
-    void size_allocate_vfunc(int width, int height, int baseline) final;
 
     // Handlers
     void add_primitive();
@@ -310,6 +310,7 @@ private:
     void add_effects(Inkscape::UI::Widget::CompletionPopup& popup, bool symbolic);
 
     Glib::RefPtr<Gtk::Builder> _builder;
+    UI::Widget::Bin _bin;
     Glib::ustring _prefs = "/dialogs/filters";
     Gtk::Paned& _paned;
     Gtk::Grid& _main_grid;
@@ -319,7 +320,6 @@ private:
     Gtk::ScrolledWindow& _filter_wnd;
     bool _narrow_dialog = true;
     Gtk::ToggleButton *_show_sources = nullptr;
-    int _min_width{}, _threshold_width{};
     Gtk::CheckButton& _cur_filter_btn;
     sigc::connection _cur_filter_toggle;
     // View/add primitives

@@ -149,16 +149,44 @@ XmlTree::XmlTree()
 
     set_name("XMLAndAttributesDialog");
     set_spacing(0);
-    set_visible(true);
 
     int panedpos = prefs->getInt("/dialogs/xml/panedpos", 200);
     _paned.property_position() = panedpos;
     _paned.property_position().signal_changed().connect(sigc::mem_fun(*this, &XmlTree::_resized));
 
-    UI::pack_start(*this, get_widget<Gtk::Box>(_builder, "main"), true, true);
+    append(_bin);
+    _bin.set_child(get_widget<Gtk::Box>(_builder, "main"));
+    _bin.set_expand(true);
 
-    int dummy;
-    measure(Gtk::Orientation::HORIZONTAL, -1, _min_width, dummy, dummy, dummy);
+    int min_width = 0, dummy;
+    measure(Gtk::Orientation::HORIZONTAL, -1, min_width, dummy, dummy, dummy);
+
+    auto auto_arrange_panels = [=, this] (int width, int height) {
+        // skip bogus sizes
+        if (width < 10 || height < 10) return;
+
+        // minimal width times fudge factor to arrive at "narrow" dialog with automatic vertical layout:
+        bool const narrow = width < min_width * 1.5;
+        paned_set_vertical(_paned, narrow);
+    };
+
+    auto arrange_panels = [=, this] (DialogLayout layout, int width, int height) {
+        switch (layout) {
+            case Auto:
+                auto_arrange_panels(width, height);
+                break;
+            case Horizontal:
+                paned_set_vertical(_paned, false);
+                break;
+            case Vertical:
+                paned_set_vertical(_paned, true);
+                break;
+        }
+    };
+
+    _bin.connectBeforeResize([=, this] (int width, int height, int) {
+        arrange_panels(_layout, width, height);
+    });
 
     auto& popup = get_widget<Gtk::MenuButton>(_builder, "layout-btn");
     popup.set_has_tooltip();
@@ -177,7 +205,7 @@ XmlTree::XmlTree()
     }, true);
     UI::menuize_popover(*popup.get_popover());
 
-    auto set_layout = [=](DialogLayout layout){
+    auto set_layout = [=, this] (DialogLayout layout) {
         Glib::ustring icon = "layout-auto";
         if (layout == Horizontal) {
             icon = "layout-horizontal";
@@ -186,7 +214,7 @@ XmlTree::XmlTree()
         }
         get_widget<Gtk::Image>(_builder, "layout-img").set_from_icon_name(icon + "-symbolic");
         prefs->setInt("/dialogs/xml/layout", layout);
-        arrange_panels(layout);
+        arrange_panels(layout, get_width(), get_height());
         _layout = layout;
     };
 
@@ -237,38 +265,6 @@ XmlTree::XmlTree()
 XmlTree::~XmlTree()
 {
     unsetDocument();
-}
-
-void XmlTree::auto_arrange_panels(Gtk::Allocation const &alloc)
-{
-    // skip bogus sizes
-    if (alloc.get_width() < 10 || alloc.get_height() < 10) return;
-
-    // minimal width times fudge factor to arrive at "narrow" dialog with automatic vertical layout:
-    bool const narrow = alloc.get_width() < _min_width * 1.5;
-    paned_set_vertical(_paned, narrow);
-}
-
-void XmlTree::arrange_panels(DialogLayout layout)
-{
-    switch (layout) {
-        case Auto:
-            auto_arrange_panels(get_allocation());
-            break;
-        case Horizontal:
-            paned_set_vertical(_paned, false);
-            break;
-        case Vertical:
-            paned_set_vertical(_paned, true);
-            break;
-    }
-}
-
-// Fixme: May not get called due to box layout manager.
-void XmlTree::size_allocate_vfunc(int width, int height, int baseline)
-{
-    arrange_panels(_layout);
-    DialogBase::size_allocate_vfunc(width, height, baseline);
 }
 
 void XmlTree::rebuildTree()

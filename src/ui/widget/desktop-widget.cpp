@@ -116,7 +116,7 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     Inkscape::UI::pack_end(*this, *_top_toolbars, false, true);
 
     /* Toolboxes */
-    tool_toolbars = Gtk::make_managed<Inkscape::UI::Toolbar::Toolbars>();
+    tool_toolbars = std::make_unique<Inkscape::UI::Toolbar::Toolbars>();
     _top_toolbars->attach(*tool_toolbars, 0, 1);
 
     tool_toolbox = Gtk::make_managed<Inkscape::UI::Toolbar::ToolToolbar>(inkscape_window);
@@ -137,7 +137,7 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     };
     _tbbox->property_position().signal_changed().connect([=](){ adjust_pos(); });
 
-    snap_toolbar = Gtk::make_managed<Inkscape::UI::Toolbar::SnapToolbar>();
+    snap_toolbar = std::make_unique<Inkscape::UI::Toolbar::SnapToolbar>();
     Inkscape::UI::pack_end(*_hbox, *snap_toolbar, false, true); // May moved later.
 
     _tb_snap_pos = prefs->createObserver("/toolbox/simplesnap", sigc::mem_fun(*this, &SPDesktopWidget::repack_snaptoolbar));
@@ -203,7 +203,7 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     INKSCAPE.add_desktop(_desktop.get());
 
     // Initialize the command toolbar only after contructing the desktop. Else, it'll crash.
-    command_toolbar = Gtk::make_managed<Inkscape::UI::Toolbar::CommandToolbar>(_desktop.get());
+    command_toolbar = std::make_unique<Inkscape::UI::Toolbar::CommandToolbar>(_desktop.get());
     _top_toolbars->attach(*command_toolbar, 0, 0);
 
     // Add the shape geometry to libavoid for autorouting connectors.
@@ -231,9 +231,9 @@ void SPDesktopWidget::apply_ctrlbar_settings() {
     int min = Inkscape::UI::Toolbar::min_pixel_size;
     int max = Inkscape::UI::Toolbar::max_pixel_size;
     int size = prefs->getIntLimited(Inkscape::UI::Toolbar::ctrlbars_icon_size, min, min, max);
-    Inkscape::UI::set_icon_sizes(snap_toolbar, size);
-    Inkscape::UI::set_icon_sizes(command_toolbar, size);
-    Inkscape::UI::set_icon_sizes(tool_toolbars, size);
+    Inkscape::UI::set_icon_sizes(snap_toolbar.get(), size);
+    Inkscape::UI::set_icon_sizes(command_toolbar.get(), size);
+    Inkscape::UI::set_icon_sizes(tool_toolbars.get(), size);
 }
 
 void
@@ -443,37 +443,27 @@ SPDesktopWidget::letZoomGrabFocus()
     _statusbar->zoom_grab_focus();
 }
 
-void
-SPDesktopWidget::getWindowGeometry (gint &x, gint &y, gint &w, gint &h)
+void SPDesktopWidget::getWindowGeometry(int &x, int &y, int &w, int &h)
 {
     if (_window) {
-        _window->get_size(w, h);
-        _window->get_position(x, y);
-        // The get_positon is very unreliable (see Gtk docs) and will often return zero.
-        if (!x && !y) {
-            if (auto const &w = _window->get_window()) {
-                Gdk::Rectangle rect;
-                w->get_frame_extents(rect);
-                x = rect.get_x();
-                y = rect.get_y();
-            }
-        }
+        // Note: On Wayland, which is GTK4's main platform, getting x and y is impossible.
+        // GTK4 therefore removed support for it despite being possible on other platforms.
+        // The code is left in place for the future in case the ability comes back.
+        x = 0;
+        y = 0;
+        w = _window->get_width();
+        h = _window->get_height();
     }
 }
 
-void
-SPDesktopWidget::setWindowPosition (Geom::Point p)
+void SPDesktopWidget::setWindowPosition(Geom::Point)
 {
-    if (_window) {
-        _window->move(gint(round(p[Geom::X])), gint(round(p[Geom::Y])));
-    }
+    // See comment in getWindowGeometry.
 }
 
-void
-SPDesktopWidget::setWindowSize (gint w, gint h)
+void SPDesktopWidget::setWindowSize(int w, int h)
 {
     if (_window) {
-        _window->set_default_size(w, h);
         _window->set_default_size(w, h);
     }
 }
@@ -531,32 +521,6 @@ bool SPDesktopWidget::warnDialog (Glib::ustring const &text)
 }
 
 void
-SPDesktopWidget::iconify()
-{
-    GtkWindow *topw = GTK_WINDOW(gtk_widget_get_root(_canvas->Gtk::Widget::gobj()));
-    if (GTK_IS_WINDOW(topw)) {
-        if (_desktop->is_iconified()) {
-            gtk_window_deiconify(topw);
-        } else {
-            gtk_window_iconify(topw);
-        }
-    }
-}
-
-void
-SPDesktopWidget::maximize()
-{
-    GtkWindow *topw = GTK_WINDOW(gtk_widget_get_root(_canvas->Gtk::Widget::gobj()));
-    if (GTK_IS_WINDOW(topw)) {
-        if (_desktop->is_maximized()) {
-            gtk_window_unmaximize(topw);
-        } else {
-            gtk_window_maximize(topw);
-        }
-    }
-}
-
-void
 SPDesktopWidget::fullscreen()
 {
     GtkWindow *topw = GTK_WINDOW(gtk_widget_get_root(_canvas->Gtk::Widget::gobj()));
@@ -578,7 +542,7 @@ SPDesktopWidget::fullscreen()
 void SPDesktopWidget::layoutWidgets()
 {
     Glib::ustring pref_root;
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    auto prefs = Inkscape::Preferences::get();
 
     if (_desktop && _desktop->is_focusMode()) {
         pref_root = "/focus/";
@@ -588,42 +552,18 @@ void SPDesktopWidget::layoutWidgets()
         pref_root = "/window/";
     }
 
-    if (!prefs->getBool(pref_root + "commands/state", true)) {
-        command_toolbar->set_visible(false);
-    } else {
-        command_toolbar->set_visible(true);
-    }
+    command_toolbar->set_visible(prefs->getBool(pref_root + "commands/state", true));
 
-    if (!prefs->getBool(pref_root + "snaptoolbox/state", true)) {
-        snap_toolbar->set_visible(false);
-    } else {
-        snap_toolbar->set_visible(true);
-    }
+    snap_toolbar->set_visible(prefs->getBool(pref_root + "snaptoolbox/state", true));
 
-    if (!prefs->getBool(pref_root + "toppanel/state", true)) {
-        tool_toolbars->set_visible(false);
-    } else {
-        tool_toolbars->set_visible(true);
-    }
+    tool_toolbars->set_visible(prefs->getBool(pref_root + "toppanel/state", true));
 
-    if (!prefs->getBool(pref_root + "toolbox/state", true)) {
-        tool_toolbox->set_visible(false);
-    } else {
-        tool_toolbox->set_visible(true);
-    }
+    tool_toolbox->set_visible(prefs->getBool(pref_root + "toolbox/state", true));
 
-    if (!prefs->getBool(pref_root + "statusbar/state", true)) {
-        _statusbar->set_visible(false);
-    } else {
-        _statusbar->set_visible(true);
-    }
+    _statusbar->set_visible(prefs->getBool(pref_root + "statusbar/state", true));
     _statusbar->update_visibility(); // Individual items in bar
 
-    if (!prefs->getBool(pref_root + "panels/state", true)) {
-        _panels->set_visible(false);
-    } else {
-        _panels->set_visible(true);
-    }
+    _panels->set_visible(prefs->getBool(pref_root + "panels/state", true));
 
     _canvas_grid->ShowScrollbars(prefs->getBool(pref_root + "scrollbars/state", true));
     _canvas_grid->ShowRulers(    prefs->getBool(pref_root + "rulers/state",     true));
@@ -638,7 +578,6 @@ void SPDesktopWidget::layoutWidgets()
     widescreen = prefs->getBool(pref_root + "interface_mode", widescreen);
 
     // Unlink command toolbar.
-    command_toolbar->reference(); // So toolbox is not deleted.
     remove_from_top_toolbar_or_hbox(*command_toolbar);
 
     // Link command toolbar back.
@@ -659,7 +598,6 @@ void SPDesktopWidget::layoutWidgets()
         }
         return Inkscape::UI::ForEachResult::_continue;
     });
-    command_toolbar->unreference();
 
     // Temporary for Gtk3: Gtk toolbar resets icon sizes, so reapply them.
     // TODO: remove this call in Gtk4 after Gtk::Toolbar is eliminated.
@@ -735,10 +673,10 @@ SPDesktopWidget::isToolboxButtonActive(char const * const id) const
  */
 void SPDesktopWidget::repack_snaptoolbar()
 {
-    Inkscape::Preferences* prefs = Inkscape::Preferences::get();
+    auto prefs = Inkscape::Preferences::get();
     bool is_perm = prefs->getInt("/toolbox/simplesnap", 1) == 2;
-    auto& aux = *tool_toolbars;
-    auto& snap = *snap_toolbar;
+    auto &aux = *tool_toolbars;
+    auto &snap = *snap_toolbar;
 
     // Only remove from the parent if the status has changed
     auto parent = snap.get_parent();
@@ -762,13 +700,15 @@ void SPDesktopWidget::repack_snaptoolbar()
     }
 
     // This ensures that the Snap toolbox is on the top and only takes the needed space.
+    _top_toolbars->remove(aux);
+    _top_toolbars->remove(snap);
     if (Inkscape::UI::get_children(*_top_toolbars).size() == 3 && command_toolbar->get_visible()) {
-        _top_toolbars->child_property_width(aux) = 2;
-        _top_toolbars->child_property_height(snap) =  1;
+        _top_toolbars->attach(aux, 0, 1, 2, 1);
+        _top_toolbars->attach(snap, 1, 0, 1, 2);
         snap.set_valign(Gtk::Align::START);
     } else {
-        _top_toolbars->child_property_width(aux) = 1;
-        _top_toolbars->child_property_height(snap) =  2;
+        _top_toolbars->attach(aux, 0, 1, 1, 1);
+        _top_toolbars->attach(snap, 1, 0, 2, 2);
         snap.set_valign(Gtk::Align::CENTER);
     }
 }

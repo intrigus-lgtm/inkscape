@@ -15,6 +15,10 @@
 
 #include <gtkmm/widget.h>
 
+#include "helper/auto-connection.h"
+
+namespace Gtk { class Builder; }
+
 namespace Inkscape::UI::Widget {
 
 /**
@@ -28,6 +32,7 @@ class Bin : public Gtk::Widget
 {
 public:
     Bin(Gtk::Widget *child = nullptr);
+    Bin(BaseObjectType *cobject, Glib::RefPtr<Gtk::Builder> const &);
     ~Bin() override;
 
     /// Gets the child widget, or nullptr if none.
@@ -36,7 +41,7 @@ public:
     /// Gets the child widget, or nullptr if none.
     Gtk::Widget const *get_child() const { return _child; }
 
-    /// Sets (parents or unparents) the child widget.
+    /// Sets (parents) the child widget, or unsets (unparents) it if @a child is null.
     void set_child(Gtk::Widget *child);
 
     /// Sets (parents) the child widget.
@@ -45,17 +50,38 @@ public:
     /// Unsets (unparents) the child widget.
     void unset_child() { set_child(nullptr); }
 
+    /// Register a handler to run immediately before a resize operation.
+    template <typename F>
+    sigc::connection connectBeforeResize(F &&slot) {
+        return _signal_before_resize.connect(std::forward<F>(slot));
+    }
+
+    /// Register a handler to run immediately after a resize operation.
+    template <typename F>
+    sigc::connection connectAfterResize(F &&slot) {
+        return _signal_after_resize.connect(std::forward<F>(slot));
+    }
+
 protected:
-    void size_allocate_vfunc(int width, int height, int baseline) override;
+    virtual void on_size_allocate(int width, int height, int baseline);
 
 private:
     Gtk::Widget *_child = nullptr;
 
-    Gtk::SizeRequestMode get_request_mode_vfunc() const final;
+    auto_connection _destroy_conn;
+
+    sigc::signal<void (int, int, int)> _signal_before_resize;
+    sigc::signal<void (int, int, int)> _signal_after_resize;
+
+    void _connectDestroy();
+
+    Gtk::SizeRequestMode get_request_mode_vfunc() const override;
 
     void measure_vfunc(Gtk::Orientation orientation, int for_size,
                        int &minimum, int &natural,
-                       int &minimum_baseline, int &natural_baseline) const final;
+                       int &minimum_baseline, int &natural_baseline) const override;
+
+    void size_allocate_vfunc(int width, int height, int baseline) override;
 };
 
 } // namespace Inkscape::UI::Widget

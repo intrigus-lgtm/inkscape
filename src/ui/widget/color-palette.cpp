@@ -77,7 +77,8 @@ ColorPalette::ColorPalette():
     auto& btn_menu = get_widget<Gtk::MenuButton>(_builder, "btn-menu");
     btn_menu.set_popover(*_menu);
     auto& dlg = get_settings_popover();
-    config.signal_activate().connect([=,&dlg](){
+    config.signal_activate().connect([&, this] {
+        dlg.set_parent(btn_menu);
         dlg.popup();
     });
 

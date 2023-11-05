@@ -12,6 +12,9 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <list>
+#include <memory>
+#include <string>
 #include "gtest/gtest.h"
 #include "xml/repr.h"
 

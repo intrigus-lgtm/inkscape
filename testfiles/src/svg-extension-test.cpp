@@ -128,6 +128,6 @@ TEST_F(SvgExtensionTest, hiddenSvg2TextIsSaved)
         ASSERT_TRUE(tspanElement);
         auto stringElement = cast<SPString>(tspanElement->firstChild());
         ASSERT_TRUE(stringElement);
-        ASSERT_EQ(kv.second, stringElement->string);
+        ASSERT_EQ(kv.second, stringElement->string.raw());
     }
 }

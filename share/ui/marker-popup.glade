@@ -314,7 +314,7 @@
                 <child>
                   <object class="GtkWidget" id="preview-bin">
                     <child>
-                      <object class="GtkImage" id="preview">
+                      <object class="GtkPicture" id="preview">
                       </object>
                     </child>
                     <property name="vexpand">True</property>

@@ -1071,7 +1071,7 @@
                 <property name="vexpand">True</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkImage" id="previewArea">
+                  <object class="GtkPicture" id="previewArea">
                     <property name="vexpand">True</property>
                     <property name="width-request">100</property>
                     <property name="height-request">100</property>

@@ -39,7 +39,7 @@ class Texture;
 
 namespace Gtk {
 class CheckButton;
-class Image;
+class Picture;
 class ToggleButton;
 } // namespace Gtk
 
@@ -103,7 +103,7 @@ private:
     Gtk::CheckButton     *selectionButton;
 
     std::vector<Glib::RefPtr<Gdk::Texture>> textures;
-    std::vector<Gtk::Image *> images;
+    std::vector<Gtk::Picture *> images;
     std::vector<Glib::ustring> labels;
     std::vector<Gtk::ToggleButton *> buttons;
     auto_connection docModConn;

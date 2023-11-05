@@ -29,7 +29,7 @@
 #include <gtkmm/eventcontrollerfocus.h>
 #include <gtkmm/frame.h>
 #include <gtkmm/grid.h>
-#include <gtkmm/image.h>
+#include <gtkmm/picture.h>
 #include <gtkmm/notebook.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/spinbutton.h>
@@ -118,7 +118,7 @@ private:
     Gtk::Button &B_RESET, &B_STOP, &B_OK, &B_Update;
     Gtk::Box &mainBox;
     Gtk::Notebook &choice_tab;
-    Gtk::Image &previewArea;
+    Gtk::Picture &previewArea;
     Gtk::Box &orient_box;
     Gtk::Frame &_preview_frame;
     Gtk::Grid &_param_grid;
@@ -364,7 +364,7 @@ TraceDialogImpl::TraceDialogImpl()
     // Box
   , mainBox        (get_widget<Gtk::Box>         (builder,             "mainBox"))
   , choice_tab     (get_widget<Gtk::Notebook>    (builder,          "choice_tab"))
-  , previewArea    (get_widget<Gtk::Image>       (builder,         "previewArea"))
+  , previewArea    (get_widget<Gtk::Picture>     (builder,         "previewArea"))
   , orient_box     (get_widget<Gtk::Box>         (builder,          "orient_box"))
   , _preview_frame (get_widget<Gtk::Frame>       (builder,      "_preview_frame"))
   , _param_grid    (get_widget<Gtk::Grid>        (builder,         "_param_grid"))
@@ -389,7 +389,6 @@ TraceDialogImpl::TraceDialogImpl()
 
     // attempt at making UI responsive: relocate preview to the right or bottom of dialog depending on dialog size
     bin.connectBeforeResize([this] (int width, int height, int baseline) {
-        std::cout << "Resize handler " << width << ' ' << height << std::endl;
         // skip bogus sizes
         if (width >= 10 && height >= 10) {
             // ratio: is dialog wide or is it tall?
@@ -475,7 +474,7 @@ void TraceDialogImpl::updatePreview(bool force)
     preview_future = Trace::preview(std::move(data.engine), data.sioxEnabled,
         // On completion:
         [this] (Glib::RefPtr<Gdk::Pixbuf> result) {
-            previewArea.set(std::move(result));
+            previewArea.set_paintable(Gdk::Texture::create_for_pixbuf(result));
             preview_future.cancel();
 
             // Recompute if invalidated during computation.
@@ -487,7 +486,7 @@ void TraceDialogImpl::updatePreview(bool force)
 
     if (!preview_future) {
         // On instant failure:
-        previewArea.clear();
+        previewArea.set_paintable({});
     }
 }
 

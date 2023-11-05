@@ -1257,6 +1257,9 @@ popover.menu.menuize > stack > box > modelbutton:first-child > * /* Affect child
 }
 
 /* IconPreview */
+frame.icon-preview {
+    border-radius: 0;
+}
 button.icon-preview {
     min-width : 0;
     min-height: 0;

@@ -30,6 +30,7 @@
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/menubutton.h>
+#include <gtkmm/picture.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/togglebutton.h>
 #include <gtkmm/window.h>
@@ -96,7 +97,7 @@ MarkerComboBox::MarkerComboBox(Glib::ustring id, int l) :
     _builder(create_builder("marker-popup.glade")),
     _marker_list(get_widget<Gtk::FlowBox>(_builder, "flowbox")),
     _preview_bin(get_derived_widget<UI::Widget::Bin>(_builder, "preview-bin")),
-    _preview(get_widget<Gtk::Image>(_builder, "preview")),
+    _preview(get_widget<Gtk::Picture>(_builder, "preview")),
     _marker_name(get_widget<Gtk::Label>(_builder, "marker-id")),
     _link_scale(get_widget<Gtk::Button>(_builder, "link-scale")),
     _scale_x(get_widget<Gtk::SpinButton>(_builder, "scale-x")),
@@ -332,7 +333,7 @@ void MarkerComboBox::update_preview(Glib::RefPtr<MarkerItem> item) {
         label = _(item->label.c_str());
     }
 
-    _preview.set(to_texture(surface));
+    _preview.set_paintable(to_texture(surface));
     std::ostringstream ost;
     ost << "<small>" << label.raw() << "</small>";
     _marker_name.set_markup(ost.str().c_str());

@@ -22,7 +22,7 @@
 #include <glibmm/main.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/frame.h>
-#include <gtkmm/image.h>
+#include <gtkmm/picture.h>
 #include <gtkmm/snapshot.h>
 #include <gtkmm/togglebutton.h>
 #include <sigc++/adaptors/bind.h>
@@ -32,7 +32,6 @@
 #include "document.h"
 #include "page-manager.h"
 #include "selection.h"
-#include "display/cairo-utils.h"
 #include "display/drawing-context.h"
 #include "display/drawing.h"
 #include "object/sp-root.h"
@@ -126,7 +125,7 @@ IconPreviewPanel::IconPreviewPanel()
     int previous = 0;
     int avail = 0;
     for (auto i = sizes.size(); i-- > 0;) {
-        images[i] = Gtk::make_managed<Gtk::Image>();
+        images[i] = Gtk::make_managed<Gtk::Picture>();
         images[i]->set_size_request(sizes[i], sizes[i]);
 
         auto const &label = labels[i];
@@ -139,6 +138,7 @@ IconPreviewPanel::IconPreviewPanel()
         if ( prefs->getBool("/iconpreview/showFrames", true) ) {
             auto const frame = Gtk::make_managed<Gtk::Frame>();
             frame->set_child(*images[i]);
+            frame->add_css_class("icon-preview");
             buttons[i]->set_child(*frame);
         } else {
             buttons[i]->set_child(*images[i]);
@@ -546,7 +546,7 @@ void IconPreviewPanel::renderPreview( SPObject* obj )
 
     for (std::size_t i = 0; i < sizes.size(); ++i) {
         textures[i] = to_texture(sp_icon_doc_icon(doc, *drawing, id, sizes[i]));
-        images[i]->set(textures[i]);
+        images[i]->set_paintable(textures[i]);
     }
     updateMagnify();
 

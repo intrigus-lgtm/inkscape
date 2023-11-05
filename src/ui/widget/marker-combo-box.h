@@ -42,6 +42,7 @@ class FlowBox;
 class Image;
 class Label;
 class MenuButton;
+class Picture;
 class SpinButton;
 class ToggleButton;
 } // namespace Gtk
@@ -115,7 +116,7 @@ private:
     std::vector<Glib::RefPtr<MarkerItem>> _history_items;
     std::map<Gtk::Widget*, Glib::RefPtr<MarkerItem>> _widgets_to_markers;
     UI::Widget::Bin &_preview_bin;
-    Gtk::Image& _preview;
+    Gtk::Picture& _preview;
     bool _preview_no_alloc = true;
     Gtk::Button& _link_scale;
     Gtk::SpinButton& _angle_btn;

@@ -35,7 +35,6 @@
 #include "ui/widget/color-slider.h"
 #include "ui/widget/ink-color-wheel.h"
 #include "ui/widget/oklab-color-wheel.h"
-#include "ui/widget/scrollprotected.h"
 
 constexpr static int CSC_CHANNEL_R     = (1 << 0);
 constexpr static int CSC_CHANNEL_G     = (1 << 1);
@@ -279,7 +278,7 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
         grid->attach(*_s[i], 1, i, 1, 1);
 
         /* Spinbutton */
-        _b[i] = Gtk::make_managed<ScrollProtected<Gtk::SpinButton>>(_a[i], 1.0);
+        _b[i] = Gtk::make_managed<Gtk::SpinButton>(_a[i], 1.0);
         sp_dialog_defocus_on_enter(_b[i]->gobj());
         _l[i]->set_mnemonic_widget(*_b[i]);
         _b[i]->set_visible(true);

@@ -24,7 +24,6 @@
 #include <gtkmm/box.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <gtkmm/scale.h>
-#include "scrollprotected.h"
 
 namespace Gtk {
 class Adjustment;
@@ -33,9 +32,9 @@ class Snapshot;
 class SpinButton;
 } // namespace Gtk
 
-class InkScale final : public Inkscape::UI::Widget::ScrollProtected<Gtk::Scale>
+class InkScale final : public Gtk::Scale
 {
-    using parent_type = ScrollProtected<Gtk::Scale>;
+    using parent_type = Gtk::Scale;
 
 public:
     InkScale(Glib::RefPtr<Gtk::Adjustment>, Gtk::SpinButton* spinbutton);

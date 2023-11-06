@@ -35,6 +35,7 @@ class ustring;
 
 namespace Gtk {
 class Box;
+class Builder;
 class Button;
 class Frame;
 class Label;

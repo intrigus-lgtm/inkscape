@@ -24,8 +24,6 @@
 #include <gtkmm/combobox.h>
 #include <sigc++/signal.h>
 
-#include "scrollprotected.h"
-
 namespace Gtk {
 class Adjustment;
 class ListStore;
@@ -96,7 +94,7 @@ private:
     };
     DashColumns dash_columns;
     Glib::RefPtr<Gtk::ListStore> _dash_store;
-    ScrollProtected<Gtk::ComboBox> _dash_combo;
+    Gtk::ComboBox _dash_combo;
     Gtk::CellRendererPixbuf _image_renderer;
     Glib::RefPtr<Gtk::Adjustment> _offset;
     Inkscape::UI::Widget::SpinButton *_sb;

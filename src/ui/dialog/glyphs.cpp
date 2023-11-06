@@ -35,7 +35,6 @@
 #include "ui/icon-names.h"
 #include "ui/pack.h"
 #include "ui/widget/font-selector.h"
-#include "ui/widget/scrollprotected.h"
 
 namespace Inkscape::UI::Dialog {
 
@@ -432,7 +431,7 @@ GlyphsPanel::GlyphsPanel()
         auto const label = Gtk::make_managed<Gtk::Label>(_("Script: "));
         table->attach(*label, 0, row, 1, 1);
 
-        scriptCombo = Gtk::make_managed<Inkscape::UI::Widget::ScrollProtected<Gtk::ComboBoxText>>();
+        scriptCombo = Gtk::make_managed<Gtk::ComboBoxText>();
         for (auto const &it : getScriptToName()) {
             scriptCombo->append(it.second);
         }
@@ -456,7 +455,7 @@ GlyphsPanel::GlyphsPanel()
         auto const label = Gtk::make_managed<Gtk::Label>(_("Range: "));
         table->attach(*label, 0, row, 1, 1);
 
-        rangeCombo = Gtk::make_managed<Inkscape::UI::Widget::ScrollProtected<Gtk::ComboBoxText>>();
+        rangeCombo = Gtk::make_managed<Gtk::ComboBoxText>();
         for (auto const &it : getRanges()) {
             rangeCombo->append(it.second);
         }

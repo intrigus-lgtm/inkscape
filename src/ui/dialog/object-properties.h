@@ -35,13 +35,12 @@
 #include <gtkmm/entry.h>
 #include <gtkmm/expander.h>
 #include <gtkmm/frame.h>
+#include <gtkmm/label.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/textview.h>
 
 #include "ui/dialog/dialog-base.h"
-#include "ui/widget/scrollprotected.h"
 #include "ui/widget/color-picker.h"
-#include "ui/widget/frame.h"
 
 class SPAttributeTable;
 class SPItem;
@@ -85,7 +84,7 @@ private:
     Inkscape::UI::Widget::ColorPicker _highlight_color; // color picker for the object highlight
 
     Gtk::Label _label_image_rendering; // the label for 'image-rendering'
-    Inkscape::UI::Widget::ScrollProtected<Gtk::ComboBoxText> _combo_image_rendering; // the combo box text for 'image-rendering'
+    Gtk::ComboBoxText _combo_image_rendering; // the combo box text for 'image-rendering'
     
     Gtk::Frame  _ft_description; //the frame for the text of the object description
     Gtk::TextView _tv_description; //the text view object showing the object description

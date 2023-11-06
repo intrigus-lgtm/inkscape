@@ -22,7 +22,6 @@
 #include <gtkmm/entry.h>
 
 #include "helper/auto-connection.h"
-#include "ui/widget/scrollprotected.h"
 
 namespace Gtk {
 class Builder;
@@ -108,9 +107,7 @@ private:
 
     bool setupDone = false; // To prevent setup() call add connections again.
 
-    typedef Inkscape::UI::Widget::ScrollProtected<Gtk::SpinButton> SpinButton;
-
-    std::map<sb_type, SpinButton *> spin_buttons;
+    std::map<sb_type, Gtk::SpinButton *> spin_buttons;
     std::map<sb_type, Gtk::Label *> spin_labels;
     std::map<selection_mode, Gtk::ToggleButton *> selection_buttons;
 

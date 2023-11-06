@@ -19,7 +19,6 @@
 
 #include "helper/auto-connection.h"
 #include "preferences.h"
-#include "ui/widget/scrollprotected.h"
 
 namespace Gtk {
 class Builder;
@@ -50,7 +49,7 @@ inline constexpr auto SP_EXPORT_MIN_SIZE = 1.0;
 #define DPI_BASE Inkscape::Util::Quantity::convert(1, "in", "px")
 
 // Class for storing and manipulating extensions
-class ExtensionList : public Inkscape::UI::Widget::ScrollProtected<Gtk::ComboBoxText>
+class ExtensionList : public Gtk::ComboBoxText
 {
 public:
     ExtensionList();
@@ -100,7 +99,6 @@ public:
     int get_rows() { return _num_rows; }
 
 private:
-    typedef Inkscape::UI::Widget::ScrollProtected<Gtk::SpinButton> SpinButton;
     Inkscape::Preferences *prefs = nullptr;
     double default_dpi = 96.00;
 

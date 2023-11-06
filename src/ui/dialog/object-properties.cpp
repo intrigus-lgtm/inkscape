@@ -42,6 +42,7 @@
 #include "object/sp-image.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
+#include "ui/widget/frame.h"
 #include "widgets/sp-attribute-widget.h"
 
 namespace Inkscape::UI::Dialog {

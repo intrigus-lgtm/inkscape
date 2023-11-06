@@ -550,7 +550,6 @@ set(ui_SRC
 	widget/scalar-unit.h
 	widget/scalar.h
 	widget/scroll-utils.h
-	widget/scrollprotected.h
 	widget/selected-style.h
 	widget/shapeicon.h
 	widget/spin-scale.h

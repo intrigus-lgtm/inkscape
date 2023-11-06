@@ -237,7 +237,7 @@ InkSpinScale::InkSpinScale(double value, double lower,
 
 InkSpinScale::InkSpinScale(Glib::RefPtr<Gtk::Adjustment> adjustment)
     : _adjustment(std::move(adjustment))
-    , _spinbutton{Gtk::make_managed<Inkscape::UI::Widget::ScrollProtected<Gtk::SpinButton>>(_adjustment)}
+    , _spinbutton{Gtk::make_managed<Gtk::SpinButton>(_adjustment)}
     , _scale{Gtk::make_managed<InkScale>(_adjustment, _spinbutton)}
 {
     g_assert (_adjustment->get_upper() - _adjustment->get_lower() > 0);

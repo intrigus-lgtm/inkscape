@@ -22,7 +22,6 @@
 
 #include "attr-widget.h"
 #include "ui/widget/labelled.h"
-#include "ui/widget/scrollprotected.h"
 #include "util/enums.h"
 
 namespace Inkscape::UI::Widget {
@@ -31,7 +30,7 @@ namespace Inkscape::UI::Widget {
  * Simplified management of enumerations in the UI as combobox.
  */
 template <typename E> class ComboBoxEnum
-    : public ScrollProtected<Gtk::ComboBox>
+    : public Gtk::ComboBox
     , public AttrWidget
 {
 public:

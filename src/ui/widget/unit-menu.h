@@ -14,7 +14,6 @@
 #include <glibmm/refptr.h>
 #include <gtkmm/comboboxtext.h>
 
-#include "ui/widget/scrollprotected.h"
 #include "util/units.h"
 
 namespace Gtk {
@@ -28,7 +27,7 @@ namespace Inkscape::UI::Widget {
 /**
  * A drop down menu for choosing unit types.
  */
-class UnitMenu : public ScrollProtected<Gtk::ComboBoxText>
+class UnitMenu : public Gtk::ComboBoxText
 {
 public:
     /**

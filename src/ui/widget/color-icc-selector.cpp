@@ -29,7 +29,6 @@
 #include "ui/util.h"
 #include "ui/widget/color-scales.h"
 #include "ui/widget/color-slider.h"
-#include "ui/widget/scrollprotected.h"
 
 #define noDEBUG_LCMS
 
@@ -66,9 +65,9 @@ static constexpr int YPAD = 1;
 
 namespace {
 
-GtkWidget *_scrollprotected_combo_box_new_with_model(GtkTreeModel *model)
+GtkWidget *ink_combo_box_new_with_model(GtkTreeModel *model)
 {
-    auto const combobox = Gtk::make_managed<Inkscape::UI::Widget::ScrollProtected<Gtk::ComboBox>>();
+    auto combobox = Gtk::make_managed<Gtk::ComboBox>();
     gtk_combo_box_set_model(combobox->gobj(), model);
     return combobox->Gtk::Widget::gobj();
 }
@@ -324,7 +323,7 @@ void ColorICCSelector::init(bool no_alpha)
 
     // Combobox and store with 2 columns : label (0) and full name (1)
     GtkListStore *store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
-    _impl->_profileSel = _scrollprotected_combo_box_new_with_model(GTK_TREE_MODEL(store));
+    _impl->_profileSel = ink_combo_box_new_with_model(GTK_TREE_MODEL(store));
 
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(_impl->_profileSel), renderer, TRUE);
@@ -378,9 +377,9 @@ void ColorICCSelector::init(bool no_alpha)
 
         attachToGridOrTable(t, _impl->_compUI[i]._slider->Gtk::Widget::gobj(), 1, row, 1, 1, true);
 
-        auto const spinbutton = Gtk::make_managed<ScrollProtected<Gtk::SpinButton>>(_impl->_compUI[i]._adj, step, digits);
+        auto const spinbutton = Gtk::make_managed<Gtk::SpinButton>(_impl->_compUI[i]._adj, step, digits);
         _impl->_compUI[i]._btn = spinbutton->Gtk::Widget::gobj();
-        gtk_widget_set_tooltip_text(_impl->_compUI[i]._btn, (i < things.size()) ? things[i].tip.c_str() : "");
+        spinbutton->set_tooltip_text(i < things.size() ? things[i].tip.c_str() : "");
         sp_dialog_defocus_on_enter(_impl->_compUI[i]._btn);
         gtk_label_set_mnemonic_widget(GTK_LABEL(_impl->_compUI[i]._label), _impl->_compUI[i]._btn);
         gtk_widget_set_visible(_impl->_compUI[i]._btn, true);
@@ -421,7 +420,7 @@ void ColorICCSelector::init(bool no_alpha)
                               SP_RGBA32_F_COMPOSE(1.0, 1.0, 1.0, 1.0));
 
     // Spinbutton
-    auto const spinbuttonalpha = Gtk::make_managed<ScrollProtected<Gtk::SpinButton>>(_impl->_adj, 1.0);
+    auto const spinbuttonalpha = Gtk::make_managed<Gtk::SpinButton>(_impl->_adj, 1.0);
     _impl->_sbtn = spinbuttonalpha->Gtk::Widget::gobj();
     gtk_widget_set_tooltip_text(_impl->_sbtn, _("Alpha (opacity)"));
     sp_dialog_defocus_on_enter(_impl->_sbtn);

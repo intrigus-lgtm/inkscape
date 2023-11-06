@@ -30,7 +30,6 @@
 
 #include "text-editing.h"
 #include "ui/dialog/dialog-base.h"
-#include "ui/widget/scrollprotected.h"
 #include "display/control/canvas-item-ptr.h"
 
 #if WITH_GSPELL
@@ -244,7 +243,7 @@ private:
     Gtk::Button     add_button;
     Gtk::Button     pref_button;
     Gtk::Label      dictionary_label;
-    Inkscape::UI::Widget::ScrollProtected<Gtk::ComboBoxText> dictionary_combo;
+    Gtk::ComboBoxText dictionary_combo;
     Gtk::Box        dictionary_hbox;
     Gtk::Separator  action_sep;
     Gtk::Button     stop_button;

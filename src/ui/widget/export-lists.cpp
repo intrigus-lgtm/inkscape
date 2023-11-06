@@ -26,7 +26,6 @@
 #include "io/sys.h"
 #include "preferences.h"
 #include "ui/icon-loader.h"
-#include "ui/widget/scrollprotected.h"
 #include "ui/builder-utils.h"
 #include "util/units.h"
 
@@ -38,7 +37,7 @@ ExtensionList::ExtensionList()
 }
 
 ExtensionList::ExtensionList(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refGlade)
-    : Inkscape::UI::Widget::ScrollProtected<Gtk::ComboBoxText>(cobject, refGlade)
+    : Gtk::ComboBoxText{cobject}
 {
     init();
 }
@@ -203,7 +202,7 @@ void ExportList::append_row()
     suffix->set_visible(true);
 
     auto const extension = Gtk::make_managed<ExtensionList>();
-    auto const dpi_sb = Gtk::make_managed<SpinButton>();
+    auto const dpi_sb = Gtk::make_managed<Gtk::SpinButton>();
 
     extension->setup();
     extension->set_visible(true);
@@ -276,7 +275,7 @@ Inkscape::Extension::Output *ExportList::getExtension(int row)
 double ExportList::get_dpi(int row)
 {
     double dpi = default_dpi;
-    SpinButton *spin_sb = dynamic_cast<SpinButton *>(this->get_child_at(_dpi_col, row + 1));
+    auto spin_sb = dynamic_cast<Gtk::SpinButton *>(this->get_child_at(_dpi_col, row + 1));
     if (spin_sb == nullptr) {
         return dpi;
     }

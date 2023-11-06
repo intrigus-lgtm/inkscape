@@ -39,25 +39,6 @@ Gtk::Widget const *get_scrollable_ancestor(Gtk::Widget const * const widget)
     return const_cast<Gtk::Widget const *>(mut_ancestor);
 }
 
-/**
- * Return true if scrolling is allowed.
- *
- * Scrolling is allowed for any of:
- * - Shift modifier is pressed
- * - Widget has focus
- * - Widget has no scrollable ancestor
- */
-bool scrolling_allowed(Gtk::Widget    const * const widget,
-                       GdkEventScroll const * const event )
-{
-    g_return_val_if_fail(widget, false);
-
-    bool const shift = event && (event->state & GDK_SHIFT_MASK);
-    return shift ||               //
-           widget->has_focus() || //
-           get_scrollable_ancestor(widget) == nullptr;
-}
-
 } // namespace Inkscape::UI::Widget
 
 /*

@@ -93,15 +93,15 @@ SingleExport::SingleExport(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Buil
     selection_buttons[SELECTION_SELECTION] = &get_widget<Gtk::ToggleButton>(builder, "si_s_selection");
     selection_buttons[SELECTION_CUSTOM]    = &get_widget<Gtk::ToggleButton>(builder, "si_s_custom");
 
-    spin_buttons[SPIN_X0]       = &get_derived_widget<SpinButton>(builder, "si_left_sb");
-    spin_buttons[SPIN_X1]       = &get_derived_widget<SpinButton>(builder, "si_right_sb");
-    spin_buttons[SPIN_Y0]       = &get_derived_widget<SpinButton>(builder, "si_top_sb");
-    spin_buttons[SPIN_Y1]       = &get_derived_widget<SpinButton>(builder, "si_bottom_sb");
-    spin_buttons[SPIN_HEIGHT]   = &get_derived_widget<SpinButton>(builder, "si_height_sb");
-    spin_buttons[SPIN_WIDTH]    = &get_derived_widget<SpinButton>(builder, "si_width_sb");
-    spin_buttons[SPIN_BMHEIGHT] = &get_derived_widget<SpinButton>(builder, "si_img_height_sb");
-    spin_buttons[SPIN_BMWIDTH]  = &get_derived_widget<SpinButton>(builder, "si_img_width_sb");
-    spin_buttons[SPIN_DPI]      = &get_derived_widget<SpinButton>(builder, "si_dpi_sb");
+    spin_buttons[SPIN_X0]       = &get_widget<Gtk::SpinButton>(builder, "si_left_sb");
+    spin_buttons[SPIN_X1]       = &get_widget<Gtk::SpinButton>(builder, "si_right_sb");
+    spin_buttons[SPIN_Y0]       = &get_widget<Gtk::SpinButton>(builder, "si_top_sb");
+    spin_buttons[SPIN_Y1]       = &get_widget<Gtk::SpinButton>(builder, "si_bottom_sb");
+    spin_buttons[SPIN_HEIGHT]   = &get_widget<Gtk::SpinButton>(builder, "si_height_sb");
+    spin_buttons[SPIN_WIDTH]    = &get_widget<Gtk::SpinButton>(builder, "si_width_sb");
+    spin_buttons[SPIN_BMHEIGHT] = &get_widget<Gtk::SpinButton>(builder, "si_img_height_sb");
+    spin_buttons[SPIN_BMWIDTH]  = &get_widget<Gtk::SpinButton>(builder, "si_img_width_sb");
+    spin_buttons[SPIN_DPI]      = &get_widget<Gtk::SpinButton>(builder, "si_dpi_sb");
 
     spin_labels[SPIN_X0]        = &get_widget<Gtk::Label>(builder, "si_label_left");
     spin_labels[SPIN_X1]        = &get_widget<Gtk::Label>(builder, "si_label_right");

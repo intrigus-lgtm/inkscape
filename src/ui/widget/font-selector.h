@@ -44,7 +44,6 @@
 #include <sigc++/signal.h>
 
 #include "ui/widget/font-variations.h"
-#include "ui/widget/scrollprotected.h"
 
 namespace Gdk {
 class Drag;
@@ -99,7 +98,7 @@ protected:
 
     // Font size
     Gtk::Label          size_label;
-    ScrollProtected<Gtk::ComboBoxText> size_combobox;
+    Gtk::ComboBoxText   size_combobox;
 
     // Font variations
     Gtk::ScrolledWindow font_variations_scroll;

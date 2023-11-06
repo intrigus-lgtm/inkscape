@@ -21,6 +21,7 @@
 
 namespace Gtk {
 class Box;
+class Builder;
 class Label;
 class Paned;
 class SearchEntry;

@@ -57,7 +57,6 @@
 #include "ui/widget/gradient-editor.h"
 #include "ui/widget/gradient-selector.h"
 #include "ui/widget/pattern-editor.h"
-#include "ui/widget/scrollprotected.h"
 #include "ui/widget/swatch-selector.h"
 #include "widgets/widget-sizes.h"
 #include "xml/repr.h"
@@ -88,9 +87,9 @@ static gchar const *modeStrings[] = {
 #endif
 
 namespace {
-GtkWidget *_scrollprotected_combo_box_new_with_model(GtkTreeModel *model)
+GtkWidget *ink_combo_box_new_with_model(GtkTreeModel *model)
 {
-    auto const combobox = Gtk::make_managed<Inkscape::UI::Widget::ScrollProtected<Gtk::ComboBox>>();
+    auto const combobox = Gtk::make_managed<Gtk::ComboBox>();
     gtk_combo_box_set_model(combobox->gobj(), model);
     return combobox->Gtk::Widget::gobj();
 }
@@ -847,7 +846,7 @@ void PaintSelector::set_mode_mesh(PaintSelector::Mode mode)
              */
             GtkListStore *store =
                 gtk_list_store_new(COMBO_N_COLS, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_BOOLEAN);
-            GtkWidget *combo = _scrollprotected_combo_box_new_with_model(GTK_TREE_MODEL(store));
+            GtkWidget *combo = ink_combo_box_new_with_model(GTK_TREE_MODEL(store));
             gtk_combo_box_set_row_separator_func(GTK_COMBO_BOX(combo), PaintSelector::isSeparator, nullptr, nullptr);
 
             GtkCellRenderer *renderer = gtk_cell_renderer_text_new();

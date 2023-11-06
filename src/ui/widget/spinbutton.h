@@ -15,7 +15,6 @@
 #include <glibmm/ustring.h>
 #include <gtkmm/spinbutton.h>
 
-#include "scrollprotected.h"
 #include "ui/popup-menu.h"
 #include "ui/widget/popover-menu.h"
 
@@ -46,15 +45,19 @@ private:
  *
  * Calling "set_numeric()" effectively disables the expression parsing. If no unit menu is linked, all unitlike characters are ignored.
  */
-class SpinButton : public ScrollProtected<Gtk::SpinButton>
+class SpinButton : public Gtk::SpinButton
 {
 public:
     using NumericMenuData = std::map<double, Glib::ustring>;
     // We canʼt inherit ctors as if we declare SpinButton(), inherited ctors donʼt call it. Really!
     template <typename ...Args>
     SpinButton(Args &&...args)
-    : ScrollProtected(std::forward<Args>(args)...)
-    { construct(); } // Do the non-templated stuff
+        : Gtk::SpinButton{std::forward<Args>(args)...}
+    { _construct(); } // Do the non-templated stuff
+
+    SpinButton(BaseObjectType *cobject, Glib::RefPtr<Gtk::Builder> const &)
+        : Gtk::SpinButton{cobject}
+    { _construct(); }
 
     void setUnitMenu(UnitMenu* unit_menu) { _unit_menu = unit_menu; };
     void addUnitTracker(UnitTracker* ut) { _unit_tracker = ut; };
@@ -83,7 +86,7 @@ private:
     NumericMenuData _custom_menu_data;
     bool _custom_popup = false;
 
-    void construct();
+    void _construct();
 
     /**
      * This callback function should try to convert the entered text to a number and write it to newvalue.

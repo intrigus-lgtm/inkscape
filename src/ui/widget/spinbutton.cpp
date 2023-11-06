@@ -49,7 +49,7 @@ int MathSpinButton::on_input(double &newvalue)
     return true;
 }
 
-void SpinButton::construct()
+void SpinButton::_construct()
 {
     Controller::add_key<&SpinButton::on_key_pressed>(*this, *this);
 

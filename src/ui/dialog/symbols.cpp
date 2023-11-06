@@ -80,7 +80,6 @@
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
-#include "ui/widget/scrollprotected.h"
 #include "xml/href-attribute-helper.h"
 
 #ifdef WITH_LIBVISIO

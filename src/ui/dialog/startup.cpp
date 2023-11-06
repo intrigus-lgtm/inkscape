@@ -17,12 +17,14 @@
 #include <gdkmm/display.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
+#include <gtkmm/checkbutton.h>
 #include <gtkmm/combobox.h>
 #include <gtkmm/cssprovider.h>
 #include <gtkmm/infobar.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/notebook.h>
 #include <gtkmm/overlay.h>
+#include <gtkmm/picture.h>
 #include <gtkmm/recentmanager.h>
 #include <gtkmm/settings.h>
 #include <gtkmm/stack.h>
@@ -30,7 +32,6 @@
 #include <gtkmm/switch.h>
 #include <gtkmm/togglebutton.h>
 #include <gtkmm/treeview.h>
-#include <gtkmm/window.h>
 
 #include "color.h"
 #include "color-rgba.h"
@@ -152,8 +153,6 @@ using Inkscape::UI::Widget::TemplateList;
 StartScreen::StartScreen()
     : Gtk::Dialog()
     , builder(create_builder("inkscape-start.glade"))
-    , window         (get_widget<Gtk::Window>  (builder, "start-screen-window"))
-      // Global widgets
     , tabs           (get_widget<Gtk::Notebook>        (builder, "tabs"))
     , templates      (get_derived_widget<TemplateList> (builder, "kinds"))
     , banners        (get_widget<Gtk::Overlay>         (builder, "banner"))
@@ -176,17 +175,14 @@ StartScreen::StartScreen()
     templates.init(Inkscape::Extension::TEMPLATE_NEW_WELCOME);
 
     // Get references to various widget used locally. (In order of appearance.)
-    auto canvas      = &get_widget<Gtk::ComboBox>(builder, "canvas");
-    auto keys        = &get_widget<Gtk::ComboBox>(builder, "keys");
-    auto save        = &get_widget<Gtk::Button>  (builder, "save");
-    auto thanks      = &get_widget<Gtk::Button>  (builder, "thanks");
-    auto close_btn   = &get_widget<Gtk::Button>  (builder, "close_window");
-    auto new_btn     = &get_widget<Gtk::Button>  (builder, "new");
-    auto show_toggle = &get_widget<Gtk::Button>  (builder, "show_toggle");
-    auto dark_toggle = &get_widget<Gtk::Switch>  (builder, "dark_toggle");
-
-    // Unparent to move to our dialog window.
-    remove_banners_and_tabs(window);
+    auto canvas      = &get_widget<Gtk::ComboBox>    (builder, "canvas");
+    auto keys        = &get_widget<Gtk::ComboBox>    (builder, "keys");
+    auto save        = &get_widget<Gtk::Button>      (builder, "save");
+    auto thanks      = &get_widget<Gtk::Button>      (builder, "thanks");
+    auto close_btn   = &get_widget<Gtk::Button>      (builder, "close_window");
+    auto new_btn     = &get_widget<Gtk::Button>      (builder, "new");
+    auto show_toggle = &get_widget<Gtk::CheckButton> (builder, "show_toggle");
+    auto dark_toggle = &get_widget<Gtk::Switch>      (builder, "dark_toggle");
 
     // Add signals and setup things.
     auto prefs = Inkscape::Preferences::get();
@@ -204,11 +200,22 @@ StartScreen::StartScreen()
     // initialise dark depending on prefs and background
     refresh_dark_switch();
 
+    // Load pictures. Gtk::Picture doesn't appear to be able to load image files from builder files.
+    auto const welcome_text_file   = Resource::get_filename(Resource::SCREENS, "start-welcome-text.svg", true);
+    auto const start_welcome_file  = Resource::get_filename(Resource::SCREENS, "start-welcome.png");
+    auto const start_support_file  = Resource::get_filename(Resource::SCREENS, "start-support.png");
+    auto const start_splash_file   = Resource::get_filename(Resource::SCREENS, "start-splash.png");
+    auto const start_support_time  = Resource::get_filename(Resource::SCREENS, "start-support-time.png");
+    auto const start_support_money = Resource::get_filename(Resource::SCREENS, "start-support-money.png");
+
+    get_widget<Gtk::Picture>(builder, "welcome_text"       ).set_filename(welcome_text_file);
+    get_widget<Gtk::Picture>(builder, "start-welcome"      ).set_filename(start_welcome_file);
+    get_widget<Gtk::Picture>(builder, "start-support"      ).set_filename(start_support_file);
+    get_widget<Gtk::Picture>(builder, "start-splash"       ).set_filename(start_splash_file);
+    get_widget<Gtk::Picture>(builder, "start-support-time" ).set_filename(start_support_time);
+    get_widget<Gtk::Picture>(builder, "start-support-money").set_filename(start_support_money);
+
     // Welcome! tab
-    auto const welcome_text_file = Resource::get_filename(Resource::SCREENS,
-                                                          "start-welcome-text.svg", true);
-    get_widget<Gtk::Image>(builder, "welcome_text").set(welcome_text_file);
-    
     canvas->signal_changed().connect(sigc::mem_fun(*this, &StartScreen::canvas_changed));
     keys->signal_changed().connect(sigc::mem_fun(*this, &StartScreen::keyboard_changed));
     themes.signal_changed().connect(sigc::mem_fun(*this, &StartScreen::theme_changed));
@@ -224,13 +231,13 @@ StartScreen::StartScreen()
     templates.signal_switch_page().connect(sigc::mem_fun(*this, &StartScreen::on_kind_changed));
     load_btn.set_sensitive(true);
 
-    show_toggle->signal_clicked().connect(sigc::mem_fun(*this, &StartScreen::show_toggle));
+    show_toggle->signal_toggled().connect(sigc::mem_fun(*this, &StartScreen::show_toggle));
     load_btn.signal_clicked().connect(sigc::mem_fun(*this, &StartScreen::load_document));
     templates.connectItemSelected(sigc::mem_fun(*this, &StartScreen::new_document));
     new_btn->signal_clicked().connect(sigc::mem_fun(*this, &StartScreen::new_document));
     close_btn->signal_clicked().connect([this] { response(GTK_RESPONSE_CANCEL); });
 
-    // Reparent to our dialog window
+    // Parent to our dialog window
     set_titlebar(banners);
     Gtk::Box* box = get_content_area();
     box->append(tabs);
@@ -256,8 +263,6 @@ StartScreen::StartScreen()
 
 StartScreen::~StartScreen()
 {
-    // These are "owned" by builder... don't delete them!
-    remove_banners_and_tabs(*this);
 }
 
 /**
@@ -739,14 +744,6 @@ void StartScreen::refresh_dark_switch()
     auto &dark_toggle = get_widget<Gtk::Switch>(builder, "dark_toggle");
     dark_toggle.set_sensitive(themes[current_theme]);
     dark_toggle.set_active(dark);
-}
-
-void StartScreen::remove_banners_and_tabs(Gtk::Window &window)
-{
-    g_assert(banners.get_parent() == &window);
-    g_assert(tabs   .get_parent() == &window);
-    window.unset_titlebar();
-    window.unset_child   ();
 }
 
 } // namespace Inkscape::UI::Dialog

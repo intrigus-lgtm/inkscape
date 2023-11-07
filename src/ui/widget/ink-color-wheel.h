@@ -37,6 +37,8 @@ class GestureClick;
 
 namespace Inkscape::UI::Widget {
 
+class Bin;
+
 struct ColorPoint final
 {
     ColorPoint();
@@ -112,9 +114,10 @@ protected:
 private:
     sigc::signal<void ()> _signal_color_changed;
 
+    UI::Widget::Bin *_bin;
     Gtk::DrawingArea *_drawing_area;
-    virtual void on_drawing_area_size (Gtk::Allocation const &allocation) {}
-    virtual void on_drawing_area_draw (Cairo::RefPtr<Cairo::Context> const &cr, int, int) = 0;
+    virtual void on_drawing_area_size(int width, int height, int baseline) {}
+    virtual void on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int) = 0;
     virtual bool on_drawing_area_focus(Gtk::DirectionType /*direction*/) { return false; }
     /// All event controllers are connected to the DrawingArea.
     virtual Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
@@ -146,9 +149,9 @@ public:
     void getHsl(double *h, double *s, double *l) const;
 
 private:
-    void on_drawing_area_size (Gtk::Allocation const &allocation      ) final;
-    void on_drawing_area_draw (Cairo::RefPtr<Cairo::Context> const &cr, int, int) final;
-    bool on_drawing_area_focus(Gtk::DirectionType direction) final;
+    void on_drawing_area_size(int width, int height, int baseline) override;
+    void on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int) override;
+    bool on_drawing_area_focus(Gtk::DirectionType direction) override;
 
     bool _set_from_xy(double x, double y);
     bool set_from_xy_delta(double dx, double dy);
@@ -177,7 +180,7 @@ private:
     // caches to speed up drawing
     using TriangleCorners = std::array<ColorPoint, 3>;
     using MinMax          = std::array<double    , 2>;
-    std::optional<int                > _cache_width, _cache_height;
+    std::optional<Geom::IntPoint> _cache_size;
     std::optional<MinMax             > _radii;
     std::optional<TriangleCorners    > _triangle_corners;
     std::optional<Geom::Point        > _marker_point;
@@ -231,7 +234,7 @@ private:
     std::unique_ptr<Hsluv::PickerGeometry> _picker_geometry;
     std::vector<guint32> _buffer_polygon;
     Cairo::RefPtr<::Cairo::ImageSurface> _surface_polygon;
-    int _cache_width = 0, _cache_height = 0;
+    Geom::IntPoint _cache_size;
     int _square_size = 1;
 };
 

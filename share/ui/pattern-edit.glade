@@ -506,7 +506,7 @@
                 <property name="child">
                   <object class="GtkViewport" id="preview-box">
                     <property name="child">
-                      <object class="GtkImage" id="preview">
+                      <object class="GtkPicture" id="preview">
                         <property name="hexpand">True</property>
                       </object>
                     </property>

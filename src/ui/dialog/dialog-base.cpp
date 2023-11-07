@@ -158,7 +158,7 @@ void DialogBase::focus_dialog() {
 void DialogBase::defocus_dialog() {
     if (auto wnd = dynamic_cast<Gtk::Window*>(get_root())) {
         // defocus floating dialog:
-        sp_dialog_defocus_cpp(wnd);
+        sp_dialog_defocus(wnd);
 
         // for docked dialogs, move focus to canvas
         if (auto desktop = getDesktop()) {

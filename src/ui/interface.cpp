@@ -100,7 +100,7 @@ void sp_ui_error_dialog(char const *message)
     auto const safeMsg = Inkscape::IO::sanitizeString(message);
 
     auto dlg = Gtk::MessageDialog(safeMsg, true, Gtk::MessageType::ERROR, Gtk::ButtonsType::CLOSE);
-    sp_transientize(dlg.Gtk::Widget::gobj());
+    sp_transientize(dlg);
 
     Inkscape::UI::dialog_run(dlg);
 }

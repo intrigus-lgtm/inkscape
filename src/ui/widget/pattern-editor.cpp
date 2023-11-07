@@ -19,9 +19,9 @@
 #include <gtkmm/entry.h>
 #include <gtkmm/flowbox.h>
 #include <gtkmm/grid.h>
-#include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/paned.h>
+#include <gtkmm/picture.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/searchentry.h>
@@ -31,19 +31,12 @@
 
 #include "document.h"
 #include "preferences.h"
-#include "style.h"
 
-#include "io/resource.h"
-#include "manipulation/copy-resource.h"
-#include "object/sp-defs.h"
-#include "object/sp-root.h"
 #include "pattern-manager.h"
 #include "pattern-manipulation.h"
 #include "ui/builder-utils.h"
 #include "ui/pack.h"
-#include "ui/svg-renderer.h"
 #include "ui/util.h"
-#include "util/units.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -96,7 +89,7 @@ PatternEditor::PatternEditor(const char* prefs, Inkscape::PatternManager& manage
     _gap_x_spin(get_widget<Gtk::SpinButton>(_builder, "gap-x-spin")),
     _gap_y_spin(get_widget<Gtk::SpinButton>(_builder, "gap-y-spin")),
     _edit_btn(get_widget<Gtk::Button>(_builder, "edit-pattern")),
-    _preview_img(get_widget<Gtk::Image>(_builder, "preview")),
+    _preview_img(get_widget<Gtk::Picture>(_builder, "preview")),
     _preview(get_widget<Gtk::Viewport>(_builder, "preview-box")),
     _color_btn(get_widget<Gtk::Button>(_builder, "color-btn")),
     _color_label(get_widget<Gtk::Label>(_builder, "color-label")),
@@ -378,8 +371,8 @@ void PatternEditor::update_scale_link() {
 void PatternEditor::update_widgets_from_pattern(Glib::RefPtr<PatternItem>& pattern) {
     _input_grid.set_sensitive(!!pattern);
 
-    PatternItem empty;
-    const auto& item = pattern ? *pattern.get() : empty;
+    static auto const empty = PatternItem::create();
+    auto const &item = pattern ? *pattern : *empty;
 
     _name_box.set_text(item.label.c_str());
 
@@ -500,9 +493,9 @@ void PatternEditor::set_selected(SPPattern* pattern) {
         // use white for checkerboard since most stock patterns are black
         unsigned int background = 0xffffffff;
         auto surface = _manager.get_preview(link_pattern, size.get_width(), size.get_height(), background, device_scale);
-        _preview_img.set(to_texture(surface));
+        _preview_img.set_paintable(to_texture(surface));
     } else {
-        _preview_img.clear();
+        _preview_img.set_paintable(nullptr);
     }
 }
 

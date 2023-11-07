@@ -279,7 +279,7 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
 
         /* Spinbutton */
         _b[i] = Gtk::make_managed<Gtk::SpinButton>(_a[i], 1.0);
-        sp_dialog_defocus_on_enter(_b[i]->gobj());
+        //sp_dialog_defocus_on_enter(_b[i]);
         _l[i]->set_mnemonic_widget(*_b[i]);
         _b[i]->set_visible(true);
 

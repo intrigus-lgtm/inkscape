@@ -25,6 +25,7 @@
 #include "ui/controller.h"
 #include "ui/dialog/color-item.h"
 #include "ui/util.h"
+#include "ui/widget/bin.h"
 #include "ui/widget/ink-color-wheel.h"
 
 namespace Inkscape::UI::Widget {
@@ -85,18 +86,19 @@ static void draw_vertical_padding(ColorPoint p0, ColorPoint p1, int padding, boo
 
 ColorWheel::ColorWheel()
     : Gtk::AspectFrame(0.5, 0.5, 1.0, false)
+    , _bin{Gtk::make_managed<UI::Widget::Bin>()}
     , _drawing_area{Gtk::make_managed<Gtk::DrawingArea>()}
 {
     set_name("ColorWheel");
     add_css_class("flat");
 
-    _drawing_area->set_visible(true);
     _drawing_area->set_focusable(true);
     _drawing_area->set_expand(true);
-    _drawing_area->signal_size_allocate().connect(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_size ));
+    _bin->connectAfterResize(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_size));
     _drawing_area->set_draw_func(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_draw ));
     _drawing_area->signal_focus().connect(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_focus));
-    set_child(*_drawing_area);
+    _bin->set_child(_drawing_area);
+    set_child(*_bin);
 
     Controller::add_click(*_drawing_area, sigc::mem_fun(*this, &ColorWheel::on_click_pressed ),
                                           sigc::mem_fun(*this, &ColorWheel::on_click_released));
@@ -294,7 +296,7 @@ void ColorWheelHSL::update_ring_source()
 {
     if (_radii && _source_ring) return;
 
-    auto const &width = _cache_width.value(), &height = _cache_height.value();
+    auto const [width, height] = *_cache_size;
     auto const cx = width  / 2.0;
     auto const cy = height / 2.0;
 
@@ -356,7 +358,7 @@ ColorWheelHSL::update_triangle_source()
      */
     constexpr int padding = 3; // Avoid edge artifacts.
 
-    auto const &width = _cache_width.value(), &height = _cache_height.value();
+    auto const [width, height] = *_cache_size;
     auto const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::Surface::Format::RGB24, width);
     _buffer_triangle.resize(height * stride / 4);
 
@@ -417,19 +419,17 @@ ColorWheelHSL::update_triangle_source()
     return {p0, p1, p2};
 }
 
-void ColorWheelHSL::on_drawing_area_size(Gtk::Allocation const &allocation)
+void ColorWheelHSL::on_drawing_area_size(int width, int height, int baseline)
 {
-    auto const width = allocation.get_width(), height = allocation.get_height();
-    if (width == _cache_width && height == _cache_height) return;
-
-    _cache_width  = width ;
-    _cache_height = height;
+    auto const size = Geom::IntPoint{width, height};
+    if (size == _cache_size) return;
+    _cache_size = size;
     _radii.reset();
 }
 
-void ColorWheelHSL::on_drawing_area_draw(::Cairo::RefPtr<::Cairo::Context> const &cr, int, int)
+void ColorWheelHSL::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int)
 {
-    auto const &width = _cache_width.value(), &height = _cache_height.value();
+    auto const [width, height] = *_cache_size;
     auto const cx = width  / 2.0;
     auto const cy = height / 2.0;
 
@@ -542,7 +542,7 @@ bool ColorWheelHSL::on_drawing_area_focus(Gtk::DirectionType const direction)
 
 bool ColorWheelHSL::_set_from_xy(double const x, double const y)
 {
-    auto const &width = _cache_width.value(), &height = _cache_height.value();
+    auto const [width, height] = *_cache_size;
     double const cx = width/2.0;
     double const cy = height/2.0;
 
@@ -580,7 +580,7 @@ bool ColorWheelHSL::set_from_xy_delta(double const dx, double const dy)
 
 bool ColorWheelHSL::_is_in_ring(double x, double y)
 {
-    auto const &width = _cache_width.value(), &height = _cache_height.value();
+    auto const [width, height] = *_cache_size;
     auto const cx = width  / 2.0;
     auto const cy = height / 2.0;
 
@@ -612,7 +612,7 @@ bool ColorWheelHSL::_is_in_triangle(double x, double y)
 
 void ColorWheelHSL::_update_ring_color(double x, double y)
 {
-    auto const &width = _cache_width.value(), &height = _cache_height.value();
+    auto const [width, height] = *_cache_size;
     double cx = width / 2.0;
     double cy = height / 2.0;
 
@@ -741,7 +741,7 @@ ColorWheelHSL::MinMax const &ColorWheelHSL::get_radii()
 
     _radii.emplace();
     auto &[r_min, r_max] = *_radii;
-    auto const &width = _cache_width.value(), &height = _cache_height.value();
+    auto const [width, height] = *_cache_size;
     r_max = std::min(width, height) / 2.0 - 2 * (focus_line_width + focus_padding);
     r_min = r_max * (1.0 - _ring_width);
     return *_radii;
@@ -751,7 +751,7 @@ std::array<ColorPoint, 3> const &ColorWheelHSL::get_triangle_corners()
 {
     if (_triangle_corners) return *_triangle_corners;
 
-    auto const &width = _cache_width.value(), &height = _cache_height.value();
+    auto const [width, height] = *_cache_size;
     double const cx = width  / 2.0;
     double const cy = height / 2.0;
 
@@ -981,7 +981,7 @@ void ColorWheelHSLuv::on_drawing_area_draw(::Cairo::RefPtr<::Cairo::Context> con
     cr->set_antialias(Cairo::ANTIALIAS_SUBPIXEL);
 
     if (size > _square_size) {
-        if (_cache_width != dimensions[Geom::X] || _cache_height != dimensions[Geom::Y]) {
+        if (_cache_size != dimensions) {
             _updatePolygon();
         }
         if (!is_vertex) {
@@ -1084,8 +1084,7 @@ void ColorWheelHSLuv::_updatePolygon()
         return;
     }
 
-    _cache_width = allocation_size[Geom::X];
-    _cache_height = allocation_size[Geom::Y];
+    _cache_size = allocation_size;
 
     double const resize = size / static_cast<double>(SIZE);
 
@@ -1103,9 +1102,9 @@ void ColorWheelHSLuv::_updatePolygon()
     auto const bounding_max = bounding_rect.max().ceil();
     auto const bounding_min = bounding_rect.min().floor();
 
-    int const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::Surface::Format::RGB24, _cache_width);
+    int const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::Surface::Format::RGB24, _cache_size.x());
 
-    _buffer_polygon.resize(_cache_height * stride / 4);
+    _buffer_polygon.resize(_cache_size.y() * stride / 4);
     std::vector<guint32> buffer_line(stride / 4);
 
     ColorPoint clr;
@@ -1135,7 +1134,7 @@ void ColorWheelHSLuv::_updatePolygon()
     }
 
     _surface_polygon = ::Cairo::ImageSurface::create(reinterpret_cast<unsigned char *>(_buffer_polygon.data()),
-                                                     Cairo::Surface::Format::RGB24, _cache_width, _cache_height, stride);
+                                                     Cairo::Surface::Format::RGB24, _cache_size.x(), _cache_size.y(), stride);
 }
 
 Gtk::EventSequenceState ColorWheelHSLuv::on_click_pressed(Gtk::GestureClick const & /*click*/,

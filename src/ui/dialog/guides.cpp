@@ -21,48 +21,49 @@
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
-#include "include/gtkmm_version.h"
-#include "message-context.h"
 #include "object/sp-guide.h"
 #include "object/sp-namedview.h"
 #include "page-manager.h"
 #include "ui/dialog-events.h"
-#include "ui/dialog-run.h"
-#include "ui/pack.h"
-#include "ui/tools/tool-base.h"
 #include "ui/widget/spinbutton.h"
 
 namespace Inkscape::UI::Dialog {
+namespace {
+
+bool relative_toggle_status = false; // initialize relative checkbox status for when this dialog is opened for first time
+Glib::ustring angle_unit_status = DEG; // initialize angle unit status
+
+} // namespace
 
 GuidelinePropertiesDialog::GuidelinePropertiesDialog(SPGuide *guide, SPDesktop *desktop)
-: _desktop(desktop), _guide(guide),
-  _locked_toggle(_("Lo_cked")),
-  _relative_toggle(_("Rela_tive change")),
-  _spin_button_x(C_("Guides", "_X:"), Glib::ustring{}, UNIT_TYPE_LINEAR, Glib::ustring{}, &_unit_menu),
-  _spin_button_y(C_("Guides", "_Y:"), Glib::ustring{}, UNIT_TYPE_LINEAR, Glib::ustring{}, &_unit_menu),
-  _label_entry(_("_Label:"), _("Optionally give this guideline a name")),
-  _spin_angle(_("_Angle:"), {}, UNIT_TYPE_RADIAL),
-  _mode(true), _oldpos(0.,0.), _oldangle(0.0)
+    : _desktop(desktop)
+    , _guide(guide)
+    , _locked_toggle(_("Lo_cked"))
+    , _relative_toggle(_("Rela_tive change"))
+    , _spin_button_x(C_("Guides", "_X:"), Glib::ustring{}, UNIT_TYPE_LINEAR, Glib::ustring{}, &_unit_menu)
+    , _spin_button_y(C_("Guides", "_Y:"), Glib::ustring{}, UNIT_TYPE_LINEAR, Glib::ustring{}, &_unit_menu)
+    , _label_entry(_("_Label:"), _("Optionally give this guideline a name"))
+    , _spin_angle(_("_Angle:"), {}, UNIT_TYPE_RADIAL)
 {
+    set_name("GuidelinePropertiesDialog");
     _locked_toggle.set_use_underline();
     _locked_toggle.set_tooltip_text(_("Lock the movement of guides"));
     _relative_toggle.set_use_underline();
     _relative_toggle.set_tooltip_text(_("Move and/or rotate the guide relative to current settings"));
+    _setup();
 }
 
-bool GuidelinePropertiesDialog::_relative_toggle_status = false; // initialize relative checkbox status for when this dialog is opened for first time
-Glib::ustring GuidelinePropertiesDialog::_angle_unit_status = DEG; // initialize angle unit status
-
-GuidelinePropertiesDialog::~GuidelinePropertiesDialog() {
+GuidelinePropertiesDialog::~GuidelinePropertiesDialog()
+{
     // save current status
-    _relative_toggle_status = _relative_toggle.get_active();
-    _angle_unit_status = _spin_angle.getUnit()->abbr;
+    relative_toggle_status = _relative_toggle.get_active();
+    angle_unit_status = _spin_angle.getUnit()->abbr;
 }
 
-void GuidelinePropertiesDialog::showDialog(SPGuide *guide, SPDesktop *desktop) {
-    GuidelinePropertiesDialog dialog(guide, desktop);
-    dialog._setup();
-    Inkscape::UI::dialog_run(dialog);
+void GuidelinePropertiesDialog::showDialog(SPGuide *guide, SPDesktop *desktop)
+{
+    auto dialog = Gtk::manage(new GuidelinePropertiesDialog(guide, desktop));
+    dialog->present(); // will self-destruct
 }
 
 void GuidelinePropertiesDialog::_modeChanged()
@@ -94,9 +95,8 @@ void GuidelinePropertiesDialog::_modeChanged()
 
 void GuidelinePropertiesDialog::_onOK()
 {
-    this->_onOKimpl();
+    _onOKimpl();
     DocumentUndo::done(_guide->document, _("Set guide properties"), "");
-
 }
 
 void GuidelinePropertiesDialog::_onOKimpl()
@@ -132,16 +132,8 @@ void GuidelinePropertiesDialog::_onOKimpl()
     }
 
     _guide->moveto(newpos, true);
-
-    const gchar* name = g_strdup( _label_entry.getEntry()->get_text().c_str() );
-
-    _guide->set_label(name, true);
-    
-    const bool locked = _locked_toggle.get_active();
-
-    _guide->set_locked(locked, true);
-    
-    g_free((gpointer) name);
+    _guide->set_label(_label_entry.getEntry()->get_text().c_str(), true);
+    _guide->set_locked(_locked_toggle.get_active(), true);
 
     const auto c = _color.get_rgba();
     unsigned r = c.get_red_u()/257, g = c.get_green_u()/257, b = c.get_blue_u()/257;
@@ -161,44 +153,23 @@ void GuidelinePropertiesDialog::_onDelete()
 void GuidelinePropertiesDialog::_onDuplicate()
 {
     _guide = _guide->duplicate();
-    this->_onOKimpl();
+    _onOKimpl();
     DocumentUndo::done(_guide->document, _("Duplicate guide"), "");
 }
 
-void GuidelinePropertiesDialog::_response(gint response)
+void GuidelinePropertiesDialog::_setup()
 {
-    switch (response) {
-	case Gtk::ResponseType::OK:
-            _onOK();
-            break;
-	case -12:
-            _onDelete();
-            break;
-	case -13:
-            _onDuplicate();
-            break;
-	case Gtk::ResponseType::CANCEL:
-            break;
-	case Gtk::ResponseType::DELETE_EVENT:
-            break;
-	default:
-            g_assert_not_reached();
-    }
-}
-
-void GuidelinePropertiesDialog::_setup() {
     set_title(_("Guideline"));
-    add_button(_("_OK"), Gtk::ResponseType::OK);
-    add_button(_("_Duplicate"), -13);
-    add_button(_("_Delete"), -12);
-    add_button(_("_Cancel"), Gtk::ResponseType::CANCEL);
 
-    auto mainVBox = get_content_area();
+    auto vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
+    set_child(*vbox);
+
     _layout_table.set_row_spacing(4);
     _layout_table.set_column_spacing(4);
     _layout_table.set_margin(4);
+    _layout_table.set_expand();
 
-    UI::pack_start(*mainVBox, _layout_table, false, false);
+    vbox->append(_layout_table);
 
     _label_name.set_label("foo0");
     _label_name.set_halign(Gtk::Align::START);
@@ -234,7 +205,7 @@ void GuidelinePropertiesDialog::_setup() {
     if (_desktop->getNamedView()->display_units) {
         _unit_menu.setUnit( _desktop->getNamedView()->display_units->abbr );
     }
-    _spin_angle.setUnit(_angle_unit_status);
+    _spin_angle.setUnit(angle_unit_status);
 
     // position spinbuttons
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
@@ -243,11 +214,11 @@ void GuidelinePropertiesDialog::_setup() {
     _spin_button_x.setAlignment(1.0);
     _spin_button_x.setIncrements(1.0, 10.0);
     _spin_button_x.setRange(-1e6, 1e6);
-    _spin_button_y.setDigits(minimumexponent);
     
     _spin_button_y.setAlignment(1.0);
     _spin_button_y.setIncrements(1.0, 10.0);
     _spin_button_y.setRange(-1e6, 1e6);
+    _spin_button_y.setDigits(minimumexponent);
 
     _spin_button_x.set_halign(Gtk::Align::FILL);
     _spin_button_x.set_valign(Gtk::Align::FILL);
@@ -271,6 +242,9 @@ void GuidelinePropertiesDialog::_setup() {
     _spin_angle.setIncrements(1.0, 10.0);
     _spin_angle.setRange(-3600., 3600.);
 
+    // Fixme: The three spinbuttons should activate the default widget when enter is pressed.
+    // Unfortunately, this is difficult or impossible to implement in GTK4.
+
     _spin_angle.set_halign(Gtk::Align::FILL);
     _spin_angle.set_valign(Gtk::Align::FILL);
     _spin_angle.set_hexpand();
@@ -291,7 +265,7 @@ void GuidelinePropertiesDialog::_setup() {
     _layout_table.attach(_locked_toggle, 1, 8, 2, 1);
 
     _relative_toggle.signal_toggled().connect(sigc::mem_fun(*this, &GuidelinePropertiesDialog::_modeChanged));
-    _relative_toggle.set_active(_relative_toggle_status);
+    _relative_toggle.set_active(relative_toggle_status);
 
     bool global_guides_lock = _desktop->getNamedView()->getLockGuides();
     if(global_guides_lock){
@@ -299,32 +273,23 @@ void GuidelinePropertiesDialog::_setup() {
     }
     _locked_toggle.set_active(_guide->getLocked());
 
-    // This results in the dialog closing when entering a value in one of the spinbuttons and pressing enter (see LP bug 484187)
-    auto register_enter_handler = [this] (Gtk::Widget *widget) {
-        auto sb = dynamic_cast<UI::Widget::SpinButton *>(widget);
-        if (!sb) {
-            return;
-        }
-        auto controller = Gtk::EventControllerKey::create();
-        controller->signal_key_pressed().connect([this] (unsigned keyval, unsigned, Gdk::ModifierType) {
-            if (keyval == GDK_KEY_Return) {
-                on_sb_activate();
-                return true;
-            } else {
-                return false;
-            }
-        }, true);
-        controller->set_propagation_phase(Gtk::PropagationPhase::BUBBLE);
-        sb->add_controller(controller);
+    // buttons
+    auto buttonbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
+    vbox->append(*buttonbox);
+    buttonbox->set_halign(Gtk::Align::END);
+    buttonbox->set_homogeneous();
+
+    auto add_button = [&] (Glib::ustring const &label, sigc::slot<void ()> &&slot) {
+        auto button = Gtk::make_managed<Gtk::Button>(label, true);
+        button->signal_clicked().connect(std::move(slot));
+        buttonbox->append(*button);
+        return button;
     };
 
-    register_enter_handler(_spin_button_x.getWidget());
-    register_enter_handler(_spin_button_y.getWidget());
-    register_enter_handler(_spin_button_y.getWidget());
-
-    // dialog
-    set_default_response(Gtk::ResponseType::OK);
-    signal_response().connect(sigc::mem_fun(*this, &GuidelinePropertiesDialog::_response));
+    auto ok = add_button(_("_OK"), [this] { _onOK(); destroy(); });
+    add_button(_("_Duplicate"), [this] { _onDuplicate(); destroy(); });
+    add_button(_("_Delete"), [this] { _onDelete(); destroy(); });
+    add_button(_("_Cancel"), [this] { destroy(); });
 
     // initialize dialog
     _oldpos = _guide->getPoint();
@@ -366,18 +331,10 @@ void GuidelinePropertiesDialog::_setup() {
         _spin_angle.grabFocusAndSelectEntry();
     }
 
-    // Ability seems removed in gtk4?
-    // set_position(Gtk::WIN_POS_MOUSE);
-
     set_modal(true);
-    _desktop->setWindowTransient (gobj());
-    property_destroy_with_parent() = true;
-}
+    _desktop->setWindowTransient(gobj());
 
-void
-GuidelinePropertiesDialog::on_sb_activate()
-{
-    activate_default();
+    set_default_widget(*ok);
 }
 
 } // namespace Inkscape::UI::Dialog

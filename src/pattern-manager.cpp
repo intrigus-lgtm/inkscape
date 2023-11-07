@@ -165,9 +165,9 @@ Cairo::RefPtr<Cairo::Surface> create_pattern_image(std::shared_ptr<SPDocument>& 
 // given a pattern, create a PatternItem instance that describes it;
 // input pattern can be a link or a root pattern
 Glib::RefPtr<PatternItem> create_pattern_item(std::shared_ptr<SPDocument>& sandbox, SPPattern* pattern, bool stock_pattern, double scale) {
-    if (!pattern) return Glib::RefPtr<PatternItem>();
+    if (!pattern) return {};
 
-    auto item = Glib::RefPtr<PatternItem>(new PatternItem);
+    auto item = PatternItem::create();
 
     //  this is a link:       this is a root:
     // <pattern href="abc"/> <pattern id="abc"/>

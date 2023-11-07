@@ -100,7 +100,7 @@ CdrImportDialog::CdrImportDialog(const std::vector<RVNGString> &vec)
     // Dialog settings
     this->set_title(_("Page Selector"));
     this->set_modal(true);
-    sp_transientize(this->Gtk::Widget::gobj());  //Make transient
+    sp_transientize(*this);
     this->set_resizable(true);
     this->property_destroy_with_parent().set_value(false);
 

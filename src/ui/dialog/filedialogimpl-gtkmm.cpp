@@ -328,7 +328,7 @@ FileSaveDialogImplGtk::FileSaveDialogImplGtk(Gtk::Window &parentWindow, const st
 bool FileSaveDialogImplGtk::show()
 {
     set_modal(true); // Window
-    sp_transientize(GTK_WIDGET(gobj())); // Make transient
+    sp_transientize(*this);
 
     int response = dialog_run(*this); // Dialog
 

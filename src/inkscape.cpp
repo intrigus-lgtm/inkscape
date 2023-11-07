@@ -525,7 +525,7 @@ Application::crash_handler (int /*signum*/)
             UI::get_widget<Gtk::Label>(builder, "message").set_label(b);
             UI::get_object<Gtk::TextBuffer>(builder, "stacktrace")->set_text("<pre>\n" + boost::stacktrace::to_string(boost::stacktrace::stacktrace()) + "</pre>\n<details><summary>System info</summary>\n" + debug_info() + "\n</details>");
             Gtk::MessageDialog &m = UI::get_widget<Gtk::MessageDialog>(builder, "crash_dialog");
-            sp_transientize(m.Gtk::Widget::gobj());
+            sp_transientize(m);
             UI::dialog_run(m);
         } catch (const Glib::Error &ex) {
             g_message("Glade file loading failed for crash handler... Anyway, error was: %s", b);

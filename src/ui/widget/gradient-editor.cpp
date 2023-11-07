@@ -159,7 +159,7 @@ Glib::ustring get_repeat_icon(SPGradientSpread mode) {
 GradientEditor::GradientEditor(const char* prefs) :
     _builder(Inkscape::UI::create_builder("gradient-edit.glade")),
     _selector(Gtk::make_managed<GradientSelector>()),
-    _repeat_popover{std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::PositionType::BOTTOM)},
+    _repeat_popover{std::make_unique<UI::Widget::PopoverMenu>(nullptr, Gtk::PositionType::BOTTOM)},
     _repeat_icon(get_widget<Gtk::Image>(_builder, "repeatIco")),
     _stop_tree(get_widget<Gtk::TreeView>(_builder, "stopList")),
     _offset_btn(get_widget<Gtk::SpinButton>(_builder, "offsetSpin")),

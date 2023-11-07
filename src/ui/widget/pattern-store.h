@@ -22,7 +22,9 @@ namespace UI {
 namespace Widget {
 
 // pattern parameters
-struct PatternItem : Glib::Object {
+class PatternItem : public Glib::Object
+{
+public:
     Cairo::RefPtr<Cairo::Surface> pix;
     std::string id;
     std::string label;
@@ -47,6 +49,13 @@ struct PatternItem : Glib::Object {
             gap == item.gap &&
             collection == item.collection;
     }
+
+    static Glib::RefPtr<PatternItem> create() {
+        return Glib::make_refptr_for_instance(new PatternItem());
+    }
+
+protected:
+    PatternItem() = default;
 };
 
 struct PatternStore {

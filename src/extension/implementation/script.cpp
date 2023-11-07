@@ -646,8 +646,7 @@ void Script::showPopupError (const Glib::ustring &data,
     if (parent_window) {
         warning.set_transient_for(*parent_window);
     } else {
-        auto const dlg = warning.Gtk::Widget::gobj();
-        sp_transientize(dlg);
+        sp_transientize(warning);
     }
 
     auto const textview = Gtk::make_managed<Gtk::TextView>();

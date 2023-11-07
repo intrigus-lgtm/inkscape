@@ -14,39 +14,35 @@
 
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/colorbutton.h>
-#include <gtkmm/dialog.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
+#include <gtkmm/window.h>
+
+#include <2geom/point.h>
 
 #include "ui/widget/unit-menu.h"
 #include "ui/widget/scalar-unit.h"
 #include "ui/widget/entry.h"
-#include <2geom/point.h>
 
 class SPGuide;
 class SPDesktop;
 
-namespace Inkscape::UI {
+namespace Inkscape::UI::Widget { class UnitMenu; }
 
-namespace Widget {
-class UnitMenu;
-} // namespace Widget
-
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 /**
  * Dialog for modifying guidelines.
  */
-class GuidelinePropertiesDialog final : public Gtk::Dialog {
+class GuidelinePropertiesDialog final : public Gtk::Window
+{
 public:
-    GuidelinePropertiesDialog(SPGuide *guide, SPDesktop *desktop);
-    ~GuidelinePropertiesDialog() final;
-
-    Glib::ustring     getName() const { return "GuidelinePropertiesDialog"; }
-
     static void showDialog(SPGuide *guide, SPDesktop *desktop);
 
-protected:
+private:
+    GuidelinePropertiesDialog(SPGuide *guide, SPDesktop *desktop);
+    ~GuidelinePropertiesDialog() override;
+
     void _setup();
 
     void _onOK();
@@ -57,10 +53,6 @@ protected:
     void _response(gint response);
     void _modeChanged();
 
-private:
-    GuidelinePropertiesDialog(GuidelinePropertiesDialog const &) = delete; // no copy
-    GuidelinePropertiesDialog &operator=(GuidelinePropertiesDialog const &) = delete; // no assign
-
     SPDesktop *_desktop;
     SPGuide *_guide;
 
@@ -69,7 +61,6 @@ private:
     Gtk::Label  _label_descr;
     Gtk::CheckButton _locked_toggle;
     Gtk::CheckButton _relative_toggle;
-    static bool _relative_toggle_status; // remember the status of the _relative_toggle_status button across instances
     Inkscape::UI::Widget::UnitMenu _unit_menu;
     Inkscape::UI::Widget::ScalarUnit _spin_button_x;
     Inkscape::UI::Widget::ScalarUnit _spin_button_y;
@@ -77,18 +68,13 @@ private:
     Gtk::ColorButton _color;
 
     Inkscape::UI::Widget::ScalarUnit _spin_angle;
-    static Glib::ustring _angle_unit_status; // remember the status of the _relative_toggle_status button across instances
 
-    bool _mode;
+    bool _mode = true;
     Geom::Point _oldpos;
-    gdouble _oldangle;
-
-    void on_sb_activate();
+    double _oldangle = 0;
 };
 
-} // namespace Dialog
-
-} // namespace Inkscape::UI
+} // namespace Inkscape::UI::Dialog
 
 #endif // INKSCAPE_DIALOG_GUIDELINE_H
 

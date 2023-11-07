@@ -18,7 +18,6 @@
 #include "inkscape.h"
 
 #include "ui/dialog-events.h"
-#include "ui/pack.h"
 #include "ui/widget/color-notebook.h"
 
 static bool _in_use = false;
@@ -34,12 +33,8 @@ ColorPicker::ColorPicker(Glib::ustring const &title,
     , _title(title)
     , _rgba(rgba)
     , _undo(undo)
-    , _colorSelectorDialog("dialogs.colorpickerwindow")
 {
-    Gtk::Button* button = external_button ? external_button : this;
-    _color_selector = nullptr;
-    setupDialog(title);
-    _preview->set_visible(true);
+    auto button = external_button ? external_button : this;
     button->set_child(*_preview);
     // set tooltip if given, otherwise leave original tooltip in place (from external button)
     if (!tip.empty()) {
@@ -50,26 +45,18 @@ ColorPicker::ColorPicker(Glib::ustring const &title,
     _selected_color.signal_released.connect(sigc::mem_fun(*this, &ColorPicker::_onSelectedColorChanged));
 
     if (external_button) {
-        external_button->signal_clicked().connect([=](){ on_clicked(); });
+        external_button->signal_clicked().connect([this] { on_clicked(); });
     }
+    
+    sp_transientize(_colorSelectorDialog);
+    _colorSelectorDialog.set_title(title);
+    _colorSelectorDialog.signal_close_request().connect([this] {
+        closeWindow();
+        return true;
+    }, false);
 }
 
-ColorPicker::~ColorPicker()
-{
-    closeWindow();
-}
-
-void ColorPicker::setupDialog(const Glib::ustring &title)
-{
-    GtkWidget *dlg = _colorSelectorDialog.Gtk::Widget::gobj();
-    sp_transientize(dlg);
-
-    _colorSelectorDialog.set_visible(false);
-    _colorSelectorDialog.set_title (title);
-    _colorSelectorDialog.set_margin(4);
-}
-
-void ColorPicker::setSensitive(bool sensitive) { set_sensitive(sensitive); }
+ColorPicker::~ColorPicker() = default;
 
 void ColorPicker::setRgba32(std::uint32_t const rgba)
 {
@@ -98,21 +85,17 @@ void ColorPicker::open() {
 void ColorPicker::on_clicked()
 {
     if (!_color_selector) {
-        auto const selector = Gtk::make_managed<ColorNotebook>(_selected_color, _ignore_transparency);
-        selector->set_label(_title);
-        _color_selector = selector;
-        UI::pack_start(*_colorSelectorDialog.get_content_area(), *_color_selector, true, true);
-        _color_selector->set_visible(true);
+        _color_selector = Gtk::make_managed<ColorNotebook>(_selected_color, _ignore_transparency);
+        _color_selector->set_label(_title);
+        _color_selector->set_margin(4);
+        _colorSelectorDialog.set_child(*_color_selector);
     }
 
     _updating = true;
     _selected_color.setValue(_rgba);
     _updating = false;
 
-    _colorSelectorDialog.set_visible(true);
-    if (auto const window = dynamic_cast<Gtk::Window *>(_colorSelectorDialog.get_parent()->get_root())) {
-        window->present();
-    }
+    _colorSelectorDialog.present();
 }
 
 void ColorPicker::on_changed(std::uint32_t)

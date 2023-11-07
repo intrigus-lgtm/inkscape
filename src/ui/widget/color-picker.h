@@ -29,6 +29,8 @@ struct SPColorSelector;
 
 namespace Inkscape::UI::Widget {
 
+class ColorNotebook;
+
 class ColorPicker : public Gtk::Button {
 public:
     [[nodiscard]] ColorPicker(Glib::ustring const &title,
@@ -40,7 +42,7 @@ public:
     ~ColorPicker() override;
 
     void setRgba32(std::uint32_t rgba);
-    void setSensitive(bool sensitive);
+    void setSensitive(bool sensitive) { set_sensitive(sensitive); }
     void open();
     void closeWindow();
 
@@ -65,15 +67,14 @@ protected:
     bool          _undo     = false;
     bool          _updating = false;
 
-    void setupDialog(Glib::ustring const &title);
-    Gtk::Dialog _colorSelectorDialog;
+    Gtk::Window _colorSelectorDialog;
 
     SelectedColor _selected_color;
 
 private:
     void set_preview(std::uint32_t rgba);
 
-    Gtk::Widget *_color_selector;
+    ColorNotebook *_color_selector = nullptr;
     bool _ignore_transparency = false;
 };
 

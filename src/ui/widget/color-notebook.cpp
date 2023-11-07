@@ -46,8 +46,7 @@ static constexpr int YPAD = 1;
 namespace Inkscape::UI::Widget {
 
 ColorNotebook::ColorNotebook(SelectedColor &color, bool no_alpha)
-    : Gtk::Grid()
-    , _selected_color(color)
+    : _selected_color(color)
 {
     set_name("ColorNotebook");
 
@@ -94,7 +93,6 @@ void ColorNotebook::_initUI(bool no_alpha)
     guint row = 0;
 
     _book = Gtk::make_managed<Gtk::Stack>();
-    _book->set_visible(true);
     _book->set_transition_type(Gtk::StackTransitionType::CROSSFADE);
     _book->set_transition_duration(130);
 
@@ -105,11 +103,9 @@ void ColorNotebook::_initUI(bool no_alpha)
     // TODO: GTK4: Figure out whether this is still needed / possible to do
     //_switcher->set_homogeneous(false);
     _switcher->set_halign(Gtk::Align::CENTER);
-    _switcher->set_visible(true);
     attach(*_switcher, 0, row++, 2);
 
     _buttonbox = Gtk::make_managed<Gtk::Box>();
-    _buttonbox->set_visible(true);
 
     // combo mode selection is compact and only shows one entry (active)
     _combo = Gtk::make_managed<IconComboBox>();
@@ -178,10 +174,9 @@ void ColorNotebook::_initUI(bool no_alpha)
     gtk_box_append(rgbabox_box, _toomuchink);
 
     /* Color picker */
-    GtkWidget *picker = sp_get_icon_image("color-picker", GTK_ICON_SIZE_NORMAL);
     _btn_picker = gtk_button_new();
     gtk_button_set_has_frame(GTK_BUTTON(_btn_picker), false);
-    gtk_box_append(GTK_BOX(_btn_picker), picker);
+    gtk_button_set_icon_name(GTK_BUTTON(_btn_picker), "color-picker");
     gtk_widget_set_tooltip_text(_btn_picker, _("Pick colors from image"));
     gtk_box_append(rgbabox_box, _btn_picker);
     g_signal_connect(G_OBJECT(_btn_picker), "clicked", G_CALLBACK(ColorNotebook::_onPickerClicked), this);
@@ -194,7 +189,7 @@ void ColorNotebook::_initUI(bool no_alpha)
 
     auto const rgba_entry = Gtk::make_managed<ColorEntry>(_selected_color);
     auto const rgba_entry_widget = rgba_entry->Gtk::Widget::gobj();
-    sp_dialog_defocus_on_enter(rgba_entry_widget);
+    sp_dialog_defocus_on_enter(rgba_entry);
     gtk_box_append(rgbabox_box, rgba_entry_widget);
     gtk_label_set_mnemonic_widget(GTK_LABEL(_rgbal), rgba_entry_widget);
 

@@ -149,7 +149,7 @@ PdfImportDialog::PdfImportDialog(std::shared_ptr<PDFDoc> doc, const gchar * /*ur
 
     this->set_title(_("PDF Import Settings"));
     this->set_modal(true);
-    sp_transientize(this->Gtk::Widget::gobj());  //Make transient
+    sp_transientize(*this);
     this->set_resizable(true);
     this->property_destroy_with_parent().set_value(false);
 

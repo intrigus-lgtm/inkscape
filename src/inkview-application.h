@@ -41,7 +41,7 @@ protected:
 
 private:
     // Callbacks
-    int on_handle_local_options(Glib::RefPtr<Glib::VariantDict> const &options);
+    int on_handle_local_options(Glib::RefPtr<Glib::VariantDict> const &options) override;
 
     // Command line options
     bool   fullscreen;

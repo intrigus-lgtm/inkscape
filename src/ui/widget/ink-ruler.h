@@ -49,7 +49,7 @@ class Ruler
 {
 public:
     Ruler(Gtk::Orientation orientation);
-    ~Ruler();
+    ~Ruler() override;
 
     void set_unit(Inkscape::Util::Unit const *unit);
     void set_range(double lower, double upper);

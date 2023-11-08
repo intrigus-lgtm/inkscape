@@ -65,7 +65,7 @@ private:
     Glib::RefPtr<Gdk::Toplevel const> get_toplevel() const;
     void on_toplevel_state_changed();
     void on_is_active_changed();
-    bool on_close_request();
+    bool on_close_request() override;
     void on_size_changed();
 
     void update_dialogs();

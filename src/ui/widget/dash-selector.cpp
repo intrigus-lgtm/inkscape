@@ -24,7 +24,6 @@
 
 #include "preferences.h"
 #include "style.h"
-#include "ui/dialog-events.h"
 #include "ui/pack.h"
 #include "ui/util.h"
 #include "ui/widget/spinbutton.h"

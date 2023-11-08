@@ -52,11 +52,11 @@ public:
     // We canʼt inherit ctors as if we declare SpinButton(), inherited ctors donʼt call it. Really!
     template <typename ...Args>
     SpinButton(Args &&...args)
-        : Gtk::SpinButton{std::forward<Args>(args)...}
+        : Gtk::SpinButton(std::forward<Args>(args)...)
     { _construct(); } // Do the non-templated stuff
 
     SpinButton(BaseObjectType *cobject, Glib::RefPtr<Gtk::Builder> const &)
-        : Gtk::SpinButton{cobject}
+        : Gtk::SpinButton(cobject)
     { _construct(); }
 
     void setUnitMenu(UnitMenu* unit_menu) { _unit_menu = unit_menu; };

@@ -39,7 +39,7 @@ public:
 
 protected:
     [[nodiscard]] WidgetVfuncsClassInit();
-    ~WidgetVfuncsClassInit();
+    ~WidgetVfuncsClassInit() override;
 
     /// Called after gtk_widget_css_changed(): when a CSS widget node is validated & style changed.
     virtual void css_changed(GtkCssStyleChange *change) {}

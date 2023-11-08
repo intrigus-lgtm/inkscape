@@ -20,7 +20,7 @@ class IconComboBox : public Gtk::ComboBox
 {
 public:
     IconComboBox();
-    ~IconComboBox();
+    ~IconComboBox() override;
 
     void add_row(Glib::ustring const &icon_name, Glib::ustring const &label, int id);
     void set_active_by_id(int id);

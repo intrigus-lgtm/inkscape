@@ -706,7 +706,7 @@ private:
                     *_dialog.getDesktop()->getToplevel(),
                     open_path,
                     Inkscape::UI::Dialog::SVG_TYPES, /* TODO: any image, not just svg */
-                    (char const *)_("Select an image to be used as input."));
+                    (char const *)_("Select an image to be used as input.")).release();
         }
 
         // Show the dialog.
@@ -722,11 +722,11 @@ private:
         }
 
         auto path = selectFeImageFileInstance->getCurrentDirectory();
-        if (path.empty()) {
+        if (!path) {
             return;
         }
 
-        open_path = path;
+        open_path = path->get_path();
         open_path.append(G_DIR_SEPARATOR_S);
 
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();

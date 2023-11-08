@@ -183,31 +183,28 @@ sp_file_open_dialog(Gtk::Window &parentWindow, gpointer /*object*/, gpointer /*d
     bool const success = openDialogInstance->show();
 
     // Save the folder the user selected for later.
-    open_path = openDialogInstance->getCurrentDirectory();
+    open_path = openDialogInstance->getCurrentDirectory()->get_path();
 
     if (!success) {
-        delete openDialogInstance;
         return;
     }
 
     // Open selected files.
     auto *app = InkscapeApplication::instance();
     auto files = openDialogInstance->getFiles();
-    for (auto file : files) {
+    for (int i = 0; i < files->get_n_items(); i++) {
+        auto file = files->get_typed_object<Gio::File>(i);
         app->create_window(file);
     }
 
     // Save directory to preferences (if only one file selected as we could have files from
     // multiple directories).
-    if (files.size() == 1) {
-        open_path = Glib::path_get_dirname(files[0]->get_path());
+    if (files->get_n_items() == 1) {
+        open_path = Glib::path_get_dirname(files->get_typed_object<Gio::File>(0)->get_path());
         open_path.append(G_DIR_SEPARATOR_S);
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         prefs->setString("/dialogs/open/path", open_path);
     }
-
-    // We no longer need the file dialog object - delete it.
-    delete openDialogInstance;
 
     return;
 }
@@ -396,7 +393,7 @@ sp_file_save_dialog(Gtk::Window &parentWindow, SPDocument *doc, Inkscape::Extens
         (char const *) _("Select file to save to");
 
     gchar* doc_title = doc->getRoot()->title();
-    Inkscape::UI::Dialog::FileSaveDialog *saveDialog =
+    auto saveDialog =
         Inkscape::UI::Dialog::FileSaveDialog::create(
             parentWindow,
             save_loc,
@@ -410,7 +407,6 @@ sp_file_save_dialog(Gtk::Window &parentWindow, SPDocument *doc, Inkscape::Extens
 
     bool success = saveDialog->show();
     if (!success) {
-        delete saveDialog;
         if (doc_title) {
             g_free(doc_title);
         }
@@ -423,8 +419,7 @@ sp_file_save_dialog(Gtk::Window &parentWindow, SPDocument *doc, Inkscape::Extens
     auto file = saveDialog->getFile();
     Inkscape::Extension::Extension *selectionType = saveDialog->getExtension();
 
-    delete saveDialog;
-    saveDialog = nullptr;
+    saveDialog.reset();
     if (doc_title) {
         g_free(doc_title);
     }
@@ -1022,7 +1017,7 @@ sp_file_import(Gtk::Window &parentWindow)
     Inkscape::UI::Dialog::get_start_directory(import_path, "/dialogs/import/path");
 
     // Create new dialog (don't use an old one, because parentWindow has probably changed)
-    Inkscape::UI::Dialog::FileOpenDialog *importDialogInstance =
+    auto importDialogInstance =
         Inkscape::UI::Dialog::FileOpenDialog::create(
             parentWindow,
             import_path,
@@ -1031,20 +1026,20 @@ sp_file_import(Gtk::Window &parentWindow)
 
     bool success = importDialogInstance->show();
     if (!success) {
-        delete importDialogInstance;
         return;
     }
 
     auto files = importDialogInstance->getFiles();
     auto extension = importDialogInstance->getExtension();
-    for (auto file : files) {
+    for (int i = 0; i < files->get_n_items(); i++) {
+        auto file = files->get_typed_object<Gio::File>(i);
         file_import(doc, file->get_path(), extension);
     }
 
     // Save directory to preferences (if only one file selected as we could have files from
     // multiple directories).
-    if (files.size() == 1) {
-        import_path = Glib::path_get_dirname(files[0]->get_path());
+    if (files->get_n_items() == 1) {
+        import_path = Glib::path_get_dirname(files->get_typed_object<Gio::File>(0)->get_path());
         import_path.append(G_DIR_SEPARATOR_S);
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         prefs->setString("/dialogs/import/path", import_path);

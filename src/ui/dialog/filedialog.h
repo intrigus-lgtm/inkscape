@@ -25,6 +25,7 @@
 
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
+#include <giomm/listmodel.h>
 
 namespace Gtk { class Window; }
 
@@ -110,7 +111,7 @@ public:
     /**
      * Get the current directory of the file dialog.
      */
-    virtual std::string getCurrentDirectory() = 0;
+    virtual Glib::RefPtr<Gio::File> getCurrentDirectory() = 0;
 
 protected:
     // The selected extension
@@ -125,8 +126,6 @@ protected:
 class FileOpenDialog : public FileDialog
 {
 public:
-    // Constructor. Do not call directly. Use the factory.
-    FileOpenDialog() = default;
     virtual ~FileOpenDialog() = default;
 
     /**
@@ -135,19 +134,18 @@ public:
      * @param fileTypes one of FileDialogTypes
      * @param title the title of the dialog
      */
-    static FileOpenDialog *create(Gtk::Window& parentWindow,
-                                  const std::string &path,
-                                  FileDialogType fileTypes,
-                                  const char *title);
+    static std::unique_ptr<FileOpenDialog> create(Gtk::Window &parentWindow,
+                                                  std::string const &path,
+                                                  FileDialogType fileTypes,
+                                                  char const *title);
 
     virtual void setSelectMultiple(bool value) = 0;
-    virtual std::vector<Glib::RefPtr<Gio::File>> getFiles() = 0;
-    virtual Glib::RefPtr<Gio::File>        const getFile() = 0;
+    virtual Glib::RefPtr<Gio::ListModel> getFiles() = 0;
+    virtual Glib::RefPtr<Gio::File> getFile() = 0;
 
 protected:
-
-}; //FileOpenDialog
-
+    FileOpenDialog() = default;
+};
 
 /**
  * This class provides an implementation-independent API for file "Save" dialogs.
@@ -166,13 +164,13 @@ public:
      * @param title the title of the dialog
      * @param key a list of file types from which the user can select
      */
-    static FileSaveDialog *create(Gtk::Window& parentWindow,
-                                  const std::string &path,
-                                  FileDialogType fileTypes,
-                                  const char *title,
-                                  const Glib::ustring &default_key,
-                                  const gchar *docTitle,
-                                  const Inkscape::Extension::FileSaveMethod save_method);
+    static std::unique_ptr<FileSaveDialog> create(Gtk::Window &parentWindow,
+                                                  std::string const &path,
+                                                  FileDialogType fileTypes,
+                                                  char const *title,
+                                                  Glib::ustring const &default_key,
+                                                  char const *docTitle,
+                                                  Inkscape::Extension::FileSaveMethod save_method);
 
     virtual const Glib::RefPtr<Gio::File> getFile() = 0;
     virtual void setCurrentName(Glib::ustring) = 0;

@@ -789,7 +789,7 @@ void PrefEntryFileButtonHBox::onRelatedButtonClickedCallback()
                     *desktop->getToplevel(),
                     open_path,
                     Inkscape::UI::Dialog::EXE_TYPES,
-                    _("Select a bitmap editor"));
+                    _("Select a bitmap editor")).release();
         }
         
         // Show the dialog.

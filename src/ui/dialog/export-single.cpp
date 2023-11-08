@@ -735,7 +735,7 @@ void SingleExport::onBrowse(Gtk::Entry::IconPosition pos)
         filename = Export::defaultFilename(_document, filename, ".png");
     }
 
-    Inkscape::UI::Dialog::FileSaveDialog *dialog = Inkscape::UI::Dialog::FileSaveDialog::create(
+    auto dialog = Inkscape::UI::Dialog::FileSaveDialog::create(
         *window, filename, Inkscape::UI::Dialog::EXPORT_TYPES, _("Select a filename for exporting"), "", "",
         Inkscape::Extension::FILE_SAVE_METHOD_EXPORT);
 
@@ -761,10 +761,8 @@ void SingleExport::onBrowse(Gtk::Entry::IconPosition pos)
         }
 
         // deleting dialog before exporting is important
-        delete dialog;
+        dialog.reset();
         onExport();
-    } else {
-        delete dialog;
     }
 
     browseConn.unblock();

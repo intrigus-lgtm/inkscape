@@ -1162,7 +1162,7 @@ void  DocumentProperties::browseExternalScript() {
                 *desktop->getToplevel(),
                 open_path,
                 Inkscape::UI::Dialog::CUSTOM_TYPE,
-                _("Select a script to load"));
+                _("Select a script to load")).release();
         selectPrefsFileInstance->addFilterMenu(_("JavaScript Files"), "*.js");
     }
 

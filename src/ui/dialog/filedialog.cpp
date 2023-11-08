@@ -132,12 +132,12 @@ bool isValidImageFile(const Glib::ustring &fileName)
 /**
  * Public factory.  Called by file.cpp, among others.
  */
-FileOpenDialog *FileOpenDialog::create(Gtk::Window &parentWindow,
-                                       const std::string &path,
-                                       FileDialogType fileTypes,
-                                       const char *title)
+std::unique_ptr<FileOpenDialog> FileOpenDialog::create(Gtk::Window &parentWindow,
+                                                       std::string const &path,
+                                                       FileDialogType fileTypes,
+                                                       char const *title)
 {
-    return new FileOpenDialogImplGtk(parentWindow, path, fileTypes, title);
+    return std::make_unique<FileOpenDialogImplGtk>(parentWindow, path, fileTypes, title);
 }
 
 //########################################################################
@@ -147,15 +147,15 @@ FileOpenDialog *FileOpenDialog::create(Gtk::Window &parentWindow,
 /**
  * Public factory method.  Used in file.cpp
  */
-FileSaveDialog *FileSaveDialog::create(Gtk::Window& parentWindow,
-                                       const std::string &path,
-                                       FileDialogType fileTypes,
-                                       const char *title,
-                                       const Glib::ustring &default_key,
-                                       const gchar *docTitle,
-                                       const Inkscape::Extension::FileSaveMethod save_method)
+std::unique_ptr<FileSaveDialog> FileSaveDialog::create(Gtk::Window& parentWindow,
+                                                       std::string const &path,
+                                                       FileDialogType fileTypes,
+                                                       char const *title,
+                                                       Glib::ustring const &default_key,
+                                                       char const *docTitle,
+                                                       Inkscape::Extension::FileSaveMethod save_method)
 {
-    return new FileSaveDialogImplGtk(parentWindow, path, fileTypes, title, default_key, docTitle, save_method);
+    return std::make_unique<FileSaveDialogImplGtk>(parentWindow, path, fileTypes, title, default_key, docTitle, save_method);
 }
 
 // Used in FileSaveDialogImplGtk to update displayed filename (thus utf8).

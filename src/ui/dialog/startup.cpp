@@ -13,6 +13,7 @@
 #include <limits>
 #include <string>
 #include <glibmm/i18n.h>
+#include <glibmm/convert.h>
 #include <glibmm/fileutils.h>
 #include <gdkmm/display.h>
 #include <gtkmm/builder.h>
@@ -418,11 +419,9 @@ StartScreen::load_document()
 
                 if (browser->show()) {
                     auto prefs = Inkscape::Preferences::get();
-                    prefs->setString("/dialogs/open/path", browser->getCurrentDirectory());
+                    prefs->setString("/dialogs/open/path", Glib::filename_to_utf8(browser->getCurrentDirectory()->get_path()));
                     file = browser->getFile();
-                    delete browser;
                 } else {
-                    delete browser;
                     return; // Cancel
                 }
             }

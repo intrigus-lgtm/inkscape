@@ -14,7 +14,7 @@
 #include <gtkmm/enums.h>
 #include <gtkmm/object.h>
 #include <gtkmm/popovermenu.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/checkbutton.h>
 #include <memory>
 #include <sigc++/functors/mem_fun.h>
 
@@ -174,17 +174,22 @@ std::shared_ptr<UI::Widget::PopoverMenu> SpinButton::get_popover_menu()
 
     static auto popover_menu = std::make_shared<UI::Widget::PopoverMenu>(*this, Gtk::PositionType::BOTTOM);
     popover_menu->delete_all();
-    Gtk::RadioButton::Group group;
+    Gtk::CheckButton *group = nullptr;
 
     for (auto const &value : values) {
         bool const enable = adj_value == value.first;
         auto const item_label = !value.second.empty() ? Glib::ustring::compose("%1: %2", value.first, value.second)
                                                       : Glib::ustring::format(value.first);
-        auto const radio_button = Gtk::make_managed<Gtk::RadioButton>(group, item_label);
+        auto const radio_button = Gtk::make_managed<Gtk::CheckButton>(item_label);
+        if (!group) {
+            group = radio_button;
+        } else {
+            radio_button->set_group(*group);
+        }
         radio_button->set_active(enable);
 
         auto const item = Gtk::make_managed<UI::Widget::PopoverMenuItem>();
-        item->add(*radio_button);
+        item->set_child(*radio_button);
         item->signal_activate().connect(
             sigc::bind(sigc::mem_fun(*this, &SpinButton::on_numeric_menu_item_activate), value.first));
         popover_menu->append(*item);

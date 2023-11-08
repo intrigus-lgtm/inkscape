@@ -21,6 +21,7 @@
 #include <vector>
 #include <giomm/file.h>
 #include <glibmm/ustring.h>
+#include <giomm/liststore.h>
 #include <gtkmm/filechooserdialog.h>
 
 #include "filedialog.h"
@@ -55,8 +56,9 @@ class FileDialogBaseGtk : public Gtk::FileChooserDialog
 {
 public:
     FileDialogBaseGtk(Gtk::Window &parentWindow, Glib::ustring const &title,
-    		      Gtk::FileChooser::Action dialogType, FileDialogType type,
+                      Gtk::FileChooser::Action dialogType, FileDialogType type,
                       char const *preferenceBase);
+
     ~FileDialogBaseGtk() override;
 
     /**
@@ -68,7 +70,6 @@ public:
     Glib::ustring extToPattern(const Glib::ustring &extension) const;
 
 protected:
-
     Glib::ustring const _preferenceBase;
 
     /**
@@ -96,20 +97,20 @@ class FileOpenDialogImplGtk final
 {
 public:
     FileOpenDialogImplGtk(Gtk::Window& parentWindow,
-                          const std::string &dir,
+                          std::string const &dir,
                           FileDialogType fileTypes,
-                          const Glib::ustring &title);
+                          Glib::ustring const &title);
 
-    bool show() final;
+    bool show() override;
 
-    void setSelectMultiple(bool value) final { set_select_multiple(value); }
-    std::vector<Glib::RefPtr<Gio::File>> getFiles() final { return get_files(); }
-    Glib::RefPtr<Gio::File>        const getFile()  final { return get_file(); }
+    void setSelectMultiple(bool value) override { set_select_multiple(value); }
+    Glib::RefPtr<Gio::ListModel> getFiles() override { return get_files(); }
+    Glib::RefPtr<Gio::File> getFile() override { return get_file(); }
 
-    std::string getCurrentDirectory() final { return get_current_folder(); }
+    Glib::RefPtr<Gio::File> getCurrentDirectory() override { return get_current_folder(); }
 
-    void addFilterMenu(const Glib::ustring &name, Glib::ustring pattern = "",
-                       Inkscape::Extension::Extension *mod = nullptr) final
+    void addFilterMenu(Glib::ustring const &name, Glib::ustring pattern = "",
+                       Inkscape::Extension::Extension *mod = nullptr) override
     {
         addFilter(name, pattern, mod);
     }
@@ -144,23 +145,22 @@ public:
     bool show() final;
 
     // One at a time.
-    const Glib::RefPtr<Gio::File> getFile() final { return get_file(); }
+    const Glib::RefPtr<Gio::File> getFile() override { return get_file(); }
 
-    void setCurrentName(Glib::ustring name) final { set_current_name(name); }
-    std::string getCurrentDirectory() final { return get_current_folder(); }
+    void setCurrentName(Glib::ustring name) override { set_current_name(name); }
+    Glib::RefPtr<Gio::File> getCurrentDirectory() override { return get_current_folder(); }
 
     // Sets module for saving, updating GUI if necessary.
     bool setExtension(Glib::ustring const &filename_utf8);
-    void setExtension(Inkscape::Extension::Extension *key) final;
+    void setExtension(Inkscape::Extension::Extension *key) override;
 
     void addFilterMenu(const Glib::ustring &name, Glib::ustring pattern = {},
-                       Inkscape::Extension::Extension *mod = nullptr) final
+                       Inkscape::Extension::Extension *mod = nullptr) override
     {
         addFilter(name, pattern, mod);
     }
 
 private:
-
     /**
      * The file save method (essentially whether the dialog was invoked by "Save as ..." or "Save a
      * copy ..."), which is used to determine file extensions and save paths.

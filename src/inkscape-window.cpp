@@ -71,6 +71,9 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
         return;
     }
 
+    set_name("InkscapeWindow");
+    set_show_menubar(true);
+
     _app = InkscapeApplication::instance();
     _app->gtk_app()->add_window(*this);
 

@@ -27,7 +27,9 @@ namespace Inkscape {
 }
 
 #define Operator Operator_Gfx
+#define _NO_W32_PSEUDO_MODIFIERS
 #include <Gfx.h>
+#undef WINDING
 #undef Operator
 
 #include <2geom/affine.h>

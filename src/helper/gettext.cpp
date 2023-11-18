@@ -15,6 +15,7 @@
 #endif
 
 #ifdef _WIN32
+#define NOGDI
 #include <windows.h>
 #endif
 

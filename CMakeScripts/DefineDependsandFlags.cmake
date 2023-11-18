@@ -102,6 +102,7 @@ if(WIN32)
     get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 
     list(APPEND INKSCAPE_LIBS "-lmscms")
+    list(APPEND INKSCAPE_LIBS "-ldwmapi")
 
     list(APPEND INKSCAPE_CXX_FLAGS "-mms-bitfields")
     if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")

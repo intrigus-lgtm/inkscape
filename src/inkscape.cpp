@@ -19,7 +19,11 @@
 
 #include <fstream>
 #include <map>
+#define NOGDI
+#define _NO_W32_PSEUDO_MODIFIERS
 #include <boost/stacktrace.hpp>
+#undef near
+#undef IGNORE
 #include <glibmm/regex.h>
 #include <glibmm/i18n.h>
 #include <glibmm/miscutils.h>
@@ -247,7 +251,7 @@ Application::Application(bool use_gui) :
         // forcing the LANGUAGE variable to be ignored
         // see :guess_category_value:gettext-runtime/intl/dcigettext.c,
         // and :gl_locale_name_from_win32_LANGID:gettext-runtime/gnulib-lib/localename.c
-        setenv("LANG", ui_language, true);
+        Glib::setenv("LANG", ui_language.raw(), true);
 #endif
     }
 

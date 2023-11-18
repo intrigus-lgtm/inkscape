@@ -17,7 +17,11 @@
 #endif
 
 #ifdef _WIN32
+#define NOGDI
+#define _NO_W32_PSEUDO_MODIFIERS
 #include <shlobj.h> // for SHGetSpecialFolderLocation
+#undef IGNORE
+#undef near
 #endif
 
 #include <sys/stat.h>

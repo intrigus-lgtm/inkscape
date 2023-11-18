@@ -22,7 +22,7 @@
 #ifdef GDK_WINDOWING_X11
 #include <gdk/x11/gdkx.h>
 #endif
-#if GDK_WINDOWING_WIN32
+#ifdef GDK_WINDOWING_WIN32
 #include <gdk/win32/gdkwin32.h>
 #endif
 

@@ -82,7 +82,6 @@ using Inkscape::DocumentUndo;
 using Inkscape::IO::Resource::TEMPLATES;
 using Inkscape::IO::Resource::USER;
 
-
 /*######################
 ## N E W
 ######################*/

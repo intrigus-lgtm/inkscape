@@ -14,7 +14,11 @@
  */
 
 #ifdef _WIN32
+#define NOGDI
+#define _NO_W32_PSEUDO_MODIFIERS
 #include <windows.h> // SetConsoleOutputCP
+#undef IGNORE
+#undef near
 #include <fcntl.h> // _O_BINARY
 #endif
 

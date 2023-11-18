@@ -13,7 +13,8 @@
 #endif
 
 #ifdef _WIN32
-#include <windows.h> // for GetModuleFileNameW
+#define NOGDI
+#include <libloaderapi.h> // for GetModuleFileNameW
 #endif
 
 #ifdef __APPLE__

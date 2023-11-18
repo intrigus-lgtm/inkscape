@@ -13,7 +13,11 @@
 #include <glibmm/miscutils.h>
 
 #ifdef _WIN32
+#define NOGDI
+#define _NO_W32_PSEUDO_MODIFIERS
 #include <windows.h> // SetDllDirectoryW, SetConsoleOutputCP
+#undef IGNORE
+#undef near
 #include <fcntl.h> // _O_BINARY
 #include <boost/algorithm/string/join.hpp>
 #endif

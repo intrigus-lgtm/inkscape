@@ -599,10 +599,6 @@ void SPDesktopWidget::layoutWidgets()
         return Inkscape::UI::ForEachResult::_continue;
     });
 
-    // Temporary for Gtk3: Gtk toolbar resets icon sizes, so reapply them.
-    // TODO: remove this call in Gtk4 after Gtk::Toolbar is eliminated.
-    apply_ctrlbar_settings();
-
     repack_snaptoolbar();
 
     Inkscape::UI::resize_widget_children(_top_toolbars);

@@ -8,14 +8,16 @@
 #ifndef INKSCAPE_DIALOG_FILLET_CHAMFER_PROPERTIES_H
 #define INKSCAPE_DIALOG_FILLET_CHAMFER_PROPERTIES_H
 
-#include <2geom/point.h>
 #include <glibmm/ustring.h>
+#include <gtkmm/box.h>
 #include <gtkmm/button.h>
-#include <gtkmm/dialog.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/treemodel.h>
+#include <gtkmm/window.h>
+
+#include <2geom/point.h>
 
 #include "live_effects/parameter/nodesatellitesarray.h"
 
@@ -23,24 +25,20 @@ class SPDesktop;
 
 namespace Inkscape::UI::Dialog {
 
-class FilletChamferPropertiesDialog final : public Gtk::Dialog {
+class FilletChamferPropertiesDialog final : public Gtk::Window
+{
 public:
-    FilletChamferPropertiesDialog();
-
-    FilletChamferPropertiesDialog(FilletChamferPropertiesDialog const &) = delete;
-    FilletChamferPropertiesDialog &operator=(FilletChamferPropertiesDialog const &) = delete;
-
-    Glib::ustring getName() const
-    {
-        return "LayerPropertiesDialog";
-    }
-
-    static void showDialog(SPDesktop *desktop, double _amount,
-                           const Inkscape::LivePathEffect::FilletChamferKnotHolderEntity *pt, bool _use_distance,
-                           bool _aprox_radius, NodeSatellite _nodesatellite);
+    static void showDialog(SPDesktop *desktop, double amount,
+                           LivePathEffect::FilletChamferKnotHolderEntity *knot, bool use_distance,
+                           bool approx_radius, NodeSatellite nodesatellite);
 
 protected:
-    Inkscape::LivePathEffect::FilletChamferKnotHolderEntity *_knotpoint = nullptr;
+    FilletChamferPropertiesDialog();
+
+    LivePathEffect::FilletChamferKnotHolderEntity *_knotpoint = nullptr;
+
+    Gtk::Box _mainbox;
+    Gtk::Box _buttonbox;
 
     Gtk::Label _fillet_chamfer_position_label;
     Gtk::SpinButton _fillet_chamfer_position_numeric;
@@ -52,40 +50,28 @@ protected:
     Gtk::SpinButton _fillet_chamfer_chamfer_subdivisions;
 
     Gtk::Grid _layout_table;
-    bool _position_visible;
+    bool _position_visible = false;
 
     Gtk::Button _close_button;
     Gtk::Button _apply_button;
 
-    static FilletChamferPropertiesDialog &_instance()
-    {
-        static FilletChamferPropertiesDialog instance;
-        return instance;
-    }
-
-    void _setPt(const Inkscape::LivePathEffect::
-                FilletChamferKnotHolderEntity *pt);
-    void _setUseDistance(bool use_knot_distance);
-    void _setAprox(bool aprox_radius);
-    void _setAmount(double amount);
     void _setNodeSatellite(NodeSatellite nodesatellite);
     void _prepareLabelRenderer(Gtk::TreeModel::const_iterator const &row);
 
     void _apply();
-    void _close();
+
     bool _flexible;
     NodeSatellite _nodesatellite;
     bool _use_distance;
     double _amount;
-    bool _aprox;
+    bool _approx;
 
-    friend class Inkscape::LivePathEffect::
-        FilletChamferKnotHolderEntity;
+    friend class LivePathEffect::FilletChamferKnotHolderEntity;
 };
 
 } // namespace Inkscape::UI::Dialog
 
-#endif //INKSCAPE_DIALOG_LAYER_PROPERTIES_H
+#endif // INKSCAPE_DIALOG_FILLET_CHAMFER_PROPERTIES_H
 
 /*
   Local Variables:

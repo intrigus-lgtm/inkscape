@@ -16,18 +16,18 @@
 #include <gdk/gdk.h> // GdkModifierType
 #include <gtk/gtk.h> // GtkEventControllerKey
 #include <glibmm/refptr.h>
+#include <gtkmm/box.h>
 #include <gtkmm/combobox.h>
-#include <gtkmm/dialog.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
-#include <gtkmm/box.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treestore.h>
 #include <gtkmm/treeview.h>
+#include <gtkmm/window.h>
 
 #include "layer-manager.h"
 
@@ -48,16 +48,9 @@ enum class LayerPropertiesDialogType
     RENAME
 };
 
-class LayerPropertiesDialog final : public Gtk::Dialog {
+class LayerPropertiesDialog final : public Gtk::Window
+{
 public:
-    LayerPropertiesDialog(LayerPropertiesDialogType type);
-    ~LayerPropertiesDialog() final;
-
-    LayerPropertiesDialog(LayerPropertiesDialog const &) = delete; // no copy
-    LayerPropertiesDialog &operator=(LayerPropertiesDialog const &) = delete; // no assign
-
-    Glib::ustring getName() const { return "LayerPropertiesDialog"; }
-
     static void showRename(SPDesktop *desktop, SPObject *layer) {
         _showDialog(LayerPropertiesDialogType::RENAME, desktop, layer);
     }
@@ -69,17 +62,22 @@ public:
     }
 
 private:
+    explicit LayerPropertiesDialog(LayerPropertiesDialogType type);
+    ~LayerPropertiesDialog() override;
+
     LayerPropertiesDialogType _type = LayerPropertiesDialogType::NONE;
     SPDesktop *_desktop = nullptr;
     SPObject *_layer = nullptr;
 
-    class PositionDropdownColumns : public Gtk::TreeModel::ColumnRecord {
-    public:
+    struct PositionDropdownColumns : Gtk::TreeModel::ColumnRecord
+    {
         Gtk::TreeModelColumn<LayerRelativePosition> position;
         Gtk::TreeModelColumn<Glib::ustring> name;
 
-        PositionDropdownColumns() {
-            add(position); add(name);
+        PositionDropdownColumns()
+        {
+            add(position);
+            add(name);
         }
     };
 
@@ -91,26 +89,27 @@ private:
 
     bool              _position_visible = false;
 
-    class ModelColumns : public Gtk::TreeModel::ColumnRecord
+    struct ModelColumns : Gtk::TreeModel::ColumnRecord
     {
-    public:
+        Gtk::TreeModelColumn<SPObject *> object;
+        Gtk::TreeModelColumn<Glib::ustring> label;
+        Gtk::TreeModelColumn<bool> visible;
+        Gtk::TreeModelColumn<bool> locked;
+
         ModelColumns()
         {
-            add(_colObject);
-            add(_colVisible);
-            add(_colLocked);
-            add(_colLabel);
+            add(object);
+            add(visible);
+            add(locked);
+            add(label);
         }
-        ~ModelColumns() override = default;
-
-        Gtk::TreeModelColumn<SPObject*> _colObject;
-        Gtk::TreeModelColumn<Glib::ustring> _colLabel;
-        Gtk::TreeModelColumn<bool> _colVisible;
-        Gtk::TreeModelColumn<bool> _colLocked;
     };
 
+    Gtk::Box _mainbox;
+    Gtk::Box _buttonbox;
+
     Gtk::TreeView _tree;
-    ModelColumns* _model;
+    ModelColumns _model;
     Glib::RefPtr<Gtk::TreeStore> _store;
     Gtk::ScrolledWindow _scroller;
 
@@ -125,11 +124,10 @@ private:
 
     static void _showDialog(LayerPropertiesDialogType type, SPDesktop *desktop, SPObject *layer);
     void _apply();
-    void _close();
 
     void _setup_position_controls();
     void _setup_layers_controls();
-    void _prepareLabelRenderer(Gtk::TreeModel::const_iterator const &row);
+    void _prepareLabelRenderer(Gtk::TreeModel::const_iterator const &iter);
 
     void _addLayer(SPObject* layer, Gtk::TreeModel::Row* parentRow, SPObject* target, int level);
     SPObject* _selectedLayer();
@@ -148,7 +146,7 @@ private:
 
 } // namespace Inkscape::UI::Dialog
 
-#endif //INKSCAPE_DIALOG_LAYER_PROPERTIES_H
+#endif // INKSCAPE_DIALOG_LAYER_PROPERTIES_H
 
 /*
   Local Variables:

@@ -50,10 +50,7 @@ ColorPicker::ColorPicker(Glib::ustring const &title,
     
     sp_transientize(_colorSelectorDialog);
     _colorSelectorDialog.set_title(title);
-    _colorSelectorDialog.signal_close_request().connect([this] {
-        closeWindow();
-        return true;
-    }, false);
+    _colorSelectorDialog.set_hide_on_close();
 }
 
 ColorPicker::~ColorPicker() = default;

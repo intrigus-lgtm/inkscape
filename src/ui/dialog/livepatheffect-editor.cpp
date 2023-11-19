@@ -632,8 +632,7 @@ LivePathEffectEditor::showParams(LPEExpander const &expanderdata, bool const cha
             }
 
             if (effectwidget) {
-                current_lperef.first->unset_child();
-                delete effectwidget;
+                current_lperef.first->unset_child(); // deletes effectwidget
                 effectwidget = nullptr;
             }
 

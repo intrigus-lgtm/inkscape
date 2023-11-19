@@ -16,23 +16,20 @@
 #include <sigc++/adaptors/hide.h>
 #include <sigc++/functors/mem_fun.h>
 
-#include "inkscape.h"
 #include "desktop.h"
-#include "document-undo.h"
-#include "layer-manager.h"
-#include "message-stack.h"
-#include "selection-chemistry.h"
-#include "ui/pack.h"
 
 namespace Inkscape::UI::Dialog {
 
 FilletChamferPropertiesDialog::FilletChamferPropertiesDialog()
-    : _knotpoint(nullptr),
-      _position_visible(false),
-      _close_button(_("_Cancel"), true)
+    : _mainbox(Gtk::Orientation::VERTICAL)
+    , _close_button(_("_Cancel"), true)
 {
-    Gtk::Box *mainVBox = get_content_area();
-    mainVBox->set_homogeneous(false);
+    set_name("FilletChamferPropertiesDialog");
+
+    set_child(_mainbox);
+    _mainbox.set_margin(2);
+    _mainbox.set_spacing(4);
+
     _layout_table.set_row_spacing(4);
     _layout_table.set_column_spacing(4);
 
@@ -60,52 +57,53 @@ FilletChamferPropertiesDialog::FilletChamferPropertiesDialog()
     _layout_table.attach(_fillet_chamfer_chamfer_subdivisions_label, 0, 1, 1, 1);
     _layout_table.attach(_fillet_chamfer_chamfer_subdivisions, 1, 1, 1, 1);
     _fillet_chamfer_type_fillet.set_label(_("Fillet"));
+    _fillet_chamfer_type_fillet.set_expand();
     _fillet_chamfer_type_inverse_fillet.set_label(_("Inverse fillet"));
     _fillet_chamfer_type_inverse_fillet.set_group(_fillet_chamfer_type_fillet);
+    _fillet_chamfer_type_inverse_fillet.set_expand();
     _fillet_chamfer_type_chamfer.set_label(_("Chamfer"));
     _fillet_chamfer_type_chamfer.set_group(_fillet_chamfer_type_fillet);
+    _fillet_chamfer_type_chamfer.set_expand();
     _fillet_chamfer_type_inverse_chamfer.set_label(_("Inverse chamfer"));
     _fillet_chamfer_type_inverse_chamfer.set_group(_fillet_chamfer_type_fillet);
+    _fillet_chamfer_type_inverse_chamfer.set_expand();
 
-    UI::pack_start(*mainVBox, _layout_table, true, true, 4);
-    UI::pack_start(*mainVBox, _fillet_chamfer_type_fillet, true, true, 4);
-    UI::pack_start(*mainVBox, _fillet_chamfer_type_inverse_fillet, true, true, 4);
-    UI::pack_start(*mainVBox, _fillet_chamfer_type_chamfer, true, true, 4);
-    UI::pack_start(*mainVBox, _fillet_chamfer_type_inverse_chamfer, true, true, 4);
+    _mainbox.append(_layout_table);
+    _mainbox.append(_fillet_chamfer_type_fillet);
+    _mainbox.append(_fillet_chamfer_type_inverse_fillet);
+    _mainbox.append(_fillet_chamfer_type_chamfer);
+    _mainbox.append(_fillet_chamfer_type_inverse_chamfer);
 
+    _mainbox.append(_buttonbox);
+    _buttonbox.set_halign(Gtk::Align::END);
+    _buttonbox.set_homogeneous();
+    _buttonbox.set_spacing(4);
+
+    _close_button.signal_clicked().connect([this] { destroy(); });
+    _apply_button.signal_clicked().connect([this] { _apply(); });
 
     _close_button.set_receives_default();
-
     _apply_button.set_use_underline(true);
     _apply_button.set_receives_default();
-
-    _close_button.signal_clicked()
-        .connect(sigc::mem_fun(*this, &FilletChamferPropertiesDialog::_close));
-
-    _apply_button.signal_clicked()
-        .connect(sigc::mem_fun(*this, &FilletChamferPropertiesDialog::_apply));
-
-    signal_close_request().connect([this] { _close(); return true; }, true);
-
-    add_action_widget(_close_button, Gtk::ResponseType::CLOSE);
-    add_action_widget(_apply_button, Gtk::ResponseType::APPLY);
+    _buttonbox.append(_close_button);
+    _buttonbox.append(_apply_button);
 
     set_default_widget(_apply_button);
 
     set_focus(_fillet_chamfer_position_numeric);
 }
 
-void FilletChamferPropertiesDialog::showDialog(SPDesktop *desktop, double _amount,
-                                               const Inkscape::LivePathEffect::FilletChamferKnotHolderEntity *pt,
-                                               bool _use_distance, bool _aprox_radius, NodeSatellite _nodesatellite)
+void FilletChamferPropertiesDialog::showDialog(SPDesktop *desktop, double amount,
+                                               LivePathEffect::FilletChamferKnotHolderEntity *knot,
+                                               bool use_distance, bool approx_radius, NodeSatellite nodesatellite)
 {
-    FilletChamferPropertiesDialog *dialog = new FilletChamferPropertiesDialog();
+    auto dialog = Gtk::manage(new FilletChamferPropertiesDialog());
 
-    dialog->_setUseDistance(_use_distance);
-    dialog->_setAprox(_aprox_radius);
-    dialog->_setAmount(_amount);
-    dialog->_setNodeSatellite(_nodesatellite);
-    dialog->_setPt(pt);
+    dialog->_use_distance = use_distance;
+    dialog->_approx = approx_radius;
+    dialog->_amount = amount;
+    dialog->_setNodeSatellite(nodesatellite);
+    dialog->_knotpoint = knot;
 
     dialog->set_title(_("Modify Fillet-Chamfer"));
     dialog->_apply_button.set_label(_("_Modify"));
@@ -114,13 +112,11 @@ void FilletChamferPropertiesDialog::showDialog(SPDesktop *desktop, double _amoun
     desktop->setWindowTransient(dialog->gobj());
     dialog->property_destroy_with_parent() = true;
 
-    dialog->set_visible(true);
     dialog->present();
 }
 
 void FilletChamferPropertiesDialog::_apply()
 {
-
     double d_pos =  _fillet_chamfer_position_numeric.get_value();
     if (d_pos >= 0) {
         if (_fillet_chamfer_type_fillet.get_active() == true) {
@@ -146,13 +142,7 @@ void FilletChamferPropertiesDialog::_apply()
         _nodesatellite.steps = steps;
         _knotpoint->knot_set_offset(_nodesatellite);
     }
-    _close();
-}
-
-void FilletChamferPropertiesDialog::_close()
-{
-    destroy_();
-    Glib::signal_idle().connect([this] { delete this; return false; });
+    destroy();
 }
 
 void FilletChamferPropertiesDialog::_setNodeSatellite(NodeSatellite nodesatellite)
@@ -160,7 +150,7 @@ void FilletChamferPropertiesDialog::_setNodeSatellite(NodeSatellite nodesatellit
     double position;
 
     std::string distance_or_radius = _("Radius");
-    if (_aprox) {
+    if (_approx) {
         distance_or_radius = _("Radius approximated");
     }
     if (_use_distance) {
@@ -191,30 +181,6 @@ void FilletChamferPropertiesDialog::_setNodeSatellite(NodeSatellite nodesatellit
         _fillet_chamfer_type_inverse_chamfer.set_active(true);
     }
     _nodesatellite = nodesatellite;
-}
-
-void FilletChamferPropertiesDialog::_setPt(
-    const Inkscape::LivePathEffect::
-    FilletChamferKnotHolderEntity *pt)
-{
-    _knotpoint = const_cast<
-                 Inkscape::LivePathEffect::FilletChamferKnotHolderEntity *>(
-                     pt);
-}
-
-void FilletChamferPropertiesDialog::_setAmount(double amount)
-{
-    _amount = amount;
-}
-
-void FilletChamferPropertiesDialog::_setUseDistance(bool use_knot_distance)
-{
-    _use_distance = use_knot_distance;
-}
-
-void FilletChamferPropertiesDialog::_setAprox(bool _aprox_radius)
-{
-    _aprox = _aprox_radius;
 }
 
 } // namespace Inkscape::UI::Dialog

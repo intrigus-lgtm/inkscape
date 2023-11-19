@@ -18,12 +18,13 @@
 #define INKSCAPE_DIALOG_POWERSTROKE_PROPERTIES_H
 
 #include <2geom/point.h>
+#include <gtkmm/box.h>
 #include <gtkmm/button.h>
-#include <gtkmm/dialog.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/treemodel.h>
+#include <gtkmm/window.h>
 
 #include "live_effects/parameter/powerstrokepointarray.h"
 
@@ -31,49 +32,40 @@ class SPDesktop;
 
 namespace Inkscape::UI::Dialog {
 
-class PowerstrokePropertiesDialog : public Gtk::Dialog {
+class PowerstrokePropertiesDialog : public Gtk::Window
+{
 public:
-    PowerstrokePropertiesDialog();
-
-    PowerstrokePropertiesDialog(PowerstrokePropertiesDialog const &) = delete;
-    PowerstrokePropertiesDialog &operator=(PowerstrokePropertiesDialog const &) = delete;
-
-    Glib::ustring     getName() const { return "LayerPropertiesDialog"; }
-
-    static void showDialog(SPDesktop *desktop, Geom::Point knotpoint, const Inkscape::LivePathEffect::PowerStrokePointArrayParamKnotHolderEntity *pt);
+    static void showDialog(SPDesktop *desktop, Geom::Point const &knotpoint, LivePathEffect::PowerStrokePointArrayParamKnotHolderEntity *knot);
 
 protected:
-    Inkscape::LivePathEffect::PowerStrokePointArrayParamKnotHolderEntity *_knotpoint;
+    PowerstrokePropertiesDialog();
+
+    LivePathEffect::PowerStrokePointArrayParamKnotHolderEntity *_knotpoint = nullptr;
+
+    Gtk::Box _mainbox;
+    Gtk::Box _buttonbox;
 
     Gtk::Label        _powerstroke_position_label;
     Gtk::SpinButton   _powerstroke_position_entry;
     Gtk::Label        _powerstroke_width_label;
     Gtk::SpinButton   _powerstroke_width_entry;
     Gtk::Grid         _layout_table;
-    bool              _position_visible;
+    bool              _position_visible = false;
 
     Gtk::Button       _close_button;
     Gtk::Button       _apply_button;
 
-    static PowerstrokePropertiesDialog &_instance() {
-        static PowerstrokePropertiesDialog instance;
-        return instance;
-    }
-
-    void _setPt(const Inkscape::LivePathEffect::PowerStrokePointArrayParamKnotHolderEntity *pt);
-
     void _apply();
-    void _close();
 
-    void _setKnotPoint(Geom::Point knotpoint);
+    void _setKnotPoint(Geom::Point const &knotpoint);
     void _prepareLabelRenderer(Gtk::TreeModel::const_iterator const &row);
 
-    friend class Inkscape::LivePathEffect::PowerStrokePointArrayParamKnotHolderEntity;
+    friend class LivePathEffect::PowerStrokePointArrayParamKnotHolderEntity;
 };
 
 } // namespace Inkscape::UI::Dialog
 
-#endif //INKSCAPE_DIALOG_LAYER_PROPERTIES_H
+#endif // INKSCAPE_DIALOG_POWERSTROKE_PROPERTIES_H
 
 /*
   Local Variables:

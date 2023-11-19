@@ -13,10 +13,12 @@
 #ifndef INKSCAPE_DIALOG_KNOT_PROPERTIES_H
 #define INKSCAPE_DIALOG_KNOT_PROPERTIES_H
 
-#include <gtkmm/dialog.h>
+#include <gtkmm/box.h>
+#include <gtkmm/button.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
 #include <gtkmm/spinbutton.h>
+#include <gtkmm/window.h>
 #include <2geom/point.h>
 
 #include "ui/tools/measure-tool.h"
@@ -27,27 +29,24 @@ namespace Inkscape::UI::Dialog {
 
 // Used in Measure tool to set ends of "ruler" (via Shift-click)."
 
-class KnotPropertiesDialog final : public Gtk::Dialog
+class KnotPropertiesDialog final : public Gtk::Window
 {
 public:
-    KnotPropertiesDialog();
-
-    KnotPropertiesDialog(KnotPropertiesDialog const &) = delete;
-    KnotPropertiesDialog &operator=(KnotPropertiesDialog const &) = delete;
-
-    Glib::ustring     getName() const { return "LayerPropertiesDialog"; }
-
-    static void showDialog(SPDesktop *desktop, const SPKnot *pt, Glib::ustring const unit_name);
+    static void showDialog(SPDesktop *desktop, SPKnot *knot, Glib::ustring const &unit_name);
 
 protected:
-    SPKnot    *_knotpoint;
+    KnotPropertiesDialog();
 
+    SPKnot *_knotpoint = nullptr;
+
+    Gtk::Box          _mainbox;
+    Gtk::Box          _buttonbox;
     Gtk::Label        _knot_x_label;
     Gtk::SpinButton   _knot_x_entry;
     Gtk::Label        _knot_y_label;
     Gtk::SpinButton   _knot_y_entry;
     Gtk::Grid         _layout_table;
-    bool              _position_visible;
+    bool _position_visible = false;
 
     Gtk::Button       _close_button;
     Gtk::Button       _apply_button;
@@ -58,12 +57,9 @@ protected:
         return instance;
     }
 
-    void _setPt(const SPKnot *pt);
-
     void _apply();
-    void _close();
 
-    void _setKnotPoint(Geom::Point knotpoint, Glib::ustring const unit_name);
+    void _setKnotPoint(Geom::Point const &knotpoint, Glib::ustring const &unit_name);
 
     friend class Inkscape::UI::Tools::MeasureTool;
 };

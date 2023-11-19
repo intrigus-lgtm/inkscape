@@ -65,9 +65,9 @@ $ARCH-gc \
 $ARCH-gsl \
 $ARCH-libxslt \
 $ARCH-boost \
-$ARCH-gtk3 \
+$ARCH-gtk4 \
 $ARCH-gtk-doc \
-$ARCH-gtkmm3 \
+$ARCH-gtkmm4 \
 $ARCH-libsoup
 
 # install Inkscape dependencies (optional)
@@ -79,7 +79,7 @@ $ARCH-libvisio \
 $ARCH-libwpg \
 $ARCH-aspell \
 $ARCH-aspell-en \
-$ARCH-gtksourceview4 \
+$ARCH-gtksourceview5 \
 $ARCH-graphicsmagick \
 $ARCH-libjxl
 

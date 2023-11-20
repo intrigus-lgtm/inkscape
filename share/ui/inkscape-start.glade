@@ -242,7 +242,7 @@
                     <child>
                       <object class="GtkImage">
                         <property name="icon-name">dialog-warning</property>
-                        <property name="icon_size">3</property>
+                        <property name="icon-size">2</property>
                       </object>
                     </child>
                     <child>
@@ -350,13 +350,13 @@
                         <child>
                           <object class="GtkImage">
                             <property name="icon-name">tool-pointer</property>
-                            <property name="icon_size">3</property>
+                            <property name="icon-size">2</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkImage">
                             <property name="icon-name">tool-node-editor</property>
-                            <property name="icon_size">3</property>
+                            <property name="icon-size">2</property>
                           </object>
                         </child>
                         <child>
@@ -367,13 +367,13 @@
                         <child>
                           <object class="GtkImage">
                             <property name="icon-name">draw-rectangle</property>
-                            <property name="icon_size">3</property>
+                            <property name="icon-size">2</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkImage">
                             <property name="icon-name">draw-polygon-star</property>
-                            <property name="icon_size">3</property>
+                            <property name="icon-size">2</property>
                           </object>
                         </child>
                         <child>
@@ -384,13 +384,13 @@
                         <child>
                           <object class="GtkImage">
                             <property name="icon-name">draw-path</property>
-                            <property name="icon_size">3</property>
+                            <property name="icon-size">2</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkImage">
                             <property name="icon-name">draw-freehand</property>
-                            <property name="icon_size">3</property>
+                            <property name="icon-size">2</property>
                           </object>
                         </child>
                         <layout>
@@ -460,7 +460,6 @@
             <child>
               <object class="GtkButton" id="save">
                 <property name="focusable">True</property>
-                <property name="has-focus">True</property>
                 <property name="focus-on-click">False</property>
                 <property name="receives-default">True</property>
                 <property name="halign">end</property>
@@ -600,7 +599,6 @@
               <object class="GtkButton" id="thanks">
                 <property name="label" translatable="yes">Thanks!</property>
                 <property name="focusable">True</property>
-                <property name="has-focus">True</property>
                 <property name="focus-on-click">False</property>
                 <property name="receives-default">True</property>
                 <property name="halign">end</property>
@@ -710,7 +708,6 @@
                     <property name="label" translatable="yes">Open</property>
                     <property name="sensitive">False</property>
                     <property name="focusable">True</property>
-                    <property name="has-focus">True</property>
                     <property name="focus-on-click">False</property>
                     <property name="receives-default">True</property>
                     <property name="valign">center</property>

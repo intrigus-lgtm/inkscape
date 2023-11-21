@@ -503,19 +503,21 @@ DialogMultipaned::~DialogMultipaned()
 
 void DialogMultipaned::unparent_children()
 {
+    // Remove widgets that require special logic to remove.
+    // TODO: Understand why this is necessary.
     for (;;) {
         auto it = std::find_if(children.begin(), children.end(), [](auto w) {
             return dynamic_cast<DialogMultipaned *>(w) || dynamic_cast<DialogNotebook *>(w);
         });
         if (it != children.end()) {
             remove(**it);
-            delete *it;
         } else {
             // no more dialog panels
             break;
         }
     }
 
+    // Remove remaining widgets (DropZones, CanvasGrid).
     for (auto const child: children) {
         g_assert(child->get_parent() == this);
         child->unparent();

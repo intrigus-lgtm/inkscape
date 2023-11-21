@@ -2183,7 +2183,7 @@ Inkscape::XML::Node *TextToolbar::unindent_node(Inkscape::XML::Node *repr, Inksc
 
 void TextToolbar::display_font_collections()
 {
-    UI::delete_all_children(_font_collections_list);
+    UI::remove_all_children(_font_collections_list);
 
     FontCollections *font_collections = Inkscape::FontCollections::get();
 

@@ -427,7 +427,7 @@ void StyleDialog::readStyleElement()
     _owner_style.clear();
     // If text node is empty, return (avoids problem with negative below).
 
-    UI::delete_all_children(_styleBox);
+    UI::remove_all_children(_styleBox);
 
     Inkscape::Selection *selection = getSelection();
     SPObject *obj = nullptr;
@@ -851,7 +851,7 @@ void StyleDialog::readStyleElement()
         }
 
         if (!hasattributes) {
-            UI::delete_all_children(*css_selector_container);
+            UI::remove_all_children(*css_selector_container);
         }
 
         UI::pack_start(_styleBox, *css_selector_container, UI::PackOptions::expand_widget);

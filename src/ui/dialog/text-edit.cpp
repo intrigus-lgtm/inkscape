@@ -494,7 +494,7 @@ void TextEdit::onApply()
 
 void TextEdit::display_font_collections()
 {
-    UI::delete_all_children(collections_list);
+    UI::remove_all_children(collections_list);
 
     FontCollections *font_collections = Inkscape::FontCollections::get();
 

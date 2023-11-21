@@ -1095,7 +1095,7 @@ FontVariants::update_opentype (Glib::ustring& font_spec) {
         if( (it = table_copy.find("vatu")) != table_copy.end() ) table_copy.erase( it );
 
         // Clear out old features
-        UI::delete_all_children(_feature_grid);
+        UI::remove_all_children(_feature_grid);
         _features.clear();
 
         std::string markup;

@@ -243,10 +243,8 @@ void LayerPropertiesDialog::_setup_position_controls()
 
     int position = Preferences::get()->getIntLimited("/dialogs/layerProp/addLayerPosition", 0, 0, 2);
 
-    Gtk::RadioButtonGroup group;
-    _layer_position_radio[0].set_group(group);
-    _layer_position_radio[1].set_group(group);
-    _layer_position_radio[2].set_group(group);
+    _layer_position_radio[1].set_group(_layer_position_radio[0]);
+    _layer_position_radio[2].set_group(_layer_position_radio[0]);
     _layer_position_radio[0].set_label(_("Above current"));
     _layer_position_radio[1].set_label(_("As sublayer of current"));
     _layer_position_radio[1].get_style_context()->add_class("indent");
@@ -255,10 +253,10 @@ void LayerPropertiesDialog::_setup_position_controls()
     _layer_position_radio[1].set_active(position == LPOS_CHILD);
     _layer_position_radio[2].set_active(position == LPOS_BELOW);
 
-    auto& vbox = *Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 3);
-    UI::pack_start(vbox, _layer_position_radio[0], false, false);
-    UI::pack_start(vbox, _layer_position_radio[1], false, false);
-    UI::pack_start(vbox, _layer_position_radio[2], false, false);
+    auto &vbox = *Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 3);
+    vbox.append(_layer_position_radio[0]);
+    vbox.append(_layer_position_radio[1]);
+    vbox.append(_layer_position_radio[2]);
 
     _layout_table.attach(vbox, 1, 1, 1, 1);
 }
@@ -275,7 +273,7 @@ void LayerPropertiesDialog::_setup_layers_controls()
     int visibleColNum = _tree.append_column("vis", *eyeRenderer) - 1;
     Gtk::TreeViewColumn *col = _tree.get_column(visibleColNum);
     if (col) {
-        col->add_attribute(eyeRenderer->property_active(), _model->visible);
+        col->add_attribute(eyeRenderer->property_active(), _model.visible);
     }
 
     auto const renderer = Gtk::make_managed<UI::Widget::ImageToggler>(INKSCAPE_ICON("object-locked"),
@@ -283,13 +281,13 @@ void LayerPropertiesDialog::_setup_layers_controls()
     int lockedColNum = _tree.append_column("lock", *renderer) - 1;
     col = _tree.get_column(lockedColNum);
     if (col) {
-        col->add_attribute(renderer->property_active(), _model->locked);
+        col->add_attribute(renderer->property_active(), _model.locked);
     }
 
     auto const _text_renderer = Gtk::make_managed<Gtk::CellRendererText>();
     int nameColNum = _tree.append_column("Name", *_text_renderer) - 1;
     Gtk::TreeView::Column *_name_column = _tree.get_column(nameColNum);
-    _name_column->add_attribute(_text_renderer->property_text(), _model->label);
+    _name_column->add_attribute(_text_renderer->property_text(), _model.label);
 
     _tree.set_expander_column(*_tree.get_column(nameColNum));
 
@@ -344,10 +342,10 @@ void LayerPropertiesDialog::_addLayer(SPObject* layer, Gtk::TreeModel::Row* pare
 
         Gtk::TreeModel::iterator iter = parentRow ? _store->prepend(parentRow->children()) : _store->prepend();
         Gtk::TreeModel::Row row = *iter;
-        row[_model->object] = child;
-        row[_model->label] = child->label() ? child->label() : child->getId();
-        row[_model->visible] = is<SPItem>(child) ? !cast_unsafe<SPItem>(child)->isHidden() : false;
-        row[_model->locked] = is<SPItem>(child) ? cast_unsafe<SPItem>(child)->isLocked() : false;
+        row[_model.object] = child;
+        row[_model.label] = child->label() ? child->label() : child->getId();
+        row[_model.visible] = is<SPItem>(child) ? !cast_unsafe<SPItem>(child)->isHidden() : false;
+        row[_model.locked] = is<SPItem>(child) ? cast_unsafe<SPItem>(child)->isLocked() : false;
 
         if (target && child == target) {
             _tree.expand_to_path(_store->get_path(iter));

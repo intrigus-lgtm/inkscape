@@ -18,7 +18,6 @@
 #include <exception>
 #include <fstream>
 #include <glibmm/error.h>
-#include <glibmm/exception.h>
 #include <iostream>
 
 #ifdef _WIN32
@@ -96,9 +95,6 @@ void RecentlyUsedFonts::read(const Glib::ustring& file_path) {
     catch (std::exception& ex) {
         std::cerr << "Failed to read recently used fonts file: " << ex.what() << std::endl;
     }
-    catch (Glib::Exception& ex) {
-        std::cerr << "Failed to read recently used fonts file: " << ex.what() << std::endl;
-    }
 }
 
 void RecentlyUsedFonts::_read(const Glib::ustring& file_path)
@@ -138,9 +134,6 @@ void RecentlyUsedFonts::write_recently_used_fonts() {
         _write_recently_used_fonts();
     }
     catch (std::exception& ex) {
-        std::cerr << "Failed to write recently used fonts file: " << ex.what() << std::endl;
-    }
-    catch (Glib::Exception& ex) {
         std::cerr << "Failed to write recently used fonts file: " << ex.what() << std::endl;
     }
 }

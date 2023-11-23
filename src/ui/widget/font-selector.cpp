@@ -277,7 +277,7 @@ void FontSelector::update_font()
         srow[font_lister->font_style_list.cssStyle] = s.css_name;
         srow[font_lister->font_style_list.displayStyle] = s.display_name;
         if (style == s.css_name) {
-            match = srow;
+            match = srow.get_iter();
         }
     }
 
@@ -442,7 +442,7 @@ FontSelector::on_family_changed() {
         srow[FontStyleList.cssStyle] = s.css_name;
         srow[FontStyleList.displayStyle] = s.display_name;
         if (best == s.css_name) {
-            it_best = srow;
+            it_best = srow.get_iter();
         }
     }
 

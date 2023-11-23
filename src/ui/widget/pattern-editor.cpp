@@ -22,7 +22,6 @@
 #include <gtkmm/label.h>
 #include <gtkmm/paned.h>
 #include <gtkmm/picture.h>
-#include <gtkmm/radiobutton.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/searchentry.h>
 #include <gtkmm/spinbutton.h>
@@ -147,8 +146,8 @@ PatternEditor::PatternEditor(const char* prefs, Inkscape::PatternManager& manage
         return true;
     }, true);
     _precise_gap_control = Inkscape::Preferences::get()->getBool(_prefs + "/preciseGapControl", false);
-    auto precise_gap = &get_widget<Gtk::RadioButton>(_builder, "gap-spin");
-    auto& mouse_friendly = get_widget<Gtk::RadioButton>(_builder, "gap-slider");
+    auto precise_gap = &get_widget<Gtk::CheckButton>(_builder, "gap-spin");
+    auto& mouse_friendly = get_widget<Gtk::CheckButton>(_builder, "gap-slider");
     if (_precise_gap_control) {
         precise_gap->set_active();
     }

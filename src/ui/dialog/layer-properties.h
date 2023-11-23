@@ -17,12 +17,12 @@
 #include <gtk/gtk.h> // GtkEventControllerKey
 #include <glibmm/refptr.h>
 #include <gtkmm/box.h>
+#include <gtkmm/checkbutton.h>
 #include <gtkmm/combobox.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
-#include <gtkmm/radiobutton.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treestore.h>
@@ -84,7 +84,7 @@ private:
     Gtk::Label        _layer_name_label;
     Gtk::Entry        _layer_name_entry;
     Gtk::Label        _layer_position_label;
-    Gtk::RadioButton  _layer_position_radio[3];
+    Gtk::CheckButton  _layer_position_radio[3];
     Gtk::Grid         _layout_table;
 
     bool              _position_visible = false;

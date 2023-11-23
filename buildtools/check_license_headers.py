@@ -69,6 +69,7 @@ IGNORE_FILE_ENDINGS = [
     "README.md",
     "TRANSLATORS",
     "todo.txt",
+    "true_false.txt",
 ]
 
 # permitted licenses (MUST BE compatible with licensing the compiled product as GPL3).

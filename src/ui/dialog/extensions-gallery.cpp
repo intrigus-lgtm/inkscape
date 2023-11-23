@@ -4,6 +4,20 @@
 
 #include <algorithm>
 #include <cmath>
+#include <giomm/liststore.h>
+#include <glibmm/objectbase.h>
+#include <gtkmm/boolfilter.h>
+#include <gtkmm/filter.h>
+#include <gtkmm/filterlistmodel.h>
+#include <gtkmm/gridview.h>
+#include <gtkmm/listitemfactory.h>
+#include <gtkmm/picture.h>
+#include <gtkmm/scrollinfo.h>
+#include <gtkmm/signallistitemfactory.h>
+#include <gtkmm/singleselection.h>
+#include <gtkmm/tooltip.h>
+#include <gtkmm/widgetpaintable.h>
+#include <initializer_list>
 #include <iterator>
 #include <list>
 #include <memory>
@@ -43,34 +57,45 @@
 #include "ui/builder-utils.h"
 #include "ui/dialog/dialog-base.h"
 #include "ui/svg-renderer.h"
+#include "ui/util.h"
 
 namespace Inkscape::UI::Dialog {
 
-struct EffectColumns : public Gtk::TreeModel::ColumnRecord {
-    Gtk::TreeModelColumn<std::string> id;     // extension ID
-    Gtk::TreeModelColumn<Glib::ustring> name; // effect's name (translated)
-    Gtk::TreeModelColumn<Glib::ustring> tooltip;     // menu tip if present, access path otherwise (translated)
-    Gtk::TreeModelColumn<Glib::ustring> description; // short description (filters have one; translated)
-    Gtk::TreeModelColumn<Glib::ustring> access;   // menu access path (translated)
-    Gtk::TreeModelColumn<Glib::ustring> order;    // string to sort items (translated)
-    Gtk::TreeModelColumn<Glib::ustring> category; // category (from menu item; translated)
-    Gtk::TreeModelColumn<Inkscape::Extension::Effect*> effect;
-    Gtk::TreeModelColumn<Cairo::RefPtr<Cairo::Surface>> image;
-    Gtk::TreeModelColumn<std::string> icon; // path to effect's SVG icon file
+struct EffectItem : public Glib::Object {
+    std::string id;     // extension ID
+    Glib::ustring name; // effect's name (translated)
+    Glib::ustring tooltip;     // menu tip if present, access path otherwise (translated)
+    Glib::ustring description; // short description (filters have one; translated)
+    Glib::ustring access;   // menu access path (translated)
+    Glib::ustring order;    // string to sort items (translated)
+    Glib::ustring category; // category (from menu item; translated)
+    Inkscape::Extension::Effect* effect;
+    std::string icon; // path to effect's SVG icon file
 
-    EffectColumns() {
-        add(id);
-        add(name);
-        add(tooltip);
-        add(description);
-        add(access);
-        add(order);
-        add(category);
-        add(effect);
-        add(image);
-        add(icon);
+    static Glib::RefPtr<EffectItem> create(
+        std::string id,
+        Glib::ustring name,
+        Glib::ustring tooltip,
+        Glib::ustring description,
+        Glib::ustring access,
+        Glib::ustring order,
+        Glib::ustring category,
+        Inkscape::Extension::Effect* effect,
+        std::string icon
+    ) {
+        auto item = Glib::make_refptr_for_instance<EffectItem>(new EffectItem());
+        item->id = id;
+        item->name = name;
+        item->tooltip = tooltip;
+        item->description = description;
+        item->access = access;
+        item->order = order;
+        item->category = category;
+        item->effect = effect;
+        item->icon = icon;
+        return item;
     }
-} g_effect_columns;
+};
 
 struct CategoriesColumns : public Gtk::TreeModel::ColumnRecord {
     Gtk::TreeModelColumn<Glib::ustring> id;
@@ -178,11 +203,9 @@ Cairo::RefPtr<Cairo::Surface> render_icon(Extension::Effect* effect, std::string
     return image;
 }
 
-void add_effects(Glib::RefPtr<Gtk::ListStore>& item_store, const std::vector<Inkscape::Extension::Effect*>& effects, bool root) {
+void add_effects(Gio::ListStore<EffectItem>& item_store, const std::vector<Inkscape::Extension::Effect*>& effects, bool root) {
     for (auto& effect : effects) {
         const auto id = effect->get_sanitized_id();
-
-        auto row = *item_store->append();
 
         std::string name = effect->get_name();
         // remove ellipsis and mnemonics
@@ -210,14 +233,6 @@ void add_effects(Glib::RefPtr<Gtk::ListStore>& item_store, const std::vector<Ink
         order << name;
         auto translated = [](const char* text) { return *text ? gettext(text) : ""; };
         auto description = effect->get_menu_tip();
-        row[g_effect_columns.id] = id;
-        row[g_effect_columns.name] = name;
-        row[g_effect_columns.tooltip] = description.empty() ? access.str().c_str() : translated(description.c_str());
-        row[g_effect_columns.description] = translated(description.c_str());
-        row[g_effect_columns.access] = access.str();
-        row[g_effect_columns.order] = order.str();
-        row[g_effect_columns.category] = get_category(menu);
-        row[g_effect_columns.effect] = effect;
 
         std::string dir(IO::Resource::get_path(IO::Resource::SYSTEM, IO::Resource::EXTENSIONS));
         auto icon = effect->find_icon_file(dir);
@@ -226,8 +241,21 @@ void add_effects(Glib::RefPtr<Gtk::ListStore>& item_store, const std::vector<Ink
             // fallback image
             icon = Inkscape::IO::Resource::get_path_string(IO::Resource::SYSTEM, IO::Resource::UIS, "resources", root ? "missing-icon.svg" : "filter-test.svg");
         }
-        row[g_effect_columns.icon] = icon;
+
+        item_store.append(EffectItem::create(
+            id,
+            name,
+            description.empty() ? access.str().c_str() : translated(description.c_str()),
+            translated(description.c_str()),
+            access.str(),
+            order.str(),
+            get_category(menu),
+            effect,
+            icon
+        ));
     }
+
+    item_store.sort([](auto& a, auto& b) { return a->order.compare(b->order); });
 }
 
 std::set<std::string> add_categories(Glib::RefPtr<Gtk::ListStore>& store, const std::vector<Inkscape::Extension::Effect*>& effects) {
@@ -263,14 +291,15 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
     DialogBase(type == Effects ? "/dialogs/extensions-gallery/effects" : "/dialogs/extensions-gallery/filters",
         type == Effects ? "ExtensionsGallery" : "FilterGallery"),
     _builder(create_builder("dialog-extensions.glade")),
-    _grid(get_widget<Gtk::IconView>(_builder, "grid")),
+    _gridview(get_widget<Gtk::GridView>(_builder, "grid")),
     _search(get_widget<Gtk::SearchEntry>(_builder, "search")),
     _run(get_widget<Gtk::Button>(_builder, "run")),
+    _run_btn_label(get_widget<Gtk::Label>(_builder, "run-label")),
     _selector(get_widget<Gtk::TreeView>(_builder, "selector")),
     _image_cache(1000), // arbitrary limit for how many rendered thumbnails to keep around
     _type(type)
 {
-    _run_label = _type == Effects ? _run.get_label() : _("_Apply");
+    _run_label = _type == Effects ? _run_btn_label.get_label() : _("_Apply");
     if (_type == Filters) {
         get_widget<Gtk::Label>(_builder, "header").set_label(_("Select filter to apply:"));
     }
@@ -305,22 +334,19 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
     show_categories_list(show_list);
 
     _categories = get_object<Gtk::ListStore>(_builder, "categories-store");
-    _selector.set_row_separator_func([=](Glib::RefPtr<Gtk::TreeModel> const &,
-                                         Gtk::TreeModel::const_iterator const &it)
-    {
+    _selector.set_row_separator_func([=](auto&, auto& it) {
         Glib::ustring id;
         it->get_value(g_categories_columns.id.index(), id);
         return id == "-";
     });
 
-    _store = Gtk::ListStore::create(g_effect_columns);
-    _filtered = Gtk::TreeModelFilter::create(_store);
-    auto model = Gtk::TreeModelSort::create(_filtered);
+    auto store = Gio::ListStore<EffectItem>::create();
+    _filter = Gtk::BoolFilter::create({});
+    _filtered_model = Gtk::FilterListModel::create(store, _filter);
 
     auto effects = prepare_effects(Inkscape::Extension::db.get_effect_list(), _type == Effects);
 
-    add_effects(_store, effects, _type == Effects);
-    model->set_sort_column(g_effect_columns.order.index(), Gtk::SortType::ASCENDING);
+    add_effects(*store, effects, _type == Effects);
 
     auto categories = add_categories(_categories, effects);
     if (!categories.count(_current_category.raw())) {
@@ -337,99 +363,114 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
         }
     });
 
-    _grid.pack_start(_image_renderer);
-    _grid.add_attribute(_image_renderer, "surface", g_effect_columns.image);
-    _grid.set_cell_data_func(_image_renderer, [=](Gtk::TreeModel::const_iterator const &const_it){
-        Gdk::Rectangle rect;
-        // https://gitlab.gnome.org/GNOME/gtkmm/-/issues/145
-        auto const it = const_cast<GtkTreeIter *>(const_it.gobj());
-        auto const path = gtk_tree_model_get_path(model->Gtk::TreeModel::gobj(), it);
-        if (!gtk_icon_view_get_cell_rect(_grid.gobj(), path, nullptr, rect.gobj())) {
-            return;
-        }
-
-        auto const height = _grid.get_height();
-        bool visible = !(rect.get_x() < 0 && rect.get_y() < 0);
-        // cell rect coordinates are not affected by scrolling
-        if (visible && (rect.get_y() + rect.get_height() < 0 || rect.get_y() > 0 + height)) {
-            visible = false;
-        }
-        auto const store = GTK_LIST_STORE(model->get_model()->gobj());
-        get_cell_data_func(_image_renderer, const_it, store, it, visible);
+    _selection_model = Gtk::SingleSelection::create(_filtered_model);
+    _factory = Gtk::SignalListItemFactory::create();
+    _factory->signal_setup().connect([=](const Glib::RefPtr<Gtk::ListItem>& list_item) {
+        // Each ListItem contains a vertical Box with an Image and a Label.
+        auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
+        auto image = Gtk::make_managed<Gtk::Picture>();
+        box->append(*image);
+        auto label = Gtk::make_managed<Gtk::Label>();
+        box->append(*Gtk::make_managed<Gtk::Label>());
+        list_item->set_child(*box);
     });
 
-    _grid.set_text_column(g_effect_columns.name);
-    _grid.set_tooltip_column(g_effect_columns.tooltip.index());
-    _grid.set_item_width(80); // min width to accomodate labels
-    _grid.set_column_spacing(0);
-    _grid.set_row_spacing(0);
-    _grid.set_model(model);
-    _grid.signal_item_activated().connect([=](const Gtk::TreeModel::Path& path){
-        _run.activate();
+    _factory->signal_bind().connect([=](const Glib::RefPtr<Gtk::ListItem>& list_item) {
+        auto effect = std::dynamic_pointer_cast<EffectItem>(list_item->get_item());
+        if (!effect) return;
+        auto box = dynamic_cast<Gtk::Box*>(list_item->get_child());
+        if (!box) return;
+        auto image = dynamic_cast<Gtk::Picture*>(box->get_first_child());
+        if (!image) return;
+        auto label = dynamic_cast<Gtk::Label*>(image->get_next_sibling());
+        if (!label) return;
+
+        auto tex = get_image(effect->id, effect->icon, effect->effect);
+        image->set_can_shrink(true);
+        image->set_content_fit(Gtk::ContentFit::CONTAIN);
+        image->set_paintable(tex);
+        // poor man's high dpi support here:
+        auto scale = get_scale_factor();
+        image->set_size_request(tex->get_width() / scale, tex->get_height() / scale);
+        label->set_text(effect->name);
+        //TODO: small labels?
+        // label->set_markup("<small>" + Glib::Markup::escape_text(effect->name) + "</small>");
+        label->set_max_width_chars(12);
+        label->set_wrap();
+        label->set_justify(Gtk::Justification::CENTER);
+        box->set_tooltip_text(effect->tooltip);
     });
+
+    _gridview.set_min_columns(1);
+    // max columns impacts number of prerendered items requested by gridview (= maxcol * 32 + 1),
+    // so it needs to be artificially kept low to prevent gridview from rendering all items up front
+    _gridview.set_max_columns(5);
+    // gtk_list_base_set_anchor_max_widgets(0); - private method, no way to customize prerender items number
+    _gridview.set_model(_selection_model);
+    _gridview.set_factory(_factory);
+    // handle item activation (double-click)
+    _gridview.signal_activate().connect([this](auto pos){
+        _run.activate_action(_run.get_action_name());
+    });
+    _gridview.set_single_click_activate(false);
 
     _search.signal_search_changed().connect([=](){
         refilter();
     });
 
-    _filtered->set_visible_func([=](const Gtk::TreeModel::const_iterator& it){
-        // filter by category
-        if (_current_category != "all") {
-            Glib::ustring cat = (*it)[g_effect_columns.category];
-            if (_current_category != cat) return false;
-        }
-
-        // filter by name
-        if (_search.get_text_length() == 0) return true;
-    
-        auto str = _search.get_text().lowercase();
-        Glib::ustring text = (*it)[g_effect_columns.access];
-        return text.lowercase().find(str) != Glib::ustring::npos;
-    });
-
-    // restore selection: last used extension
-    if (!selected.empty()) {
-        model->foreach_path([=](const Gtk::TreeModel::Path& path){
-            auto it = model->get_iter(path);
-            if (selected.raw() == static_cast<std::string>((*it)[g_effect_columns.id])) {
-                _grid.select_path(path);
-                return true;
-            }
-            return false;
-        });
-    }
-
-    update_name();
-
-    _grid.signal_selection_changed().connect([=](){
+    _selection_model->signal_selection_changed().connect([this](auto first, auto count) {
         update_name();
     });
 
-    _categories->foreach([=](Gtk::TreeModel::Path const &path,
-                             Gtk::TreeModel::const_iterator const &it)
-    {
+    // restore last selected category
+    _categories->foreach([=](const auto& path, const auto&it) {
         Glib::ustring id;
         it->get_value(g_categories_columns.id.index(), id);
 
-        if (id == _current_category) {
+        if (id.raw() == _current_category.raw()) {
             _page_selection->select(path);
             return true;
         }
         return false;
     });
 
-    // thumbnail size
+    // restore thumbnail size
     auto adj = get_object<Gtk::Adjustment>(_builder, "adjustment-thumbnails");
     _thumb_size_index = prefs->getIntLimited(_prefs_path + "/tile-size", 6, adj->get_lower(), adj->get_upper());
     auto scale = &get_widget<Gtk::Scale>(_builder, "thumb-size");
     scale->set_value(_thumb_size_index);
+
+    // populate filtered model
+    refilter();
+
+    // initial selection
+    _selection_model->select_item(0, true);
+
+    // restore selection: last used extension
+    if (!selected.empty()) {
+        const auto N = _filtered_model->get_n_items();
+        for (int pos = 0; pos < N; ++pos) {
+            auto item = _filtered_model->get_typed_object<EffectItem>(pos);
+            if (!item) continue;
+
+            if (item->id == selected.raw()) {
+                _selection_model->select_item(pos, true);
+                //TODO: it's too early for scrolling to work (?)
+                auto scroll = Gtk::ScrollInfo::create();
+                scroll->set_enable_vertical();
+                _gridview.scroll_to(pos, Gtk::ListScrollFlags::NONE, scroll);
+                break;
+            }
+        }
+    }
+
+    update_name();
+
     scale->signal_value_changed().connect([=](){
         _thumb_size_index = scale->get_value();
         rebuild();
         prefs->setInt(_prefs_path + "/tile-size", _thumb_size_index);
     });
-
-    refilter();
 
     append(get_widget<Gtk::Box>(_builder, "main"));
 }
@@ -438,48 +479,38 @@ void ExtensionsGallery::update_name() {
     auto& label = get_widget<Gtk::Label>(_builder, "name");
     auto& info = get_widget<Gtk::Label>(_builder, "info");
 
-    if (auto row = selected_item()) {
+    auto item = _selection_model->get_selected_item();
+    if (auto effect = std::dynamic_pointer_cast<EffectItem>(item)) {
         // access path - where to find it in the main menu
-        label.set_label(row[g_effect_columns.access]);
-        label.set_tooltip_text(row[g_effect_columns.access]);
+        label.set_label(effect->access);
+        label.set_tooltip_text(effect->access);
 
         // set action name
-        std::string id = row[g_effect_columns.id];
-        _run.set_action_name("app." + id);
+        _run.set_action_name("app." + effect->id);
         _run.set_sensitive();
         // add ellipsis if extension takes input
-        auto& effect = *row[g_effect_columns.effect];
-        _run.set_label(_run_label + (effect.takes_input() ? _("...") : ""));
-        // info: extension description
-        Glib::ustring desc = row[g_effect_columns.description];
+        auto& effect_obj = *effect->effect;
+        _run_btn_label.set_label(_run_label + (effect_obj.takes_input() ? _("...") : ""));
+        // info: extension description, if any
+        Glib::ustring desc = effect->description;
         info.set_markup("<i>" + Glib::Markup::escape_text(desc) + "</i>");
         info.set_tooltip_text(desc);
 
         auto prefs = Inkscape::Preferences::get();
-        prefs->setString(_prefs_path + "/selected", id);
+        prefs->setString(_prefs_path + "/selected", effect->id);
     }
     else {
         label.set_label("");
         label.set_tooltip_text("");
         info.set_text("");
         info.set_tooltip_text("");
-        _run.set_label(_run_label);
+        _run_btn_label.set_label(_run_label);
         _run.set_sensitive(false);
     }
 }
 
-Gtk::TreeModel::Row ExtensionsGallery::selected_item() {
-    auto sel = _grid.get_selected_items();
-    auto model = _grid.get_model();
-    Gtk::TreeModel::Row row;
-    if (sel.size() == 1 && model) {
-        row = *model->get_iter(sel.front());
-    }
-    return row;
-}
-
 void ExtensionsGallery::show_category(const Glib::ustring& id) {
-    if (_current_category == id) return;
+    if (_current_category.raw() == id.raw()) return;
 
     _current_category = id;
 
@@ -489,20 +520,41 @@ void ExtensionsGallery::show_category(const Glib::ustring& id) {
     refilter();
 }
 
+bool ExtensionsGallery::is_item_visible(const Glib::RefPtr<Glib::ObjectBase>& item) const {
+    auto effect_ptr = std::dynamic_pointer_cast<EffectItem>(item);
+    if (!effect_ptr) return false;
+
+    const auto& effect = *effect_ptr;
+
+    // filter by category
+    if (_current_category != "all") {
+        if (_current_category.raw() != effect.category.raw()) return false;
+    }
+
+    // filter by name
+    auto str = _search.get_text().lowercase();
+    if (str.empty()) return true;
+
+    Glib::ustring text = effect.access;
+    return text.lowercase().find(str) != Glib::ustring::npos;
+}
+
 void ExtensionsGallery::refilter() {
+    // When a new expression is set in the BoolFilter, it emits signal_changed(),
+    // and the FilterListModel re-evaluates the filter.
+    auto expression = Gtk::ClosureExpression<bool>::create([this](auto& item){ return is_item_visible(item); });
     // filter results
-    _filtered->freeze_notify();
-    _filtered->refilter();
-    _filtered->thaw_notify();
+    _filter->set_expression(expression);
 }
 
 void ExtensionsGallery::rebuild() {
+    // empty cache, so item will get re-rendered at new size
     _image_cache.clear();
-    _grid.queue_draw();
-    //ToDo: revisit in gtk4 - this code forces iconview to resize items to new image size
-    auto model = _grid.get_model();
-    _grid.unset_model();
-    _grid.set_model(model);
+    // remove all
+    auto none = Gtk::ClosureExpression<bool>::create([this](auto& item){ return false; });
+    _filter->set_expression(none);
+    // restore
+    refilter();
 }
 
 Geom::Point get_thumbnail_size(int index, ExtensionsGallery::Type type) {
@@ -522,58 +574,19 @@ Geom::Point get_thumbnail_size(int index, ExtensionsGallery::Type type) {
     return icon_size;
 }
 
-// This is an attempt to render images on-demand (visible only), as opposed to all of them in the store.
-// Hopefully this can be simplified in gtk4.
-// Yes! In gtkmm4 this passes a ConstRow, but we modify the row... ugh! Get over to GridView, ASAP!
-void ExtensionsGallery::get_cell_data_func(Gtk::CellRenderer &cell_renderer,
-                                           Gtk::TreeModel::const_iterator const &const_it,
-                                           GtkListStore * const store, GtkTreeIter * const iter,
-                                           bool const visible)
-{
-    auto const &row = *const_it;
-    std::string icon_file = (row)[g_effect_columns.icon];
-    std::string cache_key = (row)[g_effect_columns.id];
-
-    Cairo::RefPtr<Cairo::Surface> surface;
-    auto icon_size = get_thumbnail_size(_thumb_size_index, _type);
-
-    if (!visible) {
-        // cell is not visible, so this is layout pass; return empty image of the right size
-        if (!_blank_image || _blank_image->get_width() != icon_size.x() || _blank_image->get_height() != icon_size.y()) {
-            auto const icon = render_icon(nullptr, {}, icon_size, get_scale_factor());
-            _blank_image = std::dynamic_pointer_cast<Cairo::ImageSurface>(icon);
-            g_assert(_blank_image);
-        }
-        surface = _blank_image;
+Glib::RefPtr<Gdk::Texture> ExtensionsGallery::get_image(const std::string& key, const std::string& icon, Extension::Effect* effect) {
+    if (auto image = _image_cache.get(key)) {
+        // cache hit
+        return *image;
     }
     else {
-        // cell is visible, so we need to return correct symbol image and render it if it's missing
-        if (auto image = _image_cache.get(cache_key)) {
-            // cache hit
-            surface = *image;
-        }
-        else {
-            // render
-            Extension::Effect* effect = row[g_effect_columns.effect];
-            surface = render_icon(effect, icon_file, icon_size, get_scale_factor());
-            // FIXME: Doing this seems v wrong, as evidence by how hard it is in gtkmm4. →GridView!
-            // row[g_effect_columns.image] = surface;
-            gtk_list_store_set(store, iter, g_effect_columns.image.index(), surface->cobj(), -1);
-            _image_cache.insert(cache_key, surface);
-        }
+        // render
+        auto icon_size = get_thumbnail_size(_thumb_size_index, _type);
+        auto surface = render_icon(effect, icon, icon_size, get_scale_factor());
+        auto tex = to_texture(surface);
+        _image_cache.insert(key, tex);
+        return tex;
     }
-    cell_renderer.set_property("surface", surface);
 }
 
 } // namespace Inkscape::UI::Dialog
-
-/*
-  Local Variables:
-  mode:c++
-  c-file-style:"stroustrup"
-  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
-  indent-tabs-mode:nil
-  fill-column:99
-  End:
-*/
-// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

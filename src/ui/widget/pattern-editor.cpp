@@ -148,13 +148,9 @@ PatternEditor::PatternEditor(const char* prefs, Inkscape::PatternManager& manage
     _precise_gap_control = Inkscape::Preferences::get()->getBool(_prefs + "/preciseGapControl", false);
     auto precise_gap = &get_widget<Gtk::CheckButton>(_builder, "gap-spin");
     auto& mouse_friendly = get_widget<Gtk::CheckButton>(_builder, "gap-slider");
-    if (_precise_gap_control) {
-        precise_gap->set_active();
-    }
-    else {
-        mouse_friendly.set_active();
-    }
-    precise_gap->signal_toggled().connect([=](){
+    precise_gap->set_active(_precise_gap_control);
+    mouse_friendly.set_active(!_precise_gap_control);
+    precise_gap->signal_toggled().connect([=, this] {
         auto precise = precise_gap->get_active();
         if (_precise_gap_control != precise) {
             _precise_gap_control = precise;

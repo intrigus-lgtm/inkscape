@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="adjustment-opacity">
@@ -9,10 +8,13 @@
   </object>
   <object class="GtkPopover" id="object-menu">
     <property name="width-request">222</property>
-    <child>
+    <property name="child">
       <object class="GtkBox">
         <property name="orientation">vertical</property>
-        <property name="margin">5</property>
+        <property name="margin-start">5</property>
+        <property name="margin-end">5</property>
+        <property name="margin-top">5</property>
+        <property name="margin-bottom">5</property>
         <property name="spacing">3</property>
         <child>
           <object class="GtkLabel">
@@ -22,6 +24,7 @@
         </child>
         <child>
           <object class="GtkScale" id="opacity-slider">
+            <property name="draw-value">True</property>
             <property name="focusable">True</property>
             <property name="adjustment">adjustment-opacity</property>
             <property name="round-digits">1</property>
@@ -29,7 +32,6 @@
         </child>
         <child>
           <object class="GtkSeparator">
-            <property name="orientation">horizontal</property>
             <property name="margin-top">5</property>
             <property name="margin-bottom">5</property>
           </object>
@@ -40,17 +42,16 @@
             <property name="label" translatable="yes">Blend mode</property>
           </object>
         </child>
-        <!-- n-columns=2 n-rows=3 -->
         <child>
           <object class="GtkGrid" id="modes">
             <property name="row-spacing">3</property>
           </object>
         </child>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="settings-menu">
-    <child>
+    <property name="child">
       <object class="GtkBox">
         <property name="margin-start">5</property>
         <property name="margin-end">5</property>
@@ -63,7 +64,6 @@
             <property name="label" translatable="yes">Only show layers</property>
             <property name="focusable">True</property>
             <property name="halign">start</property>
-            <property name="draw-indicator">True</property>
           </object>
         </child>
         <child>
@@ -71,11 +71,10 @@
             <property name="label" translatable="yes">Expand to display selection</property>
             <property name="focusable">True</property>
             <property name="halign">start</property>
-            <property name="draw-indicator">True</property>
           </object>
         </child>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkBox" id="header">
     <property name="margin-bottom">3</property>
@@ -84,7 +83,7 @@
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="action-name">win.layer-new-above</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image-insert">
             <property name="icon-name">layer-new</property>
@@ -102,7 +101,7 @@
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Raise selection one step</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image-up">
             <property name="icon-name">go-up</property>
@@ -115,7 +114,7 @@
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Lower selection one step</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image-down">
             <property name="icon-name">go-down</property>
@@ -128,7 +127,7 @@
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Delete selected items</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image-remove">
             <property name="icon-name">edit-delete</property>
@@ -149,7 +148,7 @@
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Layers and Objects dialog settings</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">settings-menu</property>
         <child>
           <object class="GtkImage">

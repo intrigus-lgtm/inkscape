@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="_dx_adj">
@@ -38,8 +37,7 @@
     <property name="page-increment">0.10</property>
   </object>
   <object class="GtkPopover" id="font_collections_popover">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="font_collections_box">
         <property name="valign">center</property>
         <property name="orientation">vertical</property>
@@ -52,11 +50,11 @@
             <style>
               <class name="flat"/>
             </style>
-            <child>
+            <property name="child">
               <object class="GtkListBox" id="_font_collections_list">
                 <property name="selection-mode">multiple</property>
               </object>
-            </child>
+            </property>
             <child type="label">
               <object class="GtkLabel">
                 <property name="label" translatable="yes">Font Collections</property>
@@ -72,66 +70,57 @@
             <property name="tooltip-text" translatable="yes">Open the Font Collections dialog</property>
             <property name="margin-top">3</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover1">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box1">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover2">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box2">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover3">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box3">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover4">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box4">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover5">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box5">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover6">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box6">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkBox" id="text-toolbar">
     <property name="halign">start</property>
@@ -143,7 +132,7 @@
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Select Font Collections</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">font_collections_popover</property>
         <property name="icon-name">font_collections</property>
       </object>
@@ -153,60 +142,39 @@
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="tooltip-text" translatable="yes">Reset the font list (Deselects all the font collections and clears search results)</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">view-refresh</property>
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="font_list_box">
       </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="styles_list_box">
       </object>
-      <packing>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="font_size_box">
       </object>
-      <packing>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="unit_menu_box">
       </object>
-      <packing>
-        <property name="position">5</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">6</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn1">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover1</property>
         <property name="icon-name">go-down</property>
       </object>
-      <packing>
-        <property name="position">7</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="line_height_box">
@@ -225,17 +193,11 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="position">8</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="line_height_unit_box">
@@ -243,29 +205,20 @@
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="position">9</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">10</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn2">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover2</property>
         <property name="icon-name">go-down</property>
       </object>
-      <packing>
-        <property name="position">11</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="alignment_buttons_box">
@@ -275,7 +228,7 @@
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Align left</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="icon-name">format-justify-left</property>
           </object>
         </child>
@@ -284,98 +237,71 @@
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Align center</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">alignment_mode_group</property>
             <property name="icon-name">format-justify-center</property>
           </object>
-          <packing>
-            <property name="position">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Align right</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">alignment_mode_group</property>
             <property name="icon-name">format-justify-right</property>
           </object>
-          <packing>
-            <property name="position">4</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Justify (only flowed text)</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">alignment_mode_group</property>
             <property name="icon-name">format-justify-fill</property>
           </object>
-          <packing>
-            <property name="position">5</property>
-          </packing>
         </child>
         <style>
           <class name="tag2"/>
         </style>
       </object>
-      <packing>
-        <property name="position">12</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">13</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_superscript_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Toggle superscript</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">text_superscript</property>
       </object>
-      <packing>
-        <property name="position">14</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_subscript_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Toggle subscript</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">text_subscript</property>
       </object>
-      <packing>
-        <property name="position">15</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">16</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn3">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover3</property>
         <property name="icon-name">text_horz_kern</property>
       </object>
-      <packing>
-        <property name="position">17</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="writing_buttons_box">
@@ -386,7 +312,7 @@
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Horizontal text</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="icon-name">frmt-text-direction-horizontal</property>
           </object>
         </child>
@@ -395,54 +321,39 @@
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Vertical text — lines: right to left</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">writing_buttons_mode_group</property>
             <property name="icon-name">frmt-text-direction-vertical</property>
           </object>
-          <packing>
-            <property name="position">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Vertical text — lines: left to right</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">writing_buttons_mode_group</property>
             <property name="icon-name">frmt-text-direction-vertical-lr</property>
           </object>
-          <packing>
-            <property name="position">4</property>
-          </packing>
         </child>
         <style>
           <class name="tag3"/>
         </style>
       </object>
-      <packing>
-        <property name="position">18</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">19</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn4">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover4</property>
         <property name="icon-name">go-down</property>
       </object>
-      <packing>
-        <property name="position">20</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="orientation_buttons_box">
@@ -453,7 +364,7 @@
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Auto glyph orientation</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="icon-name">text-orientation-auto</property>
           </object>
         </child>
@@ -462,54 +373,39 @@
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Upright glyph orientation</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">orientation_buttons_mode_group</property>
             <property name="icon-name">text-orientation-upright</property>
           </object>
-          <packing>
-            <property name="position">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Sideways glyph orientation</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">orientation_buttons_mode_group</property>
             <property name="icon-name">text-orientation-sideways</property>
           </object>
-          <packing>
-            <property name="position">4</property>
-          </packing>
         </child>
         <style>
           <class name="tag4"/>
         </style>
       </object>
-      <packing>
-        <property name="position">21</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">22</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn5">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover5</property>
         <property name="icon-name">go-down</property>
       </object>
-      <packing>
-        <property name="position">23</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="direction_buttons_box">
@@ -520,7 +416,7 @@
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Left to right text</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="icon-name">frmt-text-direction-horizontal</property>
           </object>
         </child>
@@ -529,41 +425,29 @@
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Right to left text</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">direction_buttons_mode_group</property>
             <property name="icon-name">frmt-text-direction-r2l</property>
           </object>
-          <packing>
-            <property name="position">3</property>
-          </packing>
         </child>
         <style>
           <class name="tag5"/>
         </style>
       </object>
-      <packing>
-        <property name="position">27</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">28</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn6">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover6</property>
         <property name="icon-name">go-down</property>
       </object>
-      <packing>
-        <property name="position">29</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="letter_spacing_box">
@@ -582,17 +466,11 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="tag6"/>
         </style>
       </object>
-      <packing>
-        <property name="position">30</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="word_spacing_box">
@@ -611,17 +489,11 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="tag6"/>
         </style>
       </object>
-      <packing>
-        <property name="position">31</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="dx_box">
@@ -640,17 +512,11 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="tag6"/>
         </style>
       </object>
-      <packing>
-        <property name="position">32</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="dy_box">
@@ -669,17 +535,11 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="tag6"/>
         </style>
       </object>
-      <packing>
-        <property name="position">33</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="rotation_box">
@@ -698,17 +558,11 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="tag6"/>
         </style>
       </object>
-      <packing>
-        <property name="position">39</property>
-      </packing>
     </child>
     <style>
       <class name="toolbar"/>

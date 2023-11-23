@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <menu id="LPEEffectMenu">
@@ -56,7 +55,7 @@
           <object class="GtkOverlay">
             <property name="focusable">True</property>
             <property name="hexpand">True</property>
-            <child>
+            <property name="child">
               <object class="GtkExpander" id="LPEExpander">
                 <property name="focusable">True</property>
                 <property name="label-fill">True</property>
@@ -68,7 +67,7 @@
                       <object class="GtkBox" id="LPEExpanderBox">
                         <child>
                           <object class="GtkImage" id="LPEIconImage">
-                            <property name="margin-right">5</property>
+                            <property name="margin-end">5</property>
                             <property name="margin-end">5</property>
                             <property name="pixel-size">25</property>
                             <property name="icon-size">large</property>
@@ -94,7 +93,7 @@
                   </object>
                 </child>
               </object>
-            </child>
+            </property>
             <child type="overlay">
               <object class="GtkBox">
                 <property name="height-request">30</property>
@@ -122,7 +121,7 @@
                     <child>
                       <object class="GtkButton" id="LPEHide">
                         <property name="width-request">30</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Show/hide this Live Path Effect</property>
                         <child>
                           <object class="GtkImage" id="visibilityImage">
@@ -137,7 +136,7 @@
                     <child>
                       <object class="GtkButton" id="LPEErase">
                         <property name="width-request">30</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Remove this Live Path Effect</property>
                         <child>
                           <object class="GtkImage" id="removeImage">
@@ -172,14 +171,14 @@
                   <object class="GtkButton" id="LPEDrag">
                     <property name="focusable">True</property>
                     <property name="halign">center</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="width-request">35</property>
                     <property name="tooltip-text" translatable="yes">Reorder this Live Path Effect</property>
                     <property name="hexpand">True</property>
                     <child>
                       <object class="GtkImage" id="dndImage">
                         <property name="halign">center</property>
-                        <property name="margin-left">2</property>
+                        <property name="margin-start">2</property>
                         <property name="margin-start">2</property>
                         <property name="icon-name">dnd</property>
                       </object>

@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkPopover" id="popover1">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box1">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkBox" id="lpe-toolbar">
     <property name="halign">start</property>
@@ -20,7 +18,7 @@
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover1</property>
         <property name="icon-name">go-down</property>
       </object>
@@ -32,7 +30,7 @@
           <object class="GtkToggleButton" id="mode_buttons_group">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">No geometric tool is active</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="active">True</property>
             <property name="icon-name">draw-geometry-inactive</property>
           </object>
@@ -41,185 +39,131 @@
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Line Segment</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">mode_buttons_group</property>
             <property name="icon-name">draw-geometry-line-segment</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Circle by 3 points</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">mode_buttons_group</property>
             <property name="icon-name">draw-geometry-circle-from-three-points</property>
           </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Circle</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">mode_buttons_group</property>
             <property name="icon-name">draw-geometry-circle-from-radius</property>
           </object>
-          <packing>
-            <property name="position">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Parallel</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">mode_buttons_group</property>
             <property name="icon-name">draw-geometry-line-parallel</property>
           </object>
-          <packing>
-            <property name="position">4</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Perpendicular bisector</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">mode_buttons_group</property>
             <property name="icon-name">draw-geometry-line-perpendicular</property>
           </object>
-          <packing>
-            <property name="position">5</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Angle Bisector</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">mode_buttons_group</property>
             <property name="icon-name">draw-geometry-angle-bisector</property>
           </object>
-          <packing>
-            <property name="position">6</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Mirror symmetry</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">mode_buttons_group</property>
             <property name="icon-name">draw-geometry-mirror</property>
           </object>
-          <packing>
-            <property name="position">7</property>
-          </packing>
         </child>
         <style>
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_show_bbox_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Show bounding box (used to cut infinite lines)</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">show-bounding-box</property>
       </object>
-      <packing>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_bbox_from_selection_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Set limiting bounding box (used to cut infinite lines) to the bounding box of current selection</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">draw-geometry-set-bounding-box</property>
       </object>
-      <packing>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">5</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="line_segment_box">
         <property name="tooltip-text" translatable="yes">Choose a line segment type</property>
       </object>
-      <packing>
-        <property name="position">6</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">7</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_measuring_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Display measuring info for selected items</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">draw-geometry-show-measuring-info</property>
       </object>
-      <packing>
-        <property name="position">8</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="units_box">
         <property name="tooltip-text" translatable="yes">Scatter randomly the corners and angles</property>
       </object>
-      <packing>
-        <property name="position">9</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">10</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_open_lpe_dialog_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Open LPE dialog (to adapt parameters numerically)</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">dialog-geometry</property>
       </object>
-      <packing>
-        <property name="position">11</property>
-      </packing>
     </child>
     <style>
       <class name="toolbar"/>

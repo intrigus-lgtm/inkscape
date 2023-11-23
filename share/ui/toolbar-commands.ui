@@ -1,79 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkPopover" id="popover1">
-    <property name="focusable">False</property>
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box1">
-        <property name="focusable">False</property>
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover2">
-    <property name="focusable">False</property>
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box2">
-        <property name="focusable">False</property>
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover3">
-    <property name="focusable">False</property>
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box3">
-        <property name="focusable">False</property>
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover4">
-    <property name="focusable">False</property>
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box4">
-        <property name="focusable">False</property>
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover5">
-    <property name="focusable">False</property>
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box5">
-        <property name="focusable">False</property>
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover6">
-    <property name="focusable">False</property>
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box6">
-        <property name="focusable">False</property>
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover7">
-    <property name="focusable">False</property>
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box7">
-        <property name="focusable">False</property>
         <property name="valign">center</property>
         <property name="spacing">3</property>
         <child>
@@ -86,10 +64,9 @@
           <placeholder/>
         </child>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkBox" id="commands-toolbar">
-    <property name="focusable">False</property>
     <property name="halign">center</property>
     <property name="valign">start</property>
     <property name="orientation">vertical</property>
@@ -100,19 +77,13 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">New</property>
         <property name="action-name">win.document-new</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image1">
-            <property name="focusable">False</property>
             <property name="icon-name">document-new</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -120,19 +91,13 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Open...</property>
         <property name="action-name">win.document-open</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image2">
-            <property name="focusable">False</property>
             <property name="icon-name">document-open</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -140,19 +105,13 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Save</property>
         <property name="action-name">win.document-save</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image3">
-            <property name="focusable">False</property>
             <property name="icon-name">document-save</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -160,49 +119,31 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Print...</property>
         <property name="action-name">win.document-print</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image4">
-            <property name="focusable">False</property>
             <property name="icon-name">document-print</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="focusable">False</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn1">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover1</property>
         <child>
           <object class="GtkImage" id="image29">
-            <property name="focusable">False</property>
             <property name="icon-name">go-down</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">5</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -210,22 +151,16 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Import...</property>
         <property name="action-name">win.document-import</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag1"/>
         </style>
         <child>
           <object class="GtkImage" id="image5">
-            <property name="focusable">False</property>
             <property name="icon-name">document-import</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">6</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -234,52 +169,34 @@
         <property name="tooltip-text" translatable="yes">Export...</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'Export'</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag1"/>
         </style>
         <child>
           <object class="GtkImage" id="image6">
-            <property name="focusable">False</property>
             <property name="icon-name">document-export</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">7</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="focusable">False</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">8</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn2">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover2</property>
         <child>
           <object class="GtkImage" id="image30">
-            <property name="focusable">False</property>
             <property name="icon-name">go-down</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">9</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -287,22 +204,16 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Undo</property>
         <property name="action-name">doc.undo</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag2"/>
         </style>
         <child>
           <object class="GtkImage" id="image7">
-            <property name="focusable">False</property>
             <property name="icon-name">edit-undo</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">10</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -310,52 +221,34 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Redo</property>
         <property name="action-name">doc.redo</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag2"/>
         </style>
         <child>
           <object class="GtkImage" id="image8">
-            <property name="focusable">False</property>
             <property name="icon-name">edit-redo</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">11</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="focusable">False</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">12</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn3">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover3</property>
         <child>
           <object class="GtkImage" id="image31">
-            <property name="focusable">False</property>
             <property name="icon-name">go-down</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">13</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -363,22 +256,16 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Copy</property>
         <property name="action-name">app.copy</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag3"/>
         </style>
         <child>
           <object class="GtkImage" id="image9">
-            <property name="focusable">False</property>
             <property name="icon-name">edit-copy</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">14</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -386,22 +273,16 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Cut</property>
         <property name="action-name">app.cut</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag3"/>
         </style>
         <child>
           <object class="GtkImage" id="image10">
-            <property name="focusable">False</property>
             <property name="icon-name">edit-cut</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">15</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -409,52 +290,34 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Paste</property>
         <property name="action-name">win.paste</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag3"/>
         </style>
         <child>
           <object class="GtkImage" id="image11">
-            <property name="focusable">False</property>
             <property name="icon-name">edit-paste</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">16</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="focusable">False</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">17</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn4">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover4</property>
         <child>
           <object class="GtkImage" id="image32">
-            <property name="focusable">False</property>
             <property name="icon-name">go-down</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">18</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -462,22 +325,16 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Zoom Selection</property>
         <property name="action-name">win.canvas-zoom-selection</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag4"/>
         </style>
         <child>
           <object class="GtkImage" id="image12">
-            <property name="focusable">False</property>
             <property name="icon-name">zoom-fit-selection</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">19</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -485,22 +342,16 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Zoom Drawing</property>
         <property name="action-name">win.canvas-zoom-drawing</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag4"/>
         </style>
         <child>
           <object class="GtkImage" id="image13">
-            <property name="focusable">False</property>
             <property name="icon-name">zoom-fit-drawing</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">20</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -508,22 +359,16 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Zoom Page</property>
         <property name="action-name">win.canvas-zoom-page</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag4"/>
         </style>
         <child>
           <object class="GtkImage" id="image14">
-            <property name="focusable">False</property>
             <property name="icon-name">zoom-fit-page</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">21</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -531,52 +376,34 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Zoom Center Page</property>
         <property name="action-name">win.canvas-zoom-center-page</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag4"/>
         </style>
         <child>
           <object class="GtkImage" id="image15">
-            <property name="focusable">False</property>
             <property name="icon-name">zoom-center-page</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">22</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="focusable">False</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">23</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn5">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover5</property>
         <child>
           <object class="GtkImage" id="image33">
-            <property name="focusable">False</property>
             <property name="icon-name">go-down</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">24</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -584,22 +411,16 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Duplicate</property>
         <property name="action-name">app.duplicate</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag5"/>
         </style>
         <child>
           <object class="GtkImage" id="image16">
-            <property name="focusable">False</property>
             <property name="icon-name">edit-duplicate</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">25</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -607,22 +428,16 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Create Clone</property>
         <property name="action-name">app.clone</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag5"/>
         </style>
         <child>
           <object class="GtkImage" id="image17">
-            <property name="focusable">False</property>
             <property name="icon-name">edit-clone</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">26</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -630,32 +445,20 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Unlink Clone</property>
         <property name="action-name">app.clone-unlink</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag5"/>
         </style>
         <child>
           <object class="GtkImage" id="image18">
-            <property name="focusable">False</property>
             <property name="icon-name">edit-clone-unlink</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">27</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="focusable">False</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">28</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -663,19 +466,13 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Group</property>
         <property name="action-name">app.selection-group</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image19">
-            <property name="focusable">False</property>
             <property name="icon-name">object-group</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">29</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -683,49 +480,31 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Ungroup</property>
         <property name="action-name">app.selection-ungroup</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image20">
-            <property name="focusable">False</property>
             <property name="icon-name">object-ungroup</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">30</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="focusable">False</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">31</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn6">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover6</property>
         <child>
           <object class="GtkImage" id="image34">
-            <property name="focusable">False</property>
             <property name="icon-name">go-down</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">32</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -734,22 +513,16 @@
         <property name="tooltip-text" translatable="yes">Fill and Stroke</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'FillStroke'</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag6"/>
         </style>
         <child>
           <object class="GtkImage" id="image21">
-            <property name="focusable">False</property>
             <property name="icon-name">dialog-fill-and-stroke</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">33</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -758,22 +531,16 @@
         <property name="tooltip-text" translatable="yes">Text and Font</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'Text'</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag6"/>
         </style>
         <child>
           <object class="GtkImage" id="image22">
-            <property name="focusable">False</property>
             <property name="icon-name">dialog-text-and-font</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">34</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -782,22 +549,16 @@
         <property name="tooltip-text" translatable="yes">Layers and Objects</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'Objects'</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag6"/>
         </style>
         <child>
           <object class="GtkImage" id="image23">
-            <property name="focusable">False</property>
             <property name="icon-name">dialog-objects</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">35</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -806,22 +567,16 @@
         <property name="tooltip-text" translatable="yes">XML Editor</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'XMLEditor'</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag6"/>
         </style>
         <child>
           <object class="GtkImage" id="image24">
-            <property name="focusable">False</property>
             <property name="icon-name">dialog-xml-editor</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">36</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -830,22 +585,16 @@
         <property name="tooltip-text" translatable="yes">Selectors and CSS...</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'Selectors'</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag6"/>
         </style>
         <child>
           <object class="GtkImage" id="image25">
-            <property name="focusable">False</property>
             <property name="icon-name">dialog-selectors</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">37</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -854,52 +603,34 @@
         <property name="tooltip-text" translatable="yes">Align and Distribute...</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'AlignDistribute'</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag6"/>
         </style>
         <child>
           <object class="GtkImage" id="image26">
-            <property name="focusable">False</property>
             <property name="icon-name">dialog-align-and-distribute</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">38</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="focusable">False</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">39</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn7">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover7</property>
         <child>
           <object class="GtkImage" id="image35">
-            <property name="focusable">False</property>
             <property name="icon-name">go-down</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">40</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -908,22 +639,16 @@
         <property name="tooltip-text" translatable="yes">Document Properties...</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'DocumentProperties'</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag7"/>
         </style>
         <child>
           <object class="GtkImage" id="image27">
-            <property name="focusable">False</property>
             <property name="icon-name">document-properties</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">41</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -932,22 +657,16 @@
         <property name="tooltip-text" translatable="yes">Preferences...</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'Preferences'</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag7"/>
         </style>
         <child>
           <object class="GtkImage" id="image28">
-            <property name="focusable">False</property>
             <property name="icon-name">preferences-system</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">42</property>
-      </packing>
     </child>
     <style>
       <class name="toolbar"/>

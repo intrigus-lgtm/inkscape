@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <!-- interface-css-provider-path style.css -->
   <object class="GtkBox" id="main-box">
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkScrolledWindow" id="scrolled-wnd">
+        <property name="vexpand">True</property>
         <property name="focusable">True</property>
-        <property name="has-frame">true</property>
-        <child>
+        <property name="has-frame">True</property>
+        <property name="child">
           <object class="GtkTreeView" id="tree-view">
             <property name="focusable">True</property>
             <property name="headers-clickable">False</property>
@@ -19,29 +19,24 @@
               <object class="GtkTreeSelection"/>
             </child>
           </object>
-        </child>
+        </property>
       </object>
-      <packing>
-        <property name="expand">True</property>
-      </packing>
     </child>
     <child>
       <object class="GtkScrolledWindow" id="content-sw">
+        <property name="vexpand">True</property>
         <property name="focusable">True</property>
-        <property name="has-frame">true</property>
+        <property name="has-frame">True</property>
         <style>
           <class name="mono-font"/>
         </style>
       </object>
-      <packing>
-        <property name="expand">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="status-box">
         <child>
           <object class="GtkLabel" id="status-label">
+            <property name="hexpand">True</property>
             <property name="width-request">1</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
@@ -51,16 +46,8 @@
               <class name="small-font"/>
             </style>
           </object>
-          <packing>
-            <property name="expand">True</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="padding">2</property>
-        <property name="pack-type">end</property>
-        <property name="position">2</property>
-      </packing>
     </child>
   </object>
   <menu id="menu1">
@@ -98,8 +85,7 @@
     </section>
   </menu>
   <object class="GtkPopover" id="popup">
-    <property name="position">bottom</property>
-    <child>
+    <property name="child">
       <object class="GtkBox">
         <property name="orientation">vertical</property>
         <child>
@@ -144,7 +130,7 @@
                     <property name="focus-on-click">False</property>
                     <property name="receives-default">True</property>
                     <property name="margin-start">2</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="menu-model">menu1</property>
                     <child>
                       <object class="GtkBox">
@@ -170,14 +156,8 @@
                       <class name="menu-btn-tight"/>
                     </style>
                   </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="position">9</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="help">
@@ -194,10 +174,6 @@
                 <property name="receives-default">True</property>
                 <property name="use-underline">True</property>
               </object>
-              <packing>
-                <property name="pack-type">end</property>
-                <property name="position">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="btn-cancel">
@@ -206,21 +182,14 @@
                 <property name="receives-default">True</property>
                 <property name="use-underline">True</property>
               </object>
-              <packing>
-                <property name="pack-type">end</property>
-                <property name="position">2</property>
-              </packing>
             </child>
             <style>
               <class name="small-font"/>
             </style>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkSizeGroup">
     <widgets>
@@ -230,11 +199,8 @@
   </object>
   <object class="GtkListStore" id="store">
     <columns>
-      <!-- column-name attr-name -->
       <column type="gchararray"/>
-      <!-- column-name attr-value -->
       <column type="gchararray"/>
-      <!-- column-name attr-value-renderer -->
       <column type="gchararray"/>
     </columns>
   </object>

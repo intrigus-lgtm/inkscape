@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="adjustment-angle">
@@ -47,7 +46,7 @@
     <property name="draw-indicator">True</property>
   </object>
   <object class="GtkPopover" id="popover">
-    <child>
+    <property name="child">
       <object class="GtkBox">
         <property name="width-request">378</property>
         <property name="height-request">500</property>
@@ -57,10 +56,10 @@
             <property name="focusable">True</property>
             <property name="vexpand">True</property>
             <property name="hscrollbar-policy">never</property>
-            <child>
+            <property name="child">
               <object class="GtkViewport">
                 <property name="vscroll-policy">natural</property>
-                <child>
+                <property name="child">
                   <object class="GtkFlowBox" id="flowbox">
                     <property name="focusable">True</property>
                     <property name="halign">start</property>
@@ -68,20 +67,16 @@
                     <property name="min-children-per-line">8</property>
                     <property name="max-children-per-line">8</property>
                   </object>
-                </child>
+                </property>
               </object>
-            </child>
+            </property>
           </object>
         </child>
         <child>
           <object class="GtkSeparator">
             <property name="valign">center</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
-        <!-- n-columns=4 n-rows=8 -->
         <child>
           <object class="GtkGrid" id="input-grid">
             <property name="margin-end">4</property>
@@ -91,11 +86,11 @@
               <object class="GtkLabel">
                 <property name="halign">start</property>
                 <property name="label" translatable="yes">Size X:</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="scale-x">
@@ -104,21 +99,21 @@
                 <property name="digits">3</property>
                 <property name="numeric">True</property>
                 <property name="value">0.0001</property>
+                <layout>
+                  <property name="column">3</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">3</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="halign">start</property>
                 <property name="label" translatable="yes">Size Y:</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">1</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="scale-y">
@@ -127,36 +122,35 @@
                 <property name="digits">3</property>
                 <property name="numeric">True</property>
                 <property name="value">0.0001</property>
+                <layout>
+                  <property name="column">3</property>
+                  <property name="row">1</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">3</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkCheckButton" id="scale-with-stroke">
                 <property name="label" translatable="yes">Scale with stroke</property>
                 <property name="focusable">True</property>
                 <property name="halign">end</property>
-                <property name="draw-indicator">True</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">2</property>
+                  <property name="column-span">3</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">2</property>
-                <property name="width">3</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="halign">start</property>
                 <property name="margin-end">4</property>
                 <property name="label" translatable="yes">Orientation:</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">3</property>
+                  <property name="column-span">2</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">3</property>
-                <property name="width">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox">
@@ -194,9 +188,6 @@
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkToggleButton" id="orient-angle">
@@ -214,9 +205,6 @@
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="position">2</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton" id="btn-horz-flip">
@@ -232,62 +220,59 @@
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="position">3</property>
-                  </packing>
                 </child>
+                <layout>
+                  <property name="column">3</property>
+                  <property name="row">3</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">3</property>
-                <property name="top-attach">3</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="halign">start</property>
                 <property name="margin-end">4</property>
                 <property name="label" translatable="yes">Fixed angle:</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">4</property>
+                  <property name="column-span">2</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">4</property>
-                <property name="width">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="angle">
                 <property name="focusable">True</property>
                 <property name="adjustment">adjustment-angle</property>
                 <property name="digits">2</property>
+                <layout>
+                  <property name="column">3</property>
+                  <property name="row">4</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">3</property>
-                <property name="top-attach">4</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="halign">start</property>
                 <property name="margin-end">4</property>
                 <property name="label" translatable="yes">Offset X:</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">6</property>
+                  <property name="column-span">2</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">6</property>
-                <property name="width">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="halign">start</property>
                 <property name="margin-end">4</property>
                 <property name="label" translatable="yes">Offset Y:</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">7</property>
+                  <property name="column-span">2</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">7</property>
-                <property name="width">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="offset-x">
@@ -295,11 +280,11 @@
                 <property name="adjustment">adjustment-offset</property>
                 <property name="digits">3</property>
                 <property name="numeric">True</property>
+                <layout>
+                  <property name="column">3</property>
+                  <property name="row">6</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">3</property>
-                <property name="top-attach">6</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="offset-y">
@@ -307,11 +292,11 @@
                 <property name="adjustment">adjustment-offset-2</property>
                 <property name="digits">3</property>
                 <property name="numeric">True</property>
+                <layout>
+                  <property name="column">3</property>
+                  <property name="row">7</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">3</property>
-                <property name="top-attach">7</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="edit-marker">
@@ -319,11 +304,11 @@
                 <property name="focus-on-click">False</property>
                 <property name="receives-default">True</property>
                 <property name="halign">center</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">7</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">7</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox">
@@ -332,34 +317,28 @@
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkImage" id="preview">
+                    <property name="vexpand">True</property>
                     <property name="margin-end">4</property>
                     <property name="hexpand">True</property>
                   </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="pack-type">end</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel" id="marker-id">
-                    <property name="margin-left">4</property>
-                    <property name="margin-right">4</property>
+                    <property name="margin-start">4</property>
+                    <property name="margin-end">4</property>
                     <property name="margin-start">4</property>
                     <property name="margin-end">4</property>
                     <property name="label" translatable="yes">ID</property>
                     <property name="use-markup">True</property>
                     <property name="ellipsize">middle</property>
                   </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                  <property name="row-span">7</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">0</property>
-                <property name="height">7</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="link-scale">
@@ -370,30 +349,27 @@
                 <property name="margin-end">1</property>
                 <property name="margin-top">5</property>
                 <property name="margin-bottom">5</property>
-                <property name="has-frame">false</property>
+                <property name="has-frame">False</property>
+                <layout>
+                  <property name="column">2</property>
+                  <property name="row">0</property>
+                  <property name="row-span">2</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">2</property>
-                <property name="top-attach">0</property>
-                <property name="height">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkImage" id="spacer">
                 <property name="pixel-size">5</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">5</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">5</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
         </child>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkMenuButton" id="menu-btn">
     <property name="focusable">True</property>
@@ -415,10 +391,6 @@
               <class name="arrow"/>
             </style>
           </object>
-          <packing>
-            <property name="pack-type">end</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
     </child>

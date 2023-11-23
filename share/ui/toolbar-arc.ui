@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="_end_adj">
@@ -25,65 +24,44 @@
     <property name="page-increment">10</property>
   </object>
   <object class="GtkPopover" id="popover1">
-    <property name="focusable">False</property>
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box1">
-        <property name="focusable">False</property>
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover2">
-    <property name="focusable">False</property>
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box2">
-        <property name="focusable">False</property>
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkToggleButton" id="radio_button_group">
     <property name="focusable">True</property>
-    <property name="receives-default">False</property>
     <property name="active">True</property>
     <property name="draw-indicator">False</property>
   </object>
   <object class="GtkBox" id="arc-toolbar">
-    <property name="focusable">False</property>
     <property name="halign">start</property>
     <property name="valign">center</property>
     <property name="spacing">3</property>
     <child>
       <object class="GtkLabel" id="_mode_item">
-        <property name="focusable">False</property>
         <property name="margin-start">3</property>
         <property name="label" translatable="yes">&lt;b&gt;New:&lt;/b&gt;</property>
         <property name="use-markup">True</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="rx_box">
-        <property name="focusable">False</property>
         <property name="tooltip-text" translatable="yes">Horizontal radius of the circle, ellipse, or arc</property>
         <child>
           <object class="GtkLabel">
-            <property name="focusable">False</property>
             <property name="label" translatable="yes">Rx:</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="_rx_item">
@@ -93,33 +71,16 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="ry_box">
-        <property name="focusable">False</property>
         <property name="tooltip-text" translatable="yes">Vertical radius of the circle, ellipse, or arc</property>
         <child>
           <object class="GtkLabel">
-            <property name="focusable">False</property>
             <property name="label" translatable="yes">Ry:</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="_ry_item">
@@ -130,73 +91,38 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="unit_menu_box">
-        <property name="focusable">False</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="focusable">False</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn1">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover1</property>
         <child>
           <object class="GtkImage" id="image5">
-            <property name="focusable">False</property>
             <property name="icon-name">go-down</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">5</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="start_box">
-        <property name="focusable">False</property>
         <property name="tooltip-text" translatable="yes">The angle (in degrees) from the horizontal to the arc's start point</property>
         <child>
           <object class="GtkLabel">
-            <property name="focusable">False</property>
             <property name="label" translatable="yes">Start:</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="_start_item">
@@ -207,36 +133,19 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">6</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="end_box">
-        <property name="focusable">False</property>
         <property name="tooltip-text" translatable="yes">The angle (in degrees) from the horizontal to the arc's end point</property>
         <child>
           <object class="GtkLabel">
-            <property name="focusable">False</property>
             <property name="label" translatable="yes">End:</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="_end_item">
@@ -247,58 +156,35 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">7</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="focusable">False</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">8</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn2">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover2</property>
         <child>
           <object class="GtkImage" id="image6">
-            <property name="focusable">False</property>
             <property name="icon-name">go-down</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">9</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="slice_btn">
         <property name="focusable">True</property>
-        <property name="receives-default">False</property>
         <property name="tooltip-text" translatable="yes">Switch to slice (closed shape with two radii)</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="draw-indicator">False</property>
         <property name="group">radio_button_group</property>
         <style>
@@ -306,23 +192,16 @@
         </style>
         <child>
           <object class="GtkImage" id="image1">
-            <property name="focusable">False</property>
             <property name="icon-name">draw-ellipse-segment</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">13</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="arc_btn">
         <property name="focusable">True</property>
-        <property name="receives-default">False</property>
         <property name="tooltip-text" translatable="yes">Switch to arc (unclosed shape)</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="draw-indicator">False</property>
         <property name="group">radio_button_group</property>
         <style>
@@ -330,23 +209,16 @@
         </style>
         <child>
           <object class="GtkImage" id="image3">
-            <property name="focusable">False</property>
             <property name="icon-name">draw-ellipse-arc</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">14</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="chord_btn">
         <property name="focusable">True</property>
-        <property name="receives-default">False</property>
         <property name="tooltip-text" translatable="yes">Switch to chord (closed shape)</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="draw-indicator">False</property>
         <property name="group">radio_button_group</property>
         <style>
@@ -354,45 +226,27 @@
         </style>
         <child>
           <object class="GtkImage" id="image4">
-            <property name="focusable">False</property>
             <property name="icon-name">draw-ellipse-chord</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">15</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="focusable">False</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">16</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="_make_whole">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make the shape a whole ellipse, not arc or segment</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image2">
-            <property name="focusable">False</property>
             <property name="icon-name">draw-ellipse-whole</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">17</property>
-      </packing>
     </child>
     <style>
       <class name="toolbar"/>

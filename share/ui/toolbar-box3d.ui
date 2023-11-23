@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="_angle_x_adj">
@@ -42,9 +41,6 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
     </child>
@@ -53,16 +49,13 @@
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Toggle VP in X direction between 'finite' and 'infinite' (=parallel)</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image1">
             <property name="icon-name">perspective-parallel</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="angle_y_box">
@@ -81,29 +74,20 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_vp_y_state_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image2">
             <property name="icon-name">perspective-parallel</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="angle_z_box">
@@ -122,29 +106,20 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_vp_z_state_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image3">
             <property name="icon-name">perspective-parallel</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">5</property>
-      </packing>
     </child>
     <style>
       <class name="toolbar"/>

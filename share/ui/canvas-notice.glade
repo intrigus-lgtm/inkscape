@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkRevealer" id="canvas-notice">
     <property name="halign">center</property>
     <property name="valign">start</property>
-    <child>
+    <property name="child">
       <object class="GtkFrame">
-        <child>
+        <property name="child">
           <object class="GtkBox">
             <property name="spacing">20</property>
             <child>
@@ -26,35 +25,29 @@
                 <property name="hexpand">True</property>
                 <property name="label">Example text for the notification widget!</property>
               </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="notice-close">
                 <property name="focusable">True</property>
                 <property name="focus-on-click">False</property>
-                <property name="has-frame">false</property>
+                <property name="has-frame">False</property>
                 <child>
                   <object class="GtkImage">
                     <property name="icon-name">window-close-symbolic</property>
-                    <property name="icon-size">1</property>
+                    <property name="icon-size">normal</property>
                   </object>
                 </child>
                 <style>
                   <class name="image-button"/>
                 </style>
               </object>
-              <packing>
-                <property name="position">2</property>
-              </packing>
             </child>
           </object>
-        </child>
+        </property>
         <style>
           <class name="app-notification"/>
         </style>
       </object>
-    </child>
+    </property>
   </object>
 </interface>

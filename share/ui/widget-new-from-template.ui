@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <!-- interface-license-type gplv3 -->
-  <!-- interface-name Inkscape -->
-  <!-- interface-copyright Martin Owens -->
   <object class="GtkListStore" id="liststore">
     <columns>
-      <!-- column-name name -->
       <column type="gchararray"/>
-      <!-- column-name label -->
       <column type="gchararray"/>
-      <!-- column-name tooltip -->
       <column type="gchararray"/>
-      <!-- column-name icon -->
       <column type="GdkPixbuf"/>
-      <!-- column-name key -->
       <column type="gchararray"/>
-      <!-- column-name priority -->
       <column type="gint"/>
     </columns>
     <data>
@@ -30,8 +20,8 @@
   </object>
   <object class="GtkScrolledWindow" id="container">
     <property name="focusable">True</property>
-    <property name="has-frame">true</property>
-    <child>
+    <property name="has-frame">True</property>
+    <property name="child">
       <object class="GtkIconView" id="iconview">
         <property name="focusable">True</property>
         <property name="model">liststore</property>
@@ -69,6 +59,6 @@
           </attributes>
         </child>
       </object>
-    </child>
+    </property>
   </object>
 </interface>

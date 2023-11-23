@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <menu id="menu-popup">
     <section>
-      <!-- Keep these synced w/ enum DialogLayout in dialog/xml-tree.h et al -->
       <item>
         <attribute name="label" translatable="yes">Automatic Layout</attribute>
         <attribute name="action">xml-tree.layout</attribute>
@@ -33,7 +31,7 @@
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">New element node</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <child>
               <object class="GtkImage" id="image1">
                 <property name="icon-name">xml-element-new</property>
@@ -46,103 +44,85 @@
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">New text node</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <child>
               <object class="GtkImage" id="image2">
                 <property name="icon-name">xml-text-new</property>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="dup">
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Duplicate node</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <child>
               <object class="GtkImage" id="image3">
                 <property name="icon-name">xml-node-duplicate</property>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="del">
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Delete node</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <child>
               <object class="GtkImage" id="image4">
                 <property name="icon-name">xml-node-delete</property>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="position">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="unindent">
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Unindent node</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <child>
               <object class="GtkImage" id="image5">
                 <property name="icon-name">format-indent-less</property>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="position">4</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="indent">
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Indent node</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <child>
               <object class="GtkImage" id="image6">
                 <property name="icon-name">format-indent-more</property>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="position">5</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="raise">
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Raise node</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <child>
               <object class="GtkImage" id="image7">
                 <property name="icon-name">go-up</property>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="position">6</property>
-          </packing>
         </child>
         <child>
           <object class="GtkMenuButton" id="layout-btn">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="menu-model">menu-popup</property>
             <child>
               <object class="GtkBox">
@@ -165,52 +145,40 @@
               <class name="menu-btn-tight"/>
             </style>
           </object>
-          <packing>
-            <property name="pack-type">end</property>
-            <property name="position">7</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="lower">
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Lower node</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <child>
               <object class="GtkImage" id="image8">
                 <property name="icon-name">go-down</property>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="position">8</property>
-          </packing>
         </child>
       </object>
     </child>
     <child>
       <object class="GtkPaned" id="pane">
+        <property name="shrink-start-child">0</property>
+        <property name="resize-start-child">0</property>
         <property name="focusable">True</property>
         <property name="hexpand">True</property>
         <property name="vexpand">True</property>
         <property name="position">200</property>
         <property name="position-set">True</property>
         <property name="wide-handle">True</property>
-        <child>
+        <property name="start-child">
           <object class="GtkScrolledWindow" id="tree-wnd">
             <property name="focusable">True</property>
-            <property name="has-frame">true</property>
+            <property name="has-frame">True</property>
             <property name="overlay-scrolling">False</property>
           </object>
-          <packing>
-            <property name="resize">False</property>
-            <property name="shrink">False</property>
-          </packing>
-        </child>
+        </property>
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
     </child>
   </object>
 </interface>

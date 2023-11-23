@@ -1,47 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 
-
-Copyright (C) Martin Owens
-
-This file is part of Inkscape Extensions Manager.
-
-Inkscape Extensions Manager is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Inkscape Extensions Manager is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Inkscape Extensions Manager.  If not, see <http://www.gnu.org/licenses/>.
-
--->
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <!-- interface-license-type gplv3 -->
-  <!-- interface-name Inkscape Extensions Manager -->
-  <!-- interface-description Download and manage inkscape extensions -->
-  <!-- interface-copyright Martin Owens -->
   <object class="GtkListStore" id="canvases">
     <columns>
-      <!-- column-name id -->
       <column type="gchararray"/>
-      <!-- column-name name -->
       <column type="gchararray"/>
-      <!-- column-name preview -->
       <column type="GdkPixbuf"/>
-      <!-- column-name pagecolor -->
       <column type="gchararray"/>
-      <!-- column-name checkered -->
       <column type="gboolean"/>
-      <!-- column-name border -->
       <column type="gchararray"/>
-      <!-- column-name shadow -->
       <column type="gboolean"/>
-      <!-- column-name desk -->
       <column type="gchararray"/>
     </columns>
     <data>
@@ -99,9 +67,7 @@ along with Inkscape Extensions Manager.  If not, see <http://www.gnu.org/license
   </object>
   <object class="GtkListStore" id="keyslist">
     <columns>
-      <!-- column-name name -->
       <column type="gchararray"/>
-      <!-- column-name keys_id -->
       <column type="gchararray"/>
     </columns>
     <data>
@@ -117,13 +83,9 @@ along with Inkscape Extensions Manager.  If not, see <http://www.gnu.org/license
   </object>
   <object class="GtkListStore" id="recent_files">
     <columns>
-      <!-- column-name filename -->
       <column type="gchararray"/>
-      <!-- column-name filepath -->
       <column type="gchararray"/>
-      <!-- column-name unix_datetime -->
       <column type="gint64"/>
-      <!-- column-name crashfile -->
       <column type="gboolean"/>
     </columns>
     <data>
@@ -161,29 +123,17 @@ along with Inkscape Extensions Manager.  If not, see <http://www.gnu.org/license
   </object>
   <object class="GtkListStore" id="themelist">
     <columns>
-      <!-- column-name id -->
       <column type="gchararray"/>
-      <!-- column-name name -->
       <column type="gchararray"/>
-      <!-- column-name theme_id -->
       <column type="gchararray"/>
-      <!-- column-name icons_id -->
       <column type="gchararray"/>
-      <!-- column-name base_color -->
       <column type="gchararray"/>
-      <!-- column-name base_color_dark -->
       <column type="gchararray"/>
-      <!-- column-name success_color -->
       <column type="gchararray"/>
-      <!-- column-name warn_color -->
       <column type="gchararray"/>
-      <!-- column-name error_color -->
       <column type="gchararray"/>
-      <!-- column-name symbolic_icons -->
       <column type="gboolean"/>
-      <!-- column-name small_icons -->
       <column type="gboolean"/>
-      <!-- column-name available -->
       <column type="gboolean"/>
     </columns>
     <data>
@@ -284,637 +234,391 @@ along with Inkscape Extensions Manager.  If not, see <http://www.gnu.org/license
     <property name="default-width">700</property>
     <property name="default-height">360</property>
     <property name="urgency-hint">True</property>
-    <child>
+    <property name="child">
       <object class="GtkNotebook" id="tabs">
         <property name="name">startscreennotebook</property>
         <property name="focusable">True</property>
         <property name="show-border">False</property>
         <child>
-          <object class="GtkBox">
-            <property name="focusable">False</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkInfoBar" id="keys_warning">
-                <property name="focusable">False</property>
-                <property name="message-type">error</property>
-                <child internal-child="action_area">
-                  <object class="GtkButtonBox">
-                    <property name="focusable">False</property>
-                    <property name="halign">end</property>
-                    <property name="spacing">6</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child internal-child="content_area">
-                  <object class="GtkBox">
-                    <property name="focusable">False</property>
-                    <property name="spacing">16</property>
-                    <child>
-                      <object class="GtkImage">
+          <object class="GtkNotebookPage">
+            <property name="child">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkInfoBar" id="keys_warning">
+                    <property name="message-type">error</property>
+                    <child internal-child="action_area">
+                      <object class="GtkButtonBox">
                         <property name="focusable">False</property>
-                        <property name="icon-name">dialog-warning</property>
-                        <property name="icon_size">3</property>
+                        <property name="halign">end</property>
+                        <property name="spacing">6</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
-                        <property name="fill">True</property>
+                        <property name="fill">False</property>
                         <property name="position">0</property>
                       </packing>
                     </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="focusable">False</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Warning:&lt;/b&gt; Using a non-standard shortcut keyboard layout could make it harder to follow tutorials.</property>
-                        <property name="use-markup">True</property>
-                        <property name="wrap">True</property>
-                        <property name="xalign">0</property>
+                    <child internal-child="content_area">
+                      <object class="GtkBox">
+                        <property name="spacing">16</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">dialog-warning</property>
+                            <property name="icon_size">3</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">&lt;b&gt;Warning:&lt;/b&gt; Using a non-standard shortcut keyboard layout could make it harder to follow tutorials.</property>
+                            <property name="use-markup">True</property>
+                            <property name="wrap">True</property>
+                            <property name="xalign">0</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
+                        <property name="fill">False</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="focusable">False</property>
-                <property name="orientation">vertical</property>
-                <child>
-                  <!-- n-columns=3 n-rows=4 -->
-                  <object class="GtkGrid">
-                    <property name="focusable">False</property>
-                    <property name="halign">center</property>
-                    <property name="margin-top">40</property>
-                    <property name="margin-bottom">30</property>
-                    <property name="row-spacing">8</property>
-                    <property name="column-spacing">8</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="focusable">False</property>
-                        <property name="label" translatable="yes">Appearance</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="scale" value="1.2"/>
-                        </attributes>
-                      </object>
-                      <packing>
-                        <property name="left-attach">0</property>
-                        <property name="top-attach">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="focusable">False</property>
-                        <property name="label" translatable="yes">Canvas</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="scale" value="1.2"/>
-                        </attributes>
-                      </object>
-                      <packing>
-                        <property name="left-attach">0</property>
-                        <property name="top-attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="focusable">False</property>
-                        <property name="label" translatable="yes">Keyboard</property>
-                        <property name="xalign">0</property>
-                        <attributes>
-                          <attribute name="scale" value="1.2"/>
-                        </attributes>
-                      </object>
-                      <packing>
-                        <property name="left-attach">0</property>
-                        <property name="top-attach">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkComboBox" id="themes">
-                        <property name="focusable">False</property>
-                        <property name="model">themelist</property>
-                        <property name="id-column">0</property>
-                        <child>
-                          <object class="GtkCellRendererText" id="theme_namerenderer"/>
-                          <attributes>
-                            <attribute name="sensitive">11</attribute>
-                            <attribute name="text">1</attribute>
-                          </attributes>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="left-attach">1</property>
-                        <property name="top-attach">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkComboBox" id="keys">
-                        <property name="focusable">False</property>
-                        <property name="model">keyslist</property>
-                        <property name="active">0</property>
-                        <property name="id-column">1</property>
-                        <child>
-                          <object class="GtkCellRendererText" id="keys_cellrenderer"/>
-                          <attributes>
-                            <attribute name="text">0</attribute>
-                          </attributes>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="left-attach">1</property>
-                        <property name="top-attach">1</property>
-                        <property name="width">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkBox" id="iconrow">
-                        <property name="focusable">False</property>
-                        <property name="margin-top">4</property>
-                        <property name="margin-bottom">4</property>
-                        <property name="spacing">7</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="focusable">False</property>
-                            <property name="icon-name">tool-pointer</property>
-                            <property name="icon_size">3</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="focusable">False</property>
-                            <property name="icon-name">tool-node-editor</property>
-                            <property name="icon_size">3</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkSeparator">
-                            <property name="focusable">False</property>
-                            <property name="halign">center</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">2</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="focusable">False</property>
-                            <property name="icon-name">draw-rectangle</property>
-                            <property name="icon_size">3</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">3</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="focusable">False</property>
-                            <property name="icon-name">draw-polygon-star</property>
-                            <property name="icon_size">3</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">4</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkSeparator">
-                            <property name="focusable">False</property>
-                            <property name="halign">center</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">5</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="focusable">False</property>
-                            <property name="icon-name">draw-path</property>
-                            <property name="icon_size">3</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">6</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="focusable">False</property>
-                            <property name="icon-name">draw-freehand</property>
-                            <property name="icon_size">3</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">7</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="left-attach">1</property>
-                        <property name="top-attach">3</property>
-                        <property name="width">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkComboBox" id="canvas">
-                        <property name="focusable">False</property>
-                        <property name="tooltip-text" translatable="yes">Select the default color background for the canvas</property>
-                        <property name="model">canvases</property>
-                        <property name="id-column">0</property>
-                        <child>
-                          <object class="GtkCellRendererPixbuf" id="canvas_preview">
-                            <property name="xpad">10</property>
-                          </object>
-                          <attributes>
-                            <attribute name="pixbuf">2</attribute>
-                          </attributes>
-                        </child>
-                        <child>
-                          <object class="GtkCellRendererText"/>
-                          <attributes>
-                            <attribute name="text">1</attribute>
-                          </attributes>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="left-attach">1</property>
-                        <property name="top-attach">0</property>
-                        <property name="width">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="focusable">False</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="focusable">False</property>
-                            <property name="valign">center</property>
-                            <property name="margin-right">5</property>
-                            <property name="margin-end">5</property>
-                            <property name="label" translatable="yes">Dark</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkSwitch" id="dark_toggle">
-                            <property name="focusable">True</property>
-                            <property name="tooltip-text" translatable="yes">Set to dark theme</property>
-                            <property name="halign">center</property>
-                            <property name="valign">center</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="left-attach">2</property>
-                        <property name="top-attach">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="save">
-                <property name="focusable">True</property>
-                <property name="has-focus">True</property>
-                <property name="focus-on-click">False</property>
-                <property name="receives-default">True</property>
-                <property name="halign">end</property>
-                <property name="valign">center</property>
-                <property name="border-width">5</property>
                 <child>
                   <object class="GtkBox">
-                    <property name="focusable">False</property>
-                    <property name="spacing">4</property>
+                    <property name="vexpand">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkLabel">
-                        <property name="focusable">False</property>
-                        <property name="label">Save</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                </child>
-                <style>
-                  <class name="primary"/>
-                </style>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-          </object>
-        </child>
-        <child type="tab">
-          <object class="GtkLabel">
-            <property name="focusable">False</property>
-            <property name="label" translatable="yes">Quick Setup</property>
-          </object>
-          <packing>
-            <property name="tab-fill">False</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="focusable">False</property>
-            <property name="valign">end</property>
-            <property name="hexpand">True</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="focusable">False</property>
-                <property name="margin-left">30</property>
-                <property name="margin-right">30</property>
-                <property name="margin-top">10</property>
-                <property name="margin-bottom">10</property>
-                <property name="label" translatable="yes">&lt;b&gt;The Inkscape project is supported by users like you.&lt;/b&gt; Through our collective time, money and skill, we have made this software for everyone in the world to enjoy free from restrictions and free from costs. &lt;b&gt;
-If you would like to get involved and make the next version of Inkscape even better, please consider joining the Inkscape project today.&lt;/b&gt;</property>
-                <property name="use-markup">True</property>
-                <property name="wrap">True</property>
-                <property name="max-width-chars">50</property>
-                <property name="xalign">0</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="focusable">False</property>
-                <property name="margin-left">90</property>
-                <property name="margin-right">90</property>
-                <property name="spacing">8</property>
-                <property name="baseline-position">top</property>
-                <child>
-                  <object class="GtkLinkButton">
-                    <property name="focusable">True</property>
-                    <property name="receives-default">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="has-frame">false</property>
-                    <property name="uri">https://inkscape.org/splash/contribute/</property>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="focusable">False</property>
-                        <property name="orientation">vertical</property>
+                      <object class="GtkGrid">
+                        <property name="halign">center</property>
+                        <property name="margin-top">40</property>
+                        <property name="margin-bottom">30</property>
+                        <property name="row-spacing">8</property>
+                        <property name="column-spacing">8</property>
                         <child>
-                          <object class="GtkImage">
-                            <property name="height-request">160</property>
-                            <property name="focusable">False</property>
-                            <property name="margin-left">10</property>
-                            <property name="margin-right">10</property>
-                            <property name="margin-top">10</property>
-                            <property name="margin-bottom">10</property>
-                            <property name="pixbuf">../screens/start-support-time.png</property>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Appearance</property>
+                            <property name="xalign">0</property>
+                            <attributes>
+                              <attribute name="scale" value="1.2"></attribute>
+                            </attributes>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">2</property>
+                            </layout>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="focusable">False</property>
-                            <property name="margin-left">8</property>
-                            <property name="margin-right">8</property>
-                            <property name="margin-top">8</property>
-                            <property name="margin-bottom">8</property>
-                            <property name="label" translatable="yes">Learn how to
-Contribute Time</property>
-                            <property name="justify">center</property>
-                            <property name="wrap">True</property>
+                            <property name="label" translatable="yes">Canvas</property>
+                            <property name="xalign">0</property>
                             <attributes>
-                              <attribute name="weight" value="bold"/>
-                              <attribute name="scale" value="1.1000000000000001"/>
+                              <attribute name="scale" value="1.2"></attribute>
                             </attributes>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">0</property>
+                            </layout>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLinkButton">
-                    <property name="focusable">True</property>
-                    <property name="receives-default">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="has-frame">false</property>
-                    <property name="uri">https://inkscape.org/splash/support/</property>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="focusable">False</property>
-                        <property name="orientation">vertical</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="height-request">160</property>
-                            <property name="focusable">False</property>
-                            <property name="margin-top">10</property>
-                            <property name="margin-bottom">10</property>
-                            <property name="pixbuf">../screens/start-support-money.png</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="focusable">False</property>
-                            <property name="margin-left">8</property>
-                            <property name="margin-right">8</property>
-                            <property name="margin-top">8</property>
-                            <property name="margin-bottom">8</property>
-                            <property name="label" translatable="yes">Learn how to
-Fund Inkscape</property>
-                            <property name="justify">center</property>
-                            <property name="wrap">True</property>
+                            <property name="label" translatable="yes">Keyboard</property>
+                            <property name="xalign">0</property>
                             <attributes>
-                              <attribute name="weight" value="bold"/>
-                              <attribute name="scale" value="1.1000000000000001"/>
+                              <attribute name="scale" value="1.2"></attribute>
                             </attributes>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">1</property>
+                            </layout>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="thanks">
-                <property name="label" translatable="yes">Thanks!</property>
-                <property name="focusable">True</property>
-                <property name="has-focus">True</property>
-                <property name="focus-on-click">False</property>
-                <property name="receives-default">True</property>
-                <property name="halign">end</property>
-                <property name="valign">center</property>
-                <property name="border-width">5</property>
-                <style>
-                  <class name="primary"/>
-                </style>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child type="tab">
-          <object class="GtkLabel">
-            <property name="focusable">False</property>
-            <property name="label" translatable="yes">Supported by You</property>
-          </object>
-          <packing>
-            <property name="position">1</property>
-            <property name="tab-fill">False</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="focusable">False</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkNotebook" id="kinds">
-                <property name="focusable">True</property>
-                <property name="vexpand">True</property>
-                <property name="tab-pos">left</property>
-                <child>
-                  <object class="GtkScrolledWindow">
-                    <property name="focusable">True</property>
-                    <property name="has-frame">true</property>
-                    <child>
-                      <object class="GtkTreeView" id="recent_treeview">
-                        <property name="focusable">True</property>
-                        <property name="margin-start">4</property>
-                        <property name="model">recent_files</property>
-                        <property name="search-column">1</property>
-                        <property name="tooltip-column">1</property>
-                        <child internal-child="selection">
-                          <object class="GtkTreeSelection"/>
                         </child>
                         <child>
-                          <object class="GtkTreeViewColumn" id="recent_name">
-                            <property name="title" translatable="yes" context="Welcome dialog">Recent Files</property>
-                            <property name="sort-indicator">True</property>
-                            <property name="sort-order">descending</property>
-                            <property name="sort-column-id">0</property>
+                          <object class="GtkComboBox" id="themes">
+                            <property name="model">themelist</property>
+                            <property name="id-column">0</property>
                             <child>
-                              <object class="GtkCellRendererText"/>
+                              <object class="GtkCellRendererText" id="theme_namerenderer"/>
+                              <attributes>
+                                <attribute name="sensitive">11</attribute>
+                                <attribute name="text">1</attribute>
+                              </attributes>
+                            </child>
+                            <layout>
+                              <property name="column">1</property>
+                              <property name="row">2</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkComboBox" id="keys">
+                            <property name="model">keyslist</property>
+                            <property name="active">0</property>
+                            <property name="id-column">1</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="keys_cellrenderer"/>
                               <attributes>
                                 <attribute name="text">0</attribute>
                               </attributes>
                             </child>
+                            <layout>
+                              <property name="column">1</property>
+                              <property name="row">1</property>
+                              <property name="column-span">2</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="iconrow">
+                            <property name="margin-top">4</property>
+                            <property name="margin-bottom">4</property>
+                            <property name="spacing">7</property>
                             <child>
-                              <object class="GtkCellRendererText">
-                                <property name="xpad">4</property>
-                                <property name="xalign">1</property>
-                                <property name="sensitive">False</property>
-                                <property name="alignment">right</property>
-                                <property name="scale">0.90</property>
-                                <property name="text">Emergency Save</property>
+                              <object class="GtkImage">
+                                <property name="icon-name">tool-pointer</property>
+                                <property name="icon_size">3</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">tool-node-editor</property>
+                                <property name="icon_size">3</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSeparator">
+                                <property name="halign">center</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">draw-rectangle</property>
+                                <property name="icon_size">3</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">draw-polygon-star</property>
+                                <property name="icon_size">3</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSeparator">
+                                <property name="halign">center</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">draw-path</property>
+                                <property name="icon_size">3</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">draw-freehand</property>
+                                <property name="icon_size">3</property>
+                              </object>
+                            </child>
+                            <layout>
+                              <property name="column">1</property>
+                              <property name="row">3</property>
+                              <property name="column-span">2</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkComboBox" id="canvas">
+                            <property name="tooltip-text" translatable="yes">Select the default color background for the canvas</property>
+                            <property name="model">canvases</property>
+                            <property name="id-column">0</property>
+                            <child>
+                              <object class="GtkCellRendererPixbuf" id="canvas_preview">
+                                <property name="xpad">10</property>
                               </object>
                               <attributes>
-                                <attribute name="visible">3</attribute>
+                                <attribute name="pixbuf">2</attribute>
                               </attributes>
+                            </child>
+                            <child>
+                              <object class="GtkCellRendererText"/>
+                              <attributes>
+                                <attribute name="text">1</attribute>
+                              </attributes>
+                            </child>
+                            <layout>
+                              <property name="column">1</property>
+                              <property name="row">0</property>
+                              <property name="column-span">2</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="valign">center</property>
+                                <property name="margin-end">5</property>
+                                <property name="margin-end">5</property>
+                                <property name="label" translatable="yes">Dark</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSwitch" id="dark_toggle">
+                                <property name="focusable">True</property>
+                                <property name="tooltip-text" translatable="yes">Set to dark theme</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                              </object>
+                            </child>
+                            <layout>
+                              <property name="column">2</property>
+                              <property name="row">2</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="save">
+                    <property name="focusable">True</property>
+                    <property name="has-focus">True</property>
+                    <property name="focus-on-click">False</property>
+                    <property name="receives-default">True</property>
+                    <property name="halign">end</property>
+                    <property name="valign">center</property>
+                    <property name="border-width">5</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">4</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label">Save</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="primary"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </property>
+            <property name="tab">
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Quick Setup</property>
+              </object>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkNotebookPage">
+            <property name="position">1</property>
+            <property name="child">
+              <object class="GtkBox">
+                <property name="valign">end</property>
+                <property name="hexpand">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="margin-start">30</property>
+                    <property name="margin-end">30</property>
+                    <property name="margin-top">10</property>
+                    <property name="margin-bottom">10</property>
+                    <property name="label" translatable="yes">&lt;b&gt;The Inkscape project is supported by users like you.&lt;/b&gt; Through our collective time, money and skill, we have made this software for everyone in the world to enjoy free from restrictions and free from costs. &lt;b&gt;
+If you would like to get involved and make the next version of Inkscape even better, please consider joining the Inkscape project today.&lt;/b&gt;</property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="max-width-chars">50</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="margin-start">90</property>
+                    <property name="margin-end">90</property>
+                    <property name="spacing">8</property>
+                    <property name="baseline-position">top</property>
+                    <child>
+                      <object class="GtkLinkButton">
+                        <property name="focusable">True</property>
+                        <property name="receives-default">True</property>
+                        <property name="hexpand">True</property>
+                        <property name="has-frame">False</property>
+                        <property name="uri">https://inkscape.org/splash/contribute/</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="height-request">160</property>
+                                <property name="margin-start">10</property>
+                                <property name="margin-end">10</property>
+                                <property name="margin-top">10</property>
+                                <property name="margin-bottom">10</property>
+                                <property name="file">../screens/start-support-time.png</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="margin-start">8</property>
+                                <property name="margin-end">8</property>
+                                <property name="margin-top">8</property>
+                                <property name="margin-bottom">8</property>
+                                <property name="label" translatable="yes">Learn how to
+Contribute Time</property>
+                                <property name="justify">center</property>
+                                <property name="wrap">True</property>
+                                <attributes>
+                                  <attribute name="weight" value="bold"></attribute>
+                                  <attribute name="scale" value="1.1000000000000001"></attribute>
+                                </attributes>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLinkButton">
+                        <property name="focusable">True</property>
+                        <property name="receives-default">True</property>
+                        <property name="hexpand">True</property>
+                        <property name="has-frame">False</property>
+                        <property name="uri">https://inkscape.org/splash/support/</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="height-request">160</property>
+                                <property name="margin-top">10</property>
+                                <property name="margin-bottom">10</property>
+                                <property name="file">../screens/start-support-money.png</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="margin-start">8</property>
+                                <property name="margin-end">8</property>
+                                <property name="margin-top">8</property>
+                                <property name="margin-bottom">8</property>
+                                <property name="label" translatable="yes">Learn how to
+Fund Inkscape</property>
+                                <property name="justify">center</property>
+                                <property name="wrap">True</property>
+                                <attributes>
+                                  <attribute name="weight" value="bold"></attribute>
+                                  <attribute name="scale" value="1.1000000000000001"></attribute>
+                                </attributes>
+                              </object>
                             </child>
                           </object>
                         </child>
@@ -922,178 +626,214 @@ Fund Inkscape</property>
                     </child>
                   </object>
                 </child>
-                <child type="tab">
-                  <object class="GtkLabel">
-                    <property name="focusable">False</property>
-                    <property name="label" translatable="yes" context="Welcome dialog">Existing Files</property>
-                  </object>
-                  <packing>
-                    <property name="tab-fill">False</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="focusable">False</property>
-                <property name="spacing">4</property>
                 <child>
-                  <object class="GtkCheckButton" id="show_toggle">
-                    <property name="label" translatable="yes">Show this every time</property>
-                    <property name="focusable">True</property>
-                    <property name="focus-on-click">False</property>
-                    <property name="receives-default">False</property>
-                    <property name="hexpand">True</property>
-                    <property name="border-width">2</property>
-                    <property name="active">True</property>
-                    <property name="draw-indicator">False</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkButton" id="load">
-                    <property name="label" translatable="yes">Open</property>
-                    <property name="sensitive">False</property>
+                  <object class="GtkButton" id="thanks">
+                    <property name="label" translatable="yes">Thanks!</property>
                     <property name="focusable">True</property>
                     <property name="has-focus">True</property>
                     <property name="focus-on-click">False</property>
                     <property name="receives-default">True</property>
+                    <property name="halign">end</property>
                     <property name="valign">center</property>
+                    <property name="border-width">5</property>
+                    <style>
+                      <class name="primary"/>
+                    </style>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkButton" id="new">
-                    <property name="label" translatable="yes">New Document</property>
-                    <property name="focusable">True</property>
-                    <property name="focus-on-click">False</property>
-                    <property name="receives-default">True</property>
-                    <property name="valign">center</property>
-                    <property name="margin-right">5</property>
-                    <property name="margin-end">5</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
+            </property>
+            <property name="tab">
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Supported by You</property>
+              </object>
+            </property>
           </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
         </child>
-        <child type="tab">
-          <object class="GtkLabel">
-            <property name="focusable">False</property>
-            <property name="label" translatable="yes">Time to Draw</property>
-          </object>
-          <packing>
+        <child>
+          <object class="GtkNotebookPage">
             <property name="position">2</property>
-            <property name="tab-fill">False</property>
-          </packing>
+            <property name="child">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkNotebook" id="kinds">
+                    <property name="focusable">True</property>
+                    <property name="vexpand">True</property>
+                    <property name="tab-pos">left</property>
+                    <child>
+                      <object class="GtkNotebookPage">
+                        <property name="child">
+                          <object class="GtkScrolledWindow">
+                            <property name="focusable">True</property>
+                            <property name="has-frame">True</property>
+                            <property name="child">
+                              <object class="GtkTreeView" id="recent_treeview">
+                                <property name="focusable">True</property>
+                                <property name="margin-start">4</property>
+                                <property name="model">recent_files</property>
+                                <property name="search-column">1</property>
+                                <property name="tooltip-column">1</property>
+                                <child internal-child="selection">
+                                  <object class="GtkTreeSelection"/>
+                                </child>
+                                <child>
+                                  <object class="GtkTreeViewColumn" id="recent_name">
+                                    <property name="title" translatable="yes" context="Welcome dialog">Recent Files</property>
+                                    <property name="sort-indicator">True</property>
+                                    <property name="sort-order">descending</property>
+                                    <property name="sort-column-id">0</property>
+                                    <child>
+                                      <object class="GtkCellRendererText"/>
+                                      <attributes>
+                                        <attribute name="text">0</attribute>
+                                      </attributes>
+                                    </child>
+                                    <child>
+                                      <object class="GtkCellRendererText">
+                                        <property name="xpad">4</property>
+                                        <property name="xalign">1</property>
+                                        <property name="sensitive">False</property>
+                                        <property name="alignment">right</property>
+                                        <property name="scale">0.90</property>
+                                        <property name="text">Emergency Save</property>
+                                      </object>
+                                      <attributes>
+                                        <attribute name="visible">3</attribute>
+                                      </attributes>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </property>
+                        <property name="tab">
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes" context="Welcome dialog">Existing Files</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkCheckButton" id="show_toggle">
+                        <property name="label" translatable="yes">Show this every time</property>
+                        <property name="focusable">True</property>
+                        <property name="focus-on-click">False</property>
+                        <property name="hexpand">True</property>
+                        <property name="border-width">2</property>
+                        <property name="active">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="load">
+                        <property name="label" translatable="yes">Open</property>
+                        <property name="sensitive">False</property>
+                        <property name="focusable">True</property>
+                        <property name="has-focus">True</property>
+                        <property name="focus-on-click">False</property>
+                        <property name="receives-default">True</property>
+                        <property name="valign">center</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="new">
+                        <property name="label" translatable="yes">New Document</property>
+                        <property name="focusable">True</property>
+                        <property name="focus-on-click">False</property>
+                        <property name="receives-default">True</property>
+                        <property name="valign">center</property>
+                        <property name="margin-end">5</property>
+                        <property name="margin-end">5</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </property>
+            <property name="tab">
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Time to Draw</property>
+              </object>
+            </property>
+          </object>
         </child>
       </object>
-    </child>
+    </property>
     <child type="titlebar">
       <object class="GtkOverlay" id="banner">
         <property name="width-request">700</property>
         <property name="height-request">220</property>
-        <property name="focusable">False</property>
-        <child>
+        <property name="child">
           <object class="GtkStack" id="banner-stack">
-            <property name="focusable">False</property>
             <property name="transition-duration">1500</property>
             <property name="transition-type">crossfade</property>
             <child>
               <object class="GtkFixed">
-                <property name="focusable">False</property>
                 <child>
                   <object class="GtkImage">
                     <property name="width-request">100</property>
                     <property name="height-request">80</property>
-                    <property name="focusable">False</property>
-                    <property name="pixbuf">../screens/start-welcome.png</property>
+                    <property name="file">../screens/start-welcome.png</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkImage" id="welcome_text">
                     <property name="width-request">700</property>
                     <property name="height-request">220</property>
-                    <property name="focusable">False</property>
-                    <property name="pixbuf">../screens/start-welcome-text.svg</property>
+                    <property name="file">../screens/start-welcome-text.svg</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="focusable">False</property>
                     <property name="label" translatable="yes" comments="Not automatic, but will be turned into start-welcome-text.svg">Welcome!</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="focusable">False</property>
                     <property name="label" translatable="yes" comments="Not automatic, but will be turned into start-welcome-text.svg">Let's set up a few things...</property>
                   </object>
                 </child>
               </object>
             </child>
             <child>
-              <object class="GtkImage">
-                <property name="focusable">False</property>
-                <property name="pixbuf">../screens/start-support.png</property>
-              </object>
-              <packing>
+              <object class="GtkStackPage">
                 <property name="position">1</property>
-              </packing>
+                <property name="child">
+                  <object class="GtkImage">
+                    <property name="file">../screens/start-support.png</property>
+                  </object>
+                </property>
+              </object>
             </child>
             <child>
-              <object class="GtkImage">
-                <property name="width-request">700</property>
-                <property name="height-request">220</property>
-                <property name="focusable">False</property>
-                <property name="pixbuf">../screens/start-splash.png</property>
-              </object>
-              <packing>
+              <object class="GtkStackPage">
                 <property name="position">2</property>
-              </packing>
+                <property name="child">
+                  <object class="GtkImage">
+                    <property name="width-request">700</property>
+                    <property name="height-request">220</property>
+                    <property name="file">../screens/start-splash.png</property>
+                  </object>
+                </property>
+              </object>
             </child>
           </object>
-          <packing>
-            <property name="index">-1</property>
-          </packing>
-        </child>
+        </property>
         <child type="overlay">
           <object class="GtkButton" id="close_window">
             <property name="focusable">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">end</property>
             <property name="valign">start</property>
             <property name="hexpand">True</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <child>
               <object class="GtkImage">
-                <property name="focusable">False</property>
                 <property name="icon-name">window-close</property>
               </object>
             </child>

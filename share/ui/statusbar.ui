@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <!-- Zoom Adjustment -->
   <object class="GtkAdjustment" id="statusbar-zoom-adjustment">
     <property name="step-increment">0.1</property>
     <property name="page-increment">10</property>
   </object>
-  <!-- Zoom Menu -->
   <menu id="statusbar-zoom-menu">
     <section>
       <item>
@@ -35,54 +33,34 @@
         <attribute name="icon">zoom-center-page</attribute>
       </item>
     </section>
-    <!-- Both attemps fail! -->
-    <!-- <section> -->
-    <!--   <item> -->
-    <!--     <attribute name='label'  translatable="yes">Zoom 1000%</attribute> -->
-    <!--     <attribute name='action-name'>"win.canvas-zoom-absolute(10.0)"</attribute> -->
-    <!--   </item> -->
-    <!--   <item> -->
-    <!--     <attribute name='label'  translatable="yes">Zoom 500%</attribute> -->
-    <!--     <attribute name='action-name'>win.canvas-zoom-absolute</attribute> -->
-    <!--     <attribute name='action-target' type="d">5.0</attribute> -->
-    <!--   </item> -->
-    <!-- </section> -->
   </menu>
-  <!-- Rotation Adjustment -->
   <object class="GtkAdjustment" id="statusbar-rotate-adjustment">
     <property name="step-increment">1</property>
     <property name="page-increment">15</property>
     <property name="lower">-360</property>
     <property name="upper">360</property>
   </object>
-  <!-- Rotate Menu -->
   <menu id="statusbar-rotate-menu"/>
-  <!-- Statusbar -->
   <object class="GtkBox" id="statusbar">
     <property name="name">Statusbar</property>
     <property name="margin-end">10</property>
-    <!-- Selected Style -->
     <child>
-      <object class="GtkBox" id="statusbar-selected-style"/>
-      <packing>
-        <property name="fill">False</property>
-      </packing>
+      <object class="GtkBox" id="statusbar-selected-style">
+        <property name="halign">center</property>
+      </object>
     </child>
-    <!-- Layer Selector -->
     <child>
       <object class="GtkSeparator">
+        <property name="halign">center</property>
         <property name="orientation">vertical</property>
         <property name="margin-top">6</property>
         <property name="margin-bottom">6</property>
         <property name="margin-end">6</property>
       </object>
-      <packing>
-        <property name="fill">False</property>
-      </packing>
     </child>
-    <!-- Selection Status -->
     <child>
       <object class="GtkLabel" id="statusbar-selection">
+        <property name="hexpand">True</property>
         <property name="name">StatusbarSelection</property>
         <property name="halign">start</property>
         <property name="xalign">0</property>
@@ -92,11 +70,7 @@
         <property name="ellipsize">end</property>
         <property name="lines">2</property>
       </object>
-      <packing>
-        <property name="expand">True</property>
-      </packing>
     </child>
-    <!-- Page Selector -->
     <child>
       <object class="GtkSeparator">
         <property name="orientation">vertical</property>
@@ -105,8 +79,6 @@
         <property name="margin-end">6</property>
       </object>
     </child>
-    <!-- Coordinates -->
-    <!-- n-columns=2 n-rows=2 -->
     <child>
       <object class="GtkGrid" id="statusbar-coordinates">
         <property name="name">StatusbarCoordinates</property>
@@ -117,21 +89,21 @@
           <object class="GtkLabel">
             <property name="halign">start</property>
             <property name="label" translatable="yes">X:</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">0</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="halign">start</property>
             <property name="label" translatable="yes">Y:</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">1</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel" id="statusbar-coordinate-x">
@@ -139,11 +111,11 @@
             <property name="halign">end</property>
             <property name="label" translatable="no">   0.00 </property>
             <property name="use-markup">True</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">0</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel" id="statusbar-coordinate-y">
@@ -151,15 +123,14 @@
             <property name="halign">end</property>
             <property name="label" translatable="no">   0.00 </property>
             <property name="use-markup">True</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">1</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">1</property>
-          </packing>
         </child>
       </object>
     </child>
-    <!-- Zoom -->
     <child>
       <object class="GtkBox" id="statusbar-zoom">
         <property name="tooltip-text" translatable="yes">Zoom (also Ctrl+scroll)</property>
@@ -184,7 +155,6 @@
         </child>
       </object>
     </child>
-    <!-- Rotation -->
     <child>
       <object class="GtkBox" id="statusbar-rotate">
         <property name="tooltip-text" translatable="yes">Rotation (also Ctrl+Shift+scroll)</property>

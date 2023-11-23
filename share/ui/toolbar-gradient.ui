@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="_offset_adj">
@@ -8,13 +7,12 @@
     <property name="page-increment">0.10</property>
   </object>
   <object class="GtkPopover" id="popover1">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box1">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkBox" id="gradient-toolbar">
     <property name="halign">start</property>
@@ -34,29 +32,20 @@
           <object class="GtkToggleButton" id="new_type_buttons_group">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Create linear gradient</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="icon-name">paint-gradient-linear</property>
           </object>
-          <packing>
-            <property name="position">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Create radial (elliptic or circular) gradient</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">new_type_buttons_group</property>
             <property name="icon-name">paint-gradient-radial</property>
           </object>
-          <packing>
-            <property name="position">4</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="new_fillstroke_buttons_box">
@@ -65,49 +54,34 @@
           <object class="GtkToggleButton" id="new_fillstroke_buttons_group">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Create gradient in the fill</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="icon-name">object-fill</property>
           </object>
-          <packing>
-            <property name="position">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Create gradient in the stroke</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">new_fillstroke_buttons_group</property>
             <property name="icon-name">object-stroke</property>
           </object>
-          <packing>
-            <property name="position">4</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn1">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover1</property>
         <property name="icon-name">go-down</property>
       </object>
-      <packing>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="select_box">
@@ -115,39 +89,30 @@
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="position">5</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_linked_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Link gradients to change all related gradients</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">object-unlocked</property>
         <style>
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="position">6</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="_stops_reverse_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Reverse the direction of the gradient</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">object-flip-horizontal</property>
         <style>
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="position">7</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="spread_box">
@@ -155,23 +120,14 @@
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="position">8</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">9</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="stop_box">
       </object>
-      <packing>
-        <property name="position">10</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="offset_box">
@@ -191,38 +147,26 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">11</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="_stops_add_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Insert new stop</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">node-add</property>
       </object>
-      <packing>
-        <property name="position">12</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="_stops_delete_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Delete stop</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">node-delete</property>
       </object>
-      <packing>
-        <property name="position">13</property>
-      </packing>
     </child>
     <style>
       <class name="toolbar"/>

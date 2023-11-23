@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="_angle_adj">
@@ -47,40 +46,36 @@
     <property name="page-increment">10</property>
   </object>
   <object class="GtkPopover" id="popover1">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box1">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover2">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box2">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover3">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box3">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover4">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box4">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkBox" id="calligraphy-toolbar">
     <property name="halign">start</property>
@@ -92,7 +87,7 @@
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
         <property name="margin-start">3</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover1</property>
         <child>
           <object class="GtkImage" id="image5">
@@ -109,16 +104,13 @@
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="profile_edit_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Add or edit calligraphic profile</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag1"/>
         </style>
@@ -128,23 +120,17 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn2">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover2</property>
         <child>
           <object class="GtkImage" id="image6">
@@ -152,9 +138,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="width_box">
@@ -174,17 +157,11 @@
             <property name="climb-rate">1</property>
             <property name="digits">3</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="tag2"/>
         </style>
       </object>
-      <packing>
-        <property name="position">5</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="unit_menu_box">
@@ -192,16 +169,13 @@
           <class name="tag2"/>
         </style>
       </object>
-      <packing>
-        <property name="position">6</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="usepressure_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of the pen</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag2"/>
         </style>
@@ -211,15 +185,12 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">7</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="tracebackground_btn">
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Trace the lightness of the background by the width of the pen (white - minimum width, black - maximum width)</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag2"/>
         </style>
@@ -229,16 +200,13 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">8</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn3">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover3</property>
         <child>
           <object class="GtkImage" id="image7">
@@ -246,9 +214,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">9</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="thinning_box">
@@ -266,17 +231,11 @@
             <property name="adjustment">_thinning_adj</property>
             <property name="climb-rate">1</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="tag3"/>
         </style>
       </object>
-      <packing>
-        <property name="position">10</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="mass_box">
@@ -295,31 +254,22 @@
             <property name="climb-rate">1</property>
             <property name="value">0.001</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="tag3"/>
         </style>
       </object>
-      <packing>
-        <property name="position">11</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">12</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn4">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover4</property>
         <child>
           <object class="GtkImage" id="image8">
@@ -327,9 +277,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">13</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="angle_box">
@@ -350,24 +297,18 @@
             <property name="climb-rate">1</property>
             <property name="value">0.001</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="tag4"/>
         </style>
       </object>
-      <packing>
-        <property name="position">14</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_usetilt_btn">
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Use the tilt of the input device to alter the angle of the pen's nib</property>
         <property name="margin-end">3</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag4"/>
         </style>
@@ -377,9 +318,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">15</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="flatness_box">
@@ -399,25 +337,16 @@
             <property name="adjustment">_flatness_adj</property>
             <property name="climb-rate">1</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="tag4"/>
         </style>
       </object>
-      <packing>
-        <property name="position">16</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
         <property name="margin-end">3</property>
       </object>
-      <packing>
-        <property name="position">17</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="cap_rounding_box">
@@ -439,22 +368,13 @@
             <property name="digits">2</property>
             <property name="value">0.001</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">18</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
         <property name="margin-end">3</property>
       </object>
-      <packing>
-        <property name="position">19</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="tremor_box">
@@ -475,17 +395,11 @@
             <property name="climb-rate">1</property>
             <property name="value">0.001</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="tag3"/>
         </style>
       </object>
-      <packing>
-        <property name="position">20</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="wiggle_box">
@@ -504,14 +418,8 @@
             <property name="climb-rate">1</property>
             <property name="value">0.001</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">21</property>
-      </packing>
     </child>
     <style>
       <class name="toolbar"/>

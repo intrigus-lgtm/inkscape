@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="_expansion_adj">
@@ -46,14 +45,8 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="expansion_box">
@@ -72,14 +65,8 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="t0_box">
@@ -98,37 +85,25 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="reset_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Reset shape parameters to defaults (use Inkscape Preferences &gt; Tools to change defaults)</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image2">
             <property name="icon-name">edit-clear</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">5</property>
-      </packing>
     </child>
     <style>
       <class name="toolbar"/>

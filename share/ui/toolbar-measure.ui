@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="_font_size_adj">
@@ -29,22 +28,20 @@
     <property name="page-increment">4</property>
   </object>
   <object class="GtkPopover" id="popover1">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box1">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover2">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box2">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkBox" id="measure-toolbar">
     <property name="halign">start</property>
@@ -67,9 +64,6 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
     </child>
@@ -89,14 +83,8 @@
             <property name="adjustment">_precision_adj</property>
             <property name="climb-rate">0.10</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="scale_box">
@@ -114,14 +102,8 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="unit_menu_box">
@@ -132,23 +114,17 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn1">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover1</property>
         <child>
           <object class="GtkImage" id="image18">
@@ -156,16 +132,13 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">5</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_only_selected_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Measure only selected</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag1"/>
         </style>
@@ -175,16 +148,13 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">6</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_ignore_1st_and_last_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Ignore first and last</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag1"/>
         </style>
@@ -194,16 +164,13 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">7</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_inbetween_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Show measures between items</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag1"/>
         </style>
@@ -213,16 +180,13 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">8</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_show_hidden_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Show hidden intersections</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag1"/>
         </style>
@@ -232,16 +196,13 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">9</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_all_layers_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Measure all layers</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag1"/>
         </style>
@@ -251,23 +212,17 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">10</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">11</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn2">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover2</property>
         <child>
           <object class="GtkImage" id="image11">
@@ -275,16 +230,13 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">12</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="reverse_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Reverse measure</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag2"/>
         </style>
@@ -294,16 +246,13 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">13</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="to_phantom_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Phantom measure</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag2"/>
         </style>
@@ -313,9 +262,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">14</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="to_guides_btn">
@@ -323,7 +269,7 @@
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">To guides</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag2"/>
         </style>
@@ -333,16 +279,13 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">15</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="to_item_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Convert to item</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag2"/>
         </style>
@@ -352,16 +295,13 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">16</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="mark_dimension_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Mark Dimension</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag2"/>
         </style>
@@ -371,9 +311,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">17</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="offset_box">
@@ -392,14 +329,8 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">18</property>
-      </packing>
     </child>
     <style>
       <class name="toolbar"/>

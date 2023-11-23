@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="adj-page-height">
@@ -45,14 +44,10 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkPopover" id="templates-popover">
-    <property name="position">bottom</property>
-  </object>
-  <!-- n-columns=3 n-rows=2 -->
+  <object class="GtkPopover" id="templates-popover"/>
   <object class="GtkGrid" id="main-grid">
     <property name="halign">start</property>
     <property name="valign">start</property>
-    <!-- n-columns=4 n-rows=16 -->
     <child>
       <object class="GtkGrid" id="left-grid">
         <property name="halign">start</property>
@@ -66,34 +61,34 @@
               <class name="heading"/>
               <class name="top"/>
             </style>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">0</property>
+              <property name="column-span">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-            <property name="width">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="label" translatable="yes">Width:</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">2</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="label" translatable="yes">Height:</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="page-width">
@@ -102,12 +97,12 @@
             <property name="width-chars">9</property>
             <property name="adjustment">adj-page-width</property>
             <property name="digits">3</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">2</property>
+              <property name="column-span">2</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">2</property>
-            <property name="width">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="page-height">
@@ -116,24 +111,24 @@
             <property name="width-chars">9</property>
             <property name="adjustment">adj-page-height</property>
             <property name="digits">3</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">3</property>
+              <property name="column-span">2</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">3</property>
-            <property name="width">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="label" translatable="yes">Resize to content:</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">6</property>
+              <property name="column-span">2</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">6</property>
-            <property name="width">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
@@ -152,7 +147,6 @@
                 <property name="focusable">True</property>
                 <property name="margin-end">5</property>
                 <property name="active">True</property>
-                <property name="draw-indicator">True</property>
                 <property name="group">page-portrait</property>
                 <child>
                   <object class="GtkImage" id="image2">
@@ -161,17 +155,12 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="pack-type">end</property>
-                <property name="position">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkCheckButton" id="page-portrait">
                 <property name="focusable">True</property>
                 <property name="margin-end">5</property>
                 <property name="active">True</property>
-                <property name="draw-indicator">True</property>
                 <child>
                   <object class="GtkImage" id="image1">
                     <property name="pixel-size">20</property>
@@ -179,17 +168,13 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="pack-type">end</property>
-                <property name="position">3</property>
-              </packing>
             </child>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">5</property>
+              <property name="column-span">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">5</property>
-            <property name="width">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="page-resize">
@@ -202,11 +187,11 @@
                 <property name="icon-name">pages-resize-symbolic</property>
               </object>
             </child>
+            <layout>
+              <property name="column">2</property>
+              <property name="row">6</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">6</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="link-width-height">
@@ -216,27 +201,27 @@
             <property name="margin-start">2</property>
             <property name="margin-top">5</property>
             <property name="margin-bottom">5</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <style>
               <class name="link-edit-button"/>
             </style>
+            <layout>
+              <property name="column">3</property>
+              <property name="row">2</property>
+              <property name="row-span">2</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">2</property>
-            <property name="height">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel" id="scale-x-label">
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="label" translatable="yes">Scale:</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">7</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">7</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="scale-x">
@@ -247,12 +232,12 @@ SVG element positions are expressed in user units.</property>
             <property name="width-chars">9</property>
             <property name="adjustment">adj-scale-x</property>
             <property name="digits">6</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">7</property>
+              <property name="column-span">2</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">7</property>
-            <property name="width">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel">
@@ -262,11 +247,11 @@ SVG element positions are expressed in user units.</property>
             <style>
               <class name="viewbox"/>
             </style>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">11</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">11</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel">
@@ -276,11 +261,11 @@ SVG element positions are expressed in user units.</property>
             <style>
               <class name="viewbox"/>
             </style>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">12</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">12</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel">
@@ -290,11 +275,11 @@ SVG element positions are expressed in user units.</property>
             <style>
               <class name="viewbox"/>
             </style>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">13</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">13</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel">
@@ -304,11 +289,11 @@ SVG element positions are expressed in user units.</property>
             <style>
               <class name="viewbox"/>
             </style>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">14</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">14</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="viewbox-x">
@@ -319,12 +304,12 @@ SVG element positions are expressed in user units.</property>
             <style>
               <class name="viewbox"/>
             </style>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">11</property>
+              <property name="column-span">2</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">11</property>
-            <property name="width">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="viewbox-y">
@@ -335,12 +320,12 @@ SVG element positions are expressed in user units.</property>
             <style>
               <class name="viewbox"/>
             </style>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">12</property>
+              <property name="column-span">2</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">12</property>
-            <property name="width">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="viewbox-width">
@@ -351,12 +336,12 @@ SVG element positions are expressed in user units.</property>
             <style>
               <class name="viewbox"/>
             </style>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">13</property>
+              <property name="column-span">2</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">13</property>
-            <property name="width">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="viewbox-height">
@@ -367,12 +352,12 @@ SVG element positions are expressed in user units.</property>
             <style>
               <class name="viewbox"/>
             </style>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">14</property>
+              <property name="column-span">2</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">14</property>
-            <property name="width">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel">
@@ -381,11 +366,11 @@ SVG element positions are expressed in user units.</property>
             <property name="margin-end">2</property>
             <property name="label" translatable="yes">Format:</property>
             <property name="tooltip-text" translatable="yes">Predefined paper sizes to choose from</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">1</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkMenuButton" id="page-menu-btn">
@@ -398,7 +383,6 @@ SVG element positions are expressed in user units.</property>
             <property name="popover">templates-popover</property>
             <child>
               <object class="GtkBox">
-                <property name="orientation">horizontal</property>
                 <property name="spacing">2</property>
                 <child>
                   <object class="GtkLabel" id="page-template-name">
@@ -420,20 +404,20 @@ SVG element positions are expressed in user units.</property>
                 </child>
               </object>
             </child>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">1</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkComboBoxText" id="page-units">
             <property name="tooltip-text" translatable="yes">Document's units used to specify document size only</property>
+            <layout>
+              <property name="column">2</property>
+              <property name="row">1</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkExpander" id="viewbox-expander">
@@ -446,12 +430,12 @@ SVG element positions are expressed in user units.</property>
                 <property name="label" translatable="yes">Viewbox</property>
               </object>
             </child>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">10</property>
+              <property name="column-span">4</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">10</property>
-            <property name="width">4</property>
-          </packing>
         </child>
         <child>
           <object class="GtkImage" id="linked-scale-img">
@@ -462,12 +446,12 @@ SVG element positions are expressed in user units.</property>
             <style>
               <class name="viewbox"/>
             </style>
+            <layout>
+              <property name="column">3</property>
+              <property name="row">13</property>
+              <property name="row-span">2</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">13</property>
-            <property name="height">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
@@ -477,16 +461,16 @@ SVG element positions are expressed in user units.</property>
                 <property name="halign">start</property>
                 <property name="label" translatable="yes">Non-uniform scale!</property>
                 <attributes>
-                  <attribute name="style" value="italic"/>
+                  <attribute name="style" value="italic"></attribute>
                 </attributes>
               </object>
             </child>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">9</property>
+              <property name="column-span">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">9</property>
-            <property name="width">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
@@ -506,30 +490,27 @@ SVG element positions are expressed in user units.</property>
                   <class name="small-font"/>
                 </style>
               </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
             </child>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">8</property>
+              <property name="column-span">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">8</property>
-            <property name="width">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel" id="unsupported">
             <property name="halign">start</property>
             <property name="label" translatable="yes">Unsupported percentage size!</property>
             <attributes>
-              <attribute name="style" value="italic"/>
+              <attribute name="style" value="italic"></attribute>
             </attributes>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">4</property>
+              <property name="column-span">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">4</property>
-            <property name="width">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="link-scale-content">
@@ -538,19 +519,19 @@ SVG element positions are expressed in user units.</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Link the scale of the viewbox to the scale of the content in the document.</property>
             <property name="halign">start</property>
-            <property name="margin-left">2</property>
+            <property name="margin-start">2</property>
             <property name="margin-start">2</property>
             <property name="margin-top">5</property>
             <property name="margin-bottom">5</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <style>
               <class name="link-edit-button"/>
             </style>
+            <layout>
+              <property name="column">3</property>
+              <property name="row">7</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">7</property>
-          </packing>
         </child>
         <child>
           <placeholder/>
@@ -579,13 +560,12 @@ SVG element positions are expressed in user units.</property>
         <child>
           <placeholder/>
         </child>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">0</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">0</property>
-      </packing>
     </child>
-    <!-- n-columns=5 n-rows=5 -->
     <child>
       <object class="GtkGrid">
         <property name="halign">start</property>
@@ -599,46 +579,45 @@ SVG element positions are expressed in user units.</property>
               <class name="heading"/>
               <class name="top"/>
             </style>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">0</property>
+              <property name="column-span">4</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-            <property name="width">4</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="label" translatable="yes">Display units:</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">1</property>
+              <property name="column-span">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-            <property name="width">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkComboBoxText" id="display-units">
             <property name="tooltip-text" translatable="yes">Units used throughout the user interface</property>
             <property name="halign">end</property>
+            <layout>
+              <property name="column">3</property>
+              <property name="row">1</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox" id="preview-box">
             <property name="height-request">132</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">2</property>
+              <property name="column-span">4</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">2</property>
-            <property name="width">4</property>
-          </packing>
         </child>
-        <!-- n-columns=3 n-rows=2 -->
         <child>
           <object class="GtkGrid">
             <property name="halign">center</property>
@@ -652,11 +631,11 @@ SVG element positions are expressed in user units.</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Page background color used during editing and exporting</property>
                 <property name="halign">center</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="border-color">
@@ -664,11 +643,11 @@ SVG element positions are expressed in user units.</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Page border and drop shadow color</property>
                 <property name="halign">center</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="desk-color">
@@ -676,48 +655,48 @@ SVG element positions are expressed in user units.</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Desk background color surrounding pages</property>
                 <property name="halign">center</property>
+                <layout>
+                  <property name="column">2</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">2</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="halign">center</property>
                 <property name="label" translatable="yes">Border</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">1</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="halign">center</property>
                 <property name="label" translatable="yes">Page</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">1</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="halign">center</property>
                 <property name="label" translatable="yes">Desk</property>
+                <layout>
+                  <property name="column">2</property>
+                  <property name="row">1</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">2</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">3</property>
+              <property name="column-span">4</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">3</property>
-            <property name="width">4</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
@@ -729,7 +708,6 @@ SVG element positions are expressed in user units.</property>
                 <property name="tooltip-text" translatable="yes">If set, use a colored checkerboard for the desk background.</property>
                 <property name="halign">start</property>
                 <property name="valign">center</property>
-                <property name="draw-indicator">True</property>
               </object>
             </child>
             <child>
@@ -739,11 +717,7 @@ SVG element positions are expressed in user units.</property>
                 <property name="tooltip-text" translatable="yes">If set, a rectangular page border is shown.</property>
                 <property name="halign">start</property>
                 <property name="valign">center</property>
-                <property name="draw-indicator">True</property>
               </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkCheckButton" id="border-top">
@@ -752,14 +726,10 @@ SVG element positions are expressed in user units.</property>
                 <property name="tooltip-text" translatable="yes">If set, the page border is always on top of the drawing.</property>
                 <property name="halign">start</property>
                 <property name="valign">center</property>
-                <property name="draw-indicator">True</property>
                 <style>
                   <class name="indent"/>
                 </style>
               </object>
-              <packing>
-                <property name="position">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkCheckButton" id="shadow">
@@ -768,14 +738,10 @@ SVG element positions are expressed in user units.</property>
                 <property name="tooltip-text" translatable="yes">If set, the page border shows a shadow on its right and lower side.</property>
                 <property name="halign">start</property>
                 <property name="valign">center</property>
-                <property name="draw-indicator">True</property>
                 <style>
                   <class name="indent"/>
                 </style>
               </object>
-              <packing>
-                <property name="position">3</property>
-              </packing>
             </child>
             <child>
               <object class="GtkCheckButton" id="page-label-style">
@@ -783,11 +749,7 @@ SVG element positions are expressed in user units.</property>
                 <property name="focusable">True</property>
                 <property name="tooltip-text" translatable="yes">Show the big page labels below the page border.</property>
                 <property name="halign">start</property>
-                <property name="draw-indicator">True</property>
               </object>
-              <packing>
-                <property name="position">4</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
@@ -797,9 +759,6 @@ SVG element positions are expressed in user units.</property>
                   <class name="heading"/>
                 </style>
               </object>
-              <packing>
-                <property name="position">5</property>
-              </packing>
             </child>
             <child>
               <object class="GtkCheckButton" id="clip-to-page">
@@ -807,11 +766,7 @@ SVG element positions are expressed in user units.</property>
                 <property name="focusable">True</property>
                 <property name="tooltip-text" translatable="yes">Anything that is not on a page will not be displayed</property>
                 <property name="halign">start</property>
-                <property name="draw-indicator">True</property>
               </object>
-              <packing>
-                <property name="position">6</property>
-              </packing>
             </child>
             <child>
               <object class="GtkCheckButton" id="use-antialias">
@@ -820,33 +775,28 @@ SVG element positions are expressed in user units.</property>
                 <property name="tooltip-text" translatable="yes">If unset, no antialiasing will be done on the drawing.</property>
                 <property name="halign">start</property>
                 <property name="valign">center</property>
-                <property name="draw-indicator">True</property>
               </object>
-              <packing>
-                <property name="position">6</property>
-              </packing>
             </child>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">4</property>
+              <property name="column-span">4</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">4</property>
-            <property name="width">4</property>
-          </packing>
         </child>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">0</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">2</property>
-        <property name="top-attach">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="label"/>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">0</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">0</property>
-      </packing>
     </child>
   </object>
 </interface>

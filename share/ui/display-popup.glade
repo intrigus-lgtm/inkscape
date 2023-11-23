@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkPopover" id="popover">
     <property name="position">left</property>
-    <!-- n-columns=3 n-rows=13 -->
-    <child>
+    <property name="child">
       <object class="GtkGrid">
         <property name="halign">start</property>
         <property name="valign">start</property>
@@ -18,16 +16,16 @@
             <property name="halign">start</property>
             <property name="margin-bottom">5</property>
             <property name="label" translatable="yes">Display mode:</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">0</property>
+              <property name="column-span">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-            <property name="width">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="normal">
-            <property name="margin-left">5</property>
+            <property name="margin-start">5</property>
             <property name="margin-top">2</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Use normal rendering mode</property>
@@ -35,17 +33,17 @@
             <property name="action-name">win.canvas-display-mode</property>
             <property name="action-target">0</property>
             <property name="label" translatable="yes">Normal</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">1</property>
+              <property name="column-span">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-            <property name="width">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="outline">
             <property name="group">normal</property>
-            <property name="margin-left">5</property>
+            <property name="margin-start">5</property>
             <property name="margin-top">3</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Show only object outlines</property>
@@ -53,17 +51,17 @@
             <property name="action-name">win.canvas-display-mode</property>
             <property name="action-target">1</property>
             <property name="label" translatable="yes">Outline</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">2</property>
+              <property name="column-span">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">2</property>
-            <property name="width">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="overlay">
             <property name="group">normal</property>
-            <property name="margin-left">5</property>
+            <property name="margin-start">5</property>
             <property name="margin-top">3</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Show objects as outlines, and the actual drawing below them with reduced opacity</property>
@@ -71,17 +69,17 @@
             <property name="action-name">win.canvas-display-mode</property>
             <property name="action-target">4</property>
             <property name="label" translatable="yes">Outline overlay</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">3</property>
+              <property name="column-span">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">3</property>
-            <property name="width">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="enhanced">
             <property name="group">normal</property>
-            <property name="margin-left">5</property>
+            <property name="margin-start">5</property>
             <property name="margin-top">3</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Ensure all strokes are displayed on screen as at least 1 pixel wide</property>
@@ -89,17 +87,17 @@
             <property name="action-name">win.canvas-display-mode</property>
             <property name="action-target">3</property>
             <property name="label" translatable="yes">Enhance thin lines</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">4</property>
+              <property name="column-span">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">4</property>
-            <property name="width">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="no-filter">
             <property name="group">normal</property>
-            <property name="margin-left">5</property>
+            <property name="margin-start">5</property>
             <property name="margin-top">3</property>
             <property name="margin-bottom">2</property>
             <property name="focusable">True</property>
@@ -108,67 +106,66 @@
             <property name="action-name">win.canvas-display-mode</property>
             <property name="action-target">2</property>
             <property name="label" translatable="yes">No filters</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">5</property>
+              <property name="column-span">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">5</property>
-            <property name="width">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="halign">start</property>
             <property name="label" translatable="yes">Quick zoom:</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">8</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">8</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="halign">start</property>
             <property name="label" translatable="yes">Quick preview:</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">9</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">9</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSeparator">
             <property name="margin-top">3</property>
             <property name="margin-bottom">3</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">7</property>
+              <property name="column-span">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">7</property>
-            <property name="width">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSeparator">
             <property name="margin-top">3</property>
             <property name="margin-bottom">3</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">11</property>
+              <property name="column-span">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">11</property>
-            <property name="width">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="zoom-resize">
             <property name="label" translatable="yes">Zoom with window size</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Zoom drawing when window size changes</property>
-            <property name="draw-indicator">True</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">12</property>
+              <property name="column-span">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">12</property>
-            <property name="width">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel">
@@ -183,11 +180,11 @@
             <style>
               <class name="key"/>
             </style>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">8</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">8</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel">
@@ -202,11 +199,11 @@
             <style>
               <class name="key"/>
             </style>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">9</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">9</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
@@ -238,18 +235,15 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
             </child>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">6</property>
+              <property name="column-span">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">6</property>
-            <property name="width">3</property>
-          </packing>
         </child>
       </object>
-    </child>
+    </property>
   </object>
 </interface>

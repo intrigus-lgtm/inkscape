@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkBox" id="CSSSelectorContainer">
@@ -9,10 +8,10 @@
       <object class="GtkBox">
         <child>
           <object class="GtkButton" id="CSSSelectorAddButton">
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <child>
               <object class="GtkImage">
-                <property name="margin-right">5</property>
+                <property name="margin-end">5</property>
                 <property name="icon-name">list-add</property>
               </object>
             </child>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="adjustment-aspect">
@@ -57,10 +56,10 @@
         <property name="min-content-width">1</property>
         <property name="min-content-height">1</property>
         <property name="overlay-scrolling">False</property>
-        <child>
+        <property name="child">
           <object class="GtkViewport" id="view-port">
             <property name="has-frame">false</property>
-            <child>
+            <property name="child">
               <object class="GtkFlowBox" id="flow-box">
                 <property name="halign">start</property>
                 <property name="valign">end</property>
@@ -74,14 +73,10 @@
                   <class name="color-palette"/>
                 </style>
               </object>
-            </child>
+            </property>
           </object>
-        </child>
+        </property>
       </object>
-      <packing>
-        <property name="expand">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="btn-left">
@@ -90,7 +85,7 @@
         <property name="receives-default">True</property>
         <property name="margin-start">1</property>
         <property name="margin-end">1</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="small"/>
         </style>
@@ -100,9 +95,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="btn-right">
@@ -111,7 +103,7 @@
         <property name="receives-default">True</property>
         <property name="margin-start">1</property>
         <property name="margin-end">1</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="small"/>
         </style>
@@ -121,12 +113,10 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkFlowBox" id="scroll-buttons">
+        <property name="halign">center</property>
         <property name="orientation">vertical</property>
         <property name="column-spacing">1</property>
         <property name="max-children-per-line">2</property>
@@ -136,14 +126,14 @@
             <property name="width-request">10</property>
             <property name="height-request">10</property>
             <property name="focusable">True</property>
-            <child>
+            <property name="child">
               <object class="GtkButton" id="btn-up">
                 <property name="focusable">True</property>
                 <property name="focus-on-click">False</property>
                 <property name="receives-default">True</property>
                 <property name="margin-start">1</property>
                 <property name="margin-end">1</property>
-                <property name="has-frame">false</property>
+                <property name="has-frame">False</property>
                 <style>
                   <class name="small"/>
                 </style>
@@ -153,7 +143,7 @@
                   </object>
                 </child>
               </object>
-            </child>
+            </property>
           </object>
         </child>
         <child>
@@ -161,14 +151,14 @@
             <property name="width-request">10</property>
             <property name="height-request">10</property>
             <property name="focusable">True</property>
-            <child>
+            <property name="child">
               <object class="GtkButton" id="btn-down">
                 <property name="focusable">True</property>
                 <property name="focus-on-click">False</property>
                 <property name="receives-default">True</property>
                 <property name="margin-start">1</property>
                 <property name="margin-end">1</property>
-                <property name="has-frame">false</property>
+                <property name="has-frame">False</property>
                 <style>
                   <class name="small"/>
                 </style>
@@ -178,35 +168,27 @@
                   </object>
                 </child>
               </object>
-            </child>
+            </property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="fill">False</property>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="btn-menu">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="halign">end</property>
+        <property name="halign">center</property>
         <property name="valign">end</property>
         <property name="margin-start">1</property>
         <property name="margin-end">1</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="direction">none</property>
         <property name="use-popover">False</property>
         <style>
           <class name="small"/>
         </style>
       </object>
-      <packing>
-        <property name="fill">False</property>
-        <property name="position">5</property>
-      </packing>
     </child>
     <style>
       <class name="color-palette-main-box"/>
@@ -214,26 +196,29 @@
   </object>
   <object class="GtkPopover" id="config-popup">
     <property name="relative-to">btn-menu</property>
-    <!-- n-columns=2 n-rows=8 -->
-    <child>
+    <property name="child">
       <object class="GtkGrid" id="main-grid">
         <property name="halign">start</property>
         <property name="valign">start</property>
-        <property name="margin">12</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-top">12</property>
+        <property name="margin-bottom">12</property>
         <property name="row-spacing">7</property>
         <property name="column-spacing">8</property>
         <child>
           <object class="GtkLabel">
             <property name="halign">start</property>
             <property name="label" translatable="yes">Tile size:</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">0</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkScale" id="border-slider">
+            <property name="draw-value">True</property>
             <property name="width-request">180</property>
             <property name="focusable">True</property>
             <property name="adjustment">adjustment-border</property>
@@ -242,24 +227,25 @@
             <property name="round-digits">0</property>
             <property name="digits">0</property>
             <property name="value-pos">right</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="halign">start</property>
             <property name="label" translatable="yes">Border:</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">3</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkScale" id="size-slider">
+            <property name="draw-value">True</property>
             <property name="focusable">True</property>
             <property name="adjustment">adjustment-size</property>
             <property name="show-fill-level">True</property>
@@ -267,24 +253,25 @@
             <property name="round-digits">0</property>
             <property name="digits">0</property>
             <property name="value-pos">right</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">0</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel" id="row-label">
             <property name="halign">start</property>
             <property name="label" translatable="yes">Rows:</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">4</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">4</property>
-          </packing>
         </child>
         <child>
           <object class="GtkScale" id="row-slider">
+            <property name="draw-value">True</property>
             <property name="width-request">180</property>
             <property name="focusable">True</property>
             <property name="adjustment">adjustment-rows</property>
@@ -293,71 +280,69 @@
             <property name="round-digits">0</property>
             <property name="digits">0</property>
             <property name="value-pos">right</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">4</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">4</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel" id="aspect-label">
             <property name="halign">start</property>
             <property name="label" translatable="yes">Aspect:</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">1</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkScale" id="aspect-slider">
+            <property name="draw-value">True</property>
             <property name="width-request">180</property>
             <property name="focusable">True</property>
             <property name="adjustment">adjustment-aspect</property>
             <property name="show-fill-level">True</property>
             <property name="fill-level">50</property>
             <property name="value-pos">right</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">1</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="use-sb">
             <property name="label" translatable="yes">Use scrollbar</property>
             <property name="focusable">True</property>
             <property name="halign">start</property>
-            <property name="draw-indicator">True</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">5</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">5</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="stretch">
             <property name="label" translatable="yes">Stretch to fill</property>
             <property name="focusable">True</property>
             <property name="halign">start</property>
-            <property name="draw-indicator">True</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">2</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="enlarge">
             <property name="label" translatable="yes">Enlarge pinned colors</property>
             <property name="focusable">True</property>
             <property name="halign">start</property>
-            <property name="draw-indicator">True</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">6</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">6</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="show-labels">
@@ -365,14 +350,13 @@
             <property name="focusable">True</property>
             <property name="halign">start</property>
             <property name="active">True</property>
-            <property name="draw-indicator">True</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">7</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">7</property>
-          </packing>
         </child>
       </object>
-    </child>
+    </property>
   </object>
 </interface>

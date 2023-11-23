@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkDialog" id="dialog">
@@ -8,113 +7,104 @@
     <property name="title" translatable="yes">Save Document as Template</property>
     <property name="type-hint">dialog</property>
     <child type="titlebar"/>
-    <child internal-child="vbox">
+    <child internal-child="content_area">
       <object class="GtkBox">
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkBox">
-            <property name="halign">end</property>
-          </object>
-          <packing>
-            <property name="fill">False</property>
-          </packing>
-        </child>
         <child>
           <object class="GtkGrid">
             <child>
               <object class="GtkLabel">
                 <property name="halign">start</property>
                 <property name="label" translatable="yes">Name: </property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="halign">start</property>
                 <property name="label" translatable="yes">Author: </property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">1</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="halign">start</property>
                 <property name="label" translatable="yes">Description: </property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">2</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
                 <property name="halign">start</property>
                 <property name="label" translatable="yes">Keywords: </property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">3</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">3</property>
-              </packing>
             </child>
             <child>
               <object class="GtkEntry" id="name">
                 <property name="focusable">True</property>
                 <property name="hexpand">True</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkEntry" id="author">
                 <property name="focusable">True</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">1</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkEntry" id="description">
                 <property name="focusable">True</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">2</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkEntry" id="keywords">
                 <property name="focusable">True</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">3</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">3</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="set-default">
             <property name="label" translatable="yes">Set as default template</property>
             <property name="focusable">True</property>
             <property name="halign">start</property>
-            <property name="draw-indicator">True</property>
           </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
         </child>
+      </object>
+    </child>
+    <child internal-child="action_area">
+      <object class="GtkBox">
+        <property name="valign">center</property>
+        <property name="halign">end</property>
       </object>
     </child>
   </object>

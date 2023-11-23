@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <!-- n-columns=3 n-rows=7 -->
   <object class="GtkGrid" id="main">
     <property name="row-spacing">4</property>
     <property name="column-spacing">4</property>
@@ -12,12 +10,12 @@
         <property name="valign">start</property>
         <property name="label" translatable="yes">&lt;b&gt;Image&lt;/b&gt;</property>
         <property name="use-markup">True</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">0</property>
+          <property name="column-span">2</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">0</property>
-        <property name="width">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
@@ -38,9 +36,6 @@
                 <property name="use-markup">True</property>
                 <property name="ellipsize">end</property>
               </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
         </child>
@@ -53,36 +48,33 @@ Linked&lt;/small&gt;</property>
             <property name="ellipsize">end</property>
             <property name="yalign">0</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">1</property>
+          <property name="column-span">2</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">1</property>
-        <property name="width">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
         <property name="halign">start</property>
         <property name="label" translatable="yes">URL:</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">2</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkEntry" id="href">
         <property name="focusable">True</property>
         <property name="hexpand">True</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">2</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="change-img">
@@ -94,11 +86,11 @@ Linked&lt;/small&gt;</property>
             <property name="icon-name">document-open</property>
           </object>
         </child>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">2</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">2</property>
-        <property name="top-attach">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
@@ -144,26 +136,22 @@ Linked&lt;/small&gt;</property>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="pack-type">end</property>
-            <property name="position">1</property>
-          </packing>
         </child>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
         <property name="halign">start</property>
         <property name="label" translatable="yes">Aspect ratio:</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">4</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
@@ -184,26 +172,23 @@ Linked&lt;/small&gt;</property>
             <property name="active">True</property>
             <property name="group">preserve</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">4</property>
+          <property name="column-span">2</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">4</property>
-        <property name="width">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
         <property name="halign">start</property>
         <property name="label" translatable="yes">Rendering:</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">5</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">5</property>
-      </packing>
     </child>
     <child>
       <object class="GtkComboBoxText" id="rendering">
@@ -215,12 +200,12 @@ Linked&lt;/small&gt;</property>
           <item id="3" translatable="yes">Crisp edges</item>
           <item id="4" translatable="yes">Pixelated</item>
         </items>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">5</property>
+          <property name="column-span">2</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">5</property>
-        <property name="width">2</property>
-      </packing>
     </child>
   </object>
 </interface>

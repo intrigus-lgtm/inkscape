@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="_mean_adj">
@@ -41,40 +40,36 @@
     <property name="page-increment">10</property>
   </object>
   <object class="GtkPopover" id="popover1">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box1">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover2">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box2">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover3">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box3">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="popover4">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box4">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkBox" id="spray-toolbar">
     <property name="halign">start</property>
@@ -85,7 +80,7 @@
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover1</property>
         <property name="icon-name">go-down</property>
       </object>
@@ -98,9 +93,6 @@
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="mode_buttons_box">
@@ -109,7 +101,7 @@
           <object class="GtkToggleButton" id="mode_buttons_group">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Spray copies of the initial selection</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="icon-name">spray-mode-copy</property>
           </object>
         </child>
@@ -117,65 +109,47 @@
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Spray clones of the initial selection</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">mode_buttons_group</property>
             <property name="icon-name">spray-mode-clone</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Spray objects in a single path</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">mode_buttons_group</property>
             <property name="icon-name">spray-mode-union</property>
           </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Delete sprayed items from selection</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">mode_buttons_group</property>
             <property name="icon-name">draw-eraser</property>
           </object>
-          <packing>
-            <property name="position">5</property>
-          </packing>
         </child>
         <style>
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn2">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover2</property>
         <property name="icon-name">go-down</property>
       </object>
-      <packing>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="width_box">
@@ -194,32 +168,23 @@
             <property name="adjustment">_width_adj</property>
             <property name="climb-rate">1</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="tag2"/>
         </style>
       </object>
-      <packing>
-        <property name="position">5</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="use_pressure_width_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of spray area</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">draw-use-pressure</property>
         <style>
           <class name="tag2"/>
         </style>
       </object>
-      <packing>
-        <property name="position">6</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="population_box">
@@ -238,39 +203,27 @@
             <property name="adjustment">_population_adj</property>
             <property name="climb-rate">1</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="tag2"/>
         </style>
       </object>
-      <packing>
-        <property name="position">7</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="use_pressure_population_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of spray area</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">draw-use-pressure</property>
         <style>
           <class name="tag2"/>
         </style>
       </object>
-      <packing>
-        <property name="position">8</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">9</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="_rotation_box">
@@ -288,14 +241,8 @@
             <property name="adjustment">_rotation_adj</property>
             <property name="climb-rate">0.10</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">10</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="scale_box">
@@ -313,33 +260,21 @@
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">11</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_use_pressure_scale_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the scale of new items</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">draw-use-pressure</property>
       </object>
-      <packing>
-        <property name="position">12</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">13</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="sd_box">
@@ -357,14 +292,8 @@
             <property name="adjustment">_sd_adj</property>
             <property name="climb-rate">1</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">14</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="mean_box">
@@ -382,94 +311,70 @@
             <property name="adjustment">_mean_adj</property>
             <property name="climb-rate">1</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">15</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">16</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn3">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover3</property>
         <property name="icon-name">go-down</property>
       </object>
-      <packing>
-        <property name="position">17</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_over_no_transparent_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Apply over no transparent areas</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">object-visible</property>
         <style>
           <class name="tag3"/>
         </style>
       </object>
-      <packing>
-        <property name="position">18</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_over_transparent_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Apply over transparent areas</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">object-hidden</property>
         <style>
           <class name="tag3"/>
         </style>
       </object>
-      <packing>
-        <property name="position">19</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_pick_no_overlap_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">No overlap between colors</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">symbol-bigger</property>
         <style>
           <class name="tag3"/>
         </style>
       </object>
-      <packing>
-        <property name="position">20</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_no_overlap_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Prevent overlapping objects</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">distribute-randomize</property>
         <style>
           <class name="tag3"/>
         </style>
       </object>
-      <packing>
-        <property name="position">21</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="_offset_box">
@@ -487,109 +392,82 @@
             <property name="adjustment">_mean_adj</property>
             <property name="climb-rate">1</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">22</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">23</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn4">
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover4</property>
         <property name="icon-name">go-down</property>
       </object>
-      <packing>
-        <property name="position">24</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_picker_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Pick color from the drawing. You can use clonetiler trace dialog for advanced effects. In clone mode original fill or stroke colors must be unset.</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <style>
           <class name="tag4"/>
         </style>
         <property name="icon-name">color-picker</property>
       </object>
-      <packing>
-        <property name="position">27</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_pick_fill_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Apply picked color to fill</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">paint-solid</property>
         <style>
           <class name="tag4"/>
         </style>
       </object>
-      <packing>
-        <property name="position">28</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_pick_stroke_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Apply picked color to stroke</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">no-marker</property>
         <style>
           <class name="tag4"/>
         </style>
       </object>
-      <packing>
-        <property name="position">29</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_pick_inverse_value_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Inverted pick value, retaining color in advanced trace mode</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">object-tweak-shrink</property>
         <style>
           <class name="tag4"/>
         </style>
       </object>
-      <packing>
-        <property name="position">30</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_pick_center_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Pick from center instead of average area.</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">snap-bounding-box-center</property>
         <style>
           <class name="tag4"/>
         </style>
       </object>
-      <packing>
-        <property name="position">31</property>
-      </packing>
     </child>
     <style>
       <class name="toolbar"/>

@@ -1,39 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkPopover" id="gen-settings">
     <property name="width-request">300</property>
-    <property name="margin">5</property>
+    <property name="margin-start">5</property>
+    <property name="margin-end">5</property>
+    <property name="margin-top">5</property>
+    <property name="margin-bottom">5</property>
   </object>
   <object class="GtkPopover" id="filters-popover">
     <property name="width-request">300</property>
     <property name="height-request">350</property>
-    <child>
+    <property name="child">
       <object class="GtkBox">
         <property name="orientation">vertical</property>
-        <property name="margin">5</property>
+        <property name="margin-start">5</property>
+        <property name="margin-end">5</property>
+        <property name="margin-top">5</property>
+        <property name="margin-bottom">5</property>
         <property name="spacing">3</property>
         <child>
           <object class="GtkScrolledWindow" id="filter-wnd">
+            <property name="vexpand">True</property>
             <property name="focusable">True</property>
-            <property name="has-frame">true</property>
-            <child>
+            <property name="has-frame">True</property>
+            <property name="child">
               <object class="GtkViewport">
-                <child>
+                <property name="child">
                   <object class="GtkTreeView" id="filter-list">
                     <property name="enable-search">False</property>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection"/>
                     </child>
                   </object>
-                </child>
+                </property>
               </object>
-            </child>
+            </property>
           </object>
-          <packing>
-            <property name="expand">True</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
@@ -42,7 +45,7 @@
                 <property name="focusable">True</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Create a new filter</property>
-                <property name="has-frame">false</property>
+                <property name="has-frame">False</property>
                 <child>
                   <object class="GtkImage" id="image-new-2">
                     <property name="icon-name">list-add</property>
@@ -55,58 +58,47 @@
                 <property name="focusable">True</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Duplicate current filter</property>
-                <property name="has-frame">false</property>
+                <property name="has-frame">False</property>
                 <child>
                   <object class="GtkImage" id="image-dup-2">
                     <property name="icon-name">edit-duplicate</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="btn-del">
                 <property name="focusable">True</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Delete current filter</property>
-                <property name="has-frame">false</property>
+                <property name="has-frame">False</property>
                 <child>
                   <object class="GtkImage" id="image-del">
                     <property name="icon-name">edit-delete</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="position">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSeparator">
               </object>
-              <packing>
-                <property name="position">3</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="btn-select">
                 <property name="focusable">True</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Select objects that use this filter</property>
-                <property name="has-frame">false</property>
+                <property name="has-frame">False</property>
                 <child>
                   <object class="GtkImage" id="image-select">
                     <property name="icon-name">object-select</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="position">4</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSearchEntry" id="stock-filters">
+                <property name="hexpand">True</property>
                 <property name="focusable">True</property>
                 <property name="margin-start">8</property>
                 <property name="width-chars">3</property>
@@ -116,36 +108,30 @@
                 <property name="primary-icon-sensitive">False</property>
                 <property name="placeholder-text" translatable="yes">Add stock filter</property>
               </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="pack-type">end</property>
-                <property name="position">6</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkPopover" id="info-popover">
     <property name="width-request">300</property>
-    <!-- n-columns=2 n-rows=4 -->
-    <child>
+    <property name="child">
       <object class="GtkGrid">
-        <property name="margin">5</property>
+        <property name="margin-start">5</property>
+        <property name="margin-end">5</property>
+        <property name="margin-top">5</property>
+        <property name="margin-bottom">5</property>
         <property name="column-spacing">5</property>
         <child>
           <object class="GtkImage" id="effect-icon">
             <property name="icon-name">effect</property>
             <property name="icon-size">large</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">0</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkTextView" id="effect-info">
@@ -154,11 +140,11 @@
             <property name="wrap-mode">word</property>
             <property name="cursor-visible">False</property>
             <property name="accepts-tab">False</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">0</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkTextView" id="effect-desc">
@@ -169,30 +155,29 @@
             <property name="indent">8</property>
             <property name="cursor-visible">False</property>
             <property name="accepts-tab">False</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">2</property>
+              <property name="column-span">2</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">2</property>
-            <property name="width">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkImage" id="effect-image">
             <property name="icon-name">image-missing</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">1</property>
+              <property name="column-span">2</property>
+            </layout>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-            <property name="width">2</property>
-          </packing>
         </child>
       </object>
-    </child>
+    </property>
     <style>
       <class name="filter-effects-info"/>
     </style>
   </object>
-  <!-- n-columns=3 n-rows=4 -->
   <object class="GtkGrid" id="main">
     <property name="margin-top">3</property>
     <property name="row-spacing">4</property>
@@ -204,7 +189,6 @@
             <property name="label" translatable="yes">Filter</property>
             <property name="tooltip-text" translatable="yes">Apply filter to selection</property>
             <property name="margin-end">5</property>
-            <property name="draw-indicator">True</property>
             <style>
               <class name="dialog-heading"/>
             </style>
@@ -212,6 +196,7 @@
         </child>
         <child>
           <object class="GtkMenuButton">
+            <property name="hexpand">True</property>
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
@@ -220,14 +205,12 @@
               <object class="GtkBox">
                 <child>
                   <object class="GtkLabel" id="filter-name">
+                    <property name="hexpand">True</property>
                     <property name="halign">start</property>
                     <property name="label" translatable="yes">-</property>
                     <property name="ellipsize">end</property>
                     <property name="single-line-mode">True</property>
                   </object>
-                  <packing>
-                    <property name="expand">True</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkImage">
@@ -236,23 +219,16 @@
                       <class name="arrow"/>
                     </style>
                   </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">0</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
@@ -261,7 +237,7 @@
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Create a new filter</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <child>
               <object class="GtkImage" id="image-new">
                 <property name="icon-name">list-add</property>
@@ -275,7 +251,7 @@
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">General filter parameters</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="popover">gen-settings</property>
             <child>
               <object class="GtkImage">
@@ -283,47 +259,43 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">0</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkPaned" id="paned">
+        <property name="shrink-end-child">0</property>
+        <property name="shrink-start-child">0</property>
         <property name="focusable">True</property>
         <property name="vexpand">True</property>
         <property name="orientation">vertical</property>
         <property name="position">200</property>
-        <child>
+        <property name="start-child">
           <object class="GtkScrolledWindow" id="filter">
             <property name="margin-bottom">2</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
-            <property name="has-frame">true</property>
+            <property name="has-frame">True</property>
             <property name="propagate-natural-height">True</property>
             <style>
               <class name="filter-effects"/>
             </style>
           </object>
-          <packing>
-            <property name="shrink">False</property>
-          </packing>
-        </child>
-        <child>
+        </property>
+        <property name="end-child">
           <object class="GtkScrolledWindow" id="params-wnd">
             <property name="focusable">True</property>
             <property name="hscrollbar-policy">never</property>
             <property name="min-content-height">50</property>
             <property name="overlay-scrolling">False</property>
             <property name="propagate-natural-height">True</property>
-            <child>
+            <property name="child">
               <object class="GtkViewport">
-                <child>
+                <property name="child">
                   <object class="GtkBox" id="params">
                     <property name="margin-start">5</property>
                     <property name="margin-end">5</property>
@@ -346,9 +318,9 @@
                             <property name="focusable">True</property>
                             <property name="focus-on-click">False</property>
                             <property name="receives-default">True</property>
-                            <property name="margin-left">5</property>
                             <property name="margin-start">5</property>
-                            <property name="has-frame">false</property>
+                            <property name="margin-start">5</property>
+                            <property name="has-frame">False</property>
                             <property name="popover">info-popover</property>
                             <property name="tooltip-text">View information about the effect</property>
                             <child>
@@ -357,62 +329,50 @@
                               </object>
                             </child>
                           </object>
-                          <packing>
-                            <property name="position">2</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkButton" id="dup-btn">
                             <property name="focusable">True</property>
                             <property name="receives-default">True</property>
                             <property name="tooltip-text" translatable="yes">Duplicate effect</property>
-                            <property name="has-frame">false</property>
+                            <property name="has-frame">False</property>
                             <child>
                               <object class="GtkImage" id="image-dup">
                                 <property name="icon-name">edit-duplicate</property>
                               </object>
                             </child>
                           </object>
-                          <packing>
-                            <property name="position">3</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkButton" id="del-btn">
                             <property name="focusable">True</property>
                             <property name="receives-default">True</property>
                             <property name="tooltip-text" translatable="yes">Remove effect</property>
-                            <property name="has-frame">false</property>
+                            <property name="has-frame">False</property>
                             <child>
                               <object class="GtkImage" id="image-delete">
                                 <property name="icon-name">edit-delete</property>
                               </object>
                             </child>
                           </object>
-                          <packing>
-                            <property name="position">4</property>
-                          </packing>
                         </child>
                       </object>
                     </child>
                   </object>
-                </child>
+                </property>
               </object>
-            </child>
+            </property>
             <style>
               <class name="effect-params"/>
             </style>
           </object>
-          <packing>
-            <property name="shrink">False</property>
-          </packing>
-        </child>
+        </property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">2</property>
+          <property name="column-span">2</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">2</property>
-        <property name="width">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="search-wide">
@@ -421,16 +381,12 @@
           <object class="GtkBox" id="connect-box-wide">
             <property name="halign">end</property>
           </object>
-          <packing>
-            <property name="pack-type">end</property>
-            <property name="position">1</property>
-          </packing>
         </child>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">0</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">2</property>
-        <property name="top-attach">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="connect-box">
@@ -441,7 +397,7 @@
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Show all filter input sources</property>
             <property name="halign">end</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <child>
               <object class="GtkImage" id="image-connect">
                 <property name="icon-name">show-sources</property>
@@ -449,19 +405,19 @@
             </child>
           </object>
         </child>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="search">
+        <layout>
+          <property name="column">0</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
   </object>
   <object class="GtkSizeGroup" id="param-labels">

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkWindow" id="ControlWindow">
     <property name="resizable">False</property>
-    <child>
+    <property name="child">
       <object class="GtkBox">
         <property name="homogeneous">True</property>
         <child>
@@ -46,6 +47,6 @@
           </object>
         </child>
       </object>
-    </child>
+    </property>
   </object>
 </interface>

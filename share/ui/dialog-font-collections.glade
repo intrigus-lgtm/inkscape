@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkBox" id="contents">
@@ -30,19 +29,17 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
     </child>
     <child>
       <object class="GtkPaned" id="paned">
+        <property name="resize-end-child">0</property>
         <property name="focusable">True</property>
         <property name="vexpand">True</property>
         <property name="position">250</property>
         <property name="wide-handle">True</property>
-        <child>
+        <property name="start-child">
           <object class="GtkBox" id="font_list_box">
             <property name="orientation">vertical</property>
             <child>
@@ -52,8 +49,8 @@
               </object>
             </child>
           </object>
-        </child>
-        <child>
+        </property>
+        <property name="end-child">
           <object class="GtkBox" id="collections_box">
             <property name="margin-start">8</property>
             <property name="orientation">vertical</property>
@@ -75,9 +72,6 @@
                     <property name="tooltip-text" translatable="yes">Edit selected collection</property>
                     <property name="margin-start">2</property>
                   </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton" id="delete_button">
@@ -86,24 +80,12 @@
                     <property name="tooltip-text" translatable="yes">Delete selected item</property>
                     <property name="margin-start">2</property>
                   </object>
-                  <packing>
-                    <property name="position">2</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="resize">False</property>
-          </packing>
-        </child>
+        </property>
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
     </child>
   </object>
 </interface>

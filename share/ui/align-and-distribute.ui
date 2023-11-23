@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkListStore" id="RelativeToNode">
     <columns>
-      <!-- column-name RelativeTo -->
       <column type="gchararray"/>
-      <!-- column-name Argument -->
       <column type="gchararray"/>
     </columns>
     <data>
@@ -34,9 +31,7 @@
   </object>
   <object class="GtkListStore" id="RelativeToObject">
     <columns>
-      <!-- column-name RelativeTo -->
       <column type="gchararray"/>
-      <!-- column-name Argument -->
       <column type="gchararray"/>
     </columns>
     <data>
@@ -84,7 +79,10 @@
   </object>
   <object class="GtkBox" id="align-and-distribute-box">
     <property name="name">align-and-distribute-box</property>
-    <property name="margin">8</property>
+    <property name="margin-start">8</property>
+    <property name="margin-end">8</property>
+    <property name="margin-top">8</property>
+    <property name="margin-bottom">8</property>
     <property name="orientation">vertical</property>
     <property name="spacing">4</property>
     <child>
@@ -98,17 +96,16 @@
             <style>
               <class name="flat"/>
             </style>
-            <child>
+            <property name="child">
               <object class="GtkBox">
                 <property name="orientation">vertical</property>
-                <!-- n-columns=2 n-rows=2 -->
                 <child>
                   <object class="GtkGrid">
                     <child>
                       <object class="GtkToggleButton" id="align-on-canvas">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Enable on-canvas alignment handles</property>
                         <property name="action-name">app.object-align-on-canvas</property>
                         <child>
@@ -116,17 +113,17 @@
                             <property name="icon-name">align-on-canvas</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">0</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">0</property>
-                        <property name="top-attach">0</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkToggleButton" id="align-move-as-group">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Treat selection as group</property>
                         <child>
                           <object class="GtkImage" id="image-align-sel-as-group">
@@ -134,33 +131,33 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">1</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">0</property>
-                        <property name="top-attach">1</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkLabel">
                         <property name="margin-start">4</property>
                         <property name="label" translatable="yes">Alignment handles with third click</property>
                         <property name="xalign">0</property>
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="row">0</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">1</property>
-                        <property name="top-attach">0</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkLabel">
                         <property name="margin-start">4</property>
                         <property name="label" translatable="yes">Move/align selection as group</property>
                         <property name="xalign">0</property>
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="row">1</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">1</property>
-                        <property name="top-attach">1</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
@@ -187,14 +184,13 @@
                     </child>
                   </object>
                 </child>
-                <!-- n-columns=6 n-rows=2 -->
                 <child>
                   <object class="GtkGrid">
                     <child>
                       <object class="GtkButton" id="align-horizontal-right-to-anchor">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Align right edges of objects to the left edge of anchor</property>
                         <child>
                           <object class="GtkImage" id="image-align-horizontal-right-to-anchor">
@@ -202,17 +198,17 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">0</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">0</property>
-                        <property name="top-attach">0</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkButton" id="align-horizontal-left">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Align left edges</property>
                         <child>
                           <object class="GtkImage" id="image-align-horizontal-left">
@@ -220,17 +216,17 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="row">0</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">1</property>
-                        <property name="top-attach">0</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkButton" id="align-horizontal-center">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Center on vertical axis</property>
                         <child>
                           <object class="GtkImage" id="image-align-horizontal-center">
@@ -238,17 +234,17 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">2</property>
+                          <property name="row">0</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">2</property>
-                        <property name="top-attach">0</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkButton" id="align-horizontal-right">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Align right edges</property>
                         <child>
                           <object class="GtkImage" id="image-align-horizontal-right">
@@ -256,17 +252,17 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">3</property>
+                          <property name="row">0</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">3</property>
-                        <property name="top-attach">0</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkButton" id="align-horizontal-left-to-anchor">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Align left edges of objects to the right edge of anchor</property>
                         <child>
                           <object class="GtkImage" id="image-align-horizontal-left-to-anchor">
@@ -274,17 +270,17 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">4</property>
+                          <property name="row">0</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">4</property>
-                        <property name="top-attach">0</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkButton" id="align-horizontal-baseline">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Align text anchors horizontally</property>
                         <child>
                           <object class="GtkImage" id="image-align-horizontal-baseline">
@@ -292,17 +288,17 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">5</property>
+                          <property name="row">0</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">5</property>
-                        <property name="top-attach">0</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkButton" id="align-vertical-bottom-to-anchor">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Align bottom edges of objects to the top edge of anchor</property>
                         <child>
                           <object class="GtkImage" id="image-align-vertical-bottom-to-anchor">
@@ -310,17 +306,17 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">1</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">0</property>
-                        <property name="top-attach">1</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkButton" id="align-vertical-top">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Align top edges</property>
                         <child>
                           <object class="GtkImage" id="image-align-vertical-top">
@@ -328,17 +324,17 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="row">1</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">1</property>
-                        <property name="top-attach">1</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkButton" id="align-vertical-center">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Center on horizontal axis</property>
                         <child>
                           <object class="GtkImage" id="image-align-vertical-center">
@@ -346,17 +342,17 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">2</property>
+                          <property name="row">1</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">2</property>
-                        <property name="top-attach">1</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkButton" id="align-vertical-bottom">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Align bottom edges</property>
                         <child>
                           <object class="GtkImage" id="image-align-vertical-bottom">
@@ -364,17 +360,17 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">3</property>
+                          <property name="row">1</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">3</property>
-                        <property name="top-attach">1</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkButton" id="align-vertical-top-to-anchor">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Align top edges of objects to bottom edge of anchor</property>
                         <child>
                           <object class="GtkImage" id="image-align-vertical-top-to-anchor">
@@ -382,17 +378,17 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">4</property>
+                          <property name="row">1</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">4</property>
-                        <property name="top-attach">1</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkButton" id="align-vertical-baseline">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Align text anchors vertically</property>
                         <child>
                           <object class="GtkImage" id="image-align-vertical-baseline">
@@ -400,23 +396,23 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">5</property>
+                          <property name="row">1</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">5</property>
-                        <property name="top-attach">1</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
               </object>
-            </child>
+            </property>
             <child type="label">
               <object class="GtkLabel">
                 <property name="margin-top">2</property>
                 <property name="margin-bottom">2</property>
                 <property name="label" translatable="yes">Align</property>
                 <attributes>
-                  <attribute name="weight" value="bold"/>
+                  <attribute name="weight" value="bold"></attribute>
                 </attributes>
               </object>
             </child>
@@ -428,8 +424,7 @@
             <style>
               <class name="flat"/>
             </style>
-            <!-- n-columns=5 n-rows=2 -->
-            <child>
+            <property name="child">
               <object class="GtkGrid">
                 <child>
                   <object class="GtkButton">
@@ -437,7 +432,7 @@
                     <property name="receives-default">True</property>
                     <property name="action-name">app.object-distribute</property>
                     <property name="action-target">'left'</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="tooltip-text" translatable="yes">Distribute horizontally with even spacing between left edges</property>
                     <child>
                       <object class="GtkImage" id="image-distribute-horizontal-left">
@@ -445,11 +440,11 @@
                         <property name="use-fallback">True</property>
                       </object>
                     </child>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="row">0</property>
+                    </layout>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton">
@@ -457,7 +452,7 @@
                     <property name="receives-default">True</property>
                     <property name="action-name">app.object-distribute</property>
                     <property name="action-target">'hcenter'</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="tooltip-text" translatable="yes">Distribute horizontally with even spacing between centers</property>
                     <child>
                       <object class="GtkImage" id="image-distribute-horizontal-center">
@@ -465,11 +460,11 @@
                         <property name="use-fallback">True</property>
                       </object>
                     </child>
+                    <layout>
+                      <property name="column">1</property>
+                      <property name="row">0</property>
+                    </layout>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton">
@@ -477,7 +472,7 @@
                     <property name="receives-default">True</property>
                     <property name="action-name">app.object-distribute</property>
                     <property name="action-target">'right'</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="tooltip-text" translatable="yes">Distribute horizontally with even spacing between right edges</property>
                     <child>
                       <object class="GtkImage" id="image-distribute-horizontal-right">
@@ -485,11 +480,11 @@
                         <property name="use-fallback">True</property>
                       </object>
                     </child>
+                    <layout>
+                      <property name="column">2</property>
+                      <property name="row">0</property>
+                    </layout>
                   </object>
-                  <packing>
-                    <property name="left-attach">2</property>
-                    <property name="top-attach">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton">
@@ -497,7 +492,7 @@
                     <property name="receives-default">True</property>
                     <property name="action-name">app.object-distribute</property>
                     <property name="action-target">'hgap'</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="tooltip-text" translatable="yes">Distribute horizontally with even horizontal gaps</property>
                     <child>
                       <object class="GtkImage" id="image-distribute-horizontal-gaps">
@@ -505,11 +500,11 @@
                         <property name="use-fallback">True</property>
                       </object>
                     </child>
+                    <layout>
+                      <property name="column">3</property>
+                      <property name="row">0</property>
+                    </layout>
                   </object>
-                  <packing>
-                    <property name="left-attach">3</property>
-                    <property name="top-attach">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton">
@@ -517,7 +512,7 @@
                     <property name="receives-default">True</property>
                     <property name="action-name">app.object-distribute-text</property>
                     <property name="action-target">'horizontal'</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="tooltip-text" translatable="yes">Distribute text anchors horizontally</property>
                     <child>
                       <object class="GtkImage" id="image-distribute-horizontal-baseline">
@@ -525,11 +520,11 @@
                         <property name="use-fallback">True</property>
                       </object>
                     </child>
+                    <layout>
+                      <property name="column">4</property>
+                      <property name="row">0</property>
+                    </layout>
                   </object>
-                  <packing>
-                    <property name="left-attach">4</property>
-                    <property name="top-attach">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton">
@@ -537,7 +532,7 @@
                     <property name="receives-default">True</property>
                     <property name="action-name">app.object-distribute</property>
                     <property name="action-target">'top'</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="tooltip-text" translatable="yes">Distribute vertically with even spacing between top edges</property>
                     <child>
                       <object class="GtkImage" id="image-distribute-vertical-top">
@@ -545,11 +540,11 @@
                         <property name="use-fallback">True</property>
                       </object>
                     </child>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="row">1</property>
+                    </layout>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton">
@@ -557,7 +552,7 @@
                     <property name="receives-default">True</property>
                     <property name="action-name">app.object-distribute</property>
                     <property name="action-target">'vcenter'</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="tooltip-text" translatable="yes">Distribute vertically with even spacing between centers</property>
                     <child>
                       <object class="GtkImage" id="image-distribute-vertical-center">
@@ -565,11 +560,11 @@
                         <property name="use-fallback">True</property>
                       </object>
                     </child>
+                    <layout>
+                      <property name="column">1</property>
+                      <property name="row">1</property>
+                    </layout>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton">
@@ -577,7 +572,7 @@
                     <property name="receives-default">True</property>
                     <property name="action-name">app.object-distribute</property>
                     <property name="action-target">'bottom'</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="tooltip-text" translatable="yes">Distribute vertically with even spacing between bottom edges</property>
                     <child>
                       <object class="GtkImage" id="image-distribute-vertical-bottom">
@@ -585,11 +580,11 @@
                         <property name="use-fallback">True</property>
                       </object>
                     </child>
+                    <layout>
+                      <property name="column">2</property>
+                      <property name="row">1</property>
+                    </layout>
                   </object>
-                  <packing>
-                    <property name="left-attach">2</property>
-                    <property name="top-attach">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton">
@@ -597,7 +592,7 @@
                     <property name="receives-default">True</property>
                     <property name="action-name">app.object-distribute</property>
                     <property name="action-target">'vgap'</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="tooltip-text" translatable="yes">Distribute vertically with even vertical gaps</property>
                     <child>
                       <object class="GtkImage" id="image-distribute-vertical-gaps">
@@ -605,11 +600,11 @@
                         <property name="use-fallback">True</property>
                       </object>
                     </child>
+                    <layout>
+                      <property name="column">3</property>
+                      <property name="row">1</property>
+                    </layout>
                   </object>
-                  <packing>
-                    <property name="left-attach">3</property>
-                    <property name="top-attach">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton">
@@ -617,7 +612,7 @@
                     <property name="receives-default">True</property>
                     <property name="action-name">app.object-distribute-text</property>
                     <property name="action-target">'vertical'</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="tooltip-text" translatable="yes">Distribute text anchors vertically</property>
                     <child>
                       <object class="GtkImage" id="image-distribute-vertical-baseline">
@@ -625,21 +620,21 @@
                         <property name="use-fallback">True</property>
                       </object>
                     </child>
+                    <layout>
+                      <property name="column">4</property>
+                      <property name="row">1</property>
+                    </layout>
                   </object>
-                  <packing>
-                    <property name="left-attach">4</property>
-                    <property name="top-attach">1</property>
-                  </packing>
                 </child>
               </object>
-            </child>
+            </property>
             <child type="label">
               <object class="GtkLabel">
                 <property name="margin-top">2</property>
                 <property name="margin-bottom">2</property>
                 <property name="label" translatable="yes">Distribute</property>
                 <attributes>
-                  <attribute name="weight" value="bold"/>
+                  <attribute name="weight" value="bold"></attribute>
                 </attributes>
               </object>
             </child>
@@ -651,8 +646,7 @@
             <style>
               <class name="flat"/>
             </style>
-            <!-- n-columns=6 n-rows=1 -->
-            <child>
+            <property name="child">
               <object class="GtkGrid">
                 <child>
                   <object class="GtkButton">
@@ -660,7 +654,7 @@
                     <property name="receives-default">True</property>
                     <property name="action-name">app.object-rearrange</property>
                     <property name="action-target">'graph'</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="tooltip-text" translatable="yes">Nicely arrange selected connector network</property>
                     <child>
                       <object class="GtkImage" id="image-distribute-graph">
@@ -668,11 +662,11 @@
                         <property name="use-fallback">True</property>
                       </object>
                     </child>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="row">0</property>
+                    </layout>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton">
@@ -680,7 +674,7 @@
                     <property name="receives-default">True</property>
                     <property name="action-name">app.object-rearrange</property>
                     <property name="action-target">'exchange'</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="tooltip-text" translatable="yes">Exchange positions of selected objects - selection order</property>
                     <child>
                       <object class="GtkImage" id="image-exchange-positions">
@@ -688,11 +682,11 @@
                         <property name="use-fallback">True</property>
                       </object>
                     </child>
+                    <layout>
+                      <property name="column">1</property>
+                      <property name="row">0</property>
+                    </layout>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton">
@@ -700,7 +694,7 @@
                     <property name="receives-default">True</property>
                     <property name="action-name">app.object-rearrange</property>
                     <property name="action-target">'exchangez'</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="tooltip-text" translatable="yes">Exchange positions of selected objects - stacking order</property>
                     <child>
                       <object class="GtkImage" id="image-exchange-positions-zorder">
@@ -708,11 +702,11 @@
                         <property name="use-fallback">True</property>
                       </object>
                     </child>
+                    <layout>
+                      <property name="column">2</property>
+                      <property name="row">0</property>
+                    </layout>
                   </object>
-                  <packing>
-                    <property name="left-attach">2</property>
-                    <property name="top-attach">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton">
@@ -720,7 +714,7 @@
                     <property name="receives-default">True</property>
                     <property name="action-name">app.object-rearrange</property>
                     <property name="action-target">'rotate'</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="tooltip-text" translatable="yes">Exchange positions of selected objects - rotate around center point</property>
                     <child>
                       <object class="GtkImage" id="image-exchange-positions-clockwise">
@@ -728,11 +722,11 @@
                         <property name="use-fallback">True</property>
                       </object>
                     </child>
+                    <layout>
+                      <property name="column">3</property>
+                      <property name="row">0</property>
+                    </layout>
                   </object>
-                  <packing>
-                    <property name="left-attach">3</property>
-                    <property name="top-attach">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton">
@@ -740,7 +734,7 @@
                     <property name="receives-default">True</property>
                     <property name="action-name">app.object-rearrange</property>
                     <property name="action-target">'randomize'</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="tooltip-text" translatable="yes">Randomize centers in both dimensions</property>
                     <child>
                       <object class="GtkImage" id="image-distribute-randomize">
@@ -748,11 +742,11 @@
                         <property name="use-fallback">True</property>
                       </object>
                     </child>
+                    <layout>
+                      <property name="column">4</property>
+                      <property name="row">0</property>
+                    </layout>
                   </object>
-                  <packing>
-                    <property name="left-attach">4</property>
-                    <property name="top-attach">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton">
@@ -760,7 +754,7 @@
                     <property name="receives-default">True</property>
                     <property name="action-name">app.object-rearrange</property>
                     <property name="action-target">'unclump'</property>
-                    <property name="has-frame">false</property>
+                    <property name="has-frame">False</property>
                     <property name="tooltip-text" translatable="yes">Unclump objects: try to equalize edge-to-edge distances</property>
                     <child>
                       <object class="GtkImage" id="image-distribute-unclump">
@@ -768,21 +762,21 @@
                         <property name="use-fallback">True</property>
                       </object>
                     </child>
+                    <layout>
+                      <property name="column">5</property>
+                      <property name="row">0</property>
+                    </layout>
                   </object>
-                  <packing>
-                    <property name="left-attach">5</property>
-                    <property name="top-attach">0</property>
-                  </packing>
                 </child>
               </object>
-            </child>
+            </property>
             <child type="label">
               <object class="GtkLabel">
                 <property name="margin-top">2</property>
                 <property name="margin-bottom">2</property>
                 <property name="label" translatable="yes">Rearrange</property>
                 <attributes>
-                  <attribute name="weight" value="bold"/>
+                  <attribute name="weight" value="bold"></attribute>
                 </attributes>
               </object>
             </child>
@@ -795,9 +789,12 @@
         <style>
           <class name="flat"/>
         </style>
-        <child>
+        <property name="child">
           <object class="GtkBox">
-            <property name="margin">4</property>
+            <property name="margin-start">4</property>
+            <property name="margin-end">4</property>
+            <property name="margin-top">4</property>
+            <property name="margin-bottom">4</property>
             <property name="spacing">4</property>
             <child>
               <object class="GtkLabel">
@@ -831,7 +828,7 @@
                 <property name="focusable">True</property>
                 <property name="receives-default">True</property>
                 <property name="margin-start">4</property>
-                <property name="has-frame">false</property>
+                <property name="has-frame">False</property>
                 <property name="tooltip-text" translatable="yes">Move objects as little as possible so that their bounding boxes do not overlap</property>
                 <child>
                   <object class="GtkImage" id="image-distribute-remove-overlaps">
@@ -842,14 +839,14 @@
               </object>
             </child>
           </object>
-        </child>
+        </property>
         <child type="label">
           <object class="GtkLabel">
             <property name="margin-top">2</property>
             <property name="margin-bottom">2</property>
             <property name="label" translatable="yes">Remove overlaps</property>
             <attributes>
-              <attribute name="weight" value="bold"/>
+              <attribute name="weight" value="bold"></attribute>
             </attributes>
           </object>
         </child>
@@ -858,7 +855,6 @@
     <child>
       <object class="GtkBox" id="align-and-distribute-node">
         <property name="name">align-and-distribute-node</property>
-        <property name="visible">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">4</property>
         <child>
@@ -867,7 +863,7 @@
             <style>
               <class name="flat"/>
             </style>
-            <child>
+            <property name="child">
               <object class="GtkBox">
                 <property name="orientation">vertical</property>
                 <child>
@@ -893,14 +889,13 @@
                     </child>
                   </object>
                 </child>
-                <!-- n-columns=2 n-rows=1 -->
                 <child>
                   <object class="GtkGrid">
                     <child>
                       <object class="GtkButton" id="align-node-horizontal">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Align selected nodes to a common horizontal line</property>
                         <child>
                           <object class="GtkImage" id="image-align-vertical-node">
@@ -908,17 +903,17 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">0</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">0</property>
-                        <property name="top-attach">0</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkButton" id="align-node-vertical">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Align selected nodes to a common vertical line</property>
                         <child>
                           <object class="GtkImage" id="image-align-horizontal-node">
@@ -926,23 +921,23 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="row">0</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">1</property>
-                        <property name="top-attach">0</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
               </object>
-            </child>
+            </property>
             <child type="label">
               <object class="GtkLabel">
                 <property name="margin-top">2</property>
                 <property name="margin-bottom">2</property>
                 <property name="label" translatable="yes">Align Nodes</property>
                 <attributes>
-                  <attribute name="weight" value="bold"/>
+                  <attribute name="weight" value="bold"></attribute>
                 </attributes>
               </object>
             </child>
@@ -953,10 +948,9 @@
             <style>
               <class name="flat"/>
             </style>
-            <child>
+            <property name="child">
               <object class="GtkBox">
                 <property name="orientation">vertical</property>
-                <!-- n-columns=2 n-rows=1 -->
                 <child>
                   <object class="GtkGrid">
                     <child>
@@ -964,7 +958,7 @@
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
                         <property name="action-name">win.node-distribute-horizontal</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Distribute selected nodes horizontally</property>
                         <child>
                           <object class="GtkImage" id="image-distribute-horizontal-node">
@@ -972,18 +966,18 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">0</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">0</property>
-                        <property name="top-attach">0</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkButton">
                         <property name="focusable">True</property>
                         <property name="receives-default">True</property>
                         <property name="action-name">win.node-distribute-vertical</property>
-                        <property name="has-frame">false</property>
+                        <property name="has-frame">False</property>
                         <property name="tooltip-text" translatable="yes">Distribute selected nodes vertically</property>
                         <child>
                           <object class="GtkImage" id="image-distribute-vertical-node">
@@ -991,23 +985,23 @@
                             <property name="use-fallback">True</property>
                           </object>
                         </child>
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="row">0</property>
+                        </layout>
                       </object>
-                      <packing>
-                        <property name="left-attach">1</property>
-                        <property name="top-attach">0</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
               </object>
-            </child>
+            </property>
             <child type="label">
               <object class="GtkLabel">
                 <property name="margin-top">2</property>
                 <property name="margin-bottom">2</property>
                 <property name="label" translatable="yes">Distribute Nodes</property>
                 <attributes>
-                  <attribute name="weight" value="bold"/>
+                  <attribute name="weight" value="bold"></attribute>
                 </attributes>
               </object>
             </child>

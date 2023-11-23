@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkBox" id="LPEContainer">
@@ -12,8 +11,8 @@
     <child>
       <object class="GtkBox" id="LPEAddContainer">
         <property name="name">LPEAddContainer</property>
-        <property name="margin-left">5</property>
-        <property name="margin-right">5</property>
+        <property name="margin-start">5</property>
+        <property name="margin-end">5</property>
         <property name="margin-start">5</property>
         <property name="margin-end">5</property>
         <property name="margin-bottom">5</property>
@@ -24,22 +23,16 @@
         <property name="name">LPECurrentItem</property>
         <property name="orientation">vertical</property>
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel" id="LPESelectionInfo">
-        <property name="margin-left">5</property>
-        <property name="margin-right">5</property>
+        <property name="margin-start">5</property>
+        <property name="margin-end">5</property>
         <property name="margin-start">5</property>
         <property name="margin-end">5</property>
         <property name="ellipsize">end</property>
         <property name="width-chars">20</property>
       </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkListBox" id="LPEListBox">
@@ -49,31 +42,20 @@
           <class name="lpelistbox"/>
         </style>
       </object>
-      <packing>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkListBox" id="LPEParentBox">
         <property name="name">LPEParentBox</property>
         <property name="selection-mode">none</property>
       </object>
-      <packing>
-        <property name="position">5</property>
-      </packing>
     </child>
   </object>
   <object class="GtkListStore" id="LPEList">
     <columns>
-      <!-- column-name id -->
       <column type="gint"/>
-      <!-- column-name name -->
       <column type="gchararray"/>
-      <!-- column-name icon -->
       <column type="gchararray"/>
-      <!-- column-name visible -->
       <column type="gboolean"/>
-      <!-- column-name search -->
       <column type="gchararray"/>
     </columns>
   </object>

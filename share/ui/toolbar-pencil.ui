@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="_maxpressure_adj">
@@ -21,13 +20,12 @@
     <property name="page-increment">1</property>
   </object>
   <object class="GtkPopover" id="popover1">
-    <property name="modal">True</property>
-    <child>
+    <property name="child">
       <object class="GtkBox" id="popover_box1">
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkBox" id="pencil-toolbar">
     <property name="halign">start</property>
@@ -38,7 +36,7 @@
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="popover">popover1</property>
         <property name="icon-name">go-down</property>
       </object>
@@ -52,9 +50,6 @@
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="mode_buttons_box">
@@ -64,7 +59,7 @@
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Create regular Bezier path</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="icon-name">path-mode-bezier</property>
           </object>
         </child>
@@ -73,67 +68,49 @@
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Create Spiro path</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">mode_buttons_group</property>
             <property name="icon-name">path-mode-spiro</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Create BSpline path</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">mode_buttons_group</property>
             <property name="icon-name">path-mode-bspline</property>
           </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton" id="zigzag_btn">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Create a sequence of straight line segments</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">mode_buttons_group</property>
             <property name="icon-name">path-mode-polyline</property>
           </object>
-          <packing>
-            <property name="position">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton" id="paraxial_btn">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Create a sequence of paraxial line segments</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="group">mode_buttons_group</property>
             <property name="icon-name">path-mode-polyline-paraxial</property>
           </object>
-          <packing>
-            <property name="position">4</property>
-          </packing>
         </child>
         <style>
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="_flatten_spiro_bspline_btn">
@@ -141,19 +118,13 @@
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Flatten Spiro or BSpline LPE</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">flatten</property>
       </object>
-      <packing>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">5</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="pencil_only_box">
@@ -163,7 +134,7 @@
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Use pressure input</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="icon-name">draw-use-pressure</property>
           </object>
         </child>
@@ -183,14 +154,8 @@
                 <property name="adjustment">_minpressure_adj</property>
                 <property name="climb-rate">1</property>
               </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox" id="_maxpressure_box">
@@ -208,29 +173,17 @@
                 <property name="adjustment">_maxpressure_adj</property>
                 <property name="climb-rate">1</property>
               </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox" id="powerstroke_cap_box">
             <property name="tooltip-text" translatable="yes">Line endings when drawing with pressure-sensitive PowerPencil</property>
           </object>
-          <packing>
-            <property name="position">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSeparator">
           </object>
-          <packing>
-            <property name="position">4</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox" id="tolerance_box">
@@ -249,14 +202,8 @@
                 <property name="climb-rate">1</property>
                 <property name="digits">2</property>
               </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="position">5</property>
-          </packing>
         </child>
         <child>
           <object class="GtkToggleButton" id="_simplify_btn">
@@ -264,47 +211,32 @@
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">LPE based interactive simplify</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="icon-name">interactive_simplify</property>
           </object>
-          <packing>
-            <property name="position">6</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="_flatten_simplify_btn">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">LPE simplify flatten</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="icon-name">flatten</property>
           </object>
-          <packing>
-            <property name="position">7</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSeparator">
           </object>
-          <packing>
-            <property name="position">9</property>
-          </packing>
         </child>
         <style>
           <class name="pencil-only"/>
         </style>
       </object>
-      <packing>
-        <property name="position">6</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="shape_box">
         <property name="tooltip-text" translatable="yes">Shape of new paths drawn by this tool</property>
       </object>
-      <packing>
-        <property name="position">7</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="_shapescale_box">
@@ -323,14 +255,8 @@
             <property name="climb-rate">1</property>
             <property name="digits">2</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">8</property>
-      </packing>
     </child>
     <style>
       <class name="toolbar"/>

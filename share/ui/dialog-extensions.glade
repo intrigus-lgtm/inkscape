@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="adjustment-thumbnails">
@@ -8,7 +7,7 @@
     <property name="page-increment">1</property>
   </object>
   <object class="GtkPopover" id="popover-settings">
-    <child>
+    <property name="child">
       <object class="GtkBox">
         <property name="margin-start">8</property>
         <property name="margin-end">8</property>
@@ -27,22 +26,15 @@
             <property name="adjustment">adjustment-thumbnails</property>
             <property name="show-fill-level">True</property>
             <property name="round-digits">0</property>
-            <property name="draw-value">False</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-    </child>
+    </property>
   </object>
   <object class="GtkListStore" id="categories-store">
     <columns>
-      <!-- column-name id -->
       <column type="gchararray"/>
-      <!-- column-name name -->
       <column type="gchararray"/>
-      <!-- column-name icon -->
       <column type="gchararray"/>
     </columns>
   </object>
@@ -66,7 +58,7 @@
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="margin-end">5</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <child>
               <object class="GtkImage" id="image-toggle">
                 <property name="icon-name">panel-left</property>
@@ -78,9 +70,6 @@
           <object class="GtkLabel" id="header">
             <property name="label" translatable="yes">Select extension to run:</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSearchEntry" id="search">
@@ -89,17 +78,13 @@
             <property name="primary-icon-activatable">False</property>
             <property name="primary-icon-sensitive">False</property>
           </object>
-          <packing>
-            <property name="pack-type">end</property>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkMenuButton">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
-            <property name="has-frame">false</property>
+            <property name="has-frame">False</property>
             <property name="popover">popover-settings</property>
             <child>
               <object class="GtkImage">
@@ -107,35 +92,30 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="pack-type">end</property>
-            <property name="position">4</property>
-          </packing>
         </child>
       </object>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkPaned" id="paned">
+        <property name="shrink-start-child">0</property>
+        <property name="resize-start-child">0</property>
         <property name="focusable">True</property>
         <property name="hexpand">True</property>
         <property name="vexpand">True</property>
         <property name="position">120</property>
         <property name="position-set">True</property>
         <property name="wide-handle">True</property>
-        <child>
+        <property name="start-child">
           <object class="GtkScrolledWindow" id="s">
             <property name="focusable">True</property>
             <property name="vexpand">True</property>
             <property name="hscrollbar-policy">never</property>
             <property name="min-content-width">50</property>
-            <child>
+            <property name="child">
               <object class="GtkTreeView" id="selector">
                 <property name="focusable">True</property>
                 <property name="model">categories-store</property>
@@ -161,44 +141,34 @@
                   </object>
                 </child>
               </object>
-            </child>
+            </property>
           </object>
-          <packing>
-            <property name="resize">False</property>
-            <property name="shrink">False</property>
-          </packing>
-        </child>
-        <child>
+        </property>
+        <property name="end-child">
           <object class="GtkScrolledWindow">
             <property name="focusable">True</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <property name="hscrollbar-policy">never</property>
             <property name="overlay-scrolling">False</property>
-            <child>
+            <property name="child">
               <object class="GtkIconView" id="grid">
                 <property name="focusable">True</property>
                 <style>
                   <class name="darker-background"/>
                 </style>
               </object>
-            </child>
+            </property>
             <style>
               <class name="darker-background"/>
             </style>
           </object>
-        </child>
+        </property>
       </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
       </object>
-      <packing>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
@@ -226,48 +196,32 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel" id="name">
+            <property name="hexpand">True</property>
             <property name="label">name</property>
             <property name="ellipsize">middle</property>
             <property name="xalign">1</property>
           </object>
-          <packing>
-            <property name="expand">True</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel" id="info">
+            <property name="hexpand">True</property>
             <property name="opacity">0.59999999999999998</property>
             <property name="halign">start</property>
             <property name="margin-end">5</property>
             <property name="label">info</property>
             <property name="ellipsize">middle</property>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="pack-type">end</property>
-            <property name="position">4</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="pack-type">end</property>
-        <property name="position">4</property>
-      </packing>
     </child>
   </object>
   <object class="GtkListStore" id="store">
     <columns>
-      <!-- column-name extension_id -->
       <column type="gchararray"/>
-      <!-- column-name category -->
       <column type="gchararray"/>
-      <!-- column-name name -->
       <column type="gchararray"/>
     </columns>
   </object>

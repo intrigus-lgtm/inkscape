@@ -16,7 +16,7 @@
             <property name="wrap-mode">word-char</property>
             <property name="xalign">0</property>
             <attributes>
-              <attribute name="weight" value="semibold"/>
+              <attribute name="weight" value="semibold"></attribute>
             </attributes>
           </object>
         </child>
@@ -38,12 +38,12 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Click to Copy</property>
         <property name="valign">center</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <child>
           <object class="GtkBox">
             <child>
               <object class="GtkImage" id="copy-icon">
-                <property name="margin-right">5</property>
+                <property name="margin-end">5</property>
                 <property name="margin-end">5</property>
                 <property name="icon-name">edit-copy</property>
               </object>

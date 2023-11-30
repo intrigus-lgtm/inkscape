@@ -162,6 +162,8 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
 
     // ========= Update text for Accellerators =======
     Inkscape::Shortcuts::getInstance().update_gui_text_recursive(this);
+
+    set_visible(true);  // Gtk4: This 'hack' is required for windows created via 'File->New' to be shown. If called before 'build_menu()', menu will not be visible.
 }
 
 void InkscapeWindow::on_realize()

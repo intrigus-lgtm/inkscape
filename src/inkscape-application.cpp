@@ -638,6 +638,10 @@ InkscapeApplication::InkscapeApplication()
                 non_unique = true;
             }
         }
+        // Run the application (a no-op) since there is no other way to unregister from D-Bus.
+        // Without this, a (wrong) warning is printed.
+        // See https://gitlab.gnome.org/GNOME/glib/-/issues/1857
+        test_app->run(0, nullptr);
         Gio::Application::unset_default();
     }
 

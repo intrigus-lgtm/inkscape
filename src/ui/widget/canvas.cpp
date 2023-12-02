@@ -258,6 +258,8 @@ public:
     bool emit_event(CanvasEvent &event);
     void ensure_geometry_uptodate();
     CanvasItem *pre_scroll_grabbed_item;
+    unsigned unreleased_presses = 0;
+    bool delayed_leave_event = false;
 
     // Various state affecting what is drawn.
     uint32_t desk   = 0xffffffff; // The background colour, with the alpha channel used to control checkerboard.
@@ -919,6 +921,7 @@ Gtk::EventSequenceState Canvas::on_button_pressed(Gtk::GestureClick const &contr
 {
     _state = (int)controller.get_current_event_state();
     d->last_mouse = Geom::IntPoint(x, y);
+    d->unreleased_presses |= 1 << controller.get_current_button();
 
     grab_focus();
 
@@ -964,6 +967,7 @@ Gtk::EventSequenceState Canvas::on_button_released(Gtk::GestureClick const &cont
 {
     _state = (int)controller.get_current_event_state();
     d->last_mouse = Geom::IntPoint(x, y);
+    d->unreleased_presses &= ~(1 << controller.get_current_button());
 
     // Drag the split view controller.
     if (_split_mode == SplitMode::SPLIT && _split_dragging) {
@@ -1014,11 +1018,28 @@ Gtk::EventSequenceState Canvas::on_button_released(Gtk::GestureClick const &cont
     event.button = controller.get_current_button();
     event.time = controller.get_current_event_time();
 
-    return d->process_event(event) ? Gtk::EventSequenceState::CLAIMED : Gtk::EventSequenceState::NONE;
+    auto result = d->process_event(event) ? Gtk::EventSequenceState::CLAIMED : Gtk::EventSequenceState::NONE;
+
+    if (d->unreleased_presses == 0 && d->delayed_leave_event) {
+        d->last_mouse = {};
+        d->delayed_leave_event = false;
+
+        auto event = LeaveEvent();
+        event.modifiers = _state;
+
+        d->process_event(event);
+    }
+
+    return result;
 }
 
 void Canvas::on_enter(GtkEventControllerMotion const *controller_c, double x, double y)
 {
+    if (d->delayed_leave_event) {
+        d->delayed_leave_event = false;
+        return;
+    }
+
     auto controller = const_wrap(controller_c, true);
     _state = (int)controller->get_current_event_state();
     d->last_mouse = Geom::IntPoint(x, y);
@@ -1032,6 +1053,11 @@ void Canvas::on_enter(GtkEventControllerMotion const *controller_c, double x, do
 
 void Canvas::on_leave(GtkEventControllerMotion const *controller_c)
 {
+    if (d->unreleased_presses != 0) {
+        d->delayed_leave_event = true;
+        return;
+    }
+
     auto controller = const_wrap(controller_c, true);
     _state = (int)controller->get_current_event_state();
     d->last_mouse = {};

@@ -4,13 +4,20 @@
 
 #include <algorithm>
 #include <cmath>
+#include <gdkmm/paintable.h>
+#include <gdkmm/texture.h>
 #include <giomm/liststore.h>
 #include <glibmm/objectbase.h>
 #include <gtkmm/boolfilter.h>
+#include <gtkmm/centerbox.h>
 #include <gtkmm/filter.h>
 #include <gtkmm/filterlistmodel.h>
+#include <gtkmm/fixed.h>
+#include <gtkmm/grid.h>
 #include <gtkmm/gridview.h>
 #include <gtkmm/listitemfactory.h>
+#include <gtkmm/object.h>
+#include <gtkmm/overlay.h>
 #include <gtkmm/picture.h>
 #include <gtkmm/scrollinfo.h>
 #include <gtkmm/signallistitemfactory.h>
@@ -24,6 +31,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <2geom/point.h>
 #include <2geom/rect.h>
 #include <cairo.h>
@@ -286,7 +294,6 @@ std::set<std::string> add_categories(Glib::RefPtr<Gtk::ListStore>& store, const 
     return categories;
 }
 
-
 ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
     DialogBase(type == Effects ? "/dialogs/extensions-gallery/effects" : "/dialogs/extensions-gallery/filters",
         type == Effects ? "ExtensionsGallery" : "FilterGallery"),
@@ -364,50 +371,22 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
     });
 
     _selection_model = Gtk::SingleSelection::create(_filtered_model);
-    _factory = Gtk::SignalListItemFactory::create();
-    _factory->signal_setup().connect([=](const Glib::RefPtr<Gtk::ListItem>& list_item) {
-        // Each ListItem contains a vertical Box with an Image and a Label.
-        auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
-        auto image = Gtk::make_managed<Gtk::Picture>();
-        box->append(*image);
-        auto label = Gtk::make_managed<Gtk::Label>();
-        box->append(*Gtk::make_managed<Gtk::Label>());
-        list_item->set_child(*box);
-    });
 
-    _factory->signal_bind().connect([=](const Glib::RefPtr<Gtk::ListItem>& list_item) {
-        auto effect = std::dynamic_pointer_cast<EffectItem>(list_item->get_item());
-        if (!effect) return;
-        auto box = dynamic_cast<Gtk::Box*>(list_item->get_child());
-        if (!box) return;
-        auto image = dynamic_cast<Gtk::Picture*>(box->get_first_child());
-        if (!image) return;
-        auto label = dynamic_cast<Gtk::Label*>(image->get_next_sibling());
-        if (!label) return;
+    _factory = IconViewItemFactory::create([=](auto& ptr) -> IconViewItemFactory::ItemData {
+        auto effect = std::dynamic_pointer_cast<EffectItem>(ptr);
+        if (!effect) return {};
 
         auto tex = get_image(effect->id, effect->icon, effect->effect);
-        image->set_can_shrink(true);
-        image->set_content_fit(Gtk::ContentFit::CONTAIN);
-        image->set_paintable(tex);
-        // poor man's high dpi support here:
-        auto scale = get_scale_factor();
-        image->set_size_request(tex->get_width() / scale, tex->get_height() / scale);
-        label->set_text(effect->name);
-        //TODO: small labels?
-        // label->set_markup("<small>" + Glib::Markup::escape_text(effect->name) + "</small>");
-        label->set_max_width_chars(12);
-        label->set_wrap();
-        label->set_justify(Gtk::Justification::CENTER);
-        box->set_tooltip_text(effect->tooltip);
+        auto name = Glib::Markup::escape_text(effect->name);
+        return { .label_markup = name, .image = tex, .tooltip = effect->tooltip };
     });
-
     _gridview.set_min_columns(1);
     // max columns impacts number of prerendered items requested by gridview (= maxcol * 32 + 1),
     // so it needs to be artificially kept low to prevent gridview from rendering all items up front
     _gridview.set_max_columns(5);
     // gtk_list_base_set_anchor_max_widgets(0); - private method, no way to customize prerender items number
     _gridview.set_model(_selection_model);
-    _gridview.set_factory(_factory);
+    _gridview.set_factory(_factory->get_factory());
     // handle item activation (double-click)
     _gridview.signal_activate().connect([this](auto pos){
         _run.activate_action(_run.get_action_name());

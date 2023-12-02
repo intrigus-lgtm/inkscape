@@ -9,15 +9,25 @@
 #define SEEN_DOC_RESOURCES_H
 
 #include <cstddef>
+#include <giomm/liststore.h>
+#include <gtkmm/boolfilter.h>
+#include <gtkmm/columnview.h>
+#include <gtkmm/gridview.h>
+#include <gtkmm/listview.h>
+#include <gtkmm/singleselection.h>
+#include <memory>
 #include <string>
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/cellrendererpixbuf.h>
 #include <gtkmm/treemodel.h>
+#include <gtkmm/treeview.h>
 
 #include "helper/auto-connection.h"
 #include "ui/dialog/dialog-base.h"
+#include "ui/iconview-item-factory.h"
+#include "ui/text_filter.h"
 #include "ui/widget/entity-entry.h"
 #include "ui/widget/registry.h"
 
@@ -30,6 +40,7 @@ class Builder;
 class Button;
 class CellEditable;
 class CellRendererText;
+class ColumnView;
 class IconView;
 class ListStore;
 class SearchEntry;
@@ -63,6 +74,8 @@ struct Statistics {
     std::size_t external_uris = 0;
 };
 
+struct ResourceItem;
+
 } // namespace details
 
 class DocumentResources final : public DialogBase {
@@ -80,23 +93,26 @@ private:
     void end_editing(const Glib::ustring& path, const Glib::ustring& new_text);
     void selectionModified(Inkscape::Selection *selection, unsigned flags) override;
     void update_buttons();
-    Gtk::TreeModel::Row selected_item();
+    std::shared_ptr<details::ResourceItem> selected_item();
     void clear_stores();
 
     Glib::RefPtr<Gtk::Builder> _builder;
-    Glib::RefPtr<Gtk::ListStore> _item_store;
+    Glib::RefPtr<Gio::ListStoreBase> _item_store;
     Glib::RefPtr<Gtk::TreeModelFilter> _categories;
-    Glib::RefPtr<Gtk::ListStore> _info_store;
+    Glib::RefPtr<Gtk::BoolFilter> _info_filter;
+    std::unique_ptr<TextMatchingFilter> _item_filter;
+    Glib::RefPtr<Gio::ListStoreBase> _info_store;
     Gtk::CellRendererPixbuf _image_renderer;
     SPDocument* _document = nullptr;
     auto_connection _selection_change;
     details::Statistics _stats;
     std::string _cur_page_id; // the last category that user selected
     int _showing_resource = -1; // ID of the resource that's currently presented
-    Glib::RefPtr<Gtk::TreeSelection> _page_selection;
-    Gtk::IconView& _iconview;
-    Gtk::TreeView& _treeview;
-    Gtk::TreeView& _selector;
+    std::unique_ptr<IconViewItemFactory> _item_factory;
+    Gtk::GridView& _gridview;
+    Glib::RefPtr<Gtk::SingleSelection> _item_selection_model;
+    Gtk::ColumnView& _listview;
+    Gtk::ListView& _selector;
     Gtk::Button& _edit;
     Gtk::Button& _select;
     Gtk::Button& _delete;
@@ -107,6 +123,8 @@ private:
     Gtk::CellRendererText* _label_renderer;
     auto_connection _document_modified;
     auto_connection _idle_refresh;
+    Glib::RefPtr<Gtk::BoolFilter> _filter;
+    Glib::RefPtr<Gtk::SingleSelection> _selection_model;
 };
 
 } // namespace Inkscape::UI::Dialog

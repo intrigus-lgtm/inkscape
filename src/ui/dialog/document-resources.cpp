@@ -7,118 +7,112 @@
 
 #include "document-resources.h"
 
-#include <cstddef>
-#include <map>
-#include <memory>
-
+#include <atomic>
 #include <cairo.h>
 #include <cairomm/enums.h>
 #include <cairomm/refptr.h>
 #include <cairomm/surface.h>
-
+#include <cstddef>
 #include <gdkmm/pixbuf.h>
 #include <gdkmm/rgba.h>
+#include <gdkmm/texture.h>
+#include <giomm/liststore.h>
 #include <glib/gi18n.h>
 #include <glibmm/error.h>
 #include <glibmm/fileutils.h>
 #include <glibmm/main.h>
 #include <glibmm/markup.h>
 #include <glibmm/miscutils.h>
+#include <glibmm/refptr.h>
 #include <glibmm/uriutils.h>
 #include <glibmm/ustring.h>
+#include <gtkmm/boolfilter.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/celleditable.h>
 #include <gtkmm/cellrendererpixbuf.h>
 #include <gtkmm/cellrenderertext.h>
+#include <gtkmm/columnview.h>
+#include <gtkmm/columnviewcolumn.h>
+#include <gtkmm/columnviewrow.h>
 #include <gtkmm/dialog.h>
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/enums.h>
+#include <gtkmm/filterlistmodel.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/iconview.h>
+#include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/liststore.h>
+#include <gtkmm/noselection.h>
 #include <gtkmm/paned.h>
 #include <gtkmm/searchentry.h>
+#include <gtkmm/signallistitemfactory.h>
+#include <gtkmm/sortlistmodel.h>
 #include <gtkmm/stack.h>
+#include <gtkmm/stringsorter.h>
 #include <gtkmm/treemodelfilter.h>
 #include <gtkmm/treemodelsort.h>
 #include <gtkmm/treeselection.h>
 #include <gtkmm/treeview.h>
 #include <gtkmm/window.h>
+#include <map>
+#include <memory>
+#include <string>
 
 #include "color.h"
 #include "desktop.h"
-#include "display/cairo-utils.h"
-#include "document.h"
 #include "document-undo.h"
-#include "extension/system.h"
 #include "helper/choose-file.h"
 #include "helper/save-image.h"
 #include "inkscape.h"
-#include "object/sp-filter.h"
-#include "object/filters/sp-filter-primitive.h"
 #include "object/color-profile.h"
-#include "object/sp-gradient.h"
+#include "object/filters/sp-filter-primitive.h"
+#include "object/sp-defs.h"
+#include "object/sp-filter.h"
 #include "object/sp-font.h"
+#include "object/sp-gradient.h"
 #include "object/sp-image.h"
 #include "object/sp-item-group.h"
 #include "object/sp-marker.h"
 #include "object/sp-mesh-gradient.h"
 #include "object/sp-object.h"
-#include "object/sp-offset.h"
 #include "object/sp-path.h"
 #include "object/sp-pattern.h"
-#include "object/tags.h"
-#include "rdf.h"
-#include "selection.h"
-#include "object/sp-defs.h"
 #include "object/sp-root.h"
 #include "object/sp-symbol.h"
 #include "object/sp-use.h"
+#include "rdf.h"
+#include "selection.h"
 #include "style.h"
 #include "ui/builder-utils.h"
 #include "ui/icon-names.h"
 #include "ui/themes.h"
 #include "ui/util.h"
-#include "ui/widget/shapeicon.h"
 #include "util/object-renderer.h"
 #include "util/trim.h"
 #include "xml/href-attribute-helper.h"
 
 namespace Inkscape::UI::Dialog {
 
-struct ItemColumns final : public Gtk::TreeModel::ColumnRecord {
-    Gtk::TreeModelColumn<Glib::ustring> id;
-    Gtk::TreeModelColumn<Glib::ustring> label;
-    Gtk::TreeModelColumn<Cairo::RefPtr<Cairo::Surface>> image;
-    Gtk::TreeModelColumn<bool> editable;
-    Gtk::TreeModelColumn<SPObject*> object;
-    Gtk::TreeModelColumn<int> color;
+struct InfoItem : public Glib::Object {
+    Glib::ustring item;
+    Glib::ustring value;
+    uint32_t count;
+    SPObject* object;
 
-    ItemColumns() {
-        add(id);
-        add(label);
-        add(image);
-        add(editable);
-        add(object);
-        add(color);
+    static Glib::RefPtr<InfoItem> create(const Glib::ustring& item, const Glib::ustring& value, uint32_t count, SPObject* object) {
+        auto infoitem = Glib::make_refptr_for_instance<InfoItem>(new InfoItem());
+        infoitem->item = item;
+        infoitem->value = value;
+        infoitem->count = count;
+        infoitem->object = object;
+        return infoitem;
     }
-} g_item_columns;
-
-struct InfoColumns final : public Gtk::TreeModel::ColumnRecord {
-    Gtk::TreeModelColumn<Glib::ustring> item;
-    Gtk::TreeModelColumn<Glib::ustring> value;
-    Gtk::TreeModelColumn<uint32_t> count;
-    Gtk::TreeModelColumn<SPObject*> object;
-
-    InfoColumns() {
-        add(item);
-        add(value);
-        add(count);
-        add(object);
+    static Glib::RefPtr<InfoItem> create(const Glib::ustring& item, const Glib::ustring& value) {
+        return create(item, value, 0, nullptr);
     }
-} g_info_columns;
+};
 
 enum Resources : int {
     Stats, Colors, Fonts, Styles, Patterns, Symbols, Markers, Gradients, Swatches, Images, Filters, External, Metadata
@@ -268,6 +262,33 @@ void set_title(SPObject& object, const Glib::ustring& title) {
     object.setTitle(title.c_str());
 }
 
+struct ResourceItem : public Glib::Object {
+    Glib::ustring id;
+    Glib::ustring label;
+    Glib::RefPtr<Gdk::Texture> image;
+    bool editable;
+    SPObject* object;
+    int color;
+
+    static Glib::RefPtr<ResourceItem> create(
+        const Glib::ustring& id,
+        Glib::ustring& label,
+        Glib::RefPtr<Gdk::Texture> image,
+        SPObject* object,
+        bool editable = false,
+        uint32_t rgb24color = 0
+    ) {
+        auto item = Glib::make_refptr_for_instance<ResourceItem>(new ResourceItem());
+        item->id = id;
+        item->label = label;
+        item->image = image;
+        item->object = object;
+        item->editable = editable;
+        item->color = rgb24color;
+        return item;
+    }
+};
+
 } // namespace details
 
 // label editing: get/set functions for various object types;
@@ -293,7 +314,22 @@ std::map<std::type_index, std::function<void (SPObject&, const Glib::ustring&)>>
     {typeid(SPMarker), details::set_inkscape_label},
 };
 
+struct ResourceTextItem : public Glib::Object {
+    Glib::ustring id;
+    Glib::ustring name;
+    Glib::ustring icon;
+
+    static Glib::RefPtr<ResourceTextItem> create(const Glib::ustring& id, Glib::ustring& name, Glib::ustring& icon) {
+        auto item = Glib::make_refptr_for_instance<ResourceTextItem>(new ResourceTextItem());
+        item->id = id;
+        item->name = name;
+        item->icon = icon;
+        return item;
+    }
+};
+
 // liststore columns from glade file
+constexpr int COL_NAME = 0;
 constexpr int COL_ID = 1;
 constexpr int COL_ICON = 2;
 constexpr int COL_COUNT = 3;
@@ -301,71 +337,178 @@ constexpr int COL_COUNT = 3;
 DocumentResources::DocumentResources()
     : DialogBase("/dialogs/document-resources", "DocumentResources"),
     _builder(create_builder("dialog-document-resources.glade")),
-    _iconview(get_widget<Gtk::IconView>(_builder, "iconview")),
-    _treeview(get_widget<Gtk::TreeView>(_builder, "treeview")),
-    _selector(get_widget<Gtk::TreeView>(_builder, "tree")),
+    _gridview(get_widget<Gtk::GridView>(_builder, "iconview")),
+    // _treeview(get_widget<Gtk::TreeView>(_builder, "treeview")),
+    _listview(get_widget<Gtk::ColumnView>(_builder, "listview")),
+    _selector(get_widget<Gtk::ListView>(_builder, "tree")),
     _edit(get_widget<Gtk::Button>(_builder, "edit")),
     _select(get_widget<Gtk::Button>(_builder, "select")),
     _delete(get_widget<Gtk::Button>(_builder, "delete")),
     _extract(get_widget<Gtk::Button>(_builder, "extract")),
     _search(get_widget<Gtk::SearchEntry>(_builder, "search")) {
 
-    _info_store = Gtk::ListStore::create(g_info_columns);
-    _item_store = Gtk::ListStore::create(g_item_columns);
-    auto filtered_info = Gtk::TreeModelFilter::create(_info_store);
-    auto filtered_items = Gtk::TreeModelFilter::create(_item_store);
-    auto model = Gtk::TreeModelSort::create(filtered_items);
-    model->set_sort_column(g_item_columns.label.index(), Gtk::SortType::ASCENDING);
+    // _info_store = Gio::ListStore<InfoItem>::create();
+    _info_store = Gio::ListStore<InfoItem>::create();
+    // _info_store = Gtk::ListStore::create(g_info_columns);
+    // _item_store = Gtk::ListStore::create(g_item_columns);
+    _item_store = Gio::ListStore<details::ResourceItem>::create();
+    _info_filter = Gtk::BoolFilter::create({});
+    auto filtered_info = Gtk::FilterListModel::create(_info_store, _info_filter);
+    // auto filtered_info = Gtk::TreeModelFilter::create(_info_store);
+    _item_filter = std::make_unique<TextMatchingFilter>([](const Glib::RefPtr<Glib::ObjectBase>& item){
+        auto ptr = std::dynamic_pointer_cast<details::ResourceItem>(item);
+        return ptr ? ptr->label : Glib::ustring();
+    });
+    auto filtered_items = Gtk::FilterListModel::create(_item_store, _item_filter->get_filter()); // Gtk::TreeModelFilter::create(_item_store);
+    // auto model = Gtk::TreeModelSort::create(filtered_items);
+    auto sorter = Gtk::StringSorter::create(Gtk::ClosureExpression<Glib::ustring>::create([this](auto& item){
+        auto ptr = std::dynamic_pointer_cast<details::ResourceItem>(item);
+        return ptr ? ptr->label : "";
+    }));
+    auto model = Gtk::SortListModel::create(filtered_items, sorter);
+    // model->set_sort_column(g_item_columns.label.index(), Gtk::SortType::ASCENDING);
+
+    _item_factory = IconViewItemFactory::create([=](auto& ptr) -> IconViewItemFactory::ItemData {
+        auto rsrc = std::dynamic_pointer_cast<details::ResourceItem>(ptr);
+        if (!rsrc) return {};
+
+        auto name = Glib::Markup::escape_text(rsrc->label);
+        return { .label_markup = name, .image = rsrc->image, .tooltip = rsrc->label };
+    });
+    _gridview.add_css_class("grid-view-small");
+    _gridview.set_factory(_item_factory->get_factory());
+    _item_selection_model = Gtk::SingleSelection::create(model);
+    _gridview.set_model(_item_selection_model);
 
     append(get_widget<Gtk::Box>(_builder, "main"));
 
-    _iconview.set_model(model);
-    _iconview.set_text_column(g_item_columns.label);
-    _label_renderer = dynamic_cast<Gtk::CellRendererText*>(_iconview.get_first_cell());
-    assert(_label_renderer);
-    _label_renderer->property_editable() = true;
-    _label_renderer->signal_editing_started().connect([this](Gtk::CellEditable * const cell, Glib::ustring const &path){
-        start_editing(cell, path);
-    });
-    _label_renderer->signal_edited().connect([this](Glib::ustring const &path, Glib::ustring const &new_text){
-        end_editing(path, new_text);
-    });
+    // _iconview.set_model(model);
+    // _iconview.set_text_column(g_item_columns.label);
+    // _label_renderer = dynamic_cast<Gtk::CellRendererText*>(_iconview.get_first_cell());
+    // assert(_label_renderer);
+    // _label_renderer->property_editable() = true;
+    // _label_renderer->signal_editing_started().connect([this](Gtk::CellEditable * const cell, Glib::ustring const &path){
+    //     start_editing(cell, path);
+    // });
+    // _label_renderer->signal_edited().connect([this](Glib::ustring const &path, Glib::ustring const &new_text){
+    //     end_editing(path, new_text);
+    // });
 
-    _iconview.pack_start(_image_renderer);
-    _iconview.add_attribute(_image_renderer, "surface", g_item_columns.image);
+    // _iconview.pack_start(_image_renderer);
+    // _iconview.add_attribute(_image_renderer, "surface", g_item_columns.image);
 
-    _treeview.set_model(filtered_info);
+    auto set_up_label = [](auto& list_item){
+        auto label = Gtk::make_managed<Gtk::Label>();
+        label->set_xalign(0);
+        list_item->set_child(*label);
+    };
+    auto bind_label = [](auto& list_item, const Glib::ustring& markup){
+        auto label = dynamic_cast<Gtk::Label*>(list_item->get_child());
+        if (label) label->set_markup(markup);
+    };
+
+    _listview.add_css_class("list-view-small");
+    auto cols = _listview.get_columns();
+    for (int i = 0; i < cols->get_n_items(); ++i) {
+        auto info_factory = Gtk::SignalListItemFactory::create();
+        info_factory->signal_setup().connect(set_up_label);
+        info_factory->signal_bind().connect([=](auto& list_item) {
+            auto item = std::dynamic_pointer_cast<InfoItem>(list_item->get_item());
+            if (!item) return;
+            Glib::ustring text;
+            if (i == 0) text = item->item;
+            else if (i == 1) { text = item->count ? std::to_string(item->count) : ""; }
+            else text = item->value;
+            bind_label(list_item, text);
+        });
+        cols->get_typed_object<Gtk::ColumnViewColumn>(i)->set_factory(info_factory);
+    }
+    _listview.set_model(Gtk::NoSelection::create(filtered_info));
+
+    auto refilter_info = [this]() {
+        auto expression = Gtk::ClosureExpression<bool>::create([this](auto& item){
+            auto ptr = std::dynamic_pointer_cast<InfoItem>(item);
+            if (!ptr) return false;
+
+            auto str = _search.get_text().lowercase();
+            if (str.empty()) return true;
+        
+            return ptr->value.lowercase().find(str) != Glib::ustring::npos;
+        });
+        _info_filter->set_expression(expression);
+    };
+    refilter_info();
 
     auto treestore = get_object<Gtk::ListStore>(_builder, "liststore");
-    _selector.set_row_separator_func([=](Glib::RefPtr<Gtk::TreeModel> const &/*model*/,
-                                         Gtk::TreeModel::const_iterator const &it)
-    {
+    auto store = Gio::ListStore<ResourceTextItem>::create();
+    treestore->foreach([&](auto& path, auto& it) {
         Glib::ustring id;
         it->get_value(COL_ID, id);
-        return id == "-";
+        Glib::ustring icon;
+        it->get_value(COL_ICON, icon);
+        Glib::ustring name;
+        it->get_value(COL_NAME, name);
+        store->append(ResourceTextItem::create(id, name, icon));
+        return false;
     });
+
+    auto factory_1 = Gtk::SignalListItemFactory::create();
+    factory_1->signal_setup().connect([this](auto& list_item) {
+        auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
+        box->add_css_class("item-box");
+        auto image = Gtk::make_managed<Gtk::Image>();
+        image->set_icon_size(Gtk::IconSize::NORMAL);
+        box->append(*image);
+        box->append(*Gtk::make_managed<Gtk::Label>());
+        list_item->set_child(*box);
+    });
+
+    factory_1->signal_bind().connect([this](auto& list_item) {
+        auto item = std::dynamic_pointer_cast<ResourceTextItem>(list_item->get_item());
+        if (!item) return;
+        auto box = dynamic_cast<Gtk::Box*>(list_item->get_child());
+        if (!box) return;
+        auto image = dynamic_cast<Gtk::Image*>(box->get_first_child());
+        if (!image) return;
+        auto label = dynamic_cast<Gtk::Label*>(image->get_next_sibling());
+        if (!label) return;
+
+        bool separator = item->id == "-";
+        box->set_hexpand();
+        image->set_from_icon_name(item->icon != "-" ? item->icon : "");
+        image->set_visible(!separator);
+        label->set_text(separator ? "" : item->name);
+        label->set_hexpand();
+        label->set_xalign(0);
+        label->set_margin_start(3);
+        label->set_visible(!separator);
+
+        // disable selecting separator
+        list_item->set_activatable(!separator);
+        list_item->set_selectable(!separator);
+        if (separator) box->add_css_class("separator"); else box->remove_css_class("separator");
+        // list_item->set_focusable(!separator);
+    });
+
+    _selector.add_css_class("list-view-small");
+    _selector.set_factory(factory_1);
+
+    _filter = Gtk::BoolFilter::create({});
+    auto filtered_model = Gtk::FilterListModel::create(store, _filter);
+    _selection_model = Gtk::SingleSelection::create(filtered_model);
+    _selection_change = _selection_model->signal_selection_changed().connect([=,this](auto pos, auto count) {
+        if (auto item = std::dynamic_pointer_cast<ResourceTextItem>(_selection_model->get_selected_item())) {
+            select_page(item->id);
+        }
+    });
+    _selector.set_model(_selection_model);
+
     _categories = Gtk::TreeModelFilter::create(treestore);
     _categories->set_visible_func([this](Gtk::TreeModel::const_iterator const &it){
         Glib::ustring id;
         it->get_value(COL_ID, id);
         return id == "-" || is_resource_present(id, _stats);
     });
-    _selector.set_model(_categories);
-    auto const icon_renderer = Gtk::make_managed<UI::Widget::CellRendererItemIcon>();
-    _selector.insert_column("", *icon_renderer, 0);
-    auto column = _selector.get_column(0);
-    column->add_attribute(*icon_renderer, icon_renderer->property_shape_type().get_name(), COL_ICON);
-    auto const count_renderer = Gtk::make_managed<Gtk::CellRendererText>();
-    auto count_column = _selector.get_column(_selector.append_column("", *count_renderer) - 1);
-    count_column->add_attribute(*count_renderer, "text", COL_COUNT);
-    count_column->set_cell_data_func(*count_renderer, [=](Gtk::CellRenderer * const r,
-                                                          Gtk::TreeModel::const_iterator const &it)
-    {
-        std::uint64_t count;
-        it->get_value(COL_COUNT, count);
-        count_renderer->property_text().set_value(count > 0 ? std::to_string(count) : "");
-    });
-    count_renderer->set_padding(3, 4);
 
     _wr.setUpdating(true); // set permanently
 
@@ -376,15 +519,6 @@ DocumentResources::DocumentResources()
         _rdf_list.push_back(w);
     }
 
-    _page_selection = _selector.get_selection();
-    _selection_change = _page_selection->signal_changed().connect([this]{
-        if (auto it = _page_selection->get_selected()) {
-            Glib::ustring id;
-            it->get_value(COL_ID, id);
-            select_page(id);
-        }
-    });
-
     auto paned = &get_widget<Gtk::Paned>(_builder, "paned");
     auto const move = [=, this](){
         auto pos = paned->get_position();
@@ -394,10 +528,13 @@ DocumentResources::DocumentResources()
     move();
 
     _edit.signal_clicked().connect([this]{
-        auto sel = _iconview.get_selected_items();
-        if (sel.size() == 1) {
+        auto sel = _item_selection_model->get_selected_item();
+        // auto sel = _iconview.get_selected_items();
+        if (sel) {
             // todo: investigate why this doesn't work initially:
-            _iconview.set_cursor(sel.front(), true);
+            // _iconview.set_cursor(sel.front(), true);
+            // TODO: enter edit mode
+            // _item_selection_model->
         }
         // treeview todo if needed
     });
@@ -409,9 +546,9 @@ DocumentResources::DocumentResources()
         auto desktop = getDesktop();
         if (!document || !desktop) return;
 
-        if (auto row = selected_item()) {
-            Glib::ustring id = row[g_item_columns.id];
-            if (auto object = document->getObjectById(id)) {
+        if (auto rsrc = selected_item()) {
+            // Glib::ustring id = row[g_item_columns.id];
+            if (auto object = document->getObjectById(rsrc->id)) {
                 // select object
                 desktop->getSelection()->set(object);
             }
@@ -422,37 +559,15 @@ DocumentResources::DocumentResources()
     });
 
     _search.signal_search_changed().connect([=](){
-        filtered_items->freeze_notify();
-        filtered_items->refilter();
-        filtered_items->thaw_notify();
-
-        filtered_info->freeze_notify();
-        filtered_info->refilter();
-        filtered_info->thaw_notify();
-    });
-
-    // filter gridview
-    filtered_items->set_visible_func([this](Gtk::TreeModel::const_iterator const &it){
-        if (_search.get_text_length() == 0) return true;
-    
-        auto str = _search.get_text().lowercase();
-        Glib::ustring label = (*it)[g_item_columns.label];
-        return label.lowercase().find(str) != Glib::ustring::npos;
-    });
-    // filter treeview too
-    filtered_info->set_visible_func([this](Gtk::TreeModel::const_iterator const &it){
-        if (_search.get_text_length() == 0) return true;
-    
-        auto str = _search.get_text().lowercase();
-        Glib::ustring value = (*it)[g_info_columns.value];
-        return value.lowercase().find(str) != Glib::ustring::npos;
+        refilter_info();
+        _item_filter->refilter(_search.get_text());
     });
 
     _delete.signal_clicked().connect([this]{
         // delete selected object
-        if (auto row = selected_item()) {
-            SPObject* object = row[g_item_columns.object];
-            delete_object(object, getDesktop()->getSelection());
+        if (auto rsrc = selected_item()) {
+            // SPObject* object = row[g_item_columns.object];
+            delete_object(rsrc->object, getDesktop()->getSelection());
         }
     });
 
@@ -462,22 +577,21 @@ DocumentResources::DocumentResources()
         switch (_showing_resource) {
         case Images:
             // extract selected image
-            if (auto row = selected_item()) {
-                SPObject* object = row[g_item_columns.object];
-                extract_image(window, cast<SPImage>(object));
+            if (auto rsrc = selected_item()) {
+                extract_image(window, cast<SPImage>(rsrc->object));
             }
             break;
         case Colors:
             // export colors into a GIMP palette
             if (_document) {
                 std::vector<int> colors;
-                _item_store->foreach_iter([&](Gtk::TreeModel::const_iterator const &it)
-                {
-                    int c;
-                    it->get_value(g_item_columns.color.index(), c);
-                    colors.push_back(c);
-                    return false; // false means continue
-                });
+                const size_t N = _item_store->get_n_items();
+                colors.reserve(N);
+                for (size_t i = 0; i < N; ++i) {
+                    if (auto r = _item_store->get_typed_object<details::ResourceItem>(i)) {
+                        colors.push_back(r->color);
+                    }
+                }
                 extract_colors(window, colors, _document->getDocumentName());
             }
             break;
@@ -487,24 +601,20 @@ DocumentResources::DocumentResources()
         }
     });
 
-    _iconview.signal_selection_changed().connect([this]{
+    _item_selection_model->signal_selection_changed().connect([this](auto pos, auto count) {
         update_buttons();
     });
 
 }
 
-Gtk::TreeModel::Row DocumentResources::selected_item() {
-    auto sel = _iconview.get_selected_items();
-    auto model = _iconview.get_model();
-    Gtk::TreeModel::Row row;
-    if (sel.size() == 1 && model) {
-        row = *model->get_iter(sel.front());
-    }
-    return row;
+std::shared_ptr<details::ResourceItem> DocumentResources::selected_item() {
+    auto sel = _item_selection_model->get_selected_item();
+    auto rsrc = std::dynamic_pointer_cast<details::ResourceItem>(sel);
+    return rsrc;
 }
 
 void DocumentResources::update_buttons() {
-    if (!_iconview.get_visible()) return;
+    if (!_gridview.get_visible()) return;
 
     auto single_sel = !!selected_item();
 
@@ -755,6 +865,18 @@ void DocumentResources::rebuild_stats() {
         _wr.setDesktop(desktop);
     }
 
+    // filter visible categories
+    auto expression = Gtk::ClosureExpression<bool>::create([this](auto& item){
+        auto ptr = std::dynamic_pointer_cast<ResourceTextItem>(item);
+        if (!ptr) return false;
+        // check for "-", which is a separator
+        if (ptr->id == "-") return true; // hidden until it can be made unselectable
+        // show only categories that have some entries
+        auto count = get_resource_count(ptr->id, _stats);
+        return count > 0;
+    });
+    _filter->set_expression(expression);
+
     _categories->refilter();
     _categories->foreach_iter([this](Gtk::TreeModel::iterator const &it){
         Glib::ustring id;
@@ -764,7 +886,6 @@ void DocumentResources::rebuild_stats() {
         it->set_value(COL_COUNT, count);
         return false; // false means continue
     });
-    _selector.columns_autosize();
 }
 
 void DocumentResources::documentReplaced() {
@@ -791,22 +912,13 @@ void DocumentResources::refresh_current_page() {
     auto page = _cur_page_id;
     if (!is_resource_present(page, _stats)) {
         page = "stats";
+        _selection_model->set_selected(0);
     }
-    auto model = _selector.get_model();
 
-    model->foreach([&](Gtk::TreeModel::Path const &path,
-                       Gtk::TreeModel::const_iterator const &it)
-    {
-        Glib::ustring id;
-        it->get_value(COL_ID, id);
-
-        if (id.raw() == page) {
-            _page_selection->select(path);
-            refresh_page(id);
-            return true;
-        }
-        return false;
-    });
+    auto selected = _selection_model->get_selected_item();
+    if (auto item = std::dynamic_pointer_cast<ResourceTextItem>(selected)) {
+        refresh_page(item->id);
+    }
 }
 
 void DocumentResources::selectionModified(Inkscape::Selection* selection, unsigned flags)
@@ -817,71 +929,65 @@ void DocumentResources::selectionModified(Inkscape::Selection* selection, unsign
 auto get_id = [](const SPObject* object) { auto id = object->getId(); return id ? id : ""; };
 auto label_fmt = [](const char* label, const Glib::ustring& id) { return label && *label ? label : '#' + id; };
 
-void add_colors(Glib::RefPtr<Gtk::ListStore> item_store, const std::map<std::string, SPColor>& colors, int device_scale) {
+void add_colors(Glib::RefPtr<Gio::ListStoreBase>& item_store, const std::map<std::string, SPColor>& colors, int device_scale) {
     for (auto&& it : colors) {
         const auto& color = it.second;
 
-        auto row = *item_store->append();
-        auto name = color.toString();
+        Glib::ustring name = color.toString();
         auto rgba32 = color.toRGBA32(0xff);
         auto rgb24 = rgba32 >> 8;
 
-        row[g_item_columns.id] = name;
-        row[g_item_columns.label] = name;
-        row[g_item_columns.color] = rgb24;
         int size = 20;
         double radius = 2.0;
-        row[g_item_columns.image] = render_color(rgba32, size, radius, device_scale);
-        row[g_item_columns.object] = nullptr;
+        auto image = to_texture(render_color(rgba32, size, radius, device_scale));
+
+        item_store->append(details::ResourceItem::create(name, name, image, nullptr, false, rgb24));
     }
 }
 
-void _add_items_with_images(Glib::RefPtr<Gtk::ListStore> item_store, const std::vector<SPObject*>& items, double width, double height, int device_scale, bool use_title, object_renderer::options opt) {
+void _add_items_with_images(Glib::RefPtr<Gio::ListStoreBase>& item_store, const std::vector<SPObject*>& items, double width, double height, int device_scale, bool use_title, object_renderer::options opt) {
     object_renderer renderer;
     item_store->freeze_notify();
 
     for (auto item : items) {
-        auto row = *item_store->append();
-
-        auto id = get_id(item);
-        row[g_item_columns.id] = id;
-
+        Glib::ustring id = get_id(item);
+        Glib::ustring label;
         if (use_title) {
             auto title = item->title();
-            row[g_item_columns.label] = label_fmt(title, id);
+            label = label_fmt(title, id);
             g_free(title);
         }
         else {
-            auto label = item->getAttribute("inkscape:label");
-            row[g_item_columns.label] = label_fmt(label, id);
+            auto labelstr = item->getAttribute("inkscape:label");
+            label = label_fmt(labelstr, id);
         }
-        row[g_item_columns.image] = renderer.render(*item, width, height, device_scale, opt);
-        row[g_item_columns.object] = item;
+        auto image = to_texture(renderer.render(*item, width, height, device_scale, opt));
+        item_store->append(details::ResourceItem::create(id, label, image, item));
     }
 
     item_store->thaw_notify();
 }
 
 template<typename T>
-void add_items_with_images(Glib::RefPtr<Gtk::ListStore> item_store, const std::vector<T*>& items, double width, double height, int device_scale, bool use_title = false, object_renderer::options opt = {}) {
+void add_items_with_images(Glib::RefPtr<Gio::ListStoreBase> item_store, const std::vector<T*>& items, double width, double height, int device_scale, bool use_title = false, object_renderer::options opt = {}) {
     static_assert(std::is_base_of<SPObject, T>::value);
     _add_items_with_images(item_store, reinterpret_cast<const std::vector<SPObject*>&>(items), width, height, device_scale, use_title, opt);
 }
 
-void add_fonts(Glib::RefPtr<Gtk::ListStore> store, const std::set<std::string>& fontspecs) {
+void add_fonts(Glib::RefPtr<Gio::ListStoreBase> store, const std::set<std::string>& fontspecs) {
     size_t i = 1;
     for (auto&& fs : fontspecs) {
-        auto row = *store->append();
-        row[g_info_columns.item] = Glib::ustring::compose("%1 %2", _("Font"), i++);
+        auto item = Glib::ustring::compose("%1 %2", _("Font"), i++);
         auto name = Glib::Markup::escape_text(fs);
-        row[g_info_columns.value] = Glib::ustring::format(
+        auto value = Glib::ustring::format(
             "<span allow_breaks='false' size='xx-large' font='", fs, "'>", name, "</span>\n",
             "<span allow_breaks='false' size='small' alpha='60%'>", name, "</span>"
         );
+        store->append(InfoItem::create(item, value));
     }
 }
 
-void add_stats(Glib::RefPtr<Gtk::ListStore> info_store, SPDocument* document, const details::Statistics& stats) {
+void add_stats(Glib::RefPtr<Gio::ListStoreBase> info_store, SPDocument* document, const details::Statistics& stats) {
     auto read_only = true;
     auto license = document ? rdf_get_license(document, read_only) : nullptr;
 
@@ -891,9 +997,7 @@ void add_stats(Glib::RefPtr<Gtk::ListStore> info_store, SPDocument* document, co
         {_("Metadata"), stats.metadata > 0 ? C_("Adjective for Metadata status", "Present") : "-"},
     };
     for (auto& pair : str) {
-        auto row = *info_store->append();
-        row[g_info_columns.item] = pair.first;
-        row[g_info_columns.value] = Glib::Markup::escape_text(pair.second);
+        info_store->append(InfoItem::create(pair.first, Glib::Markup::escape_text(pair.second)));
     }
 
     std::pair<const char*, size_t> kv[] = {
@@ -916,30 +1020,24 @@ void add_stats(Glib::RefPtr<Gtk::ListStore> info_store, SPDocument* document, co
         {_("External URIs"), stats.external_uris},
     };
     for (auto& pair : kv) {
-        auto row = *info_store->append();
-        row[g_info_columns.item] = pair.first;
-        row[g_info_columns.value] = pair.second ? std::to_string(pair.second) : "-";
+        info_store->append(InfoItem::create(pair.first, pair.second ? std::to_string(pair.second) : "-"));
     }
 }
 
-void add_metadata(Glib::RefPtr<Gtk::ListStore> info_store, SPDocument* document, 
+void add_metadata(Glib::RefPtr<Gio::ListStoreBase> info_store, SPDocument* document, 
     const boost::ptr_vector<Inkscape::UI::Widget::EntityEntry>& rdf_list) {
 
     for (auto& entry : rdf_list) {
-        auto row = *info_store->append();
         auto label = entry._label.get_label();
         Util::trim(label, ":");
-        row[g_info_columns.item] = label;
-        row[g_info_columns.value] = Glib::Markup::escape_text(entry.content());
+        info_store->append(InfoItem::create(label, Glib::Markup::escape_text(entry.content())));
     }
 }
 
-void add_filters(Glib::RefPtr<Gtk::ListStore> info_store, const std::vector<SPFilter*>& filters) {
+void add_filters(Glib::RefPtr<Gio::ListStoreBase> info_store, const std::vector<SPFilter*>& filters) {
     for (auto& filter : filters) {
-        auto row = *info_store->append();
         auto label = filter->getAttribute("inkscape:label");
         auto name = Glib::ustring(label ? label : filter->getId());
-        row[g_info_columns.item] = name;
         std::ostringstream ost;
         bool first = true;
         for (auto& obj : filter->children) {
@@ -953,11 +1051,11 @@ void add_filters(Glib::RefPtr<Gtk::ListStore> info_store, const std::vector<SPFi
                 first = false;
             }
         }
-        row[g_info_columns.value] = Glib::Markup::escape_text(ost.str());
+        info_store->append(InfoItem::create(name, ost.str()));
     }
 }
 
-void add_styles(Glib::RefPtr<Gtk::ListStore> info_store, const std::unordered_map<std::string, size_t>& map) {
+void add_styles(Glib::RefPtr<Gio::ListStoreBase> info_store, const std::unordered_map<std::string, size_t>& map) {
     std::vector<std::string> vect;
     vect.reserve(map.size());
     for (auto style : map) {
@@ -967,24 +1065,18 @@ void add_styles(Glib::RefPtr<Gtk::ListStore> info_store, const std::unordered_ma
     info_store->freeze_notify();
     int n = 1;
     for (auto& style : vect) {
-        auto row = *info_store->append();
-        row[g_info_columns.item] = _("Style ") + std::to_string(n++);
-        row[g_info_columns.count] = map.find(style)->second;
-        row[g_info_columns.value] = Glib::Markup::escape_text(style);
+        info_store->append(InfoItem::create(_("Style ") + std::to_string(n++), Glib::Markup::escape_text(style), map.find(style)->second, nullptr));
     }
     info_store->thaw_notify();
 }
 
-void add_refs(Glib::RefPtr<Gtk::ListStore> info_store, const std::vector<SPObject*>& objects) {
+void add_refs(Glib::RefPtr<Gio::ListStoreBase> info_store, const std::vector<SPObject*>& objects) {
     info_store->freeze_notify();
     for (auto& obj : objects) {
         auto href = Inkscape::getHrefAttribute(*obj->getRepr()).second;
         if (!href) continue;
 
-        auto row = *info_store->append();
-        row[g_info_columns.item] = label_fmt(nullptr, get_id(obj));
-        row[g_info_columns.value] = href;
-        row[g_info_columns.object] = obj;
+        info_store->append(InfoItem::create(label_fmt(nullptr, get_id(obj)), href, 0, obj));
     }
     info_store->thaw_notify();
 }
@@ -998,11 +1090,11 @@ void DocumentResources::select_page(const Glib::ustring& id) {
 
 void DocumentResources::clear_stores() {
     _item_store->freeze_notify();
-    _item_store->clear();
+    _item_store->remove_all();
     _item_store->thaw_notify();
 
     _info_store->freeze_notify();
-    _info_store->clear();
+    _info_store->remove_all();
     _info_store->thaw_notify();
 }
 
@@ -1131,14 +1223,16 @@ void DocumentResources::refresh_page(const Glib::ustring& id) {
 
     _showing_resource = rsrc;
 
-    _treeview.get_column(1)->set_visible(has_count);
-    _label_renderer->property_editable() = label_editable;
+    _listview.get_columns()->get_typed_object<Gtk::ColumnViewColumn>(1)->set_visible(has_count);
+    //TODO
+    // _label_renderer->property_editable() = label_editable;
     _edit   .set_visible(label_editable);
     _select .set_visible(items_selectable);
     _delete .set_visible(can_delete);
     _extract.set_visible(can_extract);
 
-    _iconview.set_item_width(item_width);
+    //TODO
+    // _iconview.set_item_width(item_width);
     get_widget<Gtk::Stack>(_builder, "stack").set_visible_child(tab);
     update_buttons();
 }
@@ -1148,12 +1242,14 @@ void DocumentResources::start_editing(Gtk::CellEditable* cell, const Glib::ustri
     entry->set_has_frame();
 }
 
+//TODO
 void DocumentResources::end_editing(const Glib::ustring& path, const Glib::ustring& new_text) {
-    auto model = _iconview.get_model();
-    Gtk::TreeModel::Row row = *model->get_iter(path);
-    if (!row) return;
+    // auto model = _iconview.get_model();
+    // Gtk::TreeModel::Row row = *model->get_iter(path);
+    // if (!row) return;
+    return;
 
-    SPObject* object = row[g_item_columns.object];
+    SPObject* object = 0; // row[g_item_columns.object];
     if (!object) {
         g_warning("Missing object ptr, cannot edit object's name.");
         return;
@@ -1173,7 +1269,7 @@ void DocumentResources::end_editing(const Glib::ustring& path, const Glib::ustri
     setter(*object, new_text);
 
     auto id = get_id(object);
-    row[g_item_columns.label] = label_fmt(new_text.c_str(), id);
+    // row[g_item_columns.label] = label_fmt(new_text.c_str(), id);
 
     if (auto document = object->document) {
         DocumentUndo::done(document, _("Edit object title"), INKSCAPE_ICON("document-resources"));

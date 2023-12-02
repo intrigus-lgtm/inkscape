@@ -13,6 +13,7 @@
 #ifndef INKSCAPE_UI_DIALOG_EXTENSIONS_H
 #define INKSCAPE_UI_DIALOG_EXTENSIONS_H
 
+#include <gdkmm/texture.h>
 #include <giomm/liststore.h>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
@@ -27,9 +28,11 @@
 #include <gtkmm/singleselection.h>
 #include <gtkmm/treemodel.h>
 #include <boost/compute/detail/lru_cache.hpp>
+#include <memory>
 
 #include "helper/auto-connection.h"
 #include "ui/dialog/dialog-base.h"
+#include "ui/iconview-item-factory.h"
 
 namespace Gtk {
 class Builder;
@@ -72,7 +75,7 @@ private:
     Cairo::RefPtr<Cairo::ImageSurface> _blank_image;
     Glib::RefPtr<Gtk::FilterListModel> _filtered_model;
     Glib::RefPtr<Gtk::SingleSelection> _selection_model;
-    Glib::RefPtr<Gtk::SignalListItemFactory> _factory;
+    std::unique_ptr<IconViewItemFactory> _factory;
 
     Glib::RefPtr<Gdk::Texture> get_image(const std::string& key, const std::string& icon, Extension::Effect* effect);
     bool is_item_visible(const Glib::RefPtr<Glib::ObjectBase>& item) const;

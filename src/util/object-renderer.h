@@ -79,7 +79,7 @@ private:
     std::unique_ptr<SPDocument> _sandbox;
 };
 
-// Place 'image' on a solid background with given color optinally adding border.
+// Place 'image' on a solid background with given color optionally adding border.
 // If no image is provided, only background surface will be created.
 Cairo::RefPtr<Cairo::Surface> add_background_to_image(Cairo::RefPtr<Cairo::Surface> image, uint32_t rgb, double margin, double radius, int device_scale, std::optional<uint32_t> border = std::optional<uint32_t>());
 

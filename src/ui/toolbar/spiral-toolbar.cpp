@@ -64,7 +64,7 @@ SpiralToolbar::SpiralToolbar(SPDesktop *desktop)
     setup_derived_spin_button(_expansion_item, "expansion", 1.0);
     setup_derived_spin_button(_t0_item, "t0", 0.0);
 
-    append(*_toolbar);
+    set_child(*_toolbar);
 
     get_widget<Gtk::Button>(_builder, "reset_btn")
         .signal_clicked()

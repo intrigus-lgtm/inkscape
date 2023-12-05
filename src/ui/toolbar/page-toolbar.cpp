@@ -16,6 +16,7 @@
 
 #include <regex>
 #include <glibmm/i18n.h>
+#include <gtkmm/box.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/entrycompletion.h>
@@ -97,7 +98,7 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
 
-    append(*_toolbar);
+    set_child(*_toolbar);
 
     _text_page_label.signal_changed().connect(sigc::mem_fun(*this, &PageToolbar::labelEdited));
 
@@ -518,13 +519,6 @@ void PageToolbar::selectionChanged(SPPage *page)
     }
     setSizeText(page);
     _label_edited.unblock();
-}
-
-void PageToolbar::size_allocate_vfunc(int const width, int const height, int const baseline)
-{
-    Toolbar::size_allocate_vfunc(width, height, baseline);
-
-    _margin_popover.present();
 }
 
 } // namespace Inkscape::UI::Toolbar

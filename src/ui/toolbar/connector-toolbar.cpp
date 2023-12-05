@@ -62,14 +62,14 @@ ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
     , _directed_btn  (get_widget<Gtk::ToggleButton>             (_builder, "_directed_btn"))
     , _overlap_btn   (get_widget<Gtk::ToggleButton>             (_builder, "_overlap_btn"))
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    auto prefs = Inkscape::Preferences::get();
 
     setup_derived_spin_button(_curvature_item, "curvature", defaultConnCurvature, &ConnectorToolbar::curvature_changed);
     setup_derived_spin_button(_spacing_item, "spacing", defaultConnSpacing, &ConnectorToolbar::spacing_changed);
     setup_derived_spin_button(_length_item, "length", 100, &ConnectorToolbar::length_changed);
 
     _toolbar = &get_widget<Gtk::Box>(_builder, "connector-toolbar");
-    append(*_toolbar);
+    set_child(*_toolbar);
 
     // Orthogonal connectors toggle button
     bool tbuttonstate = prefs->getBool("/tools/connector/orthogonal");

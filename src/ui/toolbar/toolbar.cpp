@@ -10,6 +10,7 @@
 
 #include "toolbar.h"
 
+#include "ui/util.h"
 #include "ui/widget/toolbar-menu-button.h"
 
 namespace Inkscape::UI::Toolbar {
@@ -23,14 +24,20 @@ void Toolbar::addCollapsibleButton(UI::Widget::ToolbarMenuButton *button)
     _expanded_menu_btns.emplace(button);
 }
 
-void Toolbar::measure(Gtk::Orientation orientation, int for_size, int &min, int &nat, int &min_baseline, int &nat_baseline) const
+void Toolbar::measure_vfunc(Gtk::Orientation orientation, int for_size, int &min, int &nat, int &min_baseline, int &nat_baseline) const
 {
     _toolbar->measure(orientation, for_size, min, nat, min_baseline, nat_baseline);
 
-    if (_toolbar->get_orientation() == orientation && !_expanded_menu_btns.empty()) {
+    if (_toolbar->get_orientation() == orientation) {
         // HACK: Return too-small value to allow shrinking.
         min = 0;
     }
+}
+
+void Toolbar::on_size_allocate(int width, int height, int baseline)
+{
+    _resize_handler(width, height);
+    UI::Widget::Bin::on_size_allocate(width, height, baseline);
 }
 
 static int min_dimension(Gtk::Widget const *widget, Gtk::Orientation const orientation)
@@ -41,15 +48,14 @@ static int min_dimension(Gtk::Widget const *widget, Gtk::Orientation const orien
     return min;
 };
 
-// Todo: Create a layout manager that calls this then chains up to the Box layout manager.
-void Toolbar::_resize_handler(Gtk::Allocation &allocation)
+void Toolbar::_resize_handler(int width, int height)
 {
     if (!_toolbar) {
         return;
     }
 
     auto const orientation = _toolbar->get_orientation();
-    auto const allocated_size = orientation == Gtk::Orientation::VERTICAL ? allocation.get_height() : allocation.get_width();
+    auto const allocated_size = orientation == Gtk::Orientation::VERTICAL ? height : width;
     int min_size = min_dimension(_toolbar, orientation);
 
     if (allocated_size < min_size) {
@@ -62,10 +68,12 @@ void Toolbar::_resize_handler(Gtk::Allocation &allocation)
             _move_children(_toolbar, menu_btn->get_popover_box(), menu_btn->get_children());
             menu_btn->set_visible(true);
 
-            _expanded_menu_btns.pop();
-            _collapsed_menu_btns.push(menu_btn);
-
+            int old = min_size;
             min_size = min_dimension(_toolbar, orientation);
+            int change = old - min_size;
+
+            _expanded_menu_btns.pop();
+            _collapsed_menu_btns.push({menu_btn, change});
         }
 
     } else if (allocated_size > min_size) {
@@ -76,8 +84,8 @@ void Toolbar::_resize_handler(Gtk::Allocation &allocation)
         // While there are collapsed buttons to expand...
         while (!_collapsed_menu_btns.empty()) {
             // See if we have enough space to expand the topmost collapsed button.
-            auto menu_btn = _collapsed_menu_btns.top();
-            int req_size = min_size + menu_btn->get_required_width();
+            auto [menu_btn, change] = _collapsed_menu_btns.top();
+            int req_size = min_size + change;
 
             if (req_size > allocated_size) {
                 // Not enough space - stop.
@@ -100,13 +108,18 @@ void Toolbar::_move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pai
 {
     for (auto [pos, child] : children) {
         src->remove(*child);
-        dest->append(*child);
 
         // is_expanding will be true when the children are being put back into
         // the toolbar. In that case, insert the children at their previous
         // positions.
         if (is_expanding) {
-            // dest->reorder_child(*child, pos);
+            if (pos == 0) {
+                dest->insert_child_at_start(*child);
+            } else {
+                dest->insert_child_after(*child, UI::get_nth_child(*dest, pos - 1));
+            }
+        } else {
+            dest->append(*child);
         }
     }
 }

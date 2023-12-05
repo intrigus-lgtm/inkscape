@@ -55,7 +55,7 @@ PaintbucketToolbar::PaintbucketToolbar(SPDesktop *desktop)
     , _threshold_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_threshold_item"))
     , _offset_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_offset_item"))
 {
-    auto *prefs = Inkscape::Preferences::get();
+    auto prefs = Preferences::get();
 
     _toolbar = &get_widget<Gtk::Box>(_builder, "paintbucket-toolbar");
 
@@ -131,7 +131,7 @@ PaintbucketToolbar::PaintbucketToolbar(SPDesktop *desktop)
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
 
-    append(*_toolbar);
+    set_child(*_toolbar);
 
     // Signals.
     get_widget<Gtk::Button>(_builder, "reset_btn")

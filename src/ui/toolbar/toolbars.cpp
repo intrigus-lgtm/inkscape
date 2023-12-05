@@ -118,6 +118,8 @@ void Toolbars::create_toolbars(SPDesktop *desktop)
             // Change create_func to return Gtk::Box!
             auto const sub_toolbox = Gtk::manage(aux_toolboxes[i].create(desktop).release());
             sub_toolbox->set_name("SubToolBox");
+            sub_toolbox->set_hexpand();
+            sub_toolbox->set_overflow(Gtk::Overflow::HIDDEN);
 
             // Use a grid to wrap the toolbar and a possible swatch.
             auto const grid = Gtk::make_managed<Gtk::Grid>();
@@ -143,8 +145,7 @@ void Toolbars::create_toolbars(SPDesktop *desktop)
                 // TODO: Remove and use CSS
                 swatch->set_margin_start(7);
                 swatch->set_margin_end(7);
-                swatch->set_margin_top(3);
-                swatch->set_margin_bottom(3);
+                swatch->set_valign(Gtk::Align::CENTER);
                 //             ===== End Styling =====
 
                 grid->attach(*swatch, 1, 0, 1, 1);

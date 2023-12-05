@@ -209,7 +209,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop)
     menu_btn4->init(4, "tag4", popover_box4, children);
     addCollapsibleButton(menu_btn4);
 
-    append(*_toolbar);
+    set_child(*_toolbar);
 
     int mode = prefs->getIntLimited("/tools/spray/mode", 1, 0, _mode_buttons.size() - 1);
     _mode_buttons[mode]->set_active();

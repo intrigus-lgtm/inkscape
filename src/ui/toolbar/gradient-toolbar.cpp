@@ -336,7 +336,7 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
     , _stops_add_btn(get_widget<Gtk::Button>(_builder, "_stops_add_btn"))
     , _stops_delete_btn(get_widget<Gtk::Button>(_builder, "_stops_delete_btn"))
 {
-    auto *prefs = Inkscape::Preferences::get();
+    auto prefs = Preferences::get();
 
     _toolbar = &get_widget<Gtk::Box>(_builder, "gradient-toolbar");
 
@@ -489,7 +489,7 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
 
-    append(*_toolbar);
+    set_child(*_toolbar);
 
     // Signals.
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &GradientToolbar::check_ec));

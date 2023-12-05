@@ -74,7 +74,7 @@ PencilToolbar::PencilToolbar(SPDesktop *desktop, bool pencil_mode)
 {
     _toolbar = &get_widget<Gtk::Box>(_builder, "pencil-toolbar");
 
-    auto prefs = Inkscape::Preferences::get();
+    auto prefs = Preferences::get();
 
     // Configure mode buttons
     int btn_index = 0;
@@ -137,7 +137,7 @@ PencilToolbar::PencilToolbar(SPDesktop *desktop, bool pencil_mode)
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
 
-    append(*_toolbar);
+    set_child(*_toolbar);
 
     hide_extra_widgets();
 }

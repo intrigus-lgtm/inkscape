@@ -111,7 +111,7 @@ StarToolbar::StarToolbar(SPDesktop *desktop)
 
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &StarToolbar::watch_tool));
 
-    append(*_toolbar);
+    set_child(*_toolbar);
 
     // Signals.
     get_widget<Gtk::Button>(_builder, "reset_btn")

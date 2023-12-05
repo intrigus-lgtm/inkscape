@@ -59,11 +59,6 @@ static int minw(Gtk::Widget const *widget)
     return min;
 };
 
-int ToolbarMenuButton::get_required_width() const
-{
-    return minw(_popover_box) - minw(this);
-}
-
 } // namespace Inkscape::UI::Widget
 
 /*

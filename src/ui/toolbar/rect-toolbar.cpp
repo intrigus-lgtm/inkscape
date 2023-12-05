@@ -102,7 +102,7 @@ RectToolbar::RectToolbar(SPDesktop *desktop)
     _not_rounded.signal_clicked().connect(sigc::mem_fun(*this, &RectToolbar::defaults));
     _desktop->connectEventContextChanged(sigc::mem_fun(*this, &RectToolbar::watch_ec));
 
-    append(*_toolbar);
+    set_child(*_toolbar);
 
     sensitivize();
 }

@@ -99,7 +99,7 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     menu_btn2->init(2, "tag2", popover_box2, children);
     addCollapsibleButton(menu_btn2);
 
-    append(*_toolbar);
+    set_child(*_toolbar);
 
     _select_touch_btn.set_active(prefs->getBool("/tools/select/touch_box", false));
     _select_touch_btn.signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_touch));

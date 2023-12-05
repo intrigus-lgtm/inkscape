@@ -37,8 +37,6 @@ public:
 
     void init(int priority, std::string tag, Gtk::Box *popover_box, std::vector<Gtk::Widget *> &children);
 
-    int get_required_width() const;
-
     int get_priority() const { return _priority; }
     std::string const &get_tag() const { return _tag; }
     auto const &get_children() const { return _children; }

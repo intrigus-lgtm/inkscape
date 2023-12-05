@@ -17,6 +17,8 @@
 
 #include <gtkmm/box.h>
 
+#include "ui/widget/bin.h"
+
 class SPDesktop;
 
 namespace Inkscape::UI::Widget { class ToolbarMenuButton; }
@@ -26,7 +28,7 @@ namespace Inkscape::UI::Toolbar {
 /**
  * \brief Base class for all toolbars.
  */
-class Toolbar : public Gtk::Box
+class Toolbar : public UI::Widget::Bin
 {
 protected:
     Toolbar(SPDesktop *desktop);
@@ -36,13 +38,20 @@ protected:
 
     void addCollapsibleButton(UI::Widget::ToolbarMenuButton *button);
 
-    void measure(Gtk::Orientation orientation, int for_size, int &min, int &nat, int &min_baseline, int &nat_baseline) const;
+    void measure_vfunc(Gtk::Orientation orientation, int for_size, int &min, int &nat, int &min_baseline, int &nat_baseline) const override;
+    void on_size_allocate(int width, int height, int baseline) override;
 
 private:
-    std::stack<UI::Widget::ToolbarMenuButton *> _expanded_menu_btns;
-    std::stack<UI::Widget::ToolbarMenuButton *> _collapsed_menu_btns;
+    struct CollapsedButton
+    {
+        UI::Widget::ToolbarMenuButton *button;
+        int change;
+    };
 
-    void _resize_handler(Gtk::Allocation &allocation);
+    std::stack<UI::Widget::ToolbarMenuButton *> _expanded_menu_btns;
+    std::stack<CollapsedButton> _collapsed_menu_btns;
+
+    void _resize_handler(int width, int height);
     void _move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> const &children, bool is_expanding = false);
 };
 

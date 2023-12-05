@@ -146,7 +146,7 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
         .signal_clicked()
         .connect(sigc::mem_fun(*this, &MeasureToolbar::to_mark_dimension));
 
-    append(*_toolbar);
+    set_child(*_toolbar);
 }
 
 MeasureToolbar::~MeasureToolbar() = default;

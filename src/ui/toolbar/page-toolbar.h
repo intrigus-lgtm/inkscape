@@ -73,7 +73,6 @@ protected:
 private:
     SPDocument *_document;
 
-    void size_allocate_vfunc(int width, int height, int baseline) final;
     void toolChanged(SPDesktop *desktop, Inkscape::UI::Tools::ToolBase *tool);
     void pagesChanged();
     void selectionChanged(SPPage *page);

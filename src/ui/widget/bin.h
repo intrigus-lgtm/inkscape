@@ -63,6 +63,7 @@ public:
     }
 
 protected:
+    void measure_vfunc(Gtk::Orientation orientation, int for_size, int &min, int &nat, int &min_baseline, int &nat_baseline) const override;
     virtual void on_size_allocate(int width, int height, int baseline);
 
 private:
@@ -76,10 +77,6 @@ private:
     void _connectDestroy();
 
     Gtk::SizeRequestMode get_request_mode_vfunc() const override;
-
-    void measure_vfunc(Gtk::Orientation orientation, int for_size,
-                       int &minimum, int &natural,
-                       int &minimum_baseline, int &natural_baseline) const override;
 
     void size_allocate_vfunc(int width, int height, int baseline) override;
 };

@@ -113,7 +113,7 @@ TweakToolbar::TweakToolbar(SPDesktop *desktop)
     menu_btn2->init(2, "tag2", popover_box2, children);
     addCollapsibleButton(menu_btn2);
 
-    append(*_toolbar);
+    set_child(*_toolbar);
 
     // Elements must be hidden after being initially visible.
     if (mode == Inkscape::UI::Tools::TWEAK_MODE_COLORPAINT || mode == Inkscape::UI::Tools::TWEAK_MODE_COLORJITTER) {

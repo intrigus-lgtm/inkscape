@@ -98,7 +98,7 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
     menu_btn1->init(1, "tag1", popover_box1, children);
     addCollapsibleButton(menu_btn1);
 
-    append(*_toolbar);
+    set_child(*_toolbar);
 
     // Signals.
     _usepressure_btn->signal_toggled().connect(sigc::mem_fun(*this, &EraserToolbar::usepressure_toggled));

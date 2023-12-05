@@ -82,7 +82,7 @@ CommandToolbar::CommandToolbar(SPDesktop *desktop)
     menu_btn7->init(6, "tag7", popover_box7, children);
     addCollapsibleButton(menu_btn7);
 
-    append(*_toolbar);
+    set_child(*_toolbar);
 }
 
 CommandToolbar::~CommandToolbar() = default;

@@ -159,7 +159,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
     menu_btn4->init(4, "tag4", popover_box4, children);
     addCollapsibleButton(menu_btn4);
 
-    append(*_toolbar);
+    set_child(*_toolbar);
 
     // Signals.
     get_widget<Gtk::Button>(_builder, "profile_edit_btn")

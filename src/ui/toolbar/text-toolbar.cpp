@@ -248,7 +248,7 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
 {
     _toolbar = &get_widget<Gtk::Box>(_builder, "text-toolbar");
 
-    auto prefs = Inkscape::Preferences::get();
+    auto prefs = Preferences::get();
 
     // Line height unit tracker.
     auto const &unit_table = Util::UnitTable::get();
@@ -441,7 +441,7 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
     menu_btn6->init(6, "tag6", popover_box6, children);
     addCollapsibleButton(menu_btn6);
 
-    append(*_toolbar);
+    set_child(*_toolbar);
 
     // Font collections signals.
     auto *font_collections = Inkscape::FontCollections::get();

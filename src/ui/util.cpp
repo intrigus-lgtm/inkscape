@@ -192,15 +192,15 @@ bool is_descendant_of(Gtk::Widget const &descendant, Gtk::Widget const &ancestor
 }
 
 /// Get the relative font size as determined by a widgetʼs style/Pango contexts.
-/// This creates an empty Pango Layout for the widget so only call it sparingly!
-int
-get_font_size(Gtk::Widget &widget)
+int get_font_size(Gtk::Widget &widget)
 {
-    auto const layout = widget.create_pango_layout({});
-    auto font = layout->get_font_description();
-    if (!font.gobj()) font = layout->get_context()->get_font_description();
-    auto font_size = font.get_size();
-    if (!font.get_size_is_absolute()) font_size /= Pango::SCALE;
+    auto pango_context = widget.get_pango_context();
+    auto font_description = pango_context->get_font_description();
+    double font_size = font_description.get_size();
+    font_size /= Pango::SCALE;
+    if (font_description.get_size_is_absolute()) {
+        font_size *= 0.75;
+    }
     return font_size;
 }
 

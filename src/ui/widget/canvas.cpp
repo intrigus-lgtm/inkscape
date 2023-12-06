@@ -306,6 +306,9 @@ public:
     // For tracking the last known mouse position. (The function Gdk::Window::get_device_position cannot be used because of slow X11 round-trips. Remove this workaround when X11 dies.)
     std::optional<Geom::IntPoint> last_mouse;
 
+    // For tracking the old size in size_allocate_vfunc(). As of GTK4, we only have access to the new size.
+    Geom::IntPoint old_dimensions;
+
     // Auto-scrolling.
     std::optional<guint> tick_callback;
     std::optional<gint64> last_time;
@@ -1866,9 +1869,8 @@ void Canvas::update_cursor()
 
 void Canvas::size_allocate_vfunc(int const width, int const height, int const baseline)
 {
-    auto const old_dimensions = get_dimensions();
     parent_type::size_allocate_vfunc(width, height, baseline);
-    auto const new_dimensions = get_dimensions();
+    auto const new_dimensions = Geom::IntPoint{width, height};
 
     // Necessary as GTK seems to somehow invalidate the current pipeline state upon resize.
     if (d->active) {
@@ -1879,14 +1881,14 @@ void Canvas::size_allocate_vfunc(int const width, int const height, int const ba
     d->schedule_redraw();
 
     // Keep canvas centered and optionally zoomed in.
-    if (_desktop && new_dimensions != old_dimensions) {
-        auto const midpoint = _desktop->w2d(_pos + Geom::Point(old_dimensions) * 0.5);
+    if (_desktop && new_dimensions != d->old_dimensions) {
+        auto const midpoint = _desktop->w2d(_pos + Geom::Point(d->old_dimensions) * 0.5);
         double zoom = _desktop->current_zoom();
 
         auto prefs = Preferences::get();
         if (prefs->getBool("/options/stickyzoom/value", false)) {
             // Calculate adjusted zoom.
-            auto const old_minextent = min(old_dimensions);
+            auto const old_minextent = min(d->old_dimensions);
             auto const new_minextent = min(new_dimensions);
             if (old_minextent != 0) {
                 zoom *= (double)new_minextent / old_minextent;
@@ -1895,6 +1897,8 @@ void Canvas::size_allocate_vfunc(int const width, int const height, int const ba
 
         _desktop->zoom_absolute(midpoint, zoom, false);
     }
+
+    d->old_dimensions = new_dimensions;
 }
 
 Glib::RefPtr<Gdk::GLContext> Canvas::create_context()

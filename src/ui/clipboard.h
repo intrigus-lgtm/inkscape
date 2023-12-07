@@ -11,18 +11,19 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#ifndef SEEN_INKSCAPE_CLIPBOARD_H
-#define SEEN_INKSCAPE_CLIPBOARD_H
+#ifndef INKSCAPE_UI_CLIPBOARD_H
+#define INKSCAPE_UI_CLIPBOARD_H
 
 #include <glibmm/ustring.h>
 #include <vector>
 #include <2geom/point.h>
 #include <2geom/rect.h>
 
-// forward declarations
 class SPDesktop;
 class SPDocument;
+
 namespace Inkscape {
+
 class ObjectSet;
 namespace XML { class Node; }
 namespace LivePathEffect { class PathParam; }
@@ -39,7 +40,8 @@ namespace UI {
  * data required (i.e. style, size, Live Path Effects parameters, etc.)
  */
 
-class ClipboardManager {
+class ClipboardManager
+{
 public:
     virtual void copy(ObjectSet *set) = 0;
     virtual void copyPathParameter(Inkscape::LivePathEffect::PathParam *) = 0;
@@ -53,21 +55,19 @@ public:
     virtual Glib::ustring getShapeOrTextObjectId(SPDesktop *desktop) = 0;
     virtual std::vector<Glib::ustring> getElementsOfType(SPDesktop *desktop, gchar const* type = "*", gint maxdepth = -1) = 0;
     virtual Glib::ustring getFirstObjectID() = 0;
-    static ClipboardManager *get();
-protected:
-    ClipboardManager(); // singleton
-    virtual ~ClipboardManager();
-private:
-    ClipboardManager(const ClipboardManager &) = delete; ///< no copy
-    ClipboardManager &operator=(const ClipboardManager &) = delete; ///< no assign
 
-    static ClipboardManager *_instance;
+    static ClipboardManager *get();
+
+protected:
+    ClipboardManager() = default;
+    ClipboardManager(ClipboardManager const &) = delete;
+    ClipboardManager &operator=(ClipboardManager const &) = delete;
 };
 
-} // namespace IO
+} // namespace UI
 } // namespace Inkscape
 
-#endif
+#endif // INKSCAPE_UI_CLIPBOARD_H
 /*
   Local Variables:
   mode:c++

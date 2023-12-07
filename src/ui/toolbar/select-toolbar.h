@@ -90,6 +90,7 @@ private:
     void toggle_pattern();
     void setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &btn, Glib::ustring const &name);
 
+    void on_realize() final;
     void on_unrealize() final;
 };
 

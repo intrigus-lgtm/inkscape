@@ -16,6 +16,8 @@
 
 #include "select-toolbar.h"
 
+#include <iostream>
+
 #include <2geom/rect.h>
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
@@ -107,7 +109,7 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     _tracker->addUnit(Util::UnitTable::get().getUnit("%"));
     _tracker->setActiveUnit(desktop->getNamedView()->display_units);
 
-    // Use StyleContext to check if the child is a context item.
+    // Use StyleContext to check if the child is a context item (an item that is disabled if there is no selection).
     children = UI::get_children(*_toolbar);
     for (auto const child : children) {
         bool const is_context_item = child->has_css_class("context_item");
@@ -130,9 +132,14 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
 
     _lock_btn.signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_lock));
     toggle_lock();
+}
 
-    assert(desktop);
-    auto *selection = desktop->getSelection();
+SelectToolbar::~SelectToolbar() = default;
+
+void SelectToolbar::on_realize()
+{
+    assert(_desktop);
+    auto *selection = _desktop->getSelection();
 
     // Force update when selection changes.
     _connections.emplace_back( //
@@ -144,20 +151,14 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     layout_widget_update(selection);
 
     // Set context items insensitive.
-    _connections.emplace_back(Glib::signal_idle().connect(
-        [this] {
-            for (auto item : _context_items) {
-                if (item->is_sensitive()) {
-                    item->set_sensitive(false);
-                }
-            }
+    for (auto item : _context_items) {
+        if (item->is_sensitive()) {
+            item->set_sensitive(false);
+        }
+    }
 
-            return false;
-        },
-        Glib::PRIORITY_HIGH));
+    parent_type::on_realize();
 }
-
-SelectToolbar::~SelectToolbar() = default;
 
 void SelectToolbar::on_unrealize()
 {
@@ -367,8 +368,8 @@ void SelectToolbar::on_inkscape_selection_modified(Inkscape::Selection *selectio
 {
     assert(_desktop->getSelection() == selection);
     if ((flags & (SP_OBJECT_MODIFIED_FLAG        |
-                     SP_OBJECT_PARENT_MODIFIED_FLAG |
-                     SP_OBJECT_CHILD_MODIFIED_FLAG   )))
+                  SP_OBJECT_PARENT_MODIFIED_FLAG |
+                  SP_OBJECT_CHILD_MODIFIED_FLAG   )))
     {
         layout_widget_update(selection);
     }

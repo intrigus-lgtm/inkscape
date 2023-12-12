@@ -98,13 +98,11 @@
 #include "io/resource.h"            // TEMPLATE
 #include "object/sp-root.h"         // Inkscape version.
 #include "ui/desktop/document-check.h"    // Check for data loss on closing document window.
-#include "ui/desktop/menubar.h"
 #include "ui/dialog-run.h"
 #include "ui/dialog/dialog-manager.h"     // Save state
 #include "ui/dialog/font-substitution.h"  // Warn user about font substitution.
 #include "ui/dialog/startup.h"
 #include "ui/interface.h"                 // sp_ui_error_dialog
-#include "ui/shortcuts.h"           // Shortcuts... init
 #include "ui/widget/desktop-widget.h"
 #include "util/scope_exit.h"
 #include "util/statics.h"
@@ -683,7 +681,6 @@ InkscapeApplication::InkscapeApplication()
     // ======================== Actions =========================
     add_actions_base(this);                 // actions that are GUI independent
     add_actions_edit(this);                 // actions for editing
-    add_actions_dialogs(this);              // actions to open dialogs
     add_actions_effect(this);               // actions for Filters and Extensions
     add_actions_element_a(this);            // actions for the SVG a (anchor) element
     add_actions_element_image(this);        // actions for the SVG image element
@@ -1087,7 +1084,7 @@ InkscapeApplication::on_activate()
 
         Inkscape::UI::Dialog::StartScreen start_screen;
 
-        // add start window to gtk_app to ensure proper closing on quit
+        // Add start window to gtk_app to ensure proper closing on quit.
         gtk_app()->add_window(start_screen);
 
         Inkscape::UI::dialog_run(start_screen);

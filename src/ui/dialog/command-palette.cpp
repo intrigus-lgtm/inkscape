@@ -52,6 +52,7 @@
 #include "io/resource.h"
 #include "ui/builder-utils.h"
 #include "ui/controller.h"
+#include "ui/shortcuts.h"
 #include "ui/util.h"
 #include "util/callback-converter.h"
 
@@ -255,7 +256,6 @@ void CommandPalette::append_recent_file_operation(const Glib::ustring &path, boo
 bool CommandPalette::generate_action_operation(const ActionPtrName &action_ptr_name, bool is_suggestion)
 {
     static const auto app = InkscapeApplication::instance();
-    static const auto gapp = app->gtk_app();
     static const InkActionExtraData &action_data = app->get_action_extra_data();
     static const bool show_full_action_name =
         Inkscape::Preferences::get()->getBool("/options/commandpalette/showfullactionname/value");
@@ -297,7 +297,7 @@ bool CommandPalette::generate_action_operation(const ActionPtrName &action_ptr_n
     }
 
     {
-        std::vector<Glib::ustring> accels = gapp->get_accels_for_action(action_ptr_name.second);
+        auto const &accels = Shortcuts::getInstance().get_accels(action_ptr_name.second);
         std::string accel_label;
         for (const auto &accel : accels) {
             guint key = 0;

@@ -12,7 +12,6 @@
 
 #include "util/action-accel.h"
 
-#include <iterator>
 #include <utility>
 
 #include "inkscape-application.h"
@@ -51,16 +50,14 @@ bool ActionAccel::_query()
         return false;
     }
 
-    auto accel_strings = gtk_app->get_accels_for_action(_action);
-    std::set<AcceleratorKey> new_keys{std::move_iterator{accel_strings.begin()},
-                                      std::move_iterator{accel_strings.end  ()}};
-    if (new_keys != _accels)
-    {
-        _accels = std::move(new_keys);
-        return true;
+    auto const &accels = Shortcuts::getInstance().get_accels(_action);
+    std::set<AcceleratorKey> new_keys{accels.begin(), accels.end()};
+    if (new_keys == _accels) {
+        return false;
     }
 
-    return false;
+    _accels = std::move(new_keys);
+    return true;
 }
 
 bool ActionAccel::isTriggeredBy(KeyEvent const &key) const

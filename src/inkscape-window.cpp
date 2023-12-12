@@ -19,6 +19,7 @@
 #include <gdkmm/surface.h>
 #include <gtkmm/box.h>
 #include <gtkmm/popovermenubar.h>
+#include <gtkmm/shortcutcontroller.h>
 #include <sigc++/functors/mem_fun.h>
 
 #include "desktop.h"
@@ -79,20 +80,6 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
 
     set_resizable(true);
 
-    // =============== Build interface ===============
-
-    // Main box
-    _mainbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
-    _mainbox->set_name("DesktopMainBox");
-    _mainbox->set_visible(true);
-    set_child(*_mainbox);
-
-    // Desktop widget (=> MultiPaned)
-    _desktop_widget = Gtk::make_managed<SPDesktopWidget>(this, _document);
-    _desktop_widget->set_window(this);
-    _desktop_widget->set_visible(true);
-    _desktop = _desktop_widget->get_desktop();
-
     // =================== Actions ===================
 
     // After canvas has been constructed.. move to canvas proper.
@@ -124,6 +111,20 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
     // This is called here (rather than in InkscapeApplication) solely to add win level action
     // tooltips to the menu label-to-tooltip map.
     build_menu();
+
+    // =============== Build interface ===============
+
+    // Main box
+    _mainbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
+    _mainbox->set_name("DesktopMainBox");
+    _mainbox->set_visible(true);
+    set_child(*_mainbox);
+
+    // Desktop widget (=> MultiPaned) (After actions added as this initializes shortcuts via CommandDialog.)
+    _desktop_widget = Gtk::make_managed<SPDesktopWidget>(this, _document);
+    _desktop_widget->set_window(this);
+    _desktop_widget->set_visible(true);
+    _desktop = _desktop_widget->get_desktop();
 
     // ========== Drag and Drop of Documents =========
     ink_drag_setup(_desktop_widget);
@@ -160,9 +161,24 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
         }
     }
 
-    // ========= Update text for Accellerators =======
-    Inkscape::Shortcuts::getInstance().update_gui_text_recursive(this);
+    // ================== Shortcuts ==================
+    auto& shortcuts_instance = Inkscape::Shortcuts::getInstance();
+    _shortcut_controller = Gtk::ShortcutController::create(shortcuts_instance.get_liststore());
+    _shortcut_controller->set_scope(Gtk::ShortcutScope::GLOBAL);
+    _shortcut_controller->set_propagation_phase(Gtk::PropagationPhase::BUBBLE);
+    add_controller(_shortcut_controller);
 
+    // Update shortcuts in menus (due to bug in Gtk4 where menus are not updated when liststore is changed).
+    shortcuts_instance.connect_changed([this]() {
+        remove_controller(_shortcut_controller);
+        add_controller(_shortcut_controller);
+        // Todo: Trigger update_gui_text_recursive here rather than in preferences dialog.
+    });
+
+    // Add shortcuts to tooltips, etc. (but not menus).
+    shortcuts_instance.update_gui_text_recursive(this);
+
+    // ==== Other ====
     set_visible(true);  // Gtk4: This 'hack' is required for windows created via 'File->New' to be shown. If called before 'build_menu()', menu will not be visible.
 }
 
@@ -224,53 +240,6 @@ InkscapeWindow::setup_view()
         nv->setLockGuides(true);
     }
 }
-
-// TODO: GTK4: We wonʼt be able to do this, but shouldnʼt need to, if instead of using
-// Application.set_accels_for_action(), we use GtkShortcutController in CAPTURE phase.
-// ::key-press-event handlers will be replaced by GtkEventControllerKey, w/ phase TBC.
-// See: https://gitlab.com/dboles/inkscape/-/issues/1
-#if 0
-bool InkscapeWindow::on_key_press_event(GdkEventKey *event)
-{
-    if constexpr (false) {
-        std::cout << "InkscapeWindow::on_key_press_event: GDK_KEY_PRESS: " << std::hex
-                  << " hardware: " << event->keycode
-                  << " state: "    << event->state
-                  << " keyval: "   << event->keyval << std::endl;
-    }
-
-    // Key press and release events are normally sent first to Gtk::Window for processing as
-    // accelerators and menomics before bubbling up from the "grab" or "focus" widget (unlike other
-    // events which always bubble up). This would means that key combinations used for accelerators
-    // won't reach the focus widget (and our tool event handlers). As we use single keys for
-    // accelerators, we wouldn't even be able to type text! We can get around this by sending key
-    // events first to the focus widget.
-    //
-    // See https://developer.gnome.org/gtk3/stable/chap-input-handling.html (Event Propagation)
-    auto focus = get_focus();
-    if (focus) {
-        if (focus->event(reinterpret_cast<GdkEvent *>(event))) {
-            return true;
-        }
-    }
-
-    // Try to find action to call; calling it here makes it higher priority than dialog mnemonics;
-    // this is needed because GTK tries to activate widgets with matching mnemonics first,
-    // even if they are invisible (!) and/or disabled. That cripples some Alt+key shortcuts when
-    // we open and dock some dialogs, whether they are visible or not.
-    // On macOS situation is even worse, as dialogs can steal many common <option>+key shortcuts.
-    if (Inkscape::Shortcuts::getInstance().invoke_action(event)) {
-        return true;
-    }
-
-    // TODO: GTK4: Ditto above.
-    if (Gtk::Window::on_key_press_event(event)) {
-        return true;
-    }
-
-    return false;
-}
-#endif
 
 /**
  * If "dialogs on top" is activated in the preferences, set `parent` as the

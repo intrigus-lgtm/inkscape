@@ -10,9 +10,12 @@
 #ifndef INK_SHORTCUTS_H
 #define INK_SHORTCUTS_H
 
-#include <map>
+#include <string>
+#include <unordered_map>
 #include <utility>
 #include <vector>
+
+#include <giomm/liststore.h>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 #include <gtk/gtk.h> // GtkEventControllerKey
@@ -26,7 +29,9 @@ class File;
 
 namespace Gtk {
 class Application;
+class Shortcut;
 class Widget;
+class Window;
 } // namespace Gtk
 
 namespace Inkscape {
@@ -78,6 +83,7 @@ public:
 
     void init();
     void clear();
+    Glib::RefPtr<Gio::ListStore<Gtk::Shortcut>> get_liststore() { return _liststore; }
 
     bool read (Glib::RefPtr<Gio::File> const &file, bool user_set = false);
     bool write(Glib::RefPtr<Gio::File> const &file, What what     = User );
@@ -88,7 +94,7 @@ public:
     // Add/remove shortcuts
     bool add_shortcut(Glib::ustring const &name, Gtk::AccelKey const &shortcut, bool user);
     bool remove_shortcut(Glib::ustring const &name);
-    Glib::ustring remove_shortcut(const Gtk::AccelKey& shortcut);
+    bool remove_shortcut(Gtk::AccelKey const &shortcut);
 
     // User shortcuts
     bool add_user_shortcut(Glib::ustring const &name, Gtk::AccelKey const &shortcut);
@@ -126,14 +132,34 @@ public:
     void dump_all_recursive(Gtk::Widget* widget);
 
 private:
-    // Gio::Actions
-    Gtk::Application * const app;
-    std::map<Glib::ustring, bool> action_user_set;
 
     void _read(XML::Node const &keysnode, bool user_set);
+    void unset_accels(Glib::ustring const &action_name);
+    void set_accels(Glib::ustring const &action_name, std::vector<Glib::ustring> accels);
+
+    // See comment in cpp file:
+    struct ShortcutValue final {
+        std::vector<Glib::ustring> accels;
+        Glib::RefPtr<Gtk::Shortcut> shortcut;
+    };
+    std::unordered_map<std::string, ShortcutValue> _shortcuts;
+
+    // unordered_map is considered to perform better. std:string because Glib::ustring lacks hash().
+    std::unordered_map<std::string, bool> action_user_set;
+
+    // Gio::Actions
+    Gtk::Application * const app;
+
+    // Common liststore for all shortcut controllers.
+    Glib::RefPtr<Gio::ListStore<Gtk::Shortcut>> _liststore;
 
     bool initialized = false;
     sigc::signal<void ()> _changed;
+
+
+public:
+    [[nodiscard]] std::vector<Glib::ustring> const &get_accels(Glib::ustring const &action_name) const;
+    [[nodiscard]] std::vector<Glib::ustring> get_actions(Glib::ustring const &accel) const;
 };
 
 } // Namespace Inkscape

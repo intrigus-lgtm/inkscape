@@ -3357,8 +3357,7 @@ void InkscapePreferences::onKBTreeEdited (const Glib::ustring& path, guint accel
     // Check if there is currently an actions assigned to this shortcut; if yes ask if the shortcut should be reassigned
     Glib::ustring action_name;
     Glib::ustring accel = Gtk::Accelerator::name(accel_key, accel_mods);
-    auto *app = InkscapeApplication::instance()->gtk_app();
-    std::vector<Glib::ustring> actions = app->get_actions_for_accel(accel);
+    auto const &actions = shortcuts.get_actions(accel);
     if (!actions.empty()) {
         action_name = actions[0];
     }
@@ -3561,7 +3560,7 @@ void InkscapePreferences::onKBListKeyboardShortcuts()
         }
 
         // Find accelerators
-        std::vector<Glib::ustring> accels = gapp->get_accels_for_action(action);
+        auto const &accels = shortcuts.get_accels(action);
         Glib::ustring shortcut_label;
         for (auto const &accel : accels) {
             // Convert to more user friendly notation.
@@ -3642,24 +3641,6 @@ void InkscapePreferences::onKBListKeyboardShortcuts()
     // Update all GUI text that includes shortcuts.
     for (auto win : gapp->get_windows()) {
         shortcuts.update_gui_text_recursive(win);
-    }
-
-    // Update all GUI text
-    std::list< SPDesktop* > listbuf;
-    // Get list of all available desktops
-    INKSCAPE.get_all_desktops(listbuf);
-
-    // Update text of each desktop to correct Shortcuts
-    for(SPDesktop *desktop: listbuf) {
-      // Caution: Checking if pointers are not NULL
-      if(desktop) {
-        InkscapeWindow *window = desktop->getInkscapeWindow();
-        if(window) {
-          SPDesktopWidget *dtw = window->get_desktop_widget();
-          if(dtw)
-            build_menu();
-        }
-      }
     }
 }
 

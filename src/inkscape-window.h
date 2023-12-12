@@ -47,17 +47,11 @@ private:
     SPDesktop*           _desktop = nullptr;
     SPDesktopWidget*     _desktop_widget = nullptr;
     Gtk::Box*      _mainbox = nullptr;
+    Glib::RefPtr<Gtk::ShortcutController> _shortcut_controller;
 
     void setup_view();
     void add_document_actions();
 
-// TODO: GTK4: Presumably we can use Gtk::ShortcutController and not need to replicate this monster
-#if 0
-public:
-    bool on_key_press_event(GdkEventKey* event) final;
-#endif
-
-private:
     Inkscape::auto_connection _toplevel_state_connection;
     Gdk::Toplevel::State _old_toplevel_state{};
 

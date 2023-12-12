@@ -9,16 +9,6 @@
  *
  */
 
-/* Much of the complexity of this code is in dealing with both Inkscape verbs and Gio::Actions at
- * the same time. When we remove verbs we can avoid using 'unsigned long long int shortcut' to
- * track keys and rely directly on Glib::ustring as used by
- * Gtk::Application::get_accels_for_action(). This will then automatically handle the '<Primary>'
- * modifier value (which takes care of the differences between Linux and OSX) as well as allowing
- * us to set multiple accelerators for actions in InkscapePreferences. */
-
-// TODO: GTK4: Replace Application.[un]set_accels*() with GtkShortcutController in CAPTURE phase.
-// See: https://gitlab.com/dboles/inkscape/-/issues/1
-
 #include "shortcuts.h"
 
 #include <memory>
@@ -35,6 +25,7 @@
 #include <gtkmm/accelerator.h>
 #include <gtkmm/actionable.h>
 #include <gtkmm/application.h>
+#include <gtkmm/shortcut.h>
 #include <gtkmm/window.h>
 
 #include "document.h"
@@ -63,10 +54,14 @@ Shortcuts::Shortcuts()
 {
     if (!app) {
         std::cerr << "Shortcuts::Shortcuts: No app! Shortcuts cannot be used without a Gtk::Application!" << std::endl;
+        return;
     }
+
+    // Shared among all Shortcut controllers.
+    _liststore = Gio::ListStore<Gtk::Shortcut>::create();
 }
 
-Shortcuts::~Shortcuts() = default;
+Shortcuts::~Shortcuts() {}
 
 void
 Shortcuts::init() {
@@ -94,7 +89,7 @@ Shortcuts::init() {
         Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(path);
         success = read(file);
         if (!success) {
-            std::cerr << "Shortcut::Shortcut: Unable to read shortcut file listed in preferences: " + path << std::endl;;
+            std::cerr << "Shortcut::Shortcut: Unable to read shortcut file listed in preferences: " + path << std::endl;
         }
 
         // Save relative path to "share/keys" if possible to handle parallel installations of
@@ -129,6 +124,7 @@ Shortcuts::init() {
     if (file->query_exists()) {
         read(file, true);
     }
+
     // ------------ Open User shortcut file -------------
     file = Gio::File::create_for_path(get_path_string(USER, KEYS, "default.xml"));
     // Test if file exists before attempting to read to avoid generating warning message.
@@ -143,10 +139,7 @@ Shortcuts::init() {
 void
 Shortcuts::clear()
 {
-    // Actions: We rely on Gtk for everything except user/system setting.
-    for (auto const &action_description : app->list_action_descriptions()) {
-        app->unset_accels_for_action(action_description);
-    }
+    _liststore->remove_all();
     action_user_set.clear();
 }
 
@@ -156,7 +149,8 @@ Shortcuts::invoke_action(Gtk::AccelKey const &shortcut)
 {
     // This can be simplified in GTK4.
     Glib::ustring accel = Gtk::Accelerator::name(shortcut.get_key(), shortcut.get_mod());
-    std::vector<Glib::ustring> actions = app->get_actions_for_accel(accel);
+
+    auto const actions = get_actions(accel);
     if (!actions.empty()) {
         Glib::ustring const &action = actions[0];
         Glib::ustring action_name;
@@ -165,10 +159,10 @@ Shortcuts::invoke_action(Gtk::AccelKey const &shortcut)
         if (action.compare(0, 4, "app.") == 0) {
             app->activate_action(action_name, value);
             return true;
-        } else if (action.compare(0, 4, "win.") == 0) {
+        } else {
             auto window = dynamic_cast<InkscapeWindow *>(app->get_active_window());
             if (window) {
-                window->activate_action(action_name, value);
+                window->activate_action(action, value); // Not action_name in Gtk4!
                 return true;
             }
         }
@@ -177,6 +171,7 @@ Shortcuts::invoke_action(Gtk::AccelKey const &shortcut)
 }
 
 /**  Trigger action from a shortcut. Useful if we want to intercept the event from GTK */
+// Used by Tools
 bool Shortcuts::invoke_action(KeyEvent const &event)
 {
     auto const shortcut = get_from_event(event);
@@ -184,6 +179,7 @@ bool Shortcuts::invoke_action(KeyEvent const &event)
 }
 
 /**  Trigger action from a shortcut. Useful if we want to intercept the event from GTK */
+// NOT USED CURRENTLY
 bool
 Shortcuts::invoke_action(GtkEventControllerKey const * const controller,
                          unsigned const keyval, unsigned const keycode,
@@ -196,7 +192,7 @@ Shortcuts::invoke_action(GtkEventControllerKey const * const controller,
 Gdk::ModifierType
 parse_modifier_string(char const * const modifiers_string)
 {
-    Gdk::ModifierType modifiers(Gdk::ModifierType(0));
+    Gdk::ModifierType modifiers{};
     if (modifiers_string) {
         std::vector<Glib::ustring> mod_vector = Glib::Regex::split_simple("\\s*,\\s*", modifiers_string);
   
@@ -213,7 +209,6 @@ parse_modifier_string(char const * const modifiers_string)
                 modifiers |= Gdk::ModifierType::HYPER_MASK; // Not used
             } else if (mod == "Meta") {
                 modifiers |= Gdk::ModifierType::META_MASK;
-            } else if (mod == "Primary") {
             } else {
                 std::cerr << "Shortcut::read: Unknown GDK modifier: " << mod.c_str() << std::endl;
             }
@@ -269,7 +264,7 @@ Shortcuts::_read(XML::Node const &keysnode, bool user_set)
         if (strcmp(iter->name(), "modifier") == 0) {
             char const * const mod_name = iter->attribute("action");
             if (!mod_name) {
-                std::cerr << "Shortcuts::read: Missing modifier for action!" << std::endl;;
+                std::cerr << "Shortcuts::read: Missing modifier for action!" << std::endl;
                 continue;
             }
 
@@ -388,10 +383,10 @@ Shortcuts::write(Glib::RefPtr<Gio::File> const &file, What const what)
     // Actions: write out all actions with accelerators.
     for (auto const &action_name : list_all_detailed_action_names()) {
         if ( what == All                                 ||
-            (what == System && !action_user_set[action_name]) ||
-            (what == User   &&  action_user_set[action_name]) )
+            (what == System && !action_user_set[action_name.raw()]) ||
+            (what == User   &&  action_user_set[action_name.raw()]) )
         {
-            std::vector<Glib::ustring> accels = app->get_accels_for_action(action_name);
+            auto const &accels = get_accels(action_name);
             if (!accels.empty()) {
                 XML::Node * node = document->createElement("bind");
 
@@ -434,7 +429,7 @@ Shortcuts::write(Glib::RefPtr<Gio::File> const &file, What const what)
 bool
 Shortcuts::is_user_set(Glib::ustring const &action)
 {
-    auto it = action_user_set.find(action);
+    auto it = action_user_set.find(action.raw());
     if (it != action_user_set.end()) {
         return it->second;
     } else {
@@ -497,10 +492,11 @@ bool
 Shortcuts::add_shortcut(Glib::ustring const &name, const Gtk::AccelKey& shortcut, bool const user)
 {
     // Remove previous use of shortcut (already removed if new user shortcut).
-    if (auto const &old_name = remove_shortcut(shortcut); !old_name.empty()) {
+    [[maybe_unused]] auto const removed = remove_shortcut(shortcut);
+    // if (removed) {
         // std::cerr << "Shortcut::add_shortcut: duplicate shortcut found for: " << shortcut.get_abbrev().raw()
                 //   << "  Old: " << old_name.raw() << "  New: " << name.raw() << " !" << std::endl;
-    }
+    // }
 
     // Add shortcut
 
@@ -521,11 +517,11 @@ Shortcuts::add_shortcut(Glib::ustring const &name, const Gtk::AccelKey& shortcut
             // That's what we show in the UI when we define shortcuts (only new one) and that's also
             // the only way to let user "overwrite" default shortcut, as there's no removal possible.
             if (!user) {
-                accels = app->get_accels_for_action(name);
+                accels = get_accels(name);
             }
             accels.push_back(shortcut.get_abbrev());
-            app->set_accels_for_action(name, accels);
-            action_user_set[name] = user;
+            set_accels(name, std::move(accels));
+            action_user_set[name.raw()] = user;
             _changed.emit();
             return true;
         }
@@ -556,46 +552,46 @@ Shortcuts::add_user_shortcut(Glib::ustring const &name, const Gtk::AccelKey& sho
     return false;
 };
 
-// Remove a shortcut via key. Return name of removed action.
-Glib::ustring
+// Remove a shortcut via key.
+bool
 Shortcuts::remove_shortcut(const Gtk::AccelKey& shortcut)
 {
-    std::vector<Glib::ustring> actions = app->get_actions_for_accel(shortcut.get_abbrev());
+    auto const actions = get_actions(shortcut.get_abbrev());
+
     if (actions.empty()) {
-        return Glib::ustring(); // No action, no pie.
+        return false;
     }
 
-    Glib::ustring action_name;
+    auto const &abbrev = shortcut.get_abbrev();
+
     for (auto const &action : actions) {
+        auto const &accels = get_accels(action);
+        auto const it = std::find(accels.begin(), accels.end(), abbrev);
+        if (it != accels.end()) continue;
+
         // Remove just the one shortcut, leaving the others intact.
-        std::vector<Glib::ustring> accels = app->get_accels_for_action(action);
-        auto it = std::find(accels.begin(), accels.end(), shortcut.get_abbrev());
-        if (it != accels.end()) {
-            action_name = action;
-            accels.erase(it);
-            app->set_accels_for_action(action, accels);
-            _changed.emit();
-        }
+        auto const index = std::distance(accels.begin(), it);
+        auto new_accels = accels;
+        new_accels.erase(new_accels.begin() + index);
+        set_accels(action, std::move(new_accels));
+        _changed.emit();
+        return true;
     }
 
-    return action_name;
+    return false;
 }
 
 // Remove a shortcut via action name.
 bool
 Shortcuts::remove_shortcut(Glib::ustring const &name)
 {
-    for (auto const &action : list_all_detailed_action_names()) {
-        if (action == name) {
-            // Action exists
-            app->unset_accels_for_action(action);
-            action_user_set.erase(action);
-            _changed.emit();
-            return true;
-        }
-    }
+    auto const it = _shortcuts.find(name);
+    if (it == _shortcuts.end()) return false;
 
-    return false;
+    unset_accels(name);
+    action_user_set.erase(name.raw());
+    _changed.emit();
+    return true;
 }
 
 // Remove a user shortcut, updating user's shortcut file.
@@ -668,9 +664,10 @@ get_from_event_impl(unsigned const event_keyval, unsigned const event_keycode,
 {
     // MOD2 corresponds to the NumLock key. Masking it out allows
     // shortcuts to work regardless of its state.
-    auto const initial_modifiers = static_cast<Gdk::ModifierType>(event_state & ~GDK_CONTROL_MASK);
+    auto const default_mod_mask = Gtk::Accelerator::get_default_mod_mask();
+    auto const initial_modifiers = static_cast<Gdk::ModifierType>(event_state) & default_mod_mask;
 
-    unsigned int consumed_modifiers = 0;
+    auto consumed_modifiers = 0u;
     auto keyval = Inkscape::UI::Tools::get_latin_keyval_impl(
         event_keyval, event_keycode, event_state, event_group, &consumed_modifiers);
 
@@ -679,7 +676,7 @@ get_from_event_impl(unsigned const event_keyval, unsigned const event_keycode,
     bool is_case_convertible = !(gdk_keyval_is_upper(keyval) && gdk_keyval_is_lower(keyval));
     if (is_case_convertible) {
         keyval = gdk_keyval_to_lower(keyval);
-        consumed_modifiers &= ~(unsigned)Gdk::ModifierType::SHIFT_MASK;
+        consumed_modifiers &= ~static_cast<unsigned>(Gdk::ModifierType::SHIFT_MASK);
     }
 
     // The InkscapePreferences dialog returns an event structure where the Shift modifier is not
@@ -690,9 +687,10 @@ get_from_event_impl(unsigned const event_keyval, unsigned const event_keycode,
         keyval = event_keyval;
     }
 
-    auto unused_modifiers = Gdk::ModifierType(((unsigned)initial_modifiers &~ consumed_modifiers)
-                                                                 & GDK_MODIFIER_MASK
-                                                                 &~ GDK_LOCK_MASK);
+    auto const unused_modifiers = Gdk::ModifierType(static_cast<unsigned>(initial_modifiers)
+                                                                          & ~consumed_modifiers
+                                                                          &  GDK_MODIFIER_MASK
+                                                                          & ~GDK_LOCK_MASK);
 
     // std::cout << "Shortcuts::get_from_event: End:   "
     //           << " Key: " << std::hex << keyval << " (" << (char)keyval << ")"
@@ -720,7 +718,9 @@ Shortcuts::get_from(GtkEventControllerKey const * const controller,
                     unsigned const keyval, unsigned const keycode, GdkModifierType const state,
                     bool const fix)
 {
-    auto const group = controller ? gtk_event_controller_key_get_group(const_cast<GtkEventControllerKey*>(controller)) : 0u;
+    // TODO: Once controller.h is updated to use gtkmm 4 wrappers, we can get rid of const_cast etc
+    auto const mcontroller = const_cast<GtkEventControllerKey *>(controller);
+    auto const group = controller ? gtk_event_controller_key_get_group(mcontroller) : 0u;
     return get_from_event_impl(keyval, keycode, state, group, fix);
 }
 
@@ -796,7 +796,7 @@ Shortcuts::get_file_names()
 }
 
 // void on_foreach(Gtk::Widget& widget) {
-//     std::cout <<  "on_foreach: " << widget.get_name() << std::endl;;
+//     std::cout <<  "on_foreach: " << widget.get_name() << std::endl;
 // }
 
 /*
@@ -823,7 +823,7 @@ Shortcuts::update_gui_text_recursive(Gtk::Widget* widget)
                 }
             }
 
-            std::vector<Glib::ustring> accels = app->get_accels_for_action(action);
+            auto const &accels = get_accels(action);
 
             Glib::ustring tooltip;
             auto *iapp = InkscapeApplication::instance();
@@ -840,7 +840,7 @@ Shortcuts::update_gui_text_recursive(Gtk::Widget* widget)
 
                 // Convert to more user friendly notation.
                 unsigned int key = 0;
-                Gdk::ModifierType mod = Gdk::ModifierType(0);
+                Gdk::ModifierType mod{};
                 Gtk::Accelerator::parse(accels[0], key, mod);
                 tooltip += "(" + Gtk::Accelerator::get_label(key, mod) + ")";
             }
@@ -931,7 +931,7 @@ void
 Shortcuts::dump() {
     // What shortcuts are being used?
     static std::vector<Gdk::ModifierType> const modifiers{
-        Gdk::ModifierType(0),
+        Gdk::ModifierType{},
         Gdk::ModifierType::SHIFT_MASK,
         Gdk::ModifierType::CONTROL_MASK,
         Gdk::ModifierType::ALT_MASK,
@@ -940,22 +940,31 @@ Shortcuts::dump() {
         Gdk::ModifierType::CONTROL_MASK |  Gdk::ModifierType::ALT_MASK,
         Gdk::ModifierType::SHIFT_MASK   |  Gdk::ModifierType::CONTROL_MASK   | Gdk::ModifierType::ALT_MASK
     };
+
     for (auto mod : modifiers) {
         for (char key = '!'; key <= '~'; ++key) {
             Glib::ustring action;
             Glib::ustring accel = Gtk::Accelerator::name(key, mod);
-            std::vector<Glib::ustring> actions = app->get_actions_for_accel(accel);
+            auto const actions = get_actions(accel);
             if (!actions.empty()) {
                 action = actions[0];
             }
 
             std::cout << "  shortcut:"
-                      << "  " << std::setw(8) << std::hex << (unsigned)mod
-                      << "  " << std::setw(8) << std::hex << key
+                      << "  " << std::setw( 8) << std::hex  << static_cast<int>(mod)
+                      << "  " << std::setw( 8) << std::hex  << key
                       << "  " << std::setw(30) << std::left << accel
                       << "  " << action
                       << std::endl;
         }
+    }
+
+    int count = _liststore->get_n_items();
+    for (int i = 0; i < count; ++i) {
+        auto shortcut = _liststore->get_item(i);
+        auto trigger = shortcut->get_trigger();
+        auto action = shortcut->get_action();
+        std::cout << action->to_string() << ": " << trigger->to_string() << std::endl;
     }
 }
 
@@ -980,6 +989,101 @@ Shortcuts::dump_all_recursive(Gtk::Widget* widget)
     }
 
     --indent;
+}
+
+void
+Shortcuts::unset_accels(Glib::ustring const &action_name)
+{
+    auto const it = _shortcuts.find(action_name.raw());
+    if (it == _shortcuts.end()) return;
+
+    auto const &shortcut = it->second.shortcut;
+    g_assert(shortcut);
+
+    for (int i = 0; i < _liststore->get_n_items(); ++i) {
+        auto item = _liststore->get_item(i);
+        if (auto namedaction = dynamic_pointer_cast<Gtk::NamedAction>(item->get_action())) {
+            if (namedaction->get_action_name() == action_name) {
+                _liststore->remove(i);
+                break;
+            }
+        }
+    }
+
+    _shortcuts.erase(it);
+}
+
+void
+Shortcuts::set_accels(Glib::ustring const &action_name, std::vector<Glib::ustring> accels)
+{
+    if (accels.size() > 2) {
+        std::cerr << "Shortcuts::set_accels: no more than two shortcuts allowed!  "
+                  << std::setw(36) << std::left << action_name << ":  ";
+        for (auto accel : accels) {
+            std::cerr << accel << " ";
+        }
+        std::cerr << std::endl;
+        //accels.resize(2);
+    }
+    auto const accels_string = join(accels, '|');
+
+    auto const trigger = Gtk::ShortcutTrigger::parse_string(accels_string);
+    g_assert(trigger);
+
+    // std::cout << "Shortcuts::set_accels:  "
+    //           << std::setw(36) << std::left << action_name << "   "
+    //           << std::setw(20) << accels_string << "    ";
+    // if (auto alternative = std::dynamic_pointer_cast<Gtk::AlternativeTrigger>(trigger)) {
+    //     std::cout << std::setw(20)  << alternative->get_first()->to_string()
+    //               << "  "           << alternative->get_second()->to_string()
+    //               << std::endl;
+    // } else {
+    //     std::cout  << std::setw(20) << trigger->to_string() << std::endl;
+    // }
+
+    // If shortcut already exists, modify it.
+    if (auto const it = _shortcuts.find(action_name.raw()); it != _shortcuts.end()) {
+        auto &[map_accels, shortcut] = it->second;
+        g_assert(shortcut);
+        map_accels = std::move(accels);
+        shortcut->set_trigger(trigger);
+        return;
+    }
+
+    auto const action = Gtk::NamedAction::create(action_name);
+    g_assert(action);
+
+    auto shortcut = Gtk::Shortcut::create(trigger, action);
+    g_assert(shortcut);
+
+    _liststore->append(shortcut);
+    auto value = ShortcutValue{std::move(accels), std::move(shortcut)};
+    _shortcuts.emplace(action_name.raw(), std::move(value));
+}
+
+std::vector<Glib::ustring> const &
+Shortcuts::get_accels(Glib::ustring const &action_name) const
+{
+    if (auto const it = _shortcuts.find(action_name.raw()); it != _shortcuts.end()) {
+        return it->second.accels;
+    }
+
+    static std::vector<Glib::ustring> const empty{};
+    return empty;
+}
+
+std::vector<Glib::ustring>
+Shortcuts::get_actions(Glib::ustring const &accel) const
+{
+    std::vector<Glib::ustring> result;
+    for (auto const &[action_name, value]: _shortcuts) {
+        for (auto const &map_accel: value.accels) {
+            if (map_accel == accel) {
+                result.push_back(action_name);
+            }
+        }
+    }
+    return result;
 }
 
 } // namespace Inkscape

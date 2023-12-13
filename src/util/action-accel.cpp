@@ -50,7 +50,7 @@ bool ActionAccel::_query()
         return false;
     }
 
-    auto const &accels = Shortcuts::getInstance().get_accels(_action);
+    auto const &accels = Shortcuts::getInstance().get_triggers(_action);
     std::set<AcceleratorKey> new_keys{accels.begin(), accels.end()};
     if (new_keys == _accels) {
         return false;

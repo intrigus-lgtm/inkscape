@@ -169,6 +169,7 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
     add_controller(_shortcut_controller);
 
     // Update shortcuts in menus (due to bug in Gtk4 where menus are not updated when liststore is changed).
+    // However, this will not remove a shortcut label if there is no longer a shortcut for menu item.
     shortcuts_instance.connect_changed([this]() {
         remove_controller(_shortcut_controller);
         add_controller(_shortcut_controller);

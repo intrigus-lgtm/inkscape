@@ -297,7 +297,7 @@ bool CommandPalette::generate_action_operation(const ActionPtrName &action_ptr_n
     }
 
     {
-        auto const &accels = Shortcuts::getInstance().get_accels(action_ptr_name.second);
+        auto const &accels = Shortcuts::getInstance().get_triggers(action_ptr_name.second);
         std::string accel_label;
         for (const auto &accel : accels) {
             guint key = 0;

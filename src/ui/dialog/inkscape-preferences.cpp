@@ -3560,7 +3560,7 @@ void InkscapePreferences::onKBListKeyboardShortcuts()
         }
 
         // Find accelerators
-        auto const &accels = shortcuts.get_accels(action);
+        auto const &accels = shortcuts.get_triggers(action);
         Glib::ustring shortcut_label;
         for (auto const &accel : accels) {
             // Convert to more user friendly notation.

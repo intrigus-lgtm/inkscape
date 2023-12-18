@@ -424,17 +424,6 @@ void draw_cairo_path(CanvasItemCtrlShape shape, Cairo::Context &cr, double size,
 std::unordered_map<RenderParams, std::shared_ptr<Cairo::ImageSurface const>> cache;
 std::mutex mutex;
 
-// Convert a Cairo::RefPtr to a std::shared_ptr.
-// This is to circumvent Cairo::RefPtr's thread unsafe refcounting.
-// Todo: (GTK4) Remove this, since no conversion is required.
-template <typename T>
-static std::shared_ptr<T> to_shared(Cairo::RefPtr<T> const &surface)
-{
-    auto const ptr = surface.operator->();
-    auto shared = std::make_shared<Cairo::RefPtr<T>>(surface);
-    return std::shared_ptr<T>(std::move(shared), ptr);
-}
-
 void set_source_rgba32(Cairo::Context &cr, uint32_t rgba)
 {
     cr.set_source_rgba(SP_RGBA32_R_F(rgba),
@@ -446,7 +435,7 @@ void set_source_rgba32(Cairo::Context &cr, uint32_t rgba)
 std::shared_ptr<Cairo::ImageSurface const> draw_uncached(RenderParams const &p)
 {
     // operate on a physical pixel scale, to make pixel grid aligning easier to understand
-    auto surface = to_shared(Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, p.width, p.width));
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, p.width, p.width);
 
     const auto scale = p.device_scale;
 

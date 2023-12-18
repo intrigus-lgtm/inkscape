@@ -27,6 +27,7 @@
 #include "selection.h"            // Selection
 
 #include "actions/actions-extra-data.h"
+#include "util-string/ustring-format.h"
 #include "io/resource.h"
 #include "object/sp-root.h"       // query_all()
 
@@ -89,9 +90,9 @@ query_dimension(InkscapeApplication* app, bool extent, Geom::Dim2 const axis)
         Geom::OptRect area = item->documentVisualBounds();
         if (area) {
             if (extent) {
-                out += Glib::ustring::format(area->dimensions()[axis]);
+                out += Inkscape::ustring::format_classic(area->dimensions()[axis]);
             } else {
-                out += Glib::ustring::format(area->min()[axis]);
+                out += Inkscape::ustring::format_classic(area->min()[axis]);
             }
         } else {
             out += "0";
@@ -135,10 +136,10 @@ query_all_recurse (SPObject *o)
         if (area) {
             // clang-format off
             out += Glib::ustring(item->getId()) + ",";
-            out += Glib::ustring::format(area->min()[Geom::X]) + ",";
-            out += Glib::ustring::format(area->min()[Geom::Y]) + ",";
-            out += Glib::ustring::format(area->dimensions()[Geom::X]) + ",";
-            out += Glib::ustring::format(area->dimensions()[Geom::Y]);
+            out += Inkscape::ustring::format_classic(area->min()[Geom::X]) + ",";
+            out += Inkscape::ustring::format_classic(area->min()[Geom::Y]) + ",";
+            out += Inkscape::ustring::format_classic(area->dimensions()[Geom::X]) + ",";
+            out += Inkscape::ustring::format_classic(area->dimensions()[Geom::Y]);
             // clang-format on
         }
         show_output(out, false);

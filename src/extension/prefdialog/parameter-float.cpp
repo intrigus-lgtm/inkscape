@@ -20,6 +20,7 @@
 #include "ui/pack.h"
 #include "ui/widget/spinbutton.h"
 #include "ui/widget/spin-scale.h"
+#include "util-string/ustring-format.h"
 #include "xml/node.h"
 
 namespace Inkscape::Extension {
@@ -100,7 +101,7 @@ double ParamFloat::set(double in)
 
 std::string ParamFloat::value_to_string() const
 {
-    return Glib::ustring::format(std::setprecision(_precision), std::fixed, _value);
+    return Inkscape::ustring::format_classic(std::setprecision(_precision), std::fixed, _value);
 }
 
 void ParamFloat::string_to_value(const std::string &in)

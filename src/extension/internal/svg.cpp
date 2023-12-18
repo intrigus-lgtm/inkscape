@@ -41,6 +41,8 @@
 #include "object/sp-text.h"
 
 #include "util/units.h"
+#include "util-string/ustring-format.h"
+
 #include "selection-chemistry.h"
 
 // TODO due to internal breakage in glibmm headers, this must be last:
@@ -229,10 +231,10 @@ Svg::open (Inkscape::Extension::Input *mod, const gchar *uri)
         image_node->setAttribute("preserveAspectRatio", "none");
 
         double svgdpi = mod->get_param_float("svgdpi");
-        image_node->setAttribute("inkscape:svg-dpi", Glib::ustring::format(svgdpi));
+        image_node->setAttribute("inkscape:svg-dpi", Inkscape::ustring::format_classic(svgdpi));
 
-        image_node->setAttribute("width", Glib::ustring::format(width));
-        image_node->setAttribute("height", Glib::ustring::format(height));
+        image_node->setAttribute("width", Inkscape::ustring::format_classic(width));
+        image_node->setAttribute("height", Inkscape::ustring::format_classic(height));
 
         // This is actually "image-rendering"
         Glib::ustring scale = prefs->getString("/dialogs/import/scale");

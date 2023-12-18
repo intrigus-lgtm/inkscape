@@ -32,6 +32,7 @@
 #include "canvas-item-curve.h"
 
 #include "ui/tools/measure-tool.h"
+#include "util-string/ustring-format.h"
 
 #define DISTANCE_BG_RADIUS 0.3
 
@@ -424,7 +425,7 @@ void SnapIndicator::make_alignment_indicator(Geom::Point const &p1, Geom::Point 
 
         dist = Inkscape::Util::Quantity::convert(dist, "px", unit_name);
 
-        Glib::ustring distance = Glib::ustring::format(std::fixed, std::setprecision(1), std::noshowpoint, scale*dist);
+        Glib::ustring distance = Inkscape::ustring::format_classic(std::fixed, std::setprecision(1), std::noshowpoint, scale*dist);
         
         auto text = new Inkscape::CanvasItemText(_desktop->getCanvasTemp(), text_pos, distance);
         text->set_fontsize(fontsize);
@@ -489,7 +490,7 @@ void SnapIndicator::make_distribution_indicators(SnappedPoint const &p,
         unit_name = DEFAULT_UNIT_NAME;
     }
     auto equal_dist = Inkscape::Util::Quantity::convert(p.getDistributionDistance(), "px", unit_name);
-    Glib::ustring distance = Glib::ustring::format(std::fixed, std::setprecision(1), std::noshowpoint, scale*equal_dist);
+    Glib::ustring distance = Inkscape::ustring::format_classic(std::fixed, std::setprecision(1), std::noshowpoint, scale*equal_dist);
 
     switch (p.getTarget()) {
         case SNAPTARGET_DISTRIBUTION_Y:
@@ -555,7 +556,7 @@ void SnapIndicator::make_distribution_indicators(SnappedPoint const &p,
             Inkscape::CanvasItemCurve *point1, *point2;
 
             auto equal_dist2 = Inkscape::Util::Quantity::convert(p.getDistributionDistance2(), "px", unit_name);
-            Glib::ustring distance2 = Glib::ustring::format(std::fixed, std::setprecision(1), std::noshowpoint, scale*equal_dist2);
+            Glib::ustring distance2 = Inkscape::ustring::format_classic(std::fixed, std::setprecision(1), std::noshowpoint, scale*equal_dist2);
 
             for (auto it = p.getBBoxes().begin(); it + 1 != p.getBBoxes().end(); it++) {
                 auto [y, sign] = get_y_and_sign(*it, *std::next(it), 5/_desktop->current_zoom());

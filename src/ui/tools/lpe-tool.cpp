@@ -34,6 +34,7 @@
 #include "object/sp-path.h"
 
 #include "util/units.h"
+#include "util-string/ustring-format.h"
 
 #include "ui/toolbar/lpe-toolbar.h"
 #include "ui/tools/lpe-tool.h"
@@ -317,7 +318,7 @@ void LpeTool::create_measuring_items(Selection *selection)
             double lengthval = Geom::length(pwd2);
             lengthval = Util::Quantity::convert(lengthval, "px", unit);
 
-            auto arc_length = Glib::ustring::format(std::setprecision(2), std::fixed, lengthval);
+            auto arc_length = Inkscape::ustring::format_classic(std::setprecision(2), std::fixed, lengthval);
             arc_length += " ";
             arc_length += unit->abbr;
 
@@ -356,7 +357,7 @@ void LpeTool::update_measuring_items()
         double lengthval = Geom::length(pwd2);
         lengthval = Util::Quantity::convert(lengthval, "px", unit);
 
-        auto arc_length = Glib::ustring::format(std::setprecision(2), std::fixed, lengthval);
+        auto arc_length = Inkscape::ustring::format_classic(std::setprecision(2), std::fixed, lengthval);
         arc_length += " ";
         arc_length += unit->abbr;
 

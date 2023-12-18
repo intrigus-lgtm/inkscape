@@ -36,6 +36,7 @@
 #include "ui/builder-utils.h"
 #include "ui/pack.h"
 #include "ui/util.h"
+#include "util-string/ustring-format.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -195,7 +196,7 @@ PatternEditor::PatternEditor(const char* prefs, Inkscape::PatternManager& manage
         slider->set_value(0);
         slider->set_format_value_func([=](double val){
             auto upper = slider->get_adjustment()->get_upper();
-            return Glib::ustring::format(std::fixed, std::setprecision(0), slider_to_gap(val, upper)) + "%";
+            return Inkscape::ustring::format_classic(std::fixed, std::setprecision(0), slider_to_gap(val, upper)) + "%";
         });
         slider->signal_change_value().connect([=](Gtk::ScrollType st, double value){
             if (_update.pending()) return false;

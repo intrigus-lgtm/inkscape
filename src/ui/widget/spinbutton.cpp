@@ -27,6 +27,7 @@
 #include "unit-menu.h"
 #include "unit-tracker.h"
 #include "util/expression-evaluator.h"
+#include "util-string/ustring-format.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -179,7 +180,7 @@ std::shared_ptr<UI::Widget::PopoverMenu> SpinButton::get_popover_menu()
     for (auto const &value : values) {
         bool const enable = adj_value == value.first;
         auto const item_label = !value.second.empty() ? Glib::ustring::compose("%1: %2", value.first, value.second)
-                                                      : Glib::ustring::format(value.first);
+                                                      : Inkscape::ustring::format_classic(value.first);
         auto const radio_button = Gtk::make_managed<Gtk::CheckButton>(item_label);
         if (!group) {
             group = radio_button;

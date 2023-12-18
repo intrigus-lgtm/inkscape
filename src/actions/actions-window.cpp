@@ -18,6 +18,7 @@
 #include "document.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
+#include "util-string/ustring-format.h"
 
 // Actions for window handling (should be integrated with file dialog).
 
@@ -48,10 +49,10 @@ window_query_geometry(InkscapeApplication *app)
         if (desktop) {
             gint x, y, w, h = 0;
             desktop->getWindowGeometry(x, y, w, h);
-            show_output(Glib::ustring("x:") + Glib::ustring::format(x), false);
-            show_output(Glib::ustring("y:") + Glib::ustring::format(y), false);
-            show_output(Glib::ustring("w:") + Glib::ustring::format(w), false); 
-            show_output(Glib::ustring("h:") + Glib::ustring::format(h), false);
+            show_output(Glib::ustring("x:") + Inkscape::ustring::format_classic(x), false);
+            show_output(Glib::ustring("y:") + Inkscape::ustring::format_classic(y), false);
+            show_output(Glib::ustring("w:") + Inkscape::ustring::format_classic(w), false);
+            show_output(Glib::ustring("h:") + Inkscape::ustring::format_classic(h), false);
         }
     } else {
         show_output("this action needs active window, probably you need to add --active-window / -q");

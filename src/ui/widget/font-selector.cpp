@@ -29,6 +29,7 @@
 #include "desktop.h"
 #include "object/sp-text.h"
 #include "ui/controller.h"
+#include "util-string/ustring-format.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -221,7 +222,7 @@ FontSelector::set_sizes ()
     for (int i : sizes)
     {
         double size = i/ratios[unit];
-        size_combobox.append( Glib::ustring::format(size) );
+        size_combobox.append( Inkscape::ustring::format_classic(size) );
     }
 }
 
@@ -230,7 +231,7 @@ FontSelector::set_fontsize_tooltip()
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     int unit = prefs->getInt("/options/font/unitType", SP_CSS_UNIT_PT);
-    Glib::ustring tooltip = Glib::ustring::format(_("Font size"), " (", sp_style_get_css_unit_string(unit), ")");
+    Glib::ustring tooltip = Inkscape::ustring::format_classic(_("Font size"), " (", sp_style_get_css_unit_string(unit), ")");
     size_combobox.set_tooltip_text (tooltip);
 }
 

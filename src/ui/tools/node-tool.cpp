@@ -43,6 +43,7 @@
 #include "ui/tool/path-manipulator.h"
 #include "ui/tools/node-tool.h"
 #include "ui/widget/events/canvas-event.h"
+#include "util-string/ustring-format.h"
 
 using Inkscape::Modifiers::Modifier;
 
@@ -711,7 +712,7 @@ void NodeTool::update_tip()
             nodestring += " ";
             // TRANSLATORS: %1 is an angle in degrees, formatted with two decimal places.
             nodestring += Glib::ustring::compose(_("Angle: %1°."),
-                                                 Glib::ustring::format(std::fixed, std::setprecision(2), angle));
+                                                 Inkscape::ustring::format_classic(std::fixed, std::setprecision(2), angle));
         }
 
         if (this->_last_over) {

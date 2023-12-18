@@ -53,6 +53,7 @@
 #include "ui/widget/popover-menu-item.h"
 #include "util/safe-printf.h"
 #include "util/units.cpp"
+#include "util-string/ustring-format.h"
 #include "widgets/paintdef.h"
 #include "widgets/spw-utilities.h"
 
@@ -717,7 +718,7 @@ void SelectedStyle::make_popup_units()
 
     _popup_sw->append_section_label(_("Width"));
     for (std::size_t i = 0; i < _sw_presets.size(); ++i) {
-        _popup_sw->append(*make_menu_item(Glib::ustring::format(_sw_presets[i]),
+        _popup_sw->append(*make_menu_item(Inkscape::ustring::format_classic(_sw_presets[i]),
             sigc::bind(sigc::mem_fun(*this, &SelectedStyle::on_popup_preset), i)));
     }
 

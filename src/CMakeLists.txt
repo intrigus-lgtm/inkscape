@@ -323,6 +323,7 @@ add_subdirectory(svg)
 add_subdirectory(trace)
 add_subdirectory(ui)
 add_subdirectory(util)
+add_subdirectory(util-string)
 add_subdirectory(widgets)
 add_subdirectory(xml)
 

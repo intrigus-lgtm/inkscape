@@ -37,6 +37,8 @@
 #include "object/sp-root.h"
 #include "object/sp-item-group.h"
 
+#include "util-string/ustring-format.h"
+
 #include "xml/node-observer.h"
 
 namespace Inkscape {
@@ -156,7 +158,7 @@ Glib::ustring LayerManager::getNextLayerName( SPObject* obj, gchar const *label)
     // Intentionally unsigned
     guint endNum = startNum + 3000;
     for ( guint i = startNum; (i < endNum) && (currentNames.find(result) != currentNames.end()); i++ ) {
-        result = Glib::ustring::format(base, split, i);
+        result = Inkscape::ustring::format_classic(base, split, i);
     }
 
     return result;

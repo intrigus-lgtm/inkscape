@@ -27,6 +27,7 @@
 #include "ui/pack.h"
 #include "ui/util.h"
 #include "ui/widget/spinbutton.h"
+#include "util-string/ustring-format.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -237,7 +238,7 @@ void DashSelector::offset_value_changed()
 {
     Glib::ustring offset = _("Pattern offset");
     offset += " (";
-    offset += Glib::ustring::format(_sb->get_value());
+    offset += Inkscape::ustring::format_classic(_sb->get_value());
     offset += ")";
     _sb->set_tooltip_text(offset.c_str());
     changed_signal.emit();

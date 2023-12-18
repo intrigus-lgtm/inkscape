@@ -40,6 +40,7 @@
 #include "svg/svg.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
+#include "util-string/ustring-format.h"
 #include "xml/sp-css-attr.h"
 
 // this is only to flatten nonzero fillrule
@@ -418,7 +419,7 @@ LPESlice::split(SPItem* item, SPCurve *curve, std::vector<std::pair<Geom::Line, 
     if (!elemref && item->getId()) {
         
         Glib::ustring elemref_id = Glib::ustring("slice-");
-        elemref_id += Glib::ustring::format(slicer[splitindex].second);
+        elemref_id += Inkscape::ustring::format_classic(slicer[splitindex].second);
         elemref_id += "-";
         Glib::ustring clean_id = item->getId();
         //First check is to allow effects on "satellites"

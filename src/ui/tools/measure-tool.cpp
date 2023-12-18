@@ -55,6 +55,7 @@
 #include "ui/widget/events/canvas-event.h"
 
 #include "util/units.h"
+#include "util-string/ustring-format.h"
 
 using Inkscape::DocumentUndo;
 
@@ -691,7 +692,7 @@ void MeasureTool::toMarkDimension()
     double scale = prefs->getDouble("/tools/measure/scale", 100.0) / 100.0;
 
     int precision = prefs->getInt("/tools/measure/precision", 2);
-    Glib::ustring total = Glib::ustring::format(std::fixed, std::setprecision(precision), totallengthval * scale);
+    Glib::ustring total = Inkscape::ustring::format_classic(std::fixed, std::setprecision(precision), totallengthval * scale);
     total += unit_name;
 
     double textangle = Geom::rad_from_deg(180) - ray.angle();
@@ -910,7 +911,7 @@ void MeasureTool::setMeasureCanvasText(bool is_angle, double precision, double a
                                        bool to_left, bool to_item,
                                        bool to_phantom, Inkscape::XML::Node *measure_repr)
 {
-    Glib::ustring measure = Glib::ustring::format(std::setprecision(precision), std::fixed, amount);
+    Glib::ustring measure = Inkscape::ustring::format_classic(std::setprecision(precision), std::fixed, amount);
     measure += " ";
     measure += (is_angle ? "°" : unit_name);
     auto canvas_tooltip = new Inkscape::CanvasItemText(_desktop->getCanvasTemp(), position, measure);

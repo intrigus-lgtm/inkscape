@@ -69,6 +69,7 @@
 #include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
 #include "util/font-collections.h"
+#include "util-string/ustring-format.h"
 #include "widgets/style-utils.h"
 
 using Inkscape::DocumentUndo;
@@ -162,7 +163,7 @@ static Glib::RefPtr<Gtk::ListStore> create_sizes_store_uncached(int unit)
     auto store = Gtk::ListStore::create(columns);
 
     for (int i : sizes) {
-        store->append()->set_value(columns.str, Glib::ustring::format(i / ratios[unit]));
+        store->append()->set_value(columns.str, Inkscape::ustring::format_classic(i / ratios[unit]));
     }
 
     return store;

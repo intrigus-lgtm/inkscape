@@ -51,6 +51,7 @@
 #include "ui/knot/knot-holder.h"
 #include "ui/pack.h"
 #include "ui/util.h"
+#include "util-string/ustring-format.h"
 #include "xml/sp-css-attr.h"
 
 namespace Inkscape::LivePathEffect {
@@ -1087,10 +1088,10 @@ bool
 LPETiling::getActiveMirror(int const index)
 {
     auto const &result = getMirrorMap(index);
-    return result[0] == Glib::ustring::format(mirrorrowsx)[0] && 
-           result[1] == Glib::ustring::format(mirrorrowsy)[0] && 
-           result[2] == Glib::ustring::format(mirrorcolsx)[0] && 
-           result[3] == Glib::ustring::format(mirrorcolsy)[0];
+    return result[0] == Inkscape::ustring::format_classic(mirrorrowsx)[0] &&
+           result[1] == Inkscape::ustring::format_classic(mirrorrowsy)[0] &&
+           result[2] == Inkscape::ustring::format_classic(mirrorcolsx)[0] &&
+           result[3] == Inkscape::ustring::format_classic(mirrorcolsy)[0];
 }
 
 void 

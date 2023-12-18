@@ -11,8 +11,10 @@
 #include <glibmm.h>
 #include <glibmm/i18n.h>
 #include <iomanip>
+#include <iostream>
 
 #include "color-entry.h"
+#include "util-string/ustring-format.h"
 
 namespace Inkscape {
 namespace UI {
@@ -25,6 +27,8 @@ ColorEntry::ColorEntry(SelectedColor &color)
     , _prevpos(0)
     , _lastcolor(0)
 {
+    set_name("ColorEntry");
+
     _color_changed_connection = color.signal_changed.connect(sigc::mem_fun(*this, &ColorEntry::_onColorChanged));
     _color_dragged_connection = color.signal_dragged.connect(sigc::mem_fun(*this, &ColorEntry::_onColorChanged));
     signal_activate().connect(sigc::mem_fun(*this, &ColorEntry::_onColorChanged));
@@ -133,7 +137,8 @@ void ColorEntry::_onColorChanged()
     gdouble alpha = _color.alpha();
 
     _lastcolor = color.toRGBA32(alpha);
-    Glib::ustring text = Glib::ustring::format(std::hex, std::setw(8), std::setfill(L'0'), _lastcolor);
+
+    auto text = Inkscape::ustring::format_classic(std::hex, std::setw(8), std::setfill(L'0'), _lastcolor);
 
     Glib::ustring old_text = get_text();
     if (old_text != text) {

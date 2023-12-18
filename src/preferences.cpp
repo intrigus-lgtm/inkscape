@@ -20,11 +20,12 @@
 #include <glibmm/i18n.h>
 #include <glib/gstdio.h>
 
+#include "attribute-rel-util.h"
 #include "preferences.h"
 #include "preferences-skeleton.h"
-#include "util/units.h"
-#include "attribute-rel-util.h"
 #include "io/resource.h"
+#include "util/units.h"
+#include "util-string/ustring-format.h"
 #include "xml/node-observer.h"
 #include "xml/node-iterators.h"
 #include "xml/attribute-record.h"
@@ -411,7 +412,7 @@ void Preferences::setUInt(Glib::ustring const &pref_path, unsigned int value)
 void Preferences::setDouble(Glib::ustring const &pref_path, double value)
 {
     static constexpr auto digits10 = std::numeric_limits<double>::digits10; // number of decimal digits that are ensured to be precise
-    _setRawValue(pref_path, Glib::ustring::format(std::setprecision(digits10), value));
+    _setRawValue(pref_path, Inkscape::ustring::format_classic(std::setprecision(digits10), value));
 }
 
 /**
@@ -424,7 +425,7 @@ void Preferences::setDouble(Glib::ustring const &pref_path, double value)
 void Preferences::setDoubleUnit(Glib::ustring const &pref_path, double value, Glib::ustring const &unit_abbr)
 {
     static constexpr auto digits10 = std::numeric_limits<double>::digits10; // number of decimal digits that are ensured to be precise
-    Glib::ustring str = Glib::ustring::compose("%1%2", Glib::ustring::format(std::setprecision(digits10), value), unit_abbr);
+    Glib::ustring str = Glib::ustring::compose("%1%2", Inkscape::ustring::format_classic(std::setprecision(digits10), value), unit_abbr);
     _setRawValue(pref_path, str);
 }
 

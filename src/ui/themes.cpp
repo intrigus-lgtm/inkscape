@@ -43,6 +43,7 @@
 #include "ui/dialog/dialog-manager.h"
 #include "ui/dialog/dialog-window.h"
 #include "ui/util.h"
+#include "util-string/ustring-format.h"
 
 #if WITH_GSOURCEVIEW
 #   include <gtksourceview/gtksource.h>
@@ -217,15 +218,15 @@ std::string sp_tweak_background_colors(std::string cssstring, double crossfade, 
     std::regex_search(cssstring, m, re_no_affect);
     if (m.size() == 0) {
         if (cssstring.find("background-color") != std::string::npos) {
-            sub = "background-color:shade($2," + Glib::ustring::format(crossfade) + ");";
+            sub = "background-color:shade($2," + Inkscape::ustring::format_classic(crossfade) + ");";
             cssstring = std::regex_replace(cssstring, re_color, sub);
         } else if (cssstring.find("background-image") != std::string::npos) {
             if (dark) {
                 contrast = std::clamp((int)((contrast) * 27), 0, 100);
-                sub = "background-image:cross-fade(" + Glib::ustring::format(contrast) + "% image(rgb(255,255,255)), image($2));";
+                sub = "background-image:cross-fade(" + Inkscape::ustring::format_classic(contrast) + "% image(rgb(255,255,255)), image($2));";
             } else {
                 contrast = std::clamp((int)((contrast) * 90), 0 , 100);
-                sub = "background-image:cross-fade(" + Glib::ustring::format(contrast) + "% image(rgb(0,0,0)), image($2));";
+                sub = "background-image:cross-fade(" + Inkscape::ustring::format_classic(contrast) + "% image(rgb(0,0,0)), image($2));";
             }
             cssstring = std::regex_replace(cssstring, re_image, sub);
         }

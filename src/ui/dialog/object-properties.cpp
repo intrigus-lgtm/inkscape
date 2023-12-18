@@ -43,6 +43,7 @@
 #include "ui/icon-names.h"
 #include "ui/pack.h"
 #include "ui/widget/frame.h"
+#include "util-string/ustring-format.h"
 #include "widgets/sp-attribute-widget.h"
 
 namespace Inkscape::UI::Dialog {
@@ -456,7 +457,7 @@ void ObjectProperties::_labelChanged()
 
     /* Retrieve the DPI */
     if (is<SPImage>(obj)) {
-        Glib::ustring dpi_value = Glib::ustring::format(_spin_dpi.get_value());
+        Glib::ustring dpi_value = Inkscape::ustring::format_classic(_spin_dpi.get_value());
         obj->setAttribute("inkscape:svg-dpi", dpi_value);
         DocumentUndo::done(getDocument(), _("Set image DPI"), INKSCAPE_ICON("dialog-object-properties"));
     }
@@ -544,7 +545,7 @@ void ObjectProperties::_aspectRatioToggled()
     }
     /* Retrieve the DPI */
     if (is<SPImage>(item)) {
-        Glib::ustring dpi_value = Glib::ustring::format(_spin_dpi.get_value());
+        Glib::ustring dpi_value = Inkscape::ustring::format_classic(_spin_dpi.get_value());
         item->setAttribute("preserveAspectRatio", active);
         DocumentUndo::done(getDocument(), _("Set preserve ratio"), INKSCAPE_ICON("dialog-object-properties"));
     }

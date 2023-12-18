@@ -52,6 +52,7 @@
 #include "ui/pack.h"
 #include "util/safe-printf.h"
 #include "util/units.h"
+#include "util-string/ustring-format.h"
 #include "xml/node.h"
 #include "xml/sp-css-attr.h"
 
@@ -361,7 +362,7 @@ LPEMeasureSegments::createTextLabel(Geom::Point &pos, size_t counter, double len
     Glib::ustring lpobjid = this->lpeobj->getId();
     Glib::ustring itemid  = sp_lpe_item->getId();
     Glib::ustring id = Glib::ustring("text-on-");
-    id += Glib::ustring::format(counter);
+    id += Inkscape::ustring::format_classic(counter);
     id += "-";
     id += lpobjid;
     SPObject *elemref = nullptr;
@@ -471,7 +472,7 @@ LPEMeasureSegments::createTextLabel(Geom::Point &pos, size_t counter, double len
     }
 
     if (showindex) {
-        label_value = Glib::ustring("[") + Glib::ustring::format(counter) + Glib::ustring("] ") + label_value;
+        label_value = Glib::ustring("[") + Inkscape::ustring::format_classic(counter) + Glib::ustring("] ") + label_value;
     }
     if (!valid) {
         label_value = Glib::ustring(_("Non Uniform Scale"));
@@ -515,7 +516,7 @@ LPEMeasureSegments::createLine(Geom::Point start,Geom::Point end, Glib::ustring 
     Glib::ustring lpobjid = this->lpeobj->getId();
     Glib::ustring itemid  = sp_lpe_item->getId(); 
     Glib::ustring id = name;
-    id += Glib::ustring::format(counter);
+    id += Inkscape::ustring::format_classic(counter);
     id += "-";
     id += lpobjid;
     Inkscape::XML::Document *xml_doc = document->getReprDoc();
@@ -793,7 +794,7 @@ getNodes(SPItem * item, Geom::Affine transform, bool onbbox, bool centers, bool 
 static void extractFirstPoint(Geom::Point & dest, const Glib::ustring & lpobjid, const char *const prefix, const gint idx, SPDocument *const document)
 {
     Glib::ustring id = Glib::ustring(prefix);
-    id += Glib::ustring::format(idx);
+    id += Inkscape::ustring::format_classic(idx);
     id += "-";
     id += lpobjid;
     auto path = cast<SPPath>(document->getObjectById(id));
@@ -1042,22 +1043,22 @@ LPEMeasureSegments::doBeforeEffect (SPLPEItem const* lpeitem)
                     extractFirstPoint(end_stored, lpobjid, "infoline-on-end-", counter, document);
                     extractFirstPoint(next_stored, lpobjid, "infoline-on-start-", counter+1, document);
                     Glib::ustring infoline_on_start = "infoline-on-start-";
-                    infoline_on_start += Glib::ustring::format(counter);
+                    infoline_on_start += Inkscape::ustring::format_classic(counter);
                     infoline_on_start += "-";
                     infoline_on_start += lpobjid;
                     
                     Glib::ustring infoline_on_end = "infoline-on-end-";
-                    infoline_on_end += Glib::ustring::format(counter);
+                    infoline_on_end += Inkscape::ustring::format_classic(counter);
                     infoline_on_end += "-";
                     infoline_on_end += lpobjid;
                     
                     Glib::ustring infoline = "infoline-";
-                    infoline += Glib::ustring::format(counter);
+                    infoline += Inkscape::ustring::format_classic(counter);
                     infoline += "-";
                     infoline += lpobjid;
                     
                     Glib::ustring texton = "text-on-";
-                    texton += Glib::ustring::format(counter);
+                    texton += Inkscape::ustring::format_classic(counter);
                     texton += "-";
                     texton += lpobjid;
                     items.push_back(infoline_on_start);

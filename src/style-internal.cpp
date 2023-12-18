@@ -43,6 +43,7 @@
 #include "svg/css-ostringstream.h"
 
 #include "util/units.h"
+#include "util-string/ustring-format.h"
 
 // TODO REMOVE OR MAKE MEMBER FUNCTIONS
 void sp_style_fill_paint_server_ref_changed(  SPObject *old_ref, SPObject *ref, SPStyle *style);
@@ -208,7 +209,7 @@ SPIFloat::read( gchar const *str ) {
 const Glib::ustring SPIFloat::get_value() const
 {
     if (this->inherit) return Glib::ustring("inherit");
-    return Glib::ustring::format(this->value);
+    return Inkscape::ustring::format_classic(this->value);
 }
 
 void
@@ -270,7 +271,7 @@ SPIScale24::read( gchar const *str ) {
 const Glib::ustring SPIScale24::get_value() const
 {
     if (this->inherit) return Glib::ustring("inherit");
-    return Glib::ustring::format(SP_SCALE24_TO_FLOAT(this->value));
+    return Inkscape::ustring::format_classic(SP_SCALE24_TO_FLOAT(this->value));
 }
 
 void
@@ -438,7 +439,7 @@ const Glib::ustring SPILength::get_value() const
             /* Invalid */
             break;
     }
-    return Glib::ustring::format(value) + unit_out;
+    return Inkscape::ustring::format_classic(value) + unit_out;
 }
 
 void
@@ -655,7 +656,7 @@ const Glib::ustring SPIFontVariationSettings::get_value() const
     if (this->normal) return Glib::ustring("normal");
     auto ret = Glib::ustring("");
     for(auto it: axes) {
-        ret += "'" + it.first + "' " + Glib::ustring::format(it.second) + ", ";
+        ret += "'" + it.first + "' " + Inkscape::ustring::format_classic(it.second) + ", ";
     }
     if (!ret.empty()) ret.erase(ret.size() - 2);
     return ret;
@@ -2200,11 +2201,11 @@ const Glib::ustring SPIFontSize::get_value() const
             if (prefs->getBool("/options/font/textOutputPx", true)) {
                 unit = SP_CSS_UNIT_PX;
             }
-            ret += Glib::ustring::format(sp_style_css_size_px_to_units(this->computed, unit));
+            ret += Inkscape::ustring::format_classic(sp_style_css_size_px_to_units(this->computed, unit));
             ret += sp_style_get_css_unit_string(unit);
             break;
         case SP_FONT_SIZE_PERCENTAGE:
-            return Glib::ustring::format(this->value * 100.0) + "%";
+            return Inkscape::ustring::format_classic(this->value * 100.0) + "%";
         default:
             g_error("Invalid FontSize value, not writing it.");
     }
@@ -2567,15 +2568,15 @@ const Glib::ustring SPIBaselineShift::get_value() const
             break;
         case SP_BASELINE_SHIFT_LENGTH:
             if( this->unit == SP_CSS_UNIT_EM || this->unit == SP_CSS_UNIT_EX ) {
-                ret += Glib::ustring::format(this->value);
+                ret += Inkscape::ustring::format_classic(this->value);
                 ret += (this->unit == SP_CSS_UNIT_EM ? "em" : "ex");
             } else {
                 // must specify px, see inkscape bug 1221626, mozilla bug 234789
-                ret += Glib::ustring::format(this->computed) + "px";
+                ret += Inkscape::ustring::format_classic(this->computed) + "px";
             }
             break;
         case SP_BASELINE_SHIFT_PERCENTAGE:
-            return Glib::ustring::format(this->value * 100.0) + "%";
+            return Inkscape::ustring::format_classic(this->value * 100.0) + "%";
     }
     return ret;
 }

@@ -95,6 +95,7 @@
 #include "ui/widget/style-swatch.h"
 #include "util/recently-used-fonts.h"
 #include "util/trim.h"
+#include "util-string/ustring-format.h"
 #include "widgets/spw-utilities.h"
 
 #if WITH_GSPELL
@@ -1696,7 +1697,7 @@ void InkscapePreferences::initPageUI()
         auto const font_scale = Gtk::make_managed<UI::Widget::PrefSlider>();
         font_scale->init(ThemeContext::get_font_scale_pref_path(), 50, 150, 5, 5, 100, 0); // 50% to 150%
         font_scale->getSlider()->set_format_value_func([=](double const val) {
-            return Glib::ustring::format(std::fixed, std::setprecision(0), val) + "%";
+            return Inkscape::ustring::format_classic(std::fixed, std::setprecision(0), val) + "%";
         });
         // Live updates commented out; too disruptive
         // font_scale->getSlider()->signal_value_changed().connect([=](){

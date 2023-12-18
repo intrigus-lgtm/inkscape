@@ -40,6 +40,7 @@
 #include "io/sys.h"
 #include "util/delete-with.h"
 using Inkscape::Util::delete_with;
+#include "util-string/ustring-format.h"
 
 namespace {
 
@@ -394,9 +395,9 @@ void load_gimp_palette(PaletteFileData& palette, std::string const &path)
             } else {
                 // Otherwise, set the name to be the hex value.
                 color.name = Glib::ustring::compose("#%1%2%3",
-                                 Glib::ustring::format(std::hex, std::setw(2), std::setfill(L'0'), color.rgb[0]),
-                                 Glib::ustring::format(std::hex, std::setw(2), std::setfill(L'0'), color.rgb[1]),
-                                 Glib::ustring::format(std::hex, std::setw(2), std::setfill(L'0'), color.rgb[2])
+                                 Inkscape::ustring::format_classic(std::hex, std::setw(2), std::setfill(L'0'), color.rgb[0]),
+                                 Inkscape::ustring::format_classic(std::hex, std::setw(2), std::setfill(L'0'), color.rgb[1]),
+                                 Inkscape::ustring::format_classic(std::hex, std::setw(2), std::setfill(L'0'), color.rgb[2])
                              ).uppercase();
             }
 

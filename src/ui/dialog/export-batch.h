@@ -23,7 +23,6 @@
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/enums.h>
-#include <gtkmm/filechooserbutton.h>
 #include <gtkmm/flowboxchild.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
@@ -134,7 +133,7 @@ private:
     Gtk::CheckButton &overwrite;
     Gtk::Label &num_elements;
     Gtk::CheckButton &hide_all;
-    Gtk::FileChooserButton &path_chooser;
+    Gtk::Button &path_chooser;
     Gtk::Entry &name_text;
     Gtk::Button &export_btn;
     Gtk::Button &cancel_btn;
@@ -163,6 +162,7 @@ private:
     void refreshPreview();
     void refreshItems();
     void loadExportHints(bool rename_file);
+    void pickBatchPath();
 
     Glib::ustring getBatchPath() const;
     void setBatchPath(Glib::ustring const &path);

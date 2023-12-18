@@ -799,11 +799,9 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkFileChooserButton" id="b_path">
+                          <object class="GtkButton" id="b_path">
                             <property name="focusable">False</property>
                             <property name="hexpand">True</property>
-                            <property name="action">select-folder</property>
-                            <property name="title" translatable="yes"></property>
                             <layout>
                               <property name="column">0</property>
                               <property name="row">0</property>

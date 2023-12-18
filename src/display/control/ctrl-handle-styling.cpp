@@ -240,7 +240,7 @@ std::optional<std::pair<TypeState, int>> configure_selector(CRSelector *a_select
     int specificity = a_selector->simple_sel->specificity;
 
     auto const selector_str = reinterpret_cast<char const *>(cr_simple_sel_one_to_string(a_selector->simple_sel));
-    std::vector<std::string> const tokens = Glib::Regex::split_simple(":", selector_str);
+    auto const tokens = Glib::Regex::split_simple(":", selector_str);
     auto const type_it = tokens.empty() ? ctrl_type_map.end() : ctrl_type_map.find(tokens.front());
     if (type_it == ctrl_type_map.end()) {
         log_unrecognised(selector_str);

@@ -220,13 +220,13 @@ public:
             // set image
             _link_width_height.set_image_from_icon_name(_locked_size_ratio && _size_ratio > 0 ? g_linked : g_unlinked, Gtk::IconSize::LARGE);
         });
-        _link_width_height.set_image_from_icon_name(g_unlinked, Gtk::ICON_SIZE_LARGE);
+        _link_width_height.set_image_from_icon_name(g_unlinked, Gtk::IconSize::LARGE);
 
         _link_scale_content.signal_clicked().connect([=](){
             _locked_content_scale = !_locked_content_scale;
-            _link_scale_content.set_image_from_icon_name(_locked_content_scale ? s_linked : s_unlinked, Gtk::ICON_SIZE_LARGE);
+            _link_scale_content.set_image_from_icon_name(_locked_content_scale ? s_linked : s_unlinked, Gtk::IconSize::LARGE);
         });
-        _link_scale_content.set_image_from_icon_name(s_unlinked, Gtk::ICON_SIZE_LARGE);
+        _link_scale_content.set_image_from_icon_name(s_unlinked, Gtk::IconSize::LARGE);
 
         // set image for linked scale
         _linked_viewbox_scale.set_from_icon_name(s_linked);

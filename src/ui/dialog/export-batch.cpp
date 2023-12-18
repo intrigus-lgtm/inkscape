@@ -20,14 +20,16 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/flowbox.h>
+#include <gtkmm/filedialog.h>
 #include <gtkmm/messagedialog.h>
 #include <gtkmm/progressbar.h>
 #include <gtkmm/widget.h>
 #include <png.h>
 
 #include "desktop.h"
+#include "document-undo.h"
 #include "document.h"
-#include "inkscape-window.h"
+#include "io/sys.h"
 #include "layer-manager.h"
 #include "message-stack.h"
 #include "page-manager.h"
@@ -36,14 +38,15 @@
 
 #include "extension/output.h"
 #include "helper/auto-connection.h"
+#include "io/fix-broken-links.h"
 #include "object/sp-namedview.h"
 #include "object/sp-page.h"
 #include "object/sp-root.h"
 #include "ui/builder-utils.h"
+#include "ui/dialog-run.h"
 #include "ui/dialog/export-batch.h"
 #include "ui/dialog/export.h"
 #include "ui/icon-names.h"
-#include "ui/dialog/filedialog.h"
 #include "ui/widget/color-picker.h"
 #include "ui/widget/export-lists.h"
 #include "ui/widget/export-preview.h"
@@ -257,7 +260,7 @@ BatchExport::BatchExport(BaseObjectType * const cobject, Glib::RefPtr<Gtk::Build
     , hide_all         (get_widget<Gtk::CheckButton>  (builder, "b_hide_all"))
     , overwrite        (get_widget<Gtk::CheckButton>  (builder, "b_overwrite"))
     , name_text        (get_widget<Gtk::Entry>        (builder, "b_name"))
-    , path_chooser     (get_widget<Gtk::FileChooserButton>(builder, "b_path"))
+    , path_chooser     (get_widget<Gtk::Button>       (builder, "b_path"))
     , export_btn       (get_widget<Gtk::Button>       (builder, "b_export"))
     , cancel_btn       (get_widget<Gtk::Button>       (builder, "b_cancel"))
     , progress_box     (get_widget<Gtk::Box>          (builder, "b_inprogress"))
@@ -279,6 +282,8 @@ BatchExport::BatchExport(BaseObjectType * const cobject, Glib::RefPtr<Gtk::Build
     auto &button = get_widget<Gtk::Button>(builder, "b_backgnd");
     _bgnd_color_picker = std::make_unique<Inkscape::UI::Widget::ColorPicker>(
         _("Background color"), _("Color used to fill the image background"), 0xffffff00, true, &button);
+
+    path_chooser.signal_clicked().connect([this] { pickBatchPath(); });
 
     setup();
 }
@@ -518,7 +523,7 @@ Glib::ustring BatchExport::getBatchPath() const
     if (auto attr = _document->getRoot()->getAttribute("inkscape:export-batch-path")) {
         path = attr;
     }
-    if (!path.empty() && Glib::path_is_absolute(path)) {
+    if (!path.empty() && Glib::path_is_absolute(Glib::filename_from_utf8(path))) {
         return path;
     }
     // Relative to the document's position
@@ -548,7 +553,7 @@ void BatchExport::setBatchPath(Glib::ustring const &path)
  *
  * @returns either
  *   1. The name stored in the document's export-batch-name attribute
- *   2. The document's basename stripped of it's extension
+ *   2. The document's basename stripped of its extension
  */
 Glib::ustring BatchExport::getBatchName(bool fallback) const
 {
@@ -573,17 +578,31 @@ void BatchExport::loadExportHints(bool rename_file)
 {
     if (!_desktop) return;
 
-    auto old_path = path_chooser.get_filename();
-    if (old_path.empty()) {
-        old_path = getBatchPath();
-        path_chooser.set_filename(old_path);
-        }
+    if (path_chooser.get_label().empty()) {
+        path_chooser.set_label(getBatchPath());
+    }
 
-    auto old_name = name_text.get_text();
-    if (old_name.empty()) {
-        auto name = getBatchName(rename_file);
+    if (name_text.get_text().empty()) {
+        auto const name = getBatchName(rename_file);
         name_text.set_text(name);
         name_text.set_position(name.length());
+    }
+}
+
+void BatchExport::pickBatchPath()
+{
+    // Fixme: Remove event pump.
+    auto dialog = Gtk::FileDialog::create();
+    Glib::RefPtr<Gio::AsyncResult> result;
+    dialog->select_folder([&] (auto &res) { result = res; });
+    while (!result) {
+        Glib::MainContext::get_default()->iteration(true);
+    }
+
+    if (auto old_file = dialog->select_folder_finish(result)) {
+        path_chooser.set_label(Glib::filename_to_utf8(old_file->get_path()));
+    } else {
+        path_chooser.set_label(getBatchPath());
     }
 }
 
@@ -624,13 +643,14 @@ void BatchExport::onExport()
 
     setExporting(true);
 
-    std::string path = Glib::filename_from_utf8(path_chooser.get_filename());
+    std::string path = Glib::filename_from_utf8(path_chooser.get_label());
     std::string name = name_text.get_text();
 
     if (!Inkscape::IO::file_test(path.c_str(), (GFileTest)(G_FILE_TEST_IS_DIR))) {
         Gtk::Window *window = _desktop->getToplevel();
         if (!Inkscape::IO::file_test(path.c_str(), (GFileTest)(G_FILE_TEST_EXISTS))) {
-            Gtk::MessageDialog(*window, _("Can not save to a directory that is actually a file."), true, Gtk::MessageType::ERROR, Gtk::ButtonsType::OK).run();
+            auto dialog = Gtk::MessageDialog(*window, _("Can not save to a directory that is actually a file."), true, Gtk::MessageType::ERROR, Gtk::ButtonsType::OK);
+            UI::dialog_run(dialog);
             return;
         }
         Glib::ustring message = g_markup_printf_escaped(
@@ -638,7 +658,7 @@ void BatchExport::onExport()
                path.c_str());
 
         auto dialog = Gtk::MessageDialog(*window, message, true, Gtk::MessageType::WARNING, Gtk::ButtonsType::YES_NO);
-        if (dialog.run() != Gtk::ResponseType::YES) {
+        if (UI::dialog_run(dialog) != Gtk::ResponseType::YES) {
             return;
         }
         g_mkdir_with_parents(path.c_str(), S_IRWXU);
@@ -855,7 +875,7 @@ void BatchExport::setDocument(SPDocument *document)
     }
 
     name_text.set_text("");
-    path_chooser.set_filename("");
+    path_chooser.set_label("");
     refreshItems();
 }
 

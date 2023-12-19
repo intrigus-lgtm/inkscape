@@ -82,6 +82,8 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
     , _margin_bottom(get_derived_widget<UI::Widget::MathSpinButton>(_builder, "_margin_bottom"))
     , _margin_left(get_derived_widget<UI::Widget::MathSpinButton>(_builder, "_margin_left"))
 {
+    set_name("PageToolbar");
+
     _toolbar = &get_widget<Gtk::Box>(_builder, "page-toolbar");
 
     // Fetch all the ToolbarMenuButtons at once from the UI file
@@ -116,7 +118,8 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
 
     _text_page_bleeds.signal_activate().connect(sigc::mem_fun(*this, &PageToolbar::bleedsEdited));
     _text_page_margins.signal_activate().connect(sigc::mem_fun(*this, &PageToolbar::marginsEdited));
-    _margin_popover.set_parent(*this);
+    _margin_popover.set_parent(*this);  // Must unparent in destructor!
+    _margin_popover.set_name("MarginPopover");
     _text_page_margins.signal_icon_press().connect([&](Gtk::Entry::IconPosition) {
         if (auto page = _document->getPageManager().getSelected()) {
             auto margin = page->getMargin();
@@ -170,7 +173,7 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
 
     // Watch for when the tool changes
     _ec_connection = _desktop->connectEventContextChanged(sigc::mem_fun(*this, &PageToolbar::toolChanged));
-    _doc_connection = _desktop->connectDocumentReplaced([=](SPDesktop *desktop, SPDocument *doc) {
+    _doc_connection = _desktop->connectDocumentReplaced([this](SPDesktop *desktop, SPDocument *doc) {
         if (doc) {
             toolChanged(desktop, desktop->getTool());
         }
@@ -217,6 +220,7 @@ void PageToolbar::populate_sizes()
 PageToolbar::~PageToolbar()
 {
     toolChanged(nullptr, nullptr);
+    _margin_popover.unparent();
 }
 
 void PageToolbar::toolChanged(SPDesktop *desktop, Inkscape::UI::Tools::ToolBase *tool)

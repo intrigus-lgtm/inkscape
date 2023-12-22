@@ -254,34 +254,28 @@ StrokeStyle::StrokeStyle() :
                                             //   DashSelector class, so that we do not have to
                                             //   expose any of the underlying widgets?
     dashSelector = Gtk::make_managed<DashSelector>();
-    _pattern = Gtk::make_managed<Gtk::Entry>();
-
-    dashSelector->set_visible(true);
-    dashSelector->set_hexpand();
-    dashSelector->set_halign(Gtk::Align::FILL);
-    dashSelector->set_valign(Gtk::Align::CENTER);
-    table->attach(*dashSelector, 1, i, 3, 1);
     dashSelector->changed_signal.connect(sigc::mem_fun(*this, &StrokeStyle::setStrokeDash));
+    table->attach(*dashSelector, 1, i, 3, 1);
 
     i++;
 
-    table->attach(*_pattern, 1, i, 4, 1);
+    _pattern = Gtk::make_managed<Gtk::Entry>();
     _pattern_label = spw_label(table, _("_Pattern:"), 0, i, _pattern);
     _pattern_label->set_tooltip_text(_("Repeating \"dash gap ...\" pattern"));
     _pattern->set_visible(false);
     _pattern_label->set_visible(false);
-    _pattern->signal_changed().connect([=](){
+    _pattern->signal_changed().connect([this](){
         if (update || _editing_pattern) return;
-
         auto pat = parse_pattern(_pattern->get_text());
         _editing_pattern = true;
         update = true;
-        dashSelector->set_dash(pat, dashSelector->get_offset());
+        dashSelector->set_dash_pattern(pat, dashSelector->get_offset());
         update = false;
         setStrokeDash();
         _editing_pattern = false;
     });
-    update_pattern(0, nullptr);
+    table->attach(*_pattern, 1, i, 4, 1);
+    update_dash_pattern(std::vector<double>{});
 
     i++;
 
@@ -296,24 +290,24 @@ StrokeStyle::StrokeStyle() :
 
     startMarkerCombo = Gtk::make_managed<MarkerComboBox>("marker-start", SP_MARKER_LOC_START);
     startMarkerCombo->set_tooltip_text(_("Start Markers are drawn on the first node of a path or shape"));
-    startMarkerConn = startMarkerCombo->connect_changed([=]{ markerSelectCB(startMarkerCombo, SP_MARKER_LOC_START); });
-    startMarkerCombo->connect_edit([=]{ enterEditMarkerMode(SP_MARKER_LOC_START); });
+    startMarkerConn = startMarkerCombo->connect_changed([this]{ markerSelectCB(startMarkerCombo, SP_MARKER_LOC_START); });
+    startMarkerCombo->connect_edit([this]{ enterEditMarkerMode(SP_MARKER_LOC_START); });
     startMarkerCombo->set_visible(true);
 
     UI::pack_start(*hb, *startMarkerCombo, true, true);
 
     midMarkerCombo = Gtk::make_managed<MarkerComboBox>("marker-mid", SP_MARKER_LOC_MID);
     midMarkerCombo->set_tooltip_text(_("Mid Markers are drawn on every node of a path or shape except the first and last nodes"));
-    midMarkerConn = midMarkerCombo->connect_changed([=]{ markerSelectCB(midMarkerCombo, SP_MARKER_LOC_MID); });
-    midMarkerCombo->connect_edit([=]{ enterEditMarkerMode(SP_MARKER_LOC_MID); });
+    midMarkerConn = midMarkerCombo->connect_changed([this]{ markerSelectCB(midMarkerCombo, SP_MARKER_LOC_MID); });
+    midMarkerCombo->connect_edit([this]{ enterEditMarkerMode(SP_MARKER_LOC_MID); });
     midMarkerCombo->set_visible(true);
 
     UI::pack_start(*hb, *midMarkerCombo, true, true);
 
     endMarkerCombo = Gtk::make_managed<MarkerComboBox>("marker-end", SP_MARKER_LOC_END);
     endMarkerCombo->set_tooltip_text(_("End Markers are drawn on the last node of a path or shape"));
-    endMarkerConn = endMarkerCombo->connect_changed([=]{ markerSelectCB(endMarkerCombo, SP_MARKER_LOC_END); });
-    endMarkerCombo->connect_edit([=]{ enterEditMarkerMode(SP_MARKER_LOC_END); });
+    endMarkerConn = endMarkerCombo->connect_changed([this]{ markerSelectCB(endMarkerCombo, SP_MARKER_LOC_END); });
+    endMarkerCombo->connect_edit([this]{ enterEditMarkerMode(SP_MARKER_LOC_END); });
     endMarkerCombo->set_visible(true);
 
     UI::pack_start(*hb, *endMarkerCombo, true, true);
@@ -687,25 +681,20 @@ void
 StrokeStyle::setDashSelectorFromStyle(DashSelector *dsel, SPStyle *style)
 {
     double offset = 0;
-    auto d = getDashFromStyle(style, offset);
-    if (!d.empty()) {
-        dsel->set_dash(d, offset);
-        update_pattern(d.size(), d.data());
-    } else {
-        dsel->set_dash(std::vector<double>(), 0.0);
-        update_pattern(0, nullptr);
-    }
+    auto dash_pattern = getDashFromStyle(style, offset);
+    dsel->set_dash_pattern(dash_pattern, offset);
 }
 
-void StrokeStyle::update_pattern(int ndash, const double* pattern) {
+void StrokeStyle::update_dash_pattern(const std::vector<double> &dash_pattern) {
     if (_editing_pattern || _pattern->has_focus()) return;
 
     std::ostringstream ost;
-    for (int i = 0; i < ndash; ++i) {
-        ost << pattern[i] << ' ';
+    for (auto d : dash_pattern) {
+        ost << d << ' ';
     }
     _pattern->set_text(ost.str().c_str());
-    if (ndash > 0) {
+
+    if (!dash_pattern.empty()) {
         _pattern_label->set_visible(true);
         _pattern->set_visible(true);
     }
@@ -1039,9 +1028,9 @@ void StrokeStyle::setStrokeDash()
     auto document = desktop->getDocument();
     auto prefs = Inkscape::Preferences::get();
 
-    double offset = 0;
-    const auto& dash = dashSelector->get_dash(&offset);
-    update_pattern(dash.size(), dash.data());
+    const auto& dash = dashSelector->get_dash_pattern();
+    double offset = dashSelector->get_offset();
+    update_dash_pattern(dash);
 
     SPCSSAttr *css = sp_repr_css_attr_new();
     for (auto item : desktop->getSelection()->items()) {

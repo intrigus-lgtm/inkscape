@@ -1,247 +1,262 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /**
  * @file
- * Combobox for selecting dash patterns - implementation.
+ * A widget for selecting dash patterns and setting the dash offset.
  */
-/* Author:
+/* Authors:
+ *   Tavmjong Bah (Rewrite to use Gio::ListStore and Gtk::GridView).
+ *
+ * Original authors:
  *   Lauris Kaplinski <lauris@kaplinski.com>
  *   bulia byak <buliabyak@users.sf.net>
- *   Maximilian Albert <maximilian.albert@gmail.com>
+ *   Maximilian Albert <maximilian.albert@gmail.com> (gtkmm-ification)
  *
  * Copyright (C) 2002 Lauris Kaplinski
+ * Copyright (C) 2023 Tavmjong Bah
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
 #include "dash-selector.h"
 
-#include <cstring>
-#include <numeric>
-#include <2geom/coord.h>
+#include <iostream>
+#include <numeric>  // std::accumulate
+#include <vector>
+
+#include <giomm.h>
 #include <glibmm/i18n.h>
-#include <gtkmm/adjustment.h>
-#include <gtkmm/liststore.h>
+#include <glibmm/regex.h>
+#include <gdkmm/general.h>
+#include <gtkmm/drawingarea.h>
+#include <gtkmm/gridview.h>
+#include <gtkmm/image.h>
+#include <gtkmm/menubutton.h>
+#include <gtkmm/popover.h>
+#include <gtkmm/signallistitemfactory.h>
+#include <gtkmm/singleselection.h>
+
+#include <2geom/coord.h> // Geom::are_near
 
 #include "preferences.h"
-#include "style.h"
-#include "ui/pack.h"
-#include "ui/util.h"
+#include "style.h"  // Read dash patterns from preferences.
 #include "ui/widget/spinbutton.h"
-#include "util-string/ustring-format.h"
 
 namespace Inkscape::UI::Widget {
+namespace {
 
-gchar const *const DashSelector::_prefs_path = "/palette/dashes";
+constexpr auto DRAWING_AREA_WIDTH = 100;
+constexpr auto DRAWING_AREA_HEIGHT = 16;
 
-static std::vector<std::vector<double>> s_dashes;
-
-DashSelector::DashSelector()
-    : Gtk::Box(Gtk::Orientation::HORIZONTAL, 4),
-      _preview_width(100),
-      _preview_height(16),
-      _preview_lineheight(2)
+std::vector<std::vector<double>> get_dash_patterns()
 {
-    // TODO: find something more sensible here!!
-    init_dashes();
+    std::vector<std::vector<double>> dash_patterns;
 
-    // TODO: GTK4: Replace w/ MenuButton+GridView (not PopoverMenu as we dynamically render imgs)
-    _dash_store = Gtk::ListStore::create(dash_columns);
-    _dash_combo.set_model(_dash_store);
-    _dash_combo.pack_start(_image_renderer);
-    _dash_combo.set_cell_data_func(_image_renderer, sigc::mem_fun(*this, &DashSelector::prepareImageRenderer));
-    _dash_combo.set_tooltip_text(_("Dash pattern"));
-    _dash_combo.set_visible(true);
-    _dash_combo.signal_changed().connect( sigc::mem_fun(*this, &DashSelector::on_selection) );
-    // show dashes in two columns to eliminate or minimize scrolling
-    _dash_combo.set_wrap_width(2);
+    auto prefs = Preferences::get();
+    auto const dash_prefs = prefs->getAllDirs("/palette/dashes");
 
-    UI::pack_start(*this, _dash_combo, true, true);
-
-    _offset = Gtk::Adjustment::create(0.0, 0.0, 1000.0, 0.1, 1.0, 0.0);
-    _offset->signal_value_changed().connect(sigc::mem_fun(*this, &DashSelector::offset_value_changed));
-    _sb = Gtk::make_managed<UI::Widget::SpinButton>(_offset, 0.1, 2);
-    _sb->set_tooltip_text(_("Pattern offset"));
-    sp_dialog_defocus_on_enter_cpp(_sb);
-    _sb->set_width_chars(4);
-    _sb->set_visible(true);
-
-    UI::pack_start(*this, *_sb, false, false);
-
-    for (std::size_t i = 0; i < s_dashes.size(); ++i) {
-        Gtk::TreeModel::Row row = *(_dash_store->append());
-        row[dash_columns.dash] = i;
+    SPStyle style;
+    std::vector<double> dash_pattern;
+    for (auto const &dash_pref : dash_prefs) {
+        style.readFromPrefs(dash_pref);
+        dash_pattern.clear();
+        for (auto const &v : style.stroke_dasharray.values) {
+            dash_pattern.push_back(v.value);
+        }
+        dash_patterns.emplace_back(std::move(dash_pattern));
     }
 
-    _pattern = &s_dashes.front();
+    return dash_patterns;
+}
+
+class DashPattern : public Glib::Object
+{
+public:
+    std::vector<double> dash_pattern;
+    bool custom = false;
+
+    static Glib::RefPtr<DashPattern> create(std::vector<double> dash_pattern) {
+        return Glib::make_refptr_for_instance<DashPattern>(new DashPattern(std::move(dash_pattern)));
+    }
+
+private:
+    DashPattern(std::vector<double> dash_pattern)
+        : dash_pattern(std::move(dash_pattern))
+    {}
+};
+
+} // namespace
+
+DashSelector::DashSelector()
+    : Gtk::Box(Gtk::Orientation::HORIZONTAL, 4)
+{
+    set_name("DashSelector");
+    set_hexpand();
+    set_halign(Gtk::Align::FILL);
+    set_valign(Gtk::Align::CENTER);
+
+    // Create liststore
+    auto dash_patterns = get_dash_patterns();
+    auto liststore = Gio::ListStore<DashPattern>::create();
+    for (auto const &dash_pattern : dash_patterns) {
+        liststore->append(DashPattern::create(dash_pattern));
+    }
+
+    // Add custom pattern slot (upper right corner).
+    auto custom_pattern = DashPattern::create({1, 2, 1, 4});
+    custom_pattern->custom = true;
+    liststore->insert(1, custom_pattern);
+
+    selection = Gtk::SingleSelection::create(liststore);
+    auto factory = Gtk::SignalListItemFactory::create();
+    factory->signal_setup().connect(sigc::mem_fun(*this, &DashSelector::setup_listitem_cb));
+    factory->signal_bind() .connect(sigc::mem_fun(*this, &DashSelector::bind_listitem_cb));
+
+    auto gridview = Gtk::make_managed<Gtk::GridView>(selection, factory);
+    gridview->set_min_columns(2);
+    gridview->set_max_columns(2);
+    gridview->set_single_click_activate(true);
+    gridview->signal_activate().connect(sigc::bind<0>(sigc::mem_fun(*this, &DashSelector::activate), gridview));
+
+    popover = Gtk::make_managed<Gtk::Popover>();
+    popover->set_child(*gridview);
+
+    // Menubutton
+    drawing_area = Gtk::make_managed<Gtk::DrawingArea>();
+    drawing_area->set_content_width(DRAWING_AREA_WIDTH);
+    drawing_area->set_content_height(DRAWING_AREA_HEIGHT);
+    drawing_area->set_draw_func(sigc::bind(sigc::mem_fun(*this, &DashSelector::draw_pattern), std::vector<double>{}));
+
+    auto menubutton = Gtk::make_managed<Gtk::MenuButton>();
+    menubutton->set_child(*drawing_area);
+    gtk_menu_button_set_always_show_arrow(menubutton->gobj(), true); // No C++ API!
+    menubutton->set_popover(*popover);
+
+    append(*menubutton);
+
+    // Offset spinbutton
+    adjustment = Gtk::Adjustment::create(0.0, 0.0, 1000.0, 0.1, 1.0, 0.0);
+    adjustment->signal_value_changed().connect([this] {
+        offset = adjustment->get_value();
+        changed_signal.emit();
+    });
+    auto spinbutton = Gtk::make_managed<Inkscape::UI::Widget::SpinButton>(adjustment, 0.1, 2); // Climb rate, digits.
+    spinbutton->set_tooltip_text(_("Dash pattern offset"));
+    spinbutton->set_width_chars(5);
+    sp_dialog_defocus_on_enter_cpp(spinbutton);
+
+    append(*spinbutton);
 }
 
 DashSelector::~DashSelector() = default;
 
-void DashSelector::prepareImageRenderer( Gtk::TreeModel::const_iterator const &row ) {
-    // dashes are rendered on the fly to adapt to current theme colors
-    std::size_t index = (*row)[dash_columns.dash];
-    Cairo::RefPtr<Cairo::Surface> surface;
-    if (index == 1) {
-        // add the custom one as a second option; it'll show up at the top of second column
-        // TRANSLATORS: 'Custom' here means, that user-defined dash pattern is specified in an entry box
-        surface = sp_text_to_pixbuf(_("Custom"));
-    }
-    else if (index < s_dashes.size()) {
-        // add the dash to the combobox
-        surface = sp_dash_to_pixbuf(s_dashes[index]);
-    }
-    else {
-        surface = Cairo::RefPtr<Cairo::Surface>(new Cairo::Surface(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 1, 1)));
-        g_warning("No surface in prepareImageRenderer.");
-    }
-    _image_renderer.property_texture() = to_texture(surface);
-}
+// Set dash pattern from outside class.
+void DashSelector::set_dash_pattern(std::vector<double> const &new_dash_pattern, double new_offset)
+{
+    // See if there is already a dash pattern that matches (within delta).
 
-static std::vector<double> map_values(const std::vector<SPILength>& values) {
-    std::vector<double> out;
-    out.reserve(values.size());
-    for (auto&& v : values) {
-        out.push_back(v.value);
-    }
-    return out;
-}
+    // Set the criteria for matching (sum of dash lengths / number of dashes):
+    double const delta = std::accumulate(new_dash_pattern.begin(), new_dash_pattern.end(), 0.0)
+                       / (10000.0 * (new_dash_pattern.empty() ? 1.0 : new_dash_pattern.size()));
 
-void DashSelector::init_dashes() {
-    if (s_dashes.empty()) {
-        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        std::vector<Glib::ustring> dash_prefs = prefs->getAllDirs(_prefs_path);
-        
-        if (!dash_prefs.empty()) {
-            SPStyle style;
-            s_dashes.reserve(dash_prefs.size() + 1);
-            
-            for (auto & dash_pref : dash_prefs) {
-                style.readFromPrefs( dash_pref );
-                
-                if (!style.stroke_dasharray.values.empty()) {
-                    s_dashes.emplace_back(map_values(style.stroke_dasharray.values));
-                } else {
-                    s_dashes.emplace_back();
-                }
-            }
-        } else {
-            g_warning("Missing stock dash definitions. DashSelector::init_dashes.");
-            //  This code may never execute - a new preferences.xml is created for a new user.  Maybe if the user deletes dashes from preferences.xml?
-            s_dashes.emplace_back();
-        }
-
-        std::vector<double> custom {1, 2, 1, 4}; // 'custom' dashes second on the list, so they are at the top of the second column in a combo box
-        s_dashes.insert(s_dashes.begin() + 1, custom);
-    }
-}
-
-void DashSelector::set_dash(const std::vector<double>& dash, double offset) {
-    int pos = -1;    // Allows custom patterns to remain unscathed by this.
-
-    double delta = std::accumulate(dash.begin(), dash.end(), 0.0) / (10000.0 * (dash.empty() ? 1 : dash.size()));
-
-    int index = 0;
-    for (auto&& pattern : s_dashes) {
-        if (dash.size() == pattern.size() &&
-            std::equal(dash.begin(), dash.end(), pattern.begin(),
-                       [=](double a, double b) { return Geom::are_near(a, b, delta); })) {
-            pos = index;
+    int position = 1; // Position for custom dash patterns.
+    auto const item_count = selection->get_n_items();
+    for (int index = 0; index < item_count; ++index) {
+        auto const &item = dynamic_cast<DashPattern &>(*selection->get_object(index));
+        if (std::equal(new_dash_pattern.begin(), new_dash_pattern.end(), item.dash_pattern.begin(), item.dash_pattern.end(),
+                       [=] (double a, double b) { return Geom::are_near(a, b, delta); }))
+        {
+            position = index;
             break;
         }
-        ++index;
     }
 
-    if (pos >= 0) {
-        _pattern = &s_dashes.at(pos);
-        _dash_combo.set_active(pos);
-        _offset->set_value(offset);
+    // Set selected pattern in GridView.
+    selection->set_selected(position);
+
+    if (position == 1) {
+        // Custom pattern!
+
+        // Update custom dash patterns.
+        auto &item = dynamic_cast<DashPattern &>(*selection->get_object(position));
+        item.dash_pattern.assign(new_dash_pattern.begin(), new_dash_pattern.end());
     }
-    else { // Hit a custom pattern in the SVG, write it into the combobox.
-        pos = 1;  // the one slot for custom patterns
-        _pattern = &s_dashes[pos];
-        _pattern->assign(dash.begin(), dash.end());
-        _dash_combo.set_active(pos);
-        _offset->set_value(offset);
-    }
+
+    // Update MenuButton DrawingArea, offset, emit changed signal.
+    dash_pattern = new_dash_pattern;
+    offset = new_offset;
+    update(position);
 }
 
-const std::vector<double>& DashSelector::get_dash(double* offset) const {
-    if (offset) *offset = _offset->get_value();
-    return *_pattern;
-}
-
-double DashSelector::get_offset() {
-    return _offset ? _offset->get_value() : 0.0;
-}
-
-/**
- * Fill a pixbuf with the dash pattern using standard cairo drawing
- */
-Cairo::RefPtr<Cairo::Surface> DashSelector::sp_dash_to_pixbuf(const std::vector<double>& pattern) {
-    auto device_scale = get_scale_factor();
-
-    auto height = _preview_height * device_scale;
-    auto width = _preview_width * device_scale;
-    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, width, height);
-    auto const s = surface->cobj();
-    cairo_t *ct = cairo_create(s);
-
-    auto const fg = get_color();
-
-    cairo_set_line_width (ct, _preview_lineheight * device_scale);
-    cairo_scale (ct, _preview_lineheight * device_scale, 1);
-    cairo_move_to (ct, 0, height/2);
-    cairo_line_to (ct, width, height/2);
-    cairo_set_dash(ct, pattern.data(), pattern.size(), 0);
-    cairo_set_source_rgb(ct, fg.get_red(), fg.get_green(), fg.get_blue());
-    cairo_stroke (ct);
-
-    cairo_destroy(ct);
-    cairo_surface_flush(s);
-
-    cairo_surface_set_device_scale(s, device_scale, device_scale);
-    return surface;
-}
-
-/**
- * Fill a pixbuf with a text label using standard cairo drawing
- */
-Cairo::RefPtr<Cairo::Surface> DashSelector::sp_text_to_pixbuf(const char* text) {
-    auto device_scale = get_scale_factor();
-    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, _preview_width  * device_scale,
-                                                                     _preview_height * device_scale);
-    auto const s = surface->cobj();
-    cairo_t *ct = cairo_create(s);
-
-    cairo_select_font_face (ct, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-    // todo: how to find default font face and size?
-    cairo_set_font_size (ct, 12 * device_scale);
-    auto const fg = get_color();
-    cairo_set_source_rgb(ct, fg.get_red(), fg.get_green(), fg.get_blue());
-    cairo_move_to (ct, 16.0 * device_scale, 13.0 * device_scale);
-    cairo_show_text (ct, text);
-
-    cairo_destroy(ct);
-    cairo_surface_flush(s);
-
-    cairo_surface_set_device_scale(s, device_scale, device_scale);
-    return surface;
-}
-
-void DashSelector::on_selection()
+// Update display, offset. Common code for when dash changes.
+void DashSelector::update(int position)
 {
-    _pattern = &s_dashes.at(_dash_combo.get_active()->get_value(dash_columns.dash));
-    changed_signal.emit();
+    // Update MenuButton DrawingArea.
+    if (position == 1) {
+        drawing_area->set_draw_func(sigc::mem_fun(*this, &DashSelector::draw_text));
+    } else {
+        drawing_area->set_draw_func(sigc::bind(sigc::mem_fun(*this, &DashSelector::draw_pattern), dash_pattern));
+    }
+
+    // If no dash pattern, reset offset to zero.
+    offset = dash_pattern.empty() ? 0.0 : offset;
+    adjustment->set_value(offset);
+
+    changed_signal.emit(); // Ensure Pattern widget updated.
 }
 
-void DashSelector::offset_value_changed()
+// User selected new dash pattern in GridView.
+void DashSelector::activate(Gtk::GridView *grid, unsigned position)
 {
-    Glib::ustring offset = _("Pattern offset");
-    offset += " (";
-    offset += Inkscape::ustring::format_classic(_sb->get_value());
-    offset += ")";
-    _sb->set_tooltip_text(offset.c_str());
-    changed_signal.emit();
+    auto &model = dynamic_cast<Gtk::SingleSelection &>(*grid->get_model());
+    auto const &item = dynamic_cast<DashPattern &>(*model.get_selected_item());
+
+    // Update MenuButton DrawingArea, offset, emit changed signal.
+    dash_pattern = item.dash_pattern;
+    update(position);
+    popover->popdown();
+}
+
+void DashSelector::setup_listitem_cb(Glib::RefPtr<Gtk::ListItem> const &list_item)
+{
+    auto drawing_area = Gtk::make_managed<Gtk::DrawingArea>();
+    drawing_area->set_content_width(DRAWING_AREA_WIDTH);
+    drawing_area->set_content_height(DRAWING_AREA_HEIGHT);
+    list_item->set_child(*drawing_area);
+}
+
+void DashSelector::bind_listitem_cb(Glib::RefPtr<Gtk::ListItem> const &list_item)
+{
+    auto const &dash_pattern = dynamic_cast<DashPattern &>(*list_item->get_item());
+    auto &drawing_area = dynamic_cast<Gtk::DrawingArea &>(*list_item->get_child());
+
+    if (dash_pattern.custom) {
+        drawing_area.set_draw_func(sigc::mem_fun(*this, &DashSelector::draw_text));
+    } else {
+        drawing_area.set_draw_func(sigc::bind(sigc::mem_fun(*this, &DashSelector::draw_pattern), dash_pattern.dash_pattern));
+    }
+}
+
+// Draw dash pattern in a Gtk::DrawingArea.
+void DashSelector::draw_pattern(Cairo::RefPtr<Cairo::Context> const &cr, int width, int height,
+                                std::vector<double> const &pattern)
+{
+    cr->set_line_width(2);
+    cr->scale(2, 1);
+    cr->set_dash(pattern, 0);
+    Gdk::Cairo::set_source_rgba(cr, get_color());
+    cr->move_to(0, height/2);
+    cr->line_to(width, height / 2);
+    cr->stroke();
+}
+
+// Draw text in a Gtk::DrawingArea.
+void DashSelector::draw_text(Cairo::RefPtr<Cairo::Context> const &cr, int width, int height)
+{
+    cr->select_font_face("Sans", Cairo::ToyFontFace::Slant::NORMAL, Cairo::ToyFontFace::Weight::NORMAL);
+    cr->set_font_size(12);
+    Gdk::Cairo::set_source_rgba(cr, get_color());
+    cr->move_to(16.0, (height + 12) / 2.0);
+    cr->show_text(_("Custom"));
 }
 
 } // namespace Inkscape::UI::Widget

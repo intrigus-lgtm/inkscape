@@ -1,113 +1,77 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /**
  * @file
- * Combobox for selecting dash patterns.
+ * A widget for selecting dash patterns and setting the dash offset.
  */
 /* Authors:
+ *   Tavmjong Bah (Rewrite to use Gio::ListStore and Gtk::GridView).
+ *
+ * Original authors:
  *   Lauris Kaplinski <lauris@kaplinski.com>
  *   bulia byak <buliabyak@users.sf.net>
  *   Maximilian Albert <maximilian.albert> (gtkmm-ification)
  *
  * Copyright (C) 2002 Lauris Kaplinski
+ * Copyright (C) 2023 Tavmjong Bah
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#ifndef SEEN_SP_DASH_SELECTOR_NEW_H
-#define SEEN_SP_DASH_SELECTOR_NEW_H
+#ifndef SEEN_DASH_SELECTOR_H
+#define SEEN_DASH_SELECTOR_H
 
-#include <cstddef>
-#include <vector>
 #include <glibmm/refptr.h>
 #include <gtkmm/box.h>
-#include <gtkmm/cellrendererpixbuf.h>
-#include <gtkmm/combobox.h>
-#include <sigc++/signal.h>
 
 namespace Gtk {
-class Adjustment;
-class ListStore;
+class DrawingArea;
+class GridView;
+class ListItem;
+class Popover;
+class SingleSelection;
 } // namespace Gtk
 
 namespace Inkscape::UI::Widget {
 
-class SpinButton;
-
-/**
- * Class that wraps a combobox and spinbutton for selecting dash patterns.
- */
 class DashSelector final : public Gtk::Box {
+
 public:
     DashSelector();
     ~DashSelector() final;
 
-    /**
-     * Get and set methods for dashes
-     */
-    void set_dash(const std::vector<double>& dash, double offset);
-    const std::vector<double>& get_dash(double* offset) const;
+    void set_dash_pattern(const std::vector<double>& dash, double offset);
+    const std::vector<double>& get_dash_pattern() { return dash_pattern; }
+    double get_offset() { return offset; }
 
     sigc::signal<void ()> changed_signal;
 
-    double get_offset();
-
 private:
-    /**
-     * Initialize dashes list from preferences
-     */
-    static void init_dashes();
+    // Functions
+    void update(int position);
 
-    /**
-     * Fill a pixbuf with the dash pattern using standard cairo drawing
-     */
-    Cairo::RefPtr<Cairo::Surface> sp_dash_to_pixbuf(const std::vector<double>& pattern);
+    void activate(Gtk::GridView* grid, unsigned int position);
 
-    /**
-     * Fill a pixbuf with text standard cairo drawing
-     */
-    Cairo::RefPtr<Cairo::Surface> sp_text_to_pixbuf(const char* text);
+    void setup_listitem_cb(const Glib::RefPtr<Gtk::ListItem>& list_item);
+    void bind_listitem_cb( const Glib::RefPtr<Gtk::ListItem>& list_item);
 
-    /**
-     * Callback for combobox image renderer
-     */
-    void prepareImageRenderer( Gtk::TreeModel::const_iterator const &row );
+    void draw_pattern(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height,
+                      const std::vector<double>& pattern);
+    void draw_text(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 
-    /**
-     * Callback for offset adjustment changing
-     */
-    void offset_value_changed();
+    // Variables
+    std::vector<double> dash_pattern; // The current pattern.
+    double offset = 0;                // The current offset.
 
-    /**
-     * Callback for combobox selection changing
-     */
-    void on_selection();
-
-    /**
-     * Combobox columns
-     */
-    class DashColumns : public Gtk::TreeModel::ColumnRecord {
-    public:
-        Gtk::TreeModelColumn<std::size_t> dash;
-        DashColumns() {
-            add(dash);
-        }
-    };
-    DashColumns dash_columns;
-    Glib::RefPtr<Gtk::ListStore> _dash_store;
-    Gtk::ComboBox _dash_combo;
-    Gtk::CellRendererPixbuf _image_renderer;
-    Glib::RefPtr<Gtk::Adjustment> _offset;
-    Inkscape::UI::Widget::SpinButton *_sb;
-    static gchar const *const _prefs_path;
-    int _preview_width;
-    int _preview_height;
-    int _preview_lineheight;
-    std::vector<double>* _pattern = nullptr;
+    // Gtk
+    Glib::RefPtr<Gtk::SingleSelection> selection;
+    Gtk::DrawingArea* drawing_area = nullptr; // MenuButton
+    Gtk::Popover* popover = nullptr;
+    Glib::RefPtr<Gtk::Adjustment> adjustment; // Dash offset
 };
 
 } // namespace Inkscape::UI::Widget
 
-#endif // SEEN_SP_DASH_SELECTOR_NEW_H
+#endif // SEEN_DASH_SELECTOR_H
 
 /*
   Local Variables:

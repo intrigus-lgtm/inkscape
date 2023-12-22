@@ -142,7 +142,7 @@ private:
     DashSelector *dashSelector;
     Gtk::Entry* _pattern = nullptr;
     Gtk::Label* _pattern_label = nullptr;
-    void update_pattern(int ndash, const double* pattern);
+    void update_dash_pattern(const std::vector<double> &dash_pattern);
     bool _editing_pattern = false;
 
     gboolean update;

@@ -251,7 +251,7 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
     auto const grid = Gtk::make_managed<Gtk::Grid>();
     append(*grid);
 
-    for (gint i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++) {
         /* Label */
         _l[i] = Gtk::make_managed<Gtk::Label>("", true);
 
@@ -279,7 +279,7 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
 
         /* Spinbutton */
         _b[i] = Gtk::make_managed<Gtk::SpinButton>(_a[i], 1.0);
-        //sp_dialog_defocus_on_enter(_b[i]);
+        sp_dialog_defocus_on_enter(*_b[i]);
         _l[i]->set_mnemonic_widget(*_b[i]);
         _b[i]->set_visible(true);
 

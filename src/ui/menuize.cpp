@@ -155,11 +155,9 @@ void menuize_popover(Gtk::Popover &popover)
     menuize_all(popover, "modelbutton");
     autohide_tooltip(popover);
 
-#if GTK_CHECK_VERSION(4, 14, 0)
     if (auto const popover_menu = dynamic_cast<Gtk::PopoverMenu *>(&popover)) {
         popover_menu->set_flags(Gtk::PopoverMenu::Flags::NESTED);
     }
-#endif
 }
 
 std::unique_ptr<Gtk::Popover>

@@ -380,7 +380,7 @@ void ColorICCSelector::init(bool no_alpha)
         auto const spinbutton = Gtk::make_managed<Gtk::SpinButton>(_impl->_compUI[i]._adj, step, digits);
         _impl->_compUI[i]._btn = spinbutton->Gtk::Widget::gobj();
         spinbutton->set_tooltip_text(i < things.size() ? things[i].tip.c_str() : "");
-        //sp_dialog_defocus_on_enter(spinbutton);
+        sp_dialog_defocus_on_enter(*spinbutton);
         gtk_label_set_mnemonic_widget(GTK_LABEL(_impl->_compUI[i]._label), _impl->_compUI[i]._btn);
         gtk_widget_set_visible(_impl->_compUI[i]._btn, true);
 
@@ -423,7 +423,7 @@ void ColorICCSelector::init(bool no_alpha)
     auto const spinbuttonalpha = Gtk::make_managed<Gtk::SpinButton>(_impl->_adj, 1.0);
     _impl->_sbtn = spinbuttonalpha->Gtk::Widget::gobj();
     spinbuttonalpha->set_tooltip_text(_("Alpha (opacity)"));
-    //sp_dialog_defocus_on_enter(spinbuttonalpha);
+    sp_dialog_defocus_on_enter(*spinbuttonalpha);
     gtk_label_set_mnemonic_widget(GTK_LABEL(_impl->_label), _impl->_sbtn);
     gtk_widget_set_visible(_impl->_sbtn, true);
 

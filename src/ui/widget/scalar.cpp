@@ -49,57 +49,57 @@ Scalar::Scalar(Glib::ustring const &label, Glib::ustring const &tooltip,
 
 unsigned Scalar::getDigits() const
 {
-    return get_spin_button().get_digits();
+    return getSpinButton().get_digits();
 }
 
 double Scalar::getStep() const
 {
     double step, page;
-    get_spin_button().get_increments(step, page);
+    getSpinButton().get_increments(step, page);
     return step;
 }
 
 double Scalar::getPage() const
 {
     double step, page;
-    get_spin_button().get_increments(step, page);
+    getSpinButton().get_increments(step, page);
     return page;
 }
 
 double Scalar::getRangeMin() const
 {
     double min, max;
-    get_spin_button().get_range(min, max);
+    getSpinButton().get_range(min, max);
     return min;
 }
 
 double Scalar::getRangeMax() const
 {
     double min, max;
-    get_spin_button().get_range(min, max);
+    getSpinButton().get_range(min, max);
     return max;
 }
 
 double Scalar::getValue() const
 {
-    return get_spin_button().get_value();
+    return getSpinButton().get_value();
 }
 
 int Scalar::getValueAsInt() const
 {
-    return get_spin_button().get_value_as_int();
+    return getSpinButton().get_value_as_int();
 }
 
 
 void Scalar::setDigits(unsigned digits)
 {
-    return get_spin_button().set_digits(digits);
+    return getSpinButton().set_digits(digits);
 }
 
 void Scalar::setNoLeadingZeros()
 {
     if (getDigits()) {
-        auto &spin_button = get_spin_button();
+        auto &spin_button = getSpinButton();
         spin_button.set_numeric(false);
         spin_button.signal_output().connect(sigc::mem_fun(*this, &Scalar::setNoLeadingZerosOutput), false);
     }
@@ -108,7 +108,7 @@ void Scalar::setNoLeadingZeros()
 bool
 Scalar::setNoLeadingZerosOutput()
 {
-    auto &spin_button = get_spin_button();
+    auto &spin_button = getSpinButton();
     double digits = std::pow(10.0, spin_button.get_digits());
     double val = std::round(spin_button.get_value() * digits) / digits;
     spin_button.set_text(Glib::ustring::format(val));
@@ -117,17 +117,17 @@ Scalar::setNoLeadingZerosOutput()
 
 void 
 Scalar::setWidthChars(gint width_chars) {
-    get_spin_button().property_width_chars() = width_chars;
+    getSpinButton().property_width_chars() = width_chars;
 }
 
 void Scalar::setIncrements(double step, double /*page*/)
 {
-    get_spin_button().set_increments(step, 0);
+    getSpinButton().set_increments(step, 0);
 }
 
 void Scalar::setRange(double min, double max)
 {
-    get_spin_button().set_range(min, max);
+    getSpinButton().set_range(min, max);
 }
 
 void Scalar::setValue(double value, bool setProg)
@@ -135,30 +135,30 @@ void Scalar::setValue(double value, bool setProg)
     if (setProg) {
         setProgrammatically = true; // callback is supposed to reset back, if it cares
     }
-    get_spin_button().set_value(value);
+    getSpinButton().set_value(value);
     setProgrammatically = false;
 }
 
 void Scalar::setWidthChars(unsigned chars)
 {
-    get_spin_button().set_width_chars(chars);
+    getSpinButton().set_width_chars(chars);
 }
 
 void Scalar::update()
 {
-    get_spin_button().update();
+    getSpinButton().update();
 }
 
 void Scalar::addSlider()
 {
-    auto const scale = Gtk::make_managed<Gtk::Scale>(get_spin_button().get_adjustment());
+    auto const scale = Gtk::make_managed<Gtk::Scale>(getSpinButton().get_adjustment());
     scale->set_draw_value(false);
     UI::pack_start(*this, *scale);
 }
 
 Glib::SignalProxy<void()> Scalar::signal_value_changed()
 {
-    return get_spin_button().signal_value_changed();
+    return getSpinButton().signal_value_changed();
 }
 
 void Scalar::hide_label() {
@@ -175,16 +175,9 @@ void Scalar::hide_label() {
     }
 }
 
-SpinButton const &Scalar::get_spin_button() const
+SpinButton const &Scalar::getSpinButton() const
 {
-    auto const spinButton = dynamic_cast<SpinButton const *>(getWidget());
-    g_assert(spinButton);
-    return *spinButton;
-}
-
-SpinButton &Scalar::get_spin_button()
-{
-    return const_cast<SpinButton &>(const_cast<Scalar const &>(*this).get_spin_button());
+    return dynamic_cast<SpinButton const &>(*getWidget());
 }
 
 } // namespace Inkscape::UI::Widget

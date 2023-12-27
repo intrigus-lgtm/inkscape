@@ -50,7 +50,7 @@ ScalarUnit::ScalarUnit(Glib::ustring const &label, Glib::ustring const &tooltip,
     _unit_menu->signal_changed()
             .connect(sigc::mem_fun(*this, &ScalarUnit::on_unit_changed));
 
-    get_spin_button().setUnitMenu(_unit_menu);
+    getSpinButton().setUnitMenu(_unit_menu);
 
     lastUnits = _unit_menu->getUnitAbbr();
 }
@@ -138,7 +138,7 @@ double ScalarUnit::getValue(Glib::ustring const &unit_name) const
 
 void ScalarUnit::grabFocusAndSelectEntry()
 {
-    auto &spinButton = get_spin_button();
+    auto &spinButton = getSpinButton();
     spinButton.grab_focus();
     spinButton.select_region(0, 20);
 }
@@ -146,7 +146,7 @@ void ScalarUnit::grabFocusAndSelectEntry()
 void ScalarUnit::setAlignment(double xalign)
 {
     xalign = std::clamp(xalign,0.0,1.0);
-    get_spin_button().set_alignment(xalign);
+    getSpinButton().set_alignment(xalign);
 }
 
 void ScalarUnit::setHundredPercent(double number)

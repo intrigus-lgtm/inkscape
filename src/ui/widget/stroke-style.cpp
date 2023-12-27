@@ -224,7 +224,7 @@ StrokeStyle::StrokeStyle() :
     widthSpin->set_visible(true);
     spw_label(table, C_("Stroke width", "_Width:"), 0, i, widthSpin);
 
-    sp_dialog_defocus_on_enter_cpp(widthSpin);
+    sp_dialog_defocus_on_enter(*widthSpin);
 
     UI::pack_start(*hb, *widthSpin, false, false);
     unitSelector = Gtk::make_managed<UnitMenu>();
@@ -359,7 +359,7 @@ StrokeStyle::StrokeStyle() :
     miterLimitSpin->set_tooltip_text(_("Maximum length of the miter (in units of stroke width)"));
     miterLimitSpin->set_width_chars(6);
     miterLimitSpin->set_visible(true);
-    sp_dialog_defocus_on_enter_cpp(miterLimitSpin);
+    sp_dialog_defocus_on_enter(*miterLimitSpin);
 
     UI::pack_start(*hb, *miterLimitSpin, false, false);
     miterLimitAdj->signal_value_changed().connect(sigc::mem_fun(*this, &StrokeStyle::setStrokeMiter));

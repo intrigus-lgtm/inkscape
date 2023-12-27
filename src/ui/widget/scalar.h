@@ -182,9 +182,8 @@ public:
     // permanently hide label part
     void hide_label();
 
-protected:
-    SpinButton const &get_spin_button() const;
-    SpinButton       &get_spin_button()      ;
+    SpinButton const &getSpinButton() const;
+    SpinButton       &getSpinButton() { return const_cast<SpinButton &>(std::as_const(*this).getSpinButton()); }
 };
 
 } // namespace Inkscape::UI::Widget

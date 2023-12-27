@@ -39,6 +39,7 @@
 
 #include "preferences.h"
 #include "style.h"  // Read dash patterns from preferences.
+#include "ui/dialog-events.h"
 #include "ui/widget/spinbutton.h"
 
 namespace Inkscape::UI::Widget {
@@ -142,7 +143,7 @@ DashSelector::DashSelector()
     auto spinbutton = Gtk::make_managed<Inkscape::UI::Widget::SpinButton>(adjustment, 0.1, 2); // Climb rate, digits.
     spinbutton->set_tooltip_text(_("Dash pattern offset"));
     spinbutton->set_width_chars(5);
-    sp_dialog_defocus_on_enter_cpp(spinbutton);
+    sp_dialog_defocus_on_enter(*spinbutton);
 
     append(*spinbutton);
 }

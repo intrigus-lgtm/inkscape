@@ -24,7 +24,6 @@
 #include "object/sp-guide.h"
 #include "object/sp-namedview.h"
 #include "page-manager.h"
-#include "ui/dialog-events.h"
 #include "ui/widget/spinbutton.h"
 
 namespace Inkscape::UI::Dialog {
@@ -242,13 +241,14 @@ void GuidelinePropertiesDialog::_setup()
     _spin_angle.setIncrements(1.0, 10.0);
     _spin_angle.setRange(-3600., 3600.);
 
-    // Fixme: The three spinbuttons should activate the default widget when enter is pressed.
-    // Unfortunately, this is difficult or impossible to implement in GTK4.
-
     _spin_angle.set_halign(Gtk::Align::FILL);
     _spin_angle.set_valign(Gtk::Align::FILL);
     _spin_angle.set_hexpand();
     _layout_table.attach(_spin_angle, 1, 6, 2, 1);
+
+    _spin_button_x.getSpinButton().set_activates_default();
+    _spin_button_y.getSpinButton().set_activates_default();
+    _spin_angle.getSpinButton().set_activates_default();
 
     // mode radio button
     _relative_toggle.set_halign(Gtk::Align::FILL);

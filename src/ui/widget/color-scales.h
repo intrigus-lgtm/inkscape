@@ -22,7 +22,10 @@
 #include "helper/auto-connection.h"
 #include "ui/selected-color.h"
 
-namespace Gtk { class Label; }
+namespace Gtk {
+class Label;
+class SpinButton;
+} // namespace Gtk
 
 namespace Inkscape::UI::Widget {
 
@@ -89,7 +92,7 @@ protected:
     gboolean _dragging : 1;
     std::vector<Glib::RefPtr<Gtk::Adjustment>> _a;        /* Channel adjustments */
     Inkscape::UI::Widget::ColorSlider *_s[5];             /* Channel sliders */
-    Gtk::Widget *_b[5];                                   /* Spinbuttons */
+    Gtk::SpinButton *_b[5];                               /* Spinbuttons */
     Gtk::Label *_l[5];                                    /* Labels */
     std::array<guchar, 4 * 1024> _sliders_maps[4];
     Inkscape::UI::Widget::ColorWheel *_wheel;

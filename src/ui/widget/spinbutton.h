@@ -37,7 +37,7 @@ public:
     MathSpinButton(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refGlade);
 
 private:
-    int on_input(double* newvalue) final;
+    int on_input(double &newvalue);
 };
 
 /**
@@ -92,7 +92,7 @@ private:
      * @retval false No conversion done, continue with default handler.
      * @retval true  Conversion successful, don't call default handler.
      */
-    int on_input(double* newvalue) final;
+    int on_input(double &newvalue);
 
     /**
      * When focus is obtained, save the value to enable undo later.
@@ -117,7 +117,7 @@ private:
      */
     void undo();
 
-  public:
+public:
     inline void set_defocus_widget(const decltype(_defocus_widget) widget) { _defocus_widget = widget; }
     inline void set_dont_evaluate(bool flag) { _dont_evaluate = flag; }
 

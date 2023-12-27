@@ -34,14 +34,15 @@ MathSpinButton::MathSpinButton(BaseObjectType *cobject, const Glib::RefPtr<Gtk::
     : Gtk::SpinButton(cobject)
 {
     drag_dest_unset();
+    signal_input().connect(sigc::mem_fun(*this, &MathSpinButton::on_input), true);
 }
 
-int MathSpinButton::on_input(double *newvalue)
+int MathSpinButton::on_input(double &newvalue)
 {
     try {
         auto eval = Inkscape::Util::ExpressionEvaluator(get_text().c_str(), nullptr);
         auto result = eval.evaluate();
-        *newvalue = result.value;
+        newvalue = result.value;
     } catch (Inkscape::Util::EvaluatorException const &e) {
         g_message ("%s", e.what());
         return false;
@@ -56,9 +57,11 @@ void SpinButton::construct()
     property_has_focus().signal_changed().connect(
         sigc::mem_fun(*this, &SpinButton::on_has_focus_changed));
     UI::on_popup_menu(*this, sigc::mem_fun(*this, &SpinButton::on_popup_menu));
+
+    signal_input().connect(sigc::mem_fun(*this, &SpinButton::on_input), true);
 }
 
-int SpinButton::on_input(double* newvalue)
+int SpinButton::on_input(double &newvalue)
 {
     if (_dont_evaluate) return false;
 
@@ -81,7 +84,7 @@ int SpinButton::on_input(double* newvalue)
             Inkscape::Util::ExpressionEvaluator eval = Inkscape::Util::ExpressionEvaluator(get_text().c_str(), nullptr);
             result = eval.evaluate();
         }
-        *newvalue = result.value;
+        newvalue = result.value;
     } catch (Inkscape::Util::EvaluatorException const &e) {
         g_message ("%s", e.what());
         return false;

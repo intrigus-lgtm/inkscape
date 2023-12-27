@@ -235,9 +235,9 @@ AlignAndDistribute::on_align_node_clicked(std::string const &direction)
     }
 
     if (direction == "horizontal") {
-        win->activate_action("node-align-horizontal", variant);
+        win->activate_action("win.node-align-horizontal", variant);
     } else {
-        win->activate_action("node-align-vertical", variant);
+        win->activate_action("win.node-align-vertical", variant);
     }
 }
 

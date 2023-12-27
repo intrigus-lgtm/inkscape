@@ -22,7 +22,7 @@ if(WIN32)
     ${MINGW_BIN}/libbz2-[0-9]*.dll
     ${MINGW_BIN}/libcairo-[0-9]*.dll
     ${MINGW_BIN}/libcairo-gobject-[0-9]*.dll
-    ${MINGW_BIN}/libcairomm-1.0-[0-9]*.dll
+    ${MINGW_BIN}/libcairomm-1.16-[0-9]*.dll
     ${MINGW_BIN}/libcdr-0.[0-9]*.dll
     ${MINGW_BIN}/libcrypto-1_[0-9]*.dll
     ${MINGW_BIN}/libcrypto-3*.dll
@@ -42,15 +42,13 @@ if(WIN32)
     ${MINGW_BIN}/libfreetype-[0-9]*.dll
     ${MINGW_BIN}/libfribidi-[0-9]*.dll
     ${MINGW_BIN}/libgc-[0-9]*.dll
-    ${MINGW_BIN}/libgdk-3-[0-9]*.dll
     ${MINGW_BIN}/libgdk_pixbuf-2.0-[0-9]*.dll
-    ${MINGW_BIN}/libgdkmm-3.0-[0-9]*.dll
     ${MINGW_BIN}/libgfortran-[0-9]*.dll
     ${MINGW_BIN}/libgio-2.0-[0-9]*.dll
-    ${MINGW_BIN}/libgiomm-2.4-[0-9]*.dll
+    ${MINGW_BIN}/libgiomm-2.68-[0-9]*.dll
     ${MINGW_BIN}/libgirepository-1.0-[0-9].dll
     ${MINGW_BIN}/libglib-2.0-[0-9]*.dll
-    ${MINGW_BIN}/libglibmm-2.4-[0-9]*.dll
+    ${MINGW_BIN}/libglibmm-2.68-[0-9]*.dll
     ${MINGW_BIN}/libgmodule-2.0-[0-9]*.dll
     ${MINGW_BIN}/libgmp-[0-9]*.dll
     ${MINGW_BIN}/libgobject-2.0-[0-9]*.dll
@@ -58,9 +56,9 @@ if(WIN32)
     ${MINGW_BIN}/libgraphite[0-9]*.dll
     ${MINGW_BIN}/libgsl-[0-9]*.dll
     ${MINGW_BIN}/libgslcblas-[0-9]*.dll
-    ${MINGW_BIN}/libgtk-3-[0-9]*.dll
-    ${MINGW_BIN}/libgtkmm-3.0-[0-9]*.dll
-    ${MINGW_BIN}/libgtksourceview-4-[0-9]*.dll
+    ${MINGW_BIN}/libgtk-4-[0-9]*.dll
+    ${MINGW_BIN}/libgtkmm-4.0-[0-9]*.dll
+    ${MINGW_BIN}/libgtksourceview-5-[0-9]*.dll
     ${MINGW_BIN}/libharfbuzz-[0-9]*.dll
     ${MINGW_BIN}/libheif.dll
     ${MINGW_BIN}/libiconv-[0-9]*.dll
@@ -85,7 +83,7 @@ if(WIN32)
     ${MINGW_BIN}/libpango-1.0-[0-9]*.dll
     ${MINGW_BIN}/libpangocairo-1.0-[0-9]*.dll
     ${MINGW_BIN}/libpangoft2-1.0-[0-9]*.dll
-    ${MINGW_BIN}/libpangomm-1.4-[0-9]*.dll
+    ${MINGW_BIN}/libpangomm-2.48-[0-9]*.dll
     ${MINGW_BIN}/libpangowin32-1.0-[0-9]*.dll
     ${MINGW_BIN}/libpcre2-8-[0-9]*.dll
     ${MINGW_BIN}/libpixman-1-[0-9]*.dll
@@ -194,7 +192,7 @@ if(WIN32)
       COMPONENT translations.${language_code_escaped}
       FILES_MATCHING
       PATTERN "*glib20.mo"
-      PATTERN "*gtk30.mo")
+      PATTERN "*gtk40.mo")
   endforeach()
 
   install(DIRECTORY ${MINGW_PATH}/share/poppler
@@ -203,7 +201,7 @@ if(WIN32)
   install(DIRECTORY ${MINGW_PATH}/share/glib-2.0/schemas
     DESTINATION share/glib-2.0)
 
-  install(DIRECTORY ${MINGW_PATH}/share/gtksourceview-4
+  install(DIRECTORY ${MINGW_PATH}/share/gtksourceview-5
     DESTINATION share)
 
   # fontconfig
@@ -230,14 +228,14 @@ if(WIN32)
   install(DIRECTORY ${CMAKE_BINARY_DIR}/etc/fonts
     DESTINATION etc)
 
-  # GTK 3.0
-  install(DIRECTORY ${MINGW_LIB}/gtk-3.0
+  # GTK 4.0
+  install(DIRECTORY ${MINGW_LIB}/gtk-4.0
     DESTINATION lib
     FILES_MATCHING
     PATTERN "*.dll"
     PATTERN "*.cache")
 
-  install(DIRECTORY ${MINGW_PATH}/etc/gtk-3.0
+  install(DIRECTORY ${MINGW_PATH}/etc/gtk-4.0
     DESTINATION etc)
 
   install(DIRECTORY ${MINGW_LIB}/gdk-pixbuf-2.0
@@ -251,13 +249,12 @@ if(WIN32)
   install (FILES
     ${MINGW_LIB}/girepository-1.0/Atk-1.0.typelib
     ${MINGW_LIB}/girepository-1.0/cairo-1.0.typelib
-    ${MINGW_LIB}/girepository-1.0/Gdk-3.0.typelib
     ${MINGW_LIB}/girepository-1.0/GdkPixbuf-2.0.typelib
     ${MINGW_LIB}/girepository-1.0/Gio-2.0.typelib
     ${MINGW_LIB}/girepository-1.0/GLib-2.0.typelib
     ${MINGW_LIB}/girepository-1.0/GModule-2.0.typelib
     ${MINGW_LIB}/girepository-1.0/GObject-2.0.typelib
-    ${MINGW_LIB}/girepository-1.0/Gtk-3.0.typelib
+    ${MINGW_LIB}/girepository-1.0/Gtk-4.0.typelib
     ${MINGW_LIB}/girepository-1.0/HarfBuzz-0.0.typelib
     ${MINGW_LIB}/girepository-1.0/Pango-1.0.typelib
     ${MINGW_LIB}/girepository-1.0/PangoCairo-1.0.typelib

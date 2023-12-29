@@ -97,19 +97,17 @@ void show_about()
         window            = &get_widget<Gtk::Window>  (builder, "about-screen-window");
         tabs              = &get_widget<Gtk::Notebook>(builder, "tabs");
         auto version      = &get_widget<Gtk::Button>  (builder, "version");
+        auto version_lbl  = &get_widget<Gtk::Label>   (builder, "version-label");
         auto label        = &get_widget<Gtk::Label>   (builder, "version-copied");
-        auto debug_info   = &get_widget<Gtk::Button>  (builder, "debug_info");
+        auto debug_info   = &get_widget<Gtk::Button>  (builder, "debug-info");
         auto label2       = &get_widget<Gtk::Label>   (builder, "debug-info-copied");
         auto copyright    = &get_widget<Gtk::Label>   (builder, "copyright");
         auto authors      = &get_widget<Gtk::TextView>(builder, "credits-authors");
         auto translators  = &get_widget<Gtk::TextView>(builder, "credits-translators");
         auto license      = &get_widget<Gtk::Label>   (builder, "license-text");
 
-        // Automatic signal handling (requires -rdynamic compile flag)
-        //gtk_builder_connect_signals(builder->gobj(), NULL);
-
         auto text = Inkscape::inkscape_version();
-        version->set_label(text);
+        version_lbl->set_label(text);
         version->signal_clicked().connect(
             sigc::bind(&copy, version, label, std::move(text)));
 
@@ -117,7 +115,7 @@ void show_about()
             sigc::bind(&copy, version, label2, Inkscape::debug_info()));
 
         copyright->set_label(
-            Glib::ustring::compose(copyright->get_label(), Inkscape::inkscape_build_year()));
+            Glib::ustring::compose(copyright->get_label(), std::to_string(Inkscape::inkscape_build_year())));
 
         // Render the about screen image via inkscape SPDocument
         auto filename = Resource::get_filename(Resource::SCREENS, "about.svg", true, false);
@@ -166,10 +164,12 @@ void show_about()
         auto const controller = gtk_event_controller_key_new();
         gtk_widget_add_controller(GTK_WIDGET(window->gobj()), controller);
         g_signal_connect(controller, "key-pressed", G_CALLBACK(on_key_pressed), window);
+
+        window->set_hide_on_close();
     }
 
     if (window) {
-        window->set_visible(true);
+        window->present();
         tabs->set_current_page(0);
     } else {
         g_error("About screen window couldn't be loaded. Missing window id in glade file.");

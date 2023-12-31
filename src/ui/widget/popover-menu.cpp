@@ -46,7 +46,7 @@ public:
 };
 
 PopoverMenu::PopoverMenu(Gtk::Widget &parent, Gtk::PositionType const position)
-: PopoverMenu{&parent, position}
+    : PopoverMenu{&parent, position}
 {}
 
 PopoverMenu::PopoverMenu(Gtk::Widget *const parent, Gtk::PositionType const position)

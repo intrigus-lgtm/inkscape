@@ -657,7 +657,6 @@
     <property name="spacing">5</property>
     <child>
       <object class="GtkBox" id="main-header">
-        <property name="vexpand">True</property>
         <property name="hexpand">True</property>
         <property name="spacing">5</property>
         <child>

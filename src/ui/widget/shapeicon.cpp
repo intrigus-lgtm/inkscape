@@ -28,7 +28,7 @@ void CellRendererItemIcon::set_icon_name()
 {
     std::string shape_type = _property_shape_type.get_value();
     if (shape_type == "-") { // "-" is an explicit request not to draw any icon
-        property_icon_name().set_value({});
+        //property_icon_name().set_value({});
         return;
     }
 
@@ -38,7 +38,7 @@ void CellRendererItemIcon::set_icon_name()
     }
 
     auto [icon_name, color_class] = get_shape_icon(shape_type, color);
-    property_icon_name().set_value(icon_name);
+    //property_icon_name().set_value(icon_name);
     _color_class = std::move(color_class);
 }
 
@@ -60,9 +60,9 @@ void CellRendererItemIcon::snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &sna
         set_icon_name();
     }
     // GTK4 will not let us recolor symbolic icons any other way I can find, so…
-    widget.add_css_class(_color_class);
+    //widget.add_css_class(_color_class);
     Gtk::CellRendererPixbuf::snapshot_vfunc(snapshot, widget, background_area, cell_area, flags);
-    widget.remove_css_class(_color_class);
+    //widget.remove_css_class(_color_class);
 
     int clipmask = _property_clipmask.get_value();
     if (clipmask <= 0) return;
@@ -71,14 +71,14 @@ void CellRendererItemIcon::snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &sna
     // …somewhat sneakily, by temporarily changing our :icon-name & re-rendering
     auto icon_name = property_icon_name().get_value();
     if (clipmask == OVERLAY_CLIP) {
-        property_icon_name().set_value("overlay-clip");
+        //property_icon_name().set_value("overlay-clip");
     } else if (clipmask == OVERLAY_MASK) {
-        property_icon_name().set_value("overlay-mask");
+        //property_icon_name().set_value("overlay-mask");
     } else if (clipmask == OVERLAY_BOTH) {
-        property_icon_name().set_value("overlay-clipmask");
+        //property_icon_name().set_value("overlay-clipmask");
     }
     Gtk::CellRendererPixbuf::snapshot_vfunc(snapshot, widget, background_area, cell_area, flags);
-    property_icon_name().set_value(std::move(icon_name));
+    //property_icon_name().set_value(std::move(icon_name));
 }
 
 bool CellRendererItemIcon::activate_vfunc(Glib::RefPtr<Gdk::Event const> const &event,

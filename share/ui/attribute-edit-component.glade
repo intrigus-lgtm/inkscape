@@ -168,16 +168,18 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="btn-ok">
-                <property name="label" translatable="yes">OK</property>
+              <object class="GtkButton" id="btn-cancel">
+                <property name="label" translatable="yes">Cancel</property>
                 <property name="focusable">True</property>
                 <property name="receives-default">True</property>
                 <property name="use-underline">True</property>
+                <property name="hexpand">True</property>
+                <property name="halign">end</property>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="btn-cancel">
-                <property name="label" translatable="yes">Cancel</property>
+              <object class="GtkButton" id="btn-ok">
+                <property name="label" translatable="yes">OK</property>
                 <property name="focusable">True</property>
                 <property name="receives-default">True</property>
                 <property name="use-underline">True</property>

@@ -18,6 +18,9 @@
 
 #include "stroke-style.h"
 
+#include <iostream>
+#include <iomanip>
+
 #include <glibmm/i18n.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/entry.h>
@@ -41,6 +44,7 @@
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
+#include "ui/util.h"
 #include "ui/widget/dash-selector.h"
 #include "ui/widget/marker-combo-box.h"
 #include "ui/widget/unit-menu.h"
@@ -254,28 +258,37 @@ StrokeStyle::StrokeStyle() :
                                             //   DashSelector class, so that we do not have to
                                             //   expose any of the underlying widgets?
     dashSelector = Gtk::make_managed<DashSelector>();
-    dashSelector->changed_signal.connect(sigc::mem_fun(*this, &StrokeStyle::setStrokeDash));
+    dashSelector->changed_signal.connect([this](){
+        if (update || _editing_dash_pattern) {
+            return;
+        }
+        _editing_dash_pattern = true;
+        auto& dash_pattern = dashSelector->get_dash_pattern();
+        update_dash_entry(dash_pattern);
+        setStrokeDash();
+        _editing_dash_pattern = false;
+    });
     table->attach(*dashSelector, 1, i, 3, 1);
 
     i++;
 
-    _pattern = Gtk::make_managed<Gtk::Entry>();
-    _pattern_label = spw_label(table, _("_Pattern:"), 0, i, _pattern);
-    _pattern_label->set_tooltip_text(_("Repeating \"dash gap ...\" pattern"));
-    _pattern->set_visible(false);
-    _pattern_label->set_visible(false);
-    _pattern->signal_changed().connect([this](){
-        if (update || _editing_pattern) return;
-        auto pat = parse_pattern(_pattern->get_text());
-        _editing_pattern = true;
+    _pattern_entry = Gtk::make_managed<Gtk::Entry>();
+    _pattern_entry->signal_changed().connect([this](){
+        if (update || _editing_dash_pattern) {
+            return;
+        }
+        _editing_dash_pattern = true;
         update = true;
-        dashSelector->set_dash_pattern(pat, dashSelector->get_offset());
+        auto pattern = parse_pattern(_pattern_entry->get_text());
+        dashSelector->set_dash_pattern(pattern, dashSelector->get_offset());
         update = false;
         setStrokeDash();
-        _editing_pattern = false;
+        _editing_dash_pattern = false;
     });
-    table->attach(*_pattern, 1, i, 4, 1);
-    update_dash_pattern(std::vector<double>{});
+    table->attach(*_pattern_entry, 1, i, 4, 1);
+
+    _pattern_label = spw_label(table, _("_Pattern:"), 0, i, _pattern_entry);
+    _pattern_label->set_tooltip_text(_("Repeating \"dash gap ...\" pattern"));
 
     i++;
 
@@ -683,24 +696,32 @@ StrokeStyle::setDashSelectorFromStyle(DashSelector *dsel, SPStyle *style)
     double offset = 0;
     auto dash_pattern = getDashFromStyle(style, offset);
     dsel->set_dash_pattern(dash_pattern, offset);
+    update_dash_entry(dash_pattern);
 }
 
-void StrokeStyle::update_dash_pattern(const std::vector<double> &dash_pattern) {
-    if (_editing_pattern || _pattern->has_focus()) return;
+void StrokeStyle::update_dash_entry(const std::vector<double> &dash_pattern)
+{
+    if (_editing_dash_pattern || contains_focus(*_pattern_entry)) { /* The GtkText object has focus. The focus test is required
+                                                                       as the StokeStyle widget is updated after all changed
+                                                                       are made (unnecessarily via selectionModifiedCB()).
+                                                                       Without this test, the cursor is placed at the beginning
+                                                                       of the GtkEntry after each character is typed. */
+        return;
+    }
 
     std::ostringstream ost;
     for (auto d : dash_pattern) {
         ost << d << ' ';
     }
-    _pattern->set_text(ost.str().c_str());
+    _pattern_entry->set_text(ost.str().c_str());
 
     if (!dash_pattern.empty()) {
         _pattern_label->set_visible(true);
-        _pattern->set_visible(true);
+        _pattern_entry->set_visible(true);
     }
     else {
         _pattern_label->set_visible(false);
-        _pattern->set_visible(false);
+        _pattern_entry->set_visible(false);
     }
 }
 
@@ -881,7 +902,7 @@ StrokeStyle::updateLine()
         capSquare->set_sensitive(is_enabled);
 
         dashSelector->set_sensitive(is_enabled);
-        _pattern->set_sensitive(is_enabled);
+        _pattern_entry->set_sensitive(is_enabled);
     }
 
     if (result_ml != QUERY_STYLE_NOTHING)
@@ -1018,19 +1039,20 @@ void StrokeStyle::setStrokeWidth()
 }
 
 /**
- * Set the stroke dash pattern, scale to the existing width if needed
+ * Apply the stroke dash pattern to objects, scale to the existing width if needed.
  */
 void StrokeStyle::setStrokeDash()
 {
-    if (update) return;
+    if (update) {
+        return;
+    }
     update = true;
 
     auto document = desktop->getDocument();
     auto prefs = Inkscape::Preferences::get();
 
     const auto& dash = dashSelector->get_dash_pattern();
-    double offset = dashSelector->get_offset();
-    update_dash_pattern(dash);
+    double offset    = dashSelector->get_offset();
 
     SPCSSAttr *css = sp_repr_css_attr_new();
     for (auto item : desktop->getSelection()->items()) {

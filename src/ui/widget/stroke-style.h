@@ -140,10 +140,10 @@ private:
     StrokeStyleButton *paintOrderSMF;
     StrokeStyleButton *paintOrderMSF;
     DashSelector *dashSelector;
-    Gtk::Entry* _pattern = nullptr;
+    Gtk::Entry* _pattern_entry = nullptr;
     Gtk::Label* _pattern_label = nullptr;
-    void update_dash_pattern(const std::vector<double> &dash_pattern);
-    bool _editing_pattern = false;
+    void update_dash_entry(const std::vector<double> &dash_pattern);
+    bool _editing_dash_pattern = false;
 
     gboolean update;
     double _last_width = 0.0;

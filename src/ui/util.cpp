@@ -191,6 +191,28 @@ bool is_descendant_of(Gtk::Widget const &descendant, Gtk::Widget const &ancestor
           { return &parent == &ancestor ? ForEachResult::_break : ForEachResult::_continue; });
 }
 
+/// Returns if widget or one of its descendants has focus.
+/// @param widget The widget of interest.
+/// @return If the widget of interest or a descendant has focus.
+bool contains_focus(Gtk::Widget &widget)
+{
+    if (widget.has_focus()) {
+        return true;
+    }
+
+    Gtk::Root const *root = widget.get_root();
+    if (!root) {
+        return false;
+    }
+
+    Gtk::Widget const *focused = root->get_focus();
+    if (!focused) {
+        return false;
+    }
+
+    return focused->is_ancestor(widget);
+}
+
 /// Get the relative font size as determined by a widgetʼs style/Pango contexts.
 int get_font_size(Gtk::Widget &widget)
 {

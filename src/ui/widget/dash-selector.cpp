@@ -182,13 +182,13 @@ void DashSelector::set_dash_pattern(std::vector<double> const &new_dash_pattern,
         item.dash_pattern.assign(new_dash_pattern.begin(), new_dash_pattern.end());
     }
 
-    // Update MenuButton DrawingArea, offset, emit changed signal.
+    // Update MenuButton DrawingArea and offset.
     dash_pattern = new_dash_pattern;
     offset = new_offset;
     update(position);
 }
 
-// Update display, offset. Common code for when dash changes.
+// Update display, offset. Common code for when dash changes (must not trigger signal!).
 void DashSelector::update(int position)
 {
     // Update MenuButton DrawingArea.
@@ -201,8 +201,6 @@ void DashSelector::update(int position)
     // If no dash pattern, reset offset to zero.
     offset = dash_pattern.empty() ? 0.0 : offset;
     adjustment->set_value(offset);
-
-    changed_signal.emit(); // Ensure Pattern widget updated.
 }
 
 // User selected new dash pattern in GridView.
@@ -215,6 +213,8 @@ void DashSelector::activate(Gtk::GridView *grid, unsigned position)
     dash_pattern = item.dash_pattern;
     update(position);
     popover->popdown();
+
+    changed_signal.emit(); // Ensure Pattern widget updated.
 }
 
 void DashSelector::setup_listitem_cb(Glib::RefPtr<Gtk::ListItem> const &list_item)

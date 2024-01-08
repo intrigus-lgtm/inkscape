@@ -133,6 +133,7 @@ Gtk::Widget *for_each_parent(Gtk::Widget &widget, Func &&func)
 [[nodiscard]] Gtk::Widget *find_widget_by_name(Gtk::Widget &parent, Glib::ustring const &name);
 [[nodiscard]] Gtk::Widget *find_focusable_widget(Gtk::Widget &parent);
 [[nodiscard]] bool is_descendant_of(Gtk::Widget const &descendant, Gtk::Widget const &ancestor);
+[[nodiscard]] bool contains_focus(Gtk::Widget &widget);
 
 [[nodiscard]] int get_font_size(Gtk::Widget &widget);
 

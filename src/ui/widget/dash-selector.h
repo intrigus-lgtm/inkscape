@@ -9,7 +9,7 @@
  * Original authors:
  *   Lauris Kaplinski <lauris@kaplinski.com>
  *   bulia byak <buliabyak@users.sf.net>
- *   Maximilian Albert <maximilian.albert> (gtkmm-ification)
+ *   Maximilian Albert <maximilian.albert@gmail.com> (gtkmm-ification)
  *
  * Copyright (C) 2002 Lauris Kaplinski
  * Copyright (C) 2023 Tavmjong Bah

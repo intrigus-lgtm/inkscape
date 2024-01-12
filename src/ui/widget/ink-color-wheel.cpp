@@ -42,7 +42,7 @@ constexpr static double MIN_LIGHTNESS = 0.0;
 constexpr static double OUTER_CIRCLE_DASH_SIZE = 10.0;
 constexpr static double VERTEX_EPSILON = 0.01;
 constexpr static double marker_radius = 4.0;
-constexpr static double focus_line_width = 0.5;
+constexpr static double focus_line_width = 1.0;
 constexpr static double focus_padding = 3.0;
 static auto const focus_dash = std::vector{1.5};
 
@@ -96,7 +96,7 @@ ColorWheel::ColorWheel()
     _drawing_area->set_expand(true);
     _bin->connectAfterResize(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_size));
     _drawing_area->set_draw_func(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_draw ));
-    _drawing_area->signal_focus().connect(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_focus));
+    _drawing_area->property_has_focus().signal_changed().connect([this]{ _drawing_area->queue_draw(); });
     _bin->set_child(_drawing_area);
     set_child(*_bin);
 
@@ -147,6 +147,11 @@ sigc::connection ColorWheel::connect_color_changed(sigc::slot<void ()> slot)
 void ColorWheel::color_changed()
 {
     _signal_color_changed.emit();
+    _drawing_area->queue_draw();
+}
+
+void ColorWheel::queue_drawing_area_draw()
+{
     _drawing_area->queue_draw();
 }
 
@@ -485,7 +490,7 @@ void ColorWheelHSL::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr
     if (drawing_area_has_focus()) {
         // The focus_dash width & alpha(foreground_color) are from GTK3 Adwaita.
         cr->set_dash(focus_dash, 0);
-        cr->set_line_width(0.5);
+        cr->set_line_width(1.0);
 
         if (_focus_on_ring) {
             auto const rgba = change_alpha(get_color(), 0.7);
@@ -502,14 +507,16 @@ void ColorWheelHSL::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr
     }
 }
 
-bool ColorWheelHSL::on_drawing_area_focus(Gtk::DirectionType const direction)
+std::optional<bool> ColorWheelHSL::focus(Gtk::DirectionType const direction)
 {
+    // Any focus change must update focus indicators (add or remove).
+    queue_drawing_area_draw();
+
     // In forward direction, focus passes from no focus to ring focus to triangle
     // focus to no focus.
     if (!drawing_area_has_focus()) {
         _focus_on_ring = (direction == Gtk::DirectionType::TAB_FORWARD);
         focus_drawing_area();
-        queue_draw();
         return true;
     }
 
@@ -531,10 +538,6 @@ bool ColorWheelHSL::on_drawing_area_focus(Gtk::DirectionType const direction)
             } else {
                 keep_focus = false;
             }
-    }
-
-    if (!keep_focus) {
-        queue_draw();  // Update focus indicators.
     }
 
     return keep_focus;
@@ -712,10 +715,11 @@ bool ColorWheelHSL::on_key_pressed(GtkEventControllerKey const * /*controller*/,
 
     if (dx == 0.0 && dy == 0.0) return false;
 
+    bool changed = false;
     if (_focus_on_ring) {
         _values[0] += -(dx != 0 ? dx : dy) * delta_hue;
     } else {
-        set_from_xy_delta(dx, dy);
+        changed = set_from_xy_delta(dx, dy);
     }
 
     if (_values[0] >= 1.0) {
@@ -724,11 +728,15 @@ bool ColorWheelHSL::on_key_pressed(GtkEventControllerKey const * /*controller*/,
         _values[0] += 1.0;
     }
 
-    bool const changed = _values[0] != old_hue;
-    if (changed) {
+    if (_values[0] != old_hue) {
         _triangle_corners.reset();
+        changed = true;
+    }
+
+    if (changed) {
         color_changed();
     }
+
     return changed;
 }
 

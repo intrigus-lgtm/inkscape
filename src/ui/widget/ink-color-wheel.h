@@ -30,6 +30,8 @@
 
 #include "hsluv.h"
 
+#include "ui/widget/widget-vfuncs-class-init.h" // for focus
+
 namespace Gtk {
 class DrawingArea;
 class GestureClick;
@@ -106,6 +108,7 @@ protected:
 
     /// Call when color has changed! Emits signal_color_changed & calls _drawing_area->queue_draw()
     void color_changed();
+    void queue_drawing_area_draw();
 
     [[nodiscard]] Gtk::Allocation get_drawing_area_allocation() const;
     [[nodiscard]] bool drawing_area_has_focus() const;
@@ -118,7 +121,7 @@ private:
     Gtk::DrawingArea *_drawing_area;
     virtual void on_drawing_area_size(int width, int height, int baseline) {}
     virtual void on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int) = 0;
-    virtual bool on_drawing_area_focus(Gtk::DirectionType /*direction*/) { return false; }
+
     /// All event controllers are connected to the DrawingArea.
     virtual Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
                                                       int n_press, double x, double y) = 0;
@@ -135,9 +138,14 @@ private:
 /**
  * @class ColorWheelHSL
  */
-class ColorWheelHSL : public ColorWheel
+class ColorWheelHSL
+    : public WidgetVfuncsClassInit // As Gtkmm4 doesn't wrap focus_vfunc
+    , public ColorWheel
 {
 public:
+    ColorWheelHSL()
+        : Glib::ObjectBase{"ColorWheelHSL"}
+        , WidgetVfuncsClassInit{} {}
     bool setHue       (double h, bool emit = true) final;
     bool setSaturation(double s, bool emit = true) final;
     bool setLightness (double l, bool emit = true) final;
@@ -151,7 +159,7 @@ public:
 private:
     void on_drawing_area_size(int width, int height, int baseline) override;
     void on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int) override;
-    bool on_drawing_area_focus(Gtk::DirectionType direction) override;
+    std::optional<bool> focus(Gtk::DirectionType direction) override;
 
     bool _set_from_xy(double x, double y);
     bool set_from_xy_delta(double dx, double dy);

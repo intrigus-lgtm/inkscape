@@ -38,7 +38,7 @@
 #include <gtkmm/listboxrow.h>
 #include <gtkmm/menubutton.h>
 #include <gtkmm/notebook.h>
-#include <gtkmm/searchentry.h>
+#include <gtkmm/searchentry2.h>
 #include <gtkmm/separator.h>
 #include <gtkmm/textbuffer.h>
 #include <gtkmm/textview.h>
@@ -90,7 +90,7 @@ TextEdit::TextEdit()
     , settings_and_filters_box (get_widget<Gtk::Box>        (builder, "settings_and_filters_box"))
     , filter_menu_button       (get_widget<Gtk::MenuButton> (builder, "filter_menu_button"))
     , reset_button             (get_widget<Gtk::Button>     (builder, "reset_button"))
-    , search_entry             (get_widget<Gtk::SearchEntry>(builder, "search_entry"))
+    , search_entry             (get_widget<Gtk::SearchEntry2>(builder, "search_entry"))
     , font_count_label         (get_widget<Gtk::Label>      (builder, "font_count_label"))
     , filter_popover           (get_widget<Gtk::Popover>    (builder, "filter_popover"))
     , popover_box              (get_widget<Gtk::Box>        (builder, "popover_box"))

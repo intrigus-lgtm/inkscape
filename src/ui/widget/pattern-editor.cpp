@@ -23,7 +23,7 @@
 #include <gtkmm/paned.h>
 #include <gtkmm/picture.h>
 #include <gtkmm/scale.h>
-#include <gtkmm/searchentry.h>
+#include <gtkmm/searchentry2.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/treemodel.h>
 #include <gtkmm/viewport.h>
@@ -101,7 +101,7 @@ PatternEditor::PatternEditor(const char* prefs, Inkscape::PatternManager& manage
     _link_scale(get_widget<Gtk::Button>(_builder, "link-scale")),
     _name_box(get_widget<Gtk::Entry>(_builder, "pattern-name")),
     _combo_set(get_widget<Gtk::ComboBoxText>(_builder, "pattern-combo")),
-    _search_box(get_widget<Gtk::SearchEntry>(_builder, "search")),
+    _search_box(get_widget<Gtk::SearchEntry2>(_builder, "search")),
     _tile_slider(get_widget<Gtk::Scale>(_builder, "tile-slider")),
     _show_names(get_widget<Gtk::CheckButton>(_builder, "show-names")),
     _prefs(prefs)

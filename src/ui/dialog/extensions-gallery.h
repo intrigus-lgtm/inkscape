@@ -39,7 +39,7 @@ class Builder;
 class Button;
 class IconView;
 class ListStore;
-class SearchEntry;
+class SearchEntry2;
 class TreeSelection;
 class TreeView;
 } // namespace Gtk
@@ -59,7 +59,7 @@ public:
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
     Gtk::GridView& _gridview;
-    Gtk::SearchEntry& _search;
+    Gtk::SearchEntry2& _search;
     Gtk::TreeView& _selector;
     Gtk::Button& _run;
     Gtk::Label& _run_btn_label;

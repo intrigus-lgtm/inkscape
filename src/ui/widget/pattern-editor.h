@@ -38,7 +38,7 @@ class Label;
 class Paned;
 class Picture;
 class Scale;
-class SearchEntry;
+class SearchEntry2;
 class SpinButton;
 class TreeModel;
 class Viewport;
@@ -122,7 +122,7 @@ private:
     Gtk::FlowBox& _stock_gallery;
     Gtk::Entry& _name_box;
     Gtk::ComboBoxText& _combo_set;
-    Gtk::SearchEntry& _search_box;
+    Gtk::SearchEntry2& _search_box;
     Gtk::Scale& _tile_slider;
     Gtk::CheckButton& _show_names;
     Glib::RefPtr<Gtk::TreeModel> _categories;

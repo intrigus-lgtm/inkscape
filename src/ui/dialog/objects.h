@@ -55,7 +55,7 @@ class DropTarget;
 class GestureClick;
 class Popover;
 class Scale;
-class SearchEntry;
+class SearchEntry2;
 class TreeStore;
 } // namespace Gtk
 
@@ -153,7 +153,7 @@ private:
     Gtk::Box _buttonsRow;
     Gtk::Box _buttonsPrimary;
     Gtk::Box _buttonsSecondary;
-    Gtk::SearchEntry& _searchBox;
+    Gtk::SearchEntry2& _searchBox;
     Gtk::ScrolledWindow _scroller;
     Gtk::Box _page;
     Inkscape::auto_connection _tree_style;
@@ -186,7 +186,6 @@ private:
     void on_motion_leave (GtkEventControllerMotion const *controller);
 
     void _searchActivated();
-    void _searchChanged();
     
     void _handleEdited(const Glib::ustring& path, const Glib::ustring& new_text);
     void _handleTransparentHover(bool enabled);

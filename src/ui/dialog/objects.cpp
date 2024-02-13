@@ -27,7 +27,7 @@
 #include <gtkmm/icontheme.h>
 #include <gtkmm/popover.h>
 #include <gtkmm/scale.h>
-#include <gtkmm/searchentry.h>
+#include <gtkmm/searchentry2.h>
 #include <gtkmm/togglebutton.h>
 #include <gtkmm/treeview.h>
 
@@ -698,7 +698,7 @@ ObjectsPanel::ObjectsPanel()
     , _builder(create_builder("dialog-objects.glade"))
     , _settings_menu(get_widget<Gtk::Popover>(_builder, "settings-menu"))
     , _object_menu(get_widget<Gtk::Popover>(_builder, "object-menu"))
-    , _searchBox(get_widget<Gtk::SearchEntry>(_builder, "search"))
+    , _searchBox(get_widget<Gtk::SearchEntry2>(_builder, "search"))
     , _opacity_slider(get_widget<Gtk::Scale>(_builder, "opacity-slider"))
     , _setting_layers(get_derived_widget<PrefCheckButton, Glib::ustring, bool>(_builder, "setting-layers", "/dialogs/objects/layers_only", false))
     , _setting_track(get_derived_widget<PrefCheckButton, Glib::ustring, bool>(_builder, "setting-track", "/dialogs/objects/expand_to_layer", true))
@@ -717,8 +717,7 @@ ObjectsPanel::ObjectsPanel()
 
     auto& header = get_widget<Gtk::Box>(_builder, "header");
     // Search
-    _searchBox.signal_activate().connect(sigc::mem_fun(*this, &ObjectsPanel::_searchActivated));
-    _searchBox.signal_search_changed().connect(sigc::mem_fun(*this, &ObjectsPanel::_searchChanged));
+    _searchBox.signal_search_changed().connect(sigc::mem_fun(*this, &ObjectsPanel::_searchActivated));
 
     // Buttons
     auto& _move_up_button = get_widget<Gtk::Button>(_builder, "move-up");
@@ -1055,7 +1054,7 @@ void ObjectsPanel::setRootWatcher()
     if (!document) return;
 
     auto const prefs = Inkscape::Preferences::get();
-    bool const filtered = prefs->getBool("/dialogs/objects/layers_only", false) || _searchBox.get_text_length();
+    bool const filtered = prefs->getBool("/dialogs/objects/layers_only", false) || _searchBox.get_text().length();
 
     // A filtered object watcher behaves differently to an unfiltered one.
     // Filtering disables creating dummy children and instead processes entire trees.
@@ -1959,7 +1958,6 @@ bool ObjectsPanel::selectCursorItem(Gdk::ModifierType const state)
     return false;
 }
 
-
 /**
  * User pressed return in search box, process search query.
  */
@@ -1967,16 +1965,6 @@ void ObjectsPanel::_searchActivated()
 {
     // The root watcher and watcher tree handles the search operations
     setRootWatcher();
-}
-
-/**
- * User has typed more into the search box
- */
-void ObjectsPanel::_searchChanged()
-{
-    if (root_watcher->isFiltered() && !_searchBox.get_text_length()) {
-        _searchActivated();
-    }
 }
 
 } // namespace Inkscape::UI::Dialog

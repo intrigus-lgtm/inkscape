@@ -16,7 +16,7 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/label.h>
 #include <gtkmm/paned.h>
-#include <gtkmm/searchentry.h>
+#include <gtkmm/searchentry2.h>
 
 #include "desktop.h"
 #include "libnrtype/font-lister.h"
@@ -37,7 +37,7 @@ FontCollectionsManager::FontCollectionsManager()
     , _font_list_box        (UI::get_widget<Gtk::Box>   (builder, "font_list_box"))
     , _font_count_label     (UI::get_widget<Gtk::Label> (builder, "font_count_label"))
     , _font_list_filter_box (UI::get_widget<Gtk::Box>   (builder, "font_list_filter_box"))
-    , _search_entry         (UI::get_widget<Gtk::SearchEntry>(builder, "search_entry"))
+    , _search_entry         (UI::get_widget<Gtk::SearchEntry2>(builder, "search_entry"))
     , _reset_button         (UI::get_widget<Gtk::Button>(builder, "reset_button"))
     , _create_button        (UI::get_widget<Gtk::Button>(builder, "create_button"))
     , _edit_button          (UI::get_widget<Gtk::Button>(builder, "edit_button"))

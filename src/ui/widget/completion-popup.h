@@ -15,7 +15,7 @@ namespace Gtk {
 class EntryCompletion;
 class ListStore;
 class MenuButton;
-class SearchEntry;
+class SearchEntry2;
 } // namespace Gtk
 
 namespace Inkscape::UI::Widget {
@@ -26,7 +26,7 @@ public:
     ~CompletionPopup() final;
 
     PopoverMenu& get_menu();
-    Gtk::SearchEntry& get_entry();
+    Gtk::SearchEntry2& get_entry();
     Glib::RefPtr<Gtk::ListStore> get_list();
 
     void clear_completion_list();
@@ -39,7 +39,7 @@ public:
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
     Glib::RefPtr<Gtk::ListStore> _list;
-    Gtk::SearchEntry& _search;
+    Gtk::SearchEntry2& _search;
     Gtk::MenuButton& _button;
     PopoverMenu _popover_menu;
     Glib::RefPtr<Gtk::EntryCompletion> _completion;

@@ -45,7 +45,7 @@
 #include <gtkmm/liststore.h>
 #include <gtkmm/paned.h>
 #include <gtkmm/scale.h>
-#include <gtkmm/searchentry.h>
+#include <gtkmm/searchentry2.h>
 #include <gtkmm/togglebutton.h>
 #include <gtkmm/treemodelfilter.h>
 #include <gtkmm/treemodelsort.h>
@@ -299,7 +299,7 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
         type == Effects ? "ExtensionsGallery" : "FilterGallery"),
     _builder(create_builder("dialog-extensions.glade")),
     _gridview(get_widget<Gtk::GridView>(_builder, "grid")),
-    _search(get_widget<Gtk::SearchEntry>(_builder, "search")),
+    _search(get_widget<Gtk::SearchEntry2>(_builder, "search")),
     _run(get_widget<Gtk::Button>(_builder, "run")),
     _run_btn_label(get_widget<Gtk::Label>(_builder, "run-label")),
     _selector(get_widget<Gtk::TreeView>(_builder, "selector")),

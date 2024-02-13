@@ -43,7 +43,7 @@ class CellRendererText;
 class ColumnView;
 class IconView;
 class ListStore;
-class SearchEntry;
+class SearchEntry2;
 class TreeSelection;
 class TreeView;
 } // namespace Gtk
@@ -89,7 +89,6 @@ private:
     void refresh_current_page();
     void rebuild_stats();
     details::Statistics collect_statistics();
-    void start_editing(Gtk::CellEditable* cell, const Glib::ustring& path);
     void end_editing(const Glib::ustring& path, const Glib::ustring& new_text);
     void selectionModified(Inkscape::Selection *selection, unsigned flags) override;
     void update_buttons();
@@ -117,7 +116,7 @@ private:
     Gtk::Button& _select;
     Gtk::Button& _delete;
     Gtk::Button& _extract;
-    Gtk::SearchEntry& _search;
+    Gtk::SearchEntry2& _search;
     boost::ptr_vector<Inkscape::UI::Widget::EntityEntry> _rdf_list;
     UI::Widget::Registry _wr;
     Gtk::CellRendererText* _label_renderer;

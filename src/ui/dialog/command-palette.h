@@ -35,7 +35,7 @@ class Label;
 class ListBox;
 class ListBoxRow;
 class ScrolledWindow;
-class SearchEntry;
+class SearchEntry2;
 class Widget;
 } // namespace Gtk
 
@@ -200,7 +200,7 @@ private:
     Glib::RefPtr<Gtk::Builder> _builder;
     Gtk::Box &_CPBase;
     Gtk::Box &_CPListBase;
-    Gtk::SearchEntry &_CPFilter;
+    Gtk::SearchEntry2 &_CPFilter;
     Gtk::ListBox &_CPSuggestions;
     Gtk::ListBox &_CPHistory;
     Gtk::ScrolledWindow &_CPSuggestionsScroll;

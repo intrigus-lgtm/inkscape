@@ -36,7 +36,7 @@
 #include <gtkmm/recentmanager.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchbar.h>
-#include <gtkmm/searchentry.h>
+#include <gtkmm/searchentry2.h>
 #include <gtkmm/window.h>
 
 #include "desktop.h"
@@ -65,7 +65,7 @@ CommandPalette::CommandPalette()
     : _builder(create_builder("command-palette-main.glade"))
     , _CPBase              (get_widget<Gtk::Box>(_builder, "CPBase"))
     , _CPListBase          (get_widget<Gtk::Box>(_builder, "CPListBase"))
-    , _CPFilter            (get_widget<Gtk::SearchEntry>(_builder, "CPFilter"))
+    , _CPFilter            (get_widget<Gtk::SearchEntry2>(_builder, "CPFilter"))
     , _CPSuggestions       (get_widget<Gtk::ListBox>(_builder, "CPSuggestions"))
     , _CPHistory           (get_widget<Gtk::ListBox>(_builder, "CPHistory"))
     , _CPSuggestionsScroll (get_widget<Gtk::ScrolledWindow>(_builder, "CPSuggestionsScroll"))
@@ -89,7 +89,7 @@ CommandPalette::CommandPalette()
                                                                           Gtk::PropagationPhase::CAPTURE);
     Controller::add_focus_on_window(_CPBase, sigc::mem_fun(*this, &CommandPalette::on_window_focus));
 
-    _CPFilter.signal_activate().connect(sigc::mem_fun(*this, &CommandPalette::on_activate_cpfilter));
+    _CPFilter.signal_search_changed().connect(sigc::mem_fun(*this, &CommandPalette::on_activate_cpfilter));
 
     auto focus = Gtk::EventControllerFocus::create();
     focus->set_propagation_phase(Gtk::PropagationPhase::BUBBLE);
@@ -518,7 +518,7 @@ bool CommandPalette::operate_recent_file(Glib::ustring const &uri, bool const im
     return true;
 }
 
-static void set_hint_texts(Gtk::Entry &entry, Glib::ustring const &text)
+static void set_hint_texts(Gtk::SearchEntry2 &entry, Glib::ustring const &text)
 {
     entry.set_placeholder_text(text);
     entry.set_tooltip_text    (text);
@@ -1080,11 +1080,9 @@ int CommandPalette::on_sort(Gtk::ListBoxRow *row1, Gtk::ListBoxRow *row2)
 }
 
 // Widget.set_sensitive() made the cursor vanish, so… TODO: GTK4: Check if fixed
-static void set_sensitive(Gtk::Entry &entry, bool const sensitive)
+static void set_sensitive(Gtk::SearchEntry2 &entry, bool const sensitive)
 {
     entry.set_editable(sensitive);
-    entry.set_icon_activatable(sensitive, Gtk::Entry::IconPosition::PRIMARY);
-    entry.set_icon_activatable(sensitive, Gtk::Entry::IconPosition::SECONDARY);
 }
 
 void CommandPalette::set_mode(CPMode mode)
@@ -1097,7 +1095,7 @@ void CommandPalette::set_mode(CPMode mode)
         case CPMode::SEARCH:
             set_sensitive(_CPFilter, true);
             _CPFilter.set_text("");
-            _CPFilter.set_icon_from_icon_name("edit-find-symbolic");
+            // _CPFilter.set_icon_from_icon_name("edit-find-symbolic"); // Icon not modifiable in GTK4.
             set_hint_texts(_CPFilter, _("Search operation..."));
 
             show_suggestions();
@@ -1127,7 +1125,7 @@ void CommandPalette::set_mode(CPMode mode)
             set_sensitive(_CPFilter, true);
             _CPFilter.set_text("");
             _CPFilter.grab_focus();
-            _CPFilter.set_icon_from_icon_name("input-keyboard");
+            // _CPFilter.set_icon_from_icon_name("input-keyboard"); // Icon not modifiable in GTK4.
             set_hint_texts(_CPFilter, _("Enter action argument"));
 
             break;
@@ -1136,7 +1134,7 @@ void CommandPalette::set_mode(CPMode mode)
             hide_suggestions();
 
             set_sensitive(_CPFilter, true);
-            _CPFilter.set_icon_from_icon_name("gtk-search");
+            // _CPFilter.set_icon_from_icon_name("gtk-search"); // Icon not modifiable in GTK4.
 
             _cpfilter_search_connection.disconnect();
 
@@ -1153,7 +1151,7 @@ void CommandPalette::set_mode(CPMode mode)
             _CPHistoryScroll.set_visible(true);
 
             set_sensitive(_CPFilter, false);
-            _CPFilter.set_icon_from_icon_name("format-justify-fill");
+            // _CPFilter.set_icon_from_icon_name("format-justify-fill"); // Icon not modifiable in GTK4.
             set_hint_texts(_CPFilter, _("History mode"));
 
             _cpfilter_search_connection.disconnect();

@@ -32,7 +32,7 @@
 #include <gtkmm/listbox.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/menubutton.h>
-#include <gtkmm/searchentry.h>
+#include <gtkmm/searchentry2.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/widgetpaintable.h>
 #include <sigc++/adaptors/bind.h>

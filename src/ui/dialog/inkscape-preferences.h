@@ -27,7 +27,7 @@
 #include <gtkmm/frame.h>
 #include <gtkmm/notebook.h>
 #include <gtkmm/scrolledwindow.h>
-#include <gtkmm/searchentry.h>
+#include <gtkmm/searchentry2.h>
 #include <gtkmm/sizegroup.h>
 #include <gtkmm/textview.h>
 #include <gtkmm/togglebutton.h>
@@ -127,7 +127,7 @@ protected:
     Gtk::Frame _page_frame;
     Gtk::Label _page_title;
     Gtk::TreeView _page_list;
-    Gtk::SearchEntry _search;
+    Gtk::SearchEntry2 _search;
     Glib::RefPtr<Gtk::TreeStore> _page_list_model;
     Gtk::Widget *_highlighted_widget = nullptr;
     Glib::RefPtr<Gtk::TreeModelFilter> _page_list_model_filter;

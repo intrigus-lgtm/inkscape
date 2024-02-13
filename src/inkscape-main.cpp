@@ -167,6 +167,8 @@ static void convert_legacy_options(int &argc, char **&argv)
 
 int main(int argc, char *argv[])
 {
+    Gtk::Application::wrap_in_search_entry2();
+
     convert_legacy_options(argc, argv);
 
 #ifdef __APPLE__

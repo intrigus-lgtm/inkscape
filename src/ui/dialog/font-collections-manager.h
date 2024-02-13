@@ -24,7 +24,7 @@ class Box;
 class Builder;
 class Label;
 class Paned;
-class SearchEntry;
+class SearchEntry2;
 } // namespace Gtk
 
 namespace Inkscape::UI::Dialog {
@@ -67,7 +67,7 @@ private:
     Gtk::Box &_font_list_box;
     Gtk::Label &_font_count_label;
     Gtk::Box &_font_list_filter_box;
-    Gtk::SearchEntry &_search_entry;
+    Gtk::SearchEntry2 &_search_entry;
     Gtk::Button &_reset_button;
     Gtk::Button &_create_button;
     Gtk::Button &_edit_button;

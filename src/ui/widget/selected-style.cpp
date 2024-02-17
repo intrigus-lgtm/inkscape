@@ -169,44 +169,37 @@ SelectedStyle::SelectedStyle(bool /*layout*/)
         swatch[i]->set_tooltip_text(type_strings[0][i][1]);
         swatch[i]->set_size_request(SELECTED_STYLE_PLACE_WIDTH, -1);
 
-        // To do: Gtk4 update to C++ controller
         // Drag color from color palette, for example.
         drop[i] = std::make_unique<SelectedStyleDropTracker>();
         drop[i]->parent = this;
         drop[i]->item = i;
-        Glib::RefPtr<Gtk::DropTarget> target = Gtk::DropTarget::create((GType)APP_OSWB_COLOR, Gdk::DragAction::COPY | Gdk::DragAction::MOVE);
-        target->signal_drop().connect([this, i] (const Glib::ValueBase& value, double x, double y){
+        auto target = Gtk::DropTarget::create(Glib::Value<PaintDef>::value_type(), Gdk::DragAction::COPY | Gdk::DragAction::MOVE);
+        target->signal_drop().connect([this, i] (Glib::ValueBase const &value, double, double) {
             if (!dropEnabled[i]) {
                 return false;
             }
-            auto const tracker = static_cast<SelectedStyleDropTracker*>(drop[i].get());
 
-            // copied from drag-and-drop.cpp, case APP_OSWB_COLOR
-            bool worked = false;
-            Glib::ustring colorspec;
-            PaintDef color;
-            Glib::ustring const data = static_cast<Glib::Value<Glib::ustring> const &>(value).get();
-            worked = color.fromMIMEData("application/x-oswb-color", data.c_str(), data.length());
-            if (worked) {
-                if (color.get_type() == PaintDef::NONE) {
-                    colorspec = "none";
-                } else {
-                    auto [r, g, b] = color.get_rgb();
-                    gchar* tmp = g_strdup_printf("#%02x%02x%02x", r, g, b);
-                    colorspec = tmp;
-                    g_free(tmp);
-                }
-            }
-            if (worked) {
-                SPCSSAttr *css = sp_repr_css_attr_new();
-                sp_repr_css_set_property(css, (tracker->item == SS_FILL) ? "fill":"stroke", colorspec.c_str());
+            auto const &tracker = *drop[i];
+            auto const &paintdef = *reinterpret_cast<PaintDef *>(g_value_get_boxed(value.gobj()));
 
-                sp_desktop_set_style(tracker->parent->_desktop, css);
-                sp_repr_css_attr_unref(css);
-                DocumentUndo::done(tracker->parent->_desktop->getDocument(), _("Drop color"), "");
-                return true;
+            // copied from drag-and-drop.cpp, case PaintDef
+            std::string colorspec;
+            if (paintdef.get_type() == PaintDef::NONE) {
+                colorspec = "none";
+            } else {
+                auto const [r, g, b] = paintdef.get_rgb();
+                colorspec.resize(63);
+                sp_svg_write_color(colorspec.data(), colorspec.size() + 1, SP_RGBA32_U_COMPOSE(r, g, b, 0xff));
+                colorspec.resize(std::strlen(colorspec.c_str()));
             }
-            return false;
+
+            auto const css = sp_repr_css_attr_new();
+            sp_repr_css_set_property(css, tracker.item == SS_FILL ? "fill" : "stroke", colorspec.c_str());
+            sp_desktop_set_style(tracker.parent->_desktop, css);
+            sp_repr_css_attr_unref(css);
+
+            DocumentUndo::done(tracker.parent->_desktop->getDocument(), _("Drop color"), "");
+            return true;
         }, true);
         swatch[i]->add_controller(target);
         Controller::add_click(*swatch[i], {}, sigc::mem_fun(*this,

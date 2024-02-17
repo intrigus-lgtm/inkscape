@@ -47,10 +47,6 @@
 #include <glibmm/stringutils.h>
 #include <glibmm/regex.h>
 
-static char const *mimeOSWB_COLOR = "application/x-oswb-color";
-static char const *mimeX_COLOR = "application/x-color";
-static char const *mimeTEXT = "text/plain";
-
 PaintDef::PaintDef()
     : description(C_("Paint", "None"))
     , type(NONE)
@@ -94,13 +90,7 @@ const Glib::ustring& PaintDef::get_tooltip() const {
     return tooltip;
 }
 
-std::vector<std::string> const &PaintDef::getMIMETypes()
-{
-    static std::vector<std::string> mimetypes = {mimeOSWB_COLOR, mimeX_COLOR, mimeTEXT};
-    return mimetypes;
-}
-
-std::pair<std::vector<char>, int> PaintDef::getMIMEData(std::string const &type) const
+std::vector<char> PaintDef::getMIMEData(char const *mime_type) const
 {
     auto from_data = [] (void const *p, int len) {
         std::vector<char> v(len);
@@ -108,16 +98,16 @@ std::pair<std::vector<char>, int> PaintDef::getMIMEData(std::string const &type)
         return v;
     };
 
-    auto [r, g, b] = rgb;
+    auto const [r, g, b] = rgb;
 
-    if (type == mimeTEXT) {
+    if (std::strcmp(mime_type, mimeTEXT) == 0) {
         std::array<char, 8> tmp;
         std::snprintf(tmp.data(), 8, "#%02x%02x%02x", r, g, b);
-        return std::make_pair(from_data(tmp.data(), 8), 8);
-    } else if (type == mimeX_COLOR) {
-        std::array<uint16_t, 4> tmp = {(uint16_t)((r << 8) | r), (uint16_t)((g << 8) | g), (uint16_t)((b << 8) | b), 0xffff};
-        return std::make_pair(from_data(tmp.data(), 8), 16);
-    } else if (type == mimeOSWB_COLOR) {
+        return from_data(tmp.data(), tmp.size());
+    } else if (std::strcmp(mime_type, mimeX_COLOR) == 0) {
+        auto const tmp = std::to_array({(uint16_t)((r << 8) | r), (uint16_t)((g << 8) | g), (uint16_t)((b << 8) | b), uint16_t{0xffff}});
+        return from_data(tmp.data(), tmp.size() * sizeof(decltype(tmp)::value_type));
+    } else if (std::strcmp(mime_type, mimeOSWB_COLOR) == 0) {
         std::string tmp("<paint>");
         switch (get_type()) {
             case PaintDef::NONE:
@@ -135,20 +125,26 @@ std::pair<std::vector<char>, int> PaintDef::getMIMEData(std::string const &type)
                 tmp += "</color>";
         }
         tmp += "</paint>";
-        return std::make_pair(from_data(tmp.c_str(), tmp.size()), 8);
+        return from_data(tmp.c_str(), tmp.size());
     } else {
-        return {{}, 0};
+        return {};
     }
 }
 
-bool PaintDef::fromMIMEData(std::string const &type_str, char const *data, int len)
+bool PaintDef::fromMIMEData(char const *mime_type, std::span<char const> data)
 {
-    if (type_str == mimeTEXT) {
-        // unused
-    } else if (type_str == mimeX_COLOR) {
-        // unused
-    } else if (type_str == mimeOSWB_COLOR) {
-        std::string xml(data, len);
+    if (std::strcmp(mime_type, mimeX_COLOR) == 0) {
+        if (data.size() == 8) {
+            // Careful about endian issues.
+            type = PaintDef::RGB;
+            auto const vals = reinterpret_cast<uint16_t const *>(data.data());
+            rgb[0] = 0x0ff & (vals[0] >> 8);
+            rgb[1] = 0x0ff & (vals[1] >> 8);
+            rgb[2] = 0x0ff & (vals[2] >> 8);
+            return true;
+        }
+    } else if (std::strcmp(mime_type, mimeOSWB_COLOR) == 0) {
+        std::string xml(data.data(), data.size());
         if (xml.find("<nocolor/>") != std::string::npos) {
             type = PaintDef::NONE;
             rgb = {0, 0, 0};

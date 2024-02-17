@@ -66,10 +66,7 @@ static void sp_repr_css_add_components(SPCSSAttr *css, Node const *repr, gchar c
  */
 SPCSSAttr *sp_repr_css_attr_new()
 {
-    static Inkscape::XML::Document *attr_doc=nullptr;
-    if (!attr_doc) {
-        attr_doc = new Inkscape::XML::SimpleDocument();
-    }
+    static auto const attr_doc = new Inkscape::XML::SimpleDocument();
     return new SPCSSAttrImpl(attr_doc);
 }
 

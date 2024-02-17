@@ -77,6 +77,7 @@
 #include "ui/cache/svg_preview_cache.h"
 #include "ui/clipboard.h"
 #include "ui/dialog/messages.h"
+#include "ui/drag-and-drop.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
@@ -292,22 +293,17 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
         prefs->setBool(path + "show-names", show);
     });
 
-
     auto source = Gtk::DragSource::create();
     source->set_actions(Gdk::DragAction::COPY);
-    source->signal_prepare().connect([this, source] ( double x, double y) {
-        Glib::Value<Glib::ustring> ustring_value;
-        ustring_value.init(ustring_value.value_type());
-        ustring_value.set("");
-        if (source->get_current_button() == 1) {
-            auto selected = get_selected_symbol();
-            if (selected) {
-                Glib::ustring symbol_id = (**selected)[g_columns.symbol_id];
-                ustring_value.set(symbol_id);
-                return Gdk::ContentProvider::create(ustring_value);
-            }
+    source->signal_prepare().connect([this, source] (double, double) -> Glib::RefPtr<Gdk::ContentProvider> {
+        auto const selected = get_selected_symbol();
+        if (!selected) {
+            return nullptr;
         }
-        return Gdk::ContentProvider::create(ustring_value);
+        Glib::Value<DnDSymbol> value;
+        value.init(value.value_type());
+        value.set(DnDSymbol{(**selected)[g_columns.symbol_id]});
+        return Gdk::ContentProvider::create(value);
     }, false);
     icon_view->add_controller(source);
     icon_view->signal_selection_changed().connect(sigc::mem_fun(*this, &SymbolsDialog::iconChanged));

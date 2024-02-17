@@ -24,7 +24,6 @@ class SPDesktop;
 
 void sp_ui_new_view();
 void sp_ui_close_view();
-void sp_ui_import_files(char *buffer);
 void sp_ui_error_dialog(char const *message);
 bool sp_ui_overwrite_file(std::string const &filename);
 

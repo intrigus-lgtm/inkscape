@@ -1748,7 +1748,7 @@ void ClipboardManagerImpl::_onGet(char const *mime_type, Glib::RefPtr<Gio::Outpu
         Extension::DB::OutputList outlist;
         Extension::db.get_output_list(outlist);
         auto out = outlist.begin();
-        for ( ; out != outlist.end() && target != (*out)->get_mimetype() ; ++out) {
+        for ( ; out != outlist.end() && target != (*out)->get_mimetype(); ++out) {
         }
         if (!(*out)->loaded()) {
             // Need to load the extension.
@@ -1929,7 +1929,7 @@ Glib::ustring ClipboardManagerImpl::_getBestTarget(SPDesktop *desktop)
 }
 
 /**
- * Register the serializers for the ClipboardDoc type.
+ * Register the serializers for the ClipboardSvg type.
  *
  * Fixme: This only happens once on first use, so doesn't adapt to extensions being loaded/unloaded.
  * GTK4 makes this hard to support, because it is not designed to unregister serialisers.

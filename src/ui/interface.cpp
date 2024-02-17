@@ -75,26 +75,6 @@ Glib::ustring getLayoutPrefPath(SPDesktop *desktop)
     }
 }
 
-void sp_ui_import_files(char *buffer)
-{
-    auto const doc = SP_ACTIVE_DOCUMENT;
-    if (!doc) {
-        return;
-    }
-
-    char **l = g_uri_list_extract_uris(buffer);
-    for (int i = 0; i < g_strv_length(l); i++) {
-        char *filename = g_filename_from_uri(l[i], nullptr, nullptr);
-        if (filename && std::strlen(filename) > 2) {
-            // Pass off to common implementation
-            // TODO might need to get the proper type of Inkscape::Extension::Extension
-            file_import(doc, filename, nullptr);
-        }
-        g_free(filename);
-    }
-    g_strfreev(l);
-}
-
 void sp_ui_error_dialog(char const *message)
 {
     auto const safeMsg = Inkscape::IO::sanitizeString(message);

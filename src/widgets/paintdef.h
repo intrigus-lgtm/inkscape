@@ -38,11 +38,16 @@
 #ifndef INKSCAPE_WIDGETS_PAINTDEF_H
 #define INKSCAPE_WIDGETS_PAINTDEF_H
 
-#include <glibmm/ustring.h>
+#include <span>
 #include <string>
 #include <vector>
 #include <array>
 #include <utility>
+#include <glibmm/ustring.h>
+
+inline constexpr auto mimeOSWB_COLOR = "application/x-oswb-color";
+inline constexpr auto mimeX_COLOR = "application/x-color";
+inline constexpr auto mimeTEXT = "text/plain";
 
 /**
  * Pure data representation of a color definition.
@@ -69,9 +74,8 @@ public:
     ColorType get_type() const { return type; }
     std::array<unsigned, 3> const &get_rgb() const { return rgb; }
 
-    static std::vector<std::string> const &getMIMETypes();
-    std::pair<std::vector<char>, int> getMIMEData(std::string const &type) const;
-    bool fromMIMEData(std::string const &type, char const *data, int len);
+    std::vector<char> getMIMEData(char const *mime_type) const;
+    bool fromMIMEData(char const *mime_type, std::span<char const> data);
 
 protected:
     std::string description;

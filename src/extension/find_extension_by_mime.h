@@ -20,20 +20,24 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <cstring>
+
 #include "input.h"
+#include "extension/db.h"
 
-namespace Inkscape {
-namespace Extension {
-static inline Inkscape::Extension::Extension *find_by_mime(const char *const mime)
+namespace Inkscape::Extension {
+
+inline Extension *find_by_mime(char const *mime)
 {
+    DB::InputList list;
+    db.get_input_list(list);
 
-    Inkscape::Extension::DB::InputList o;
-    Inkscape::Extension::db.get_input_list(o);
-    Inkscape::Extension::DB::InputList::const_iterator i = o.begin();
-    while (i != o.end() && strcmp((*i)->get_mimetype(), mime) != 0) {
-        ++i;
+    auto it = list.begin();
+    while (true) {
+        if (it == list.end()) return nullptr;
+        if (std::strcmp((*it)->get_mimetype(), mime) == 0) return *it;
+        ++it;
     }
-    return *i;
 }
-}
-}
+
+} // namespace Inkscape::Extension

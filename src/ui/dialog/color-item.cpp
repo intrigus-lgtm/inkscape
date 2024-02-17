@@ -144,6 +144,13 @@ void ColorItem::common_setup()
     set_tooltip_text(description + (tooltip.empty() ? tooltip : "\n" + tooltip));
     set_draw_func(sigc::mem_fun(*this, &ColorItem::draw_func));
 
+    Controller::add_drag_source(*this, {
+        .button  = Controller::Button::left,
+        .actions = Gdk::DragAction::MOVE | Gdk::DragAction::COPY,
+        .prepare = sigc::mem_fun(*this, &ColorItem::on_drag_prepare),
+        .begin   = sigc::mem_fun(*this, &ColorItem::on_drag_begin)
+    });
+
     Controller::add_motion<&ColorItem::on_motion_enter,
                            nullptr,
                            &ColorItem::on_motion_leave>
@@ -152,13 +159,6 @@ void ColorItem::common_setup()
     Controller::add_click(*this,
                           sigc::mem_fun(*this, &ColorItem::on_click_pressed),
                           sigc::mem_fun(*this, &ColorItem::on_click_released));
-
-    Controller::add_drag_source(*this, {
-        .button  = Controller::Button::left,
-        .actions = Gdk::DragAction::MOVE | Gdk::DragAction::COPY,
-        .prepare = sigc::mem_fun(*this, &ColorItem::on_drag_prepare),
-        .begin   = sigc::mem_fun(*this, &ColorItem::on_drag_begin  )
-    });
 }
 
 void ColorItem::set_pinned_pref(const std::string &path)
@@ -510,24 +510,14 @@ PaintDef ColorItem::to_paintdef() const
     return {};
 }
 
-Glib::RefPtr<Gdk::ContentProvider> ColorItem::on_drag_prepare(Gtk::DragSource const &/*source*/,
-                                                              double /*x*/, double /*y*/)
+Glib::RefPtr<Gdk::ContentProvider> ColorItem::on_drag_prepare(Gtk::DragSource const &, double, double)
 {
     if (!dialog) return {};
 
-    auto def = to_paintdef();
-    std::vector<Glib::RefPtr<Gdk::ContentProvider>> providers;
-
-    for (auto const &key: PaintDef::getMIMETypes()) {
-        auto [vec, format] = def.getMIMEData(key);
-        if (vec.empty()) continue;
-
-        auto bytes = Glib::Bytes::create(vec.data(), vec.size());
-        auto provider = Gdk::ContentProvider::create(key, std::move(bytes));
-        providers.push_back(std::move(provider));
-    }
-
-    return Gdk::ContentProvider::create(std::move(providers));
+    Glib::Value<PaintDef> value;
+    value.init(value.value_type());
+    value.set(to_paintdef());
+    return Gdk::ContentProvider::create(value);
 }
 
 void ColorItem::on_drag_begin(Gtk::DragSource &source, Glib::RefPtr<Gdk::Drag> const &/*drag*/)

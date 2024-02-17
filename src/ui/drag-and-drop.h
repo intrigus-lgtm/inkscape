@@ -14,7 +14,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <glibmm/ustring.h>
+
 class SPDesktopWidget;
+
+struct DnDSymbol
+{
+    Glib::ustring id;
+};
 
 void ink_drag_setup(SPDesktopWidget *);
 

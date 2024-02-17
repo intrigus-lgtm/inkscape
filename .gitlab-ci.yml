@@ -285,6 +285,7 @@ codequality:
 
 
 ### We embed script from third party libraries, that we sometimes update from their source. Hence we should NEVER modify them here before submitting the patch upstream!
+# Submodules do not need this treatment, so are exempted from the check.
 # Ideally, we should remove all this code and use them as packaged libraries. Unfortunately this check only works for merge requests.
 codeprotect:
   stage: test
@@ -294,7 +295,9 @@ codeprotect:
     - *run_for_MR
   script:
     - git fetch $CI_MERGE_REQUEST_PROJECT_URL.git $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
-    - git diff $CI_MERGE_REQUEST_DIFF_BASE_SHA -U0 --no-color src/3rdparty/*/ | tee forbidden
+    - git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA src/3rdparty/*/ > changed
+    - git submodule foreach --quiet 'echo $name' > submodules
+    - comm -23 changed submodules | tee forbidden
     - if [[ -s forbidden ]]; then echo "This commit modifies files that are in an dependency library. Make sure you update upstream first, *then* force the merge in Inkscape."; false; fi
 
 #### All files should have a licence

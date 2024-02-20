@@ -41,7 +41,7 @@ KnotPropertiesDialog::KnotPropertiesDialog()
     _unit_name = "";
 
     // Layer name widgets
-    // _knot_x_entry.set_activates_default(true); // Gone; SpinButton is no longer an Entry
+    _knot_x_entry.set_activates_default();
     _knot_x_entry.set_digits(4);
     _knot_x_entry.set_increments(1, 1);
     _knot_x_entry.set_range(-G_MAXDOUBLE, G_MAXDOUBLE);
@@ -50,7 +50,7 @@ KnotPropertiesDialog::KnotPropertiesDialog()
     _knot_x_label.set_halign(Gtk::Align::END);
     _knot_x_label.set_valign(Gtk::Align::CENTER);
 
-    // _knot_y_entry.set_activates_default(true); // Gone; SpinButton is no longer an Entry
+    _knot_y_entry.set_activates_default();
     _knot_y_entry.set_digits(4);
     _knot_y_entry.set_increments(1, 1);
     _knot_y_entry.set_range(-G_MAXDOUBLE, G_MAXDOUBLE);

@@ -40,7 +40,7 @@ PowerstrokePropertiesDialog::PowerstrokePropertiesDialog()
     _layout_table.set_column_spacing(4);
 
     // Layer name widgets
-    // _powerstroke_position_entry.set_activates_default(true); // Gone; SpinButton is no longer an Entry.
+    _powerstroke_position_entry.set_activates_default();
     _powerstroke_position_entry.set_digits(4);
     _powerstroke_position_entry.set_increments(1,1);
     _powerstroke_position_entry.set_range(-SCALARPARAM_G_MAXDOUBLE, SCALARPARAM_G_MAXDOUBLE);
@@ -49,7 +49,7 @@ PowerstrokePropertiesDialog::PowerstrokePropertiesDialog()
     _powerstroke_position_label.set_halign(Gtk::Align::END);
     _powerstroke_position_label.set_valign(Gtk::Align::CENTER);
 
-    // _powerstroke_width_entry.set_activates_default(true); // Gone; SpinButton is no longer an Entry.
+    _powerstroke_width_entry.set_activates_default();
     _powerstroke_width_entry.set_digits(4);
     _powerstroke_width_entry.set_increments(1,1);
     _powerstroke_width_entry.set_range(-SCALARPARAM_G_MAXDOUBLE, SCALARPARAM_G_MAXDOUBLE);

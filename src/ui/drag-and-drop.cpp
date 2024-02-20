@@ -111,6 +111,23 @@ void foreach(GSList *list, F &&f)
     }, &f);
 }
 
+std::span<char const> get_span(Glib::RefPtr<Glib::Bytes> const &bytes)
+{
+    gsize size{};
+    return {reinterpret_cast<char const *>(bytes->get_data(size)), size};
+}
+
+template <typename T>
+Glib::RefPtr<Glib::Bytes> make_bytes(T &&t)
+{
+    using Td = std::decay_t<T>;
+    auto const p = new Td(std::forward<T>(t));
+    auto const span = std::span<char const>(*p);
+    return Glib::wrap(g_bytes_new_with_free_func(span.data(), span.size_bytes(), +[] (void *p) {
+        delete reinterpret_cast<Td *>(p);
+    }, p));
+}
+
 template <typename T>
 GValue from_bytes(Glib::RefPtr<Glib::Bytes> &&bytes, char const *mime_type) = delete;
 
@@ -138,26 +155,29 @@ void register_deserializer(char const *mime_type)
 }
 
 template <typename T>
-void to_bytes(T const &t, Glib::RefPtr<Gio::OutputStream> const &out, char const *mime_type) = delete;
+Glib::RefPtr<Glib::Bytes> to_bytes(T const &t, char const *mime_type) = delete;
 
 template <typename T>
 void serialize_func(GdkContentSerializer *serializer)
 {
     auto const out = Glib::wrap(gdk_content_serializer_get_output_stream(serializer), true);
-    to_bytes(*get<T>(gdk_content_serializer_get_value(serializer)), out, gdk_content_serializer_get_mime_type(serializer));
-    gdk_content_serializer_return_success(serializer);
+    auto const bytes = to_bytes(*get<T>(gdk_content_serializer_get_value(serializer)), gdk_content_serializer_get_mime_type(serializer));
+    auto const span = get_span(bytes);
+    out->write_all_async(span.data(), span.size_bytes(), [serializer, out, bytes] (Glib::RefPtr<Gio::AsyncResult> &result) {
+        try {
+            gsize _;
+            out->write_all_finish(result, _);
+            gdk_content_serializer_return_success(serializer);
+        } catch (Glib::Error const &error) {
+            gdk_content_serializer_return_error(serializer, g_error_copy(error.gobj()));
+        }
+    });
 };
 
 template <typename T>
 void register_serializer(char const *mime_type)
 {
     gdk_content_register_serializer(Glib::Value<T>::value_type(), mime_type, serialize_func<T>, nullptr, nullptr);
-}
-
-std::span<char const> get_span(Glib::RefPtr<Glib::Bytes> const &bytes)
-{
-    gsize size{};
-    return {reinterpret_cast<char const *>(bytes->get_data(size)), size};
 }
 
 /*
@@ -186,16 +206,15 @@ GValue from_bytes<PaintDef>(Glib::RefPtr<Glib::Bytes> &&bytes, char const *mime_
 }
 
 template <>
-void to_bytes<PaintDef>(PaintDef const &paintdef, Glib::RefPtr<Gio::OutputStream> const &out, char const *mime_type)
+Glib::RefPtr<Glib::Bytes> to_bytes<PaintDef>(PaintDef const &paintdef, char const *mime_type)
 {
-    auto const data = paintdef.getMIMEData(mime_type);
-    out->write(data.data(), data.size());
+    return make_bytes(paintdef.getMIMEData(mime_type));
 }
 
 template <>
-void to_bytes<DnDSymbol>(DnDSymbol const &symbol, Glib::RefPtr<Gio::OutputStream> const &out, char const *)
+Glib::RefPtr<Glib::Bytes> to_bytes<DnDSymbol>(DnDSymbol const &symbol, char const *)
 {
-    out->write(symbol.id);
+    return make_bytes(symbol.id.raw());
 }
 
 std::vector<GType> const &get_drop_types()
@@ -321,7 +340,7 @@ bool on_drop(Glib::ValueBase const &value, double x, double y, SPDesktopWidget *
             return false;
         }
 
-        auto const newdoc = sp_repr_read_mem(data.data(), data.size(), SP_SVG_NS_URI);
+        auto const newdoc = sp_repr_read_mem(data.data(), data.size_bytes(), SP_SVG_NS_URI);
         if (!newdoc) {
             sp_ui_error_dialog(_("Could not parse SVG data"));
             return false;
